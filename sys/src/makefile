@@ -10,6 +10,6 @@ $(OUT): $(OBJS)
 	$(AR) -r $@ $^
 
 kmain.o: kmain.c
-	$(CC) $(CFLAGS) -c -o $@ $^
+	$(CC) $(CFLAGS) -I../arch/$(ARCH)/include -c -o $@ $^
 
 .PHONY: clean
