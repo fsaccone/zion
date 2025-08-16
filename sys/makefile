@@ -2,6 +2,8 @@ include config.mk
 
 OUT = kernel.img
 
+all: $(OUT)
+
 clean:
 	rm -f arch.a sys.a
 	(cd arch/$(ARCH)/src && $(MAKE) clean)
@@ -19,4 +21,4 @@ sys.a:
 	(cd src && $(MAKE) $@)
 	mv src/$@ $@
 
-.PHONY: clean
+.PHONY: all clean
