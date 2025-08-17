@@ -9,5 +9,5 @@ loop:
 
 .section .bss
 .align 12
-.space 0x4000
+.space 4096
 stacktop:
