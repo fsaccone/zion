@@ -10,7 +10,7 @@ clean:
 	(cd src && $(MAKE) clean)
 
 $(OUT): arch.a sys.a
-	$(LD) $(LDFLAGS) -o $@ $^
+	$(LD) $(LDFLAGS) -T linker.ld -o $@ $^
 	$(OBJCOPY) -O binary $@ $@
 
 arch.a:
