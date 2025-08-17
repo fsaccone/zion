@@ -1,6 +1,6 @@
 include config.mk
 
-all: kernel.img
+all: sys
 
 clean:
 	rm -f kernel.img
@@ -9,5 +9,7 @@ clean:
 kernel.img:
 	(cd sys && $(MAKE) $@)
 	mv sys/$@ $@
+
+sys: kernel.img
 
 .PHONY: all clean
