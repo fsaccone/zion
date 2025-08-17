@@ -1,8 +1,3 @@
-.section .bss
-.align 12
-.space 0x4000
-stacktop:
-
 .section .text
 .globl _start
 _start:
@@ -11,3 +6,8 @@ _start:
 	j loop
 loop:
 	j loop
+
+.section .bss
+.align 12
+.space 0x4000
+stacktop:
