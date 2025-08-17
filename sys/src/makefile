@@ -1,4 +1,4 @@
-include ../config.mk
+include ../../config.mk
 
 OUT  = sys.a
 OBJS = kmain.o

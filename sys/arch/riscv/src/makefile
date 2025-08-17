@@ -1,4 +1,4 @@
-include ../../../config.mk
+include ../../../../config.mk
 
 OUT  = arch.a
 OBJS = boot.o
