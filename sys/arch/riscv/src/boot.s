@@ -2,10 +2,7 @@
 .globl _start
 _start:
 	la sp, stacktop
-	call kmain
-	j loop
-loop:
-	j loop
+	j kmain
 
 .section .bss
 .align 12
