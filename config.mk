@@ -9,7 +9,7 @@ LD      = $(CROSS_COMPILE)ld
 OBJCOPY = $(CROSS_COMPILE)objcopy
 
 CFLAGS  = -std=c90 -Wall -Wextra -Wpedantic
-LDFLAGS = -s -static
+LDFLAGS = -static
 
 QEMU      = qemu-system-$(ARCH)
 QEMUFLAGS = -machine virt -bios none -smp 4 -nographic
