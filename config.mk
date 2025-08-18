@@ -10,3 +10,6 @@ OBJCOPY = $(CROSS_COMPILE)objcopy
 
 CFLAGS  =
 LDFLAGS = -s -static
+
+QEMU      = qemu-system-$(ARCH)
+QEMUFLAGS = -machine virt -bios none -smp 4 -nographic

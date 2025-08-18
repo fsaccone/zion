@@ -21,4 +21,7 @@ sys.a:
 	(cd src && $(MAKE) $@)
 	mv src/$@ $@
 
-.PHONY: all clean
+test: all
+	$(QEMU) $(QEMUFLAGS) -kernel $(OUT)
+
+.PHONY: all clean test
