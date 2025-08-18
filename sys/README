@@ -1,0 +1,44 @@
+/sys/
+=====
+
+This directory contains the kernel.
+
+Directory structure
+-------------------
+
+- arch/<arch>/boot/
+
+It contains the _start symbol, which has the first instructions to be run in
+the kernel.
+
+It outputs the boot.o file.
+
+- arch/<arch>/include/
+
+It contains the header files accessible in the arch/ directory.
+
+These are all the header which need assembly to be defined.
+
+- arch/<arch>/lib/
+
+It contains the implementation of all the header files in arch/<arch>/include/.
+
+It outputs the libarch.a file.
+
+- include/
+
+It contains all the headers files which are not in arch/.
+
+- lib/
+
+It contains the implementation of all the header files in include/.
+
+It outputs the libkernel.a file.
+
+- src/
+
+It contains the main implementation of the kernel.
+
+Its source files are linked against libarch and libkernel.
+
+It contains the kmain symbol, which should be called by _start.
