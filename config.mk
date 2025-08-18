@@ -8,7 +8,7 @@ CC      = $(CROSS_COMPILE)cc
 LD      = $(CROSS_COMPILE)ld
 OBJCOPY = $(CROSS_COMPILE)objcopy
 
-CFLAGS  =
+CFLAGS  = -std=c90
 LDFLAGS = -s -static
 
 QEMU      = qemu-system-$(ARCH)
