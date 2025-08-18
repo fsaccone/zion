@@ -1,5 +1,5 @@
 void
-kmain()
+kmain(void)
 {
 	for (;;);
 }
