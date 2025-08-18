@@ -4,6 +4,8 @@ SYS = kernel.img
 
 all: sys
 
+sys: $(SYS)
+
 clean:
 	rm -f $(SYS)
 	(cd sys && $(MAKE) clean)
@@ -11,7 +13,5 @@ clean:
 $(SYS):
 	(cd sys && $(MAKE) $@)
 	mv sys/$@ $@
-
-sys: $(SYS)
 
 .PHONY: all clean
