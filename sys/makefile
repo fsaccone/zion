@@ -31,7 +31,7 @@ src.a:
 	(cd src && $(MAKE) $@)
 	mv src/$@ $@
 
-test: all
-	$(QEMU) $(QEMUFLAGS) -kernel $(OUT)
+test: $(OUT)
+	$(QEMU) $(QEMUFLAGS) -kernel $^
 
 .PHONY: all clean test
