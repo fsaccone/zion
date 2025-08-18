@@ -5,7 +5,7 @@ OUT = kernel.img
 all: $(OUT)
 
 clean:
-	rm -f boot.o libarch.a sys.a
+	rm -f $(OUT) boot.o libarch.a sys.a
 	(cd arch/$(ARCH)/boot && $(MAKE) clean)
 	(cd arch/$(ARCH)/lib && $(MAKE) clean)
 	(cd src && $(MAKE) clean)
