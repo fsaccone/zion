@@ -8,6 +8,8 @@ ARCHLIB  = libarch.a
 LIB      = libkernel.a
 SRC      = src.a
 
+.PHONY: all clean test
+
 all: $(OUT)
 
 clean:
@@ -43,5 +45,3 @@ $(LIB):
 $(SRC):
 	(cd src && $(MAKE) $@)
 	mv src/$@ $@
-
-.PHONY: all clean test

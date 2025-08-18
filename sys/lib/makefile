@@ -5,6 +5,8 @@ OBJS = uart.o
 
 CCCMD = $(CC) $(CFLAGS) -I../arch/$(ARCH)/include -I../include -c -o $@ $^
 
+.PHONY: clean
+
 clean:
 	rm -f $(OUT) $(OBJS)
 
@@ -13,5 +15,3 @@ $(OUT): $(OBJS)
 
 uart.o: uart.c
 	$(CCCMD)
-
-.PHONY: clean

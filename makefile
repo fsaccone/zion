@@ -2,6 +2,8 @@ include config.mk
 
 SYS = kernel.img
 
+.PHONY: all clean sys
+
 all: sys
 
 sys: $(SYS)
@@ -13,5 +15,3 @@ clean:
 $(SYS):
 	(cd sys && $(MAKE) $@)
 	mv sys/$@ $@
-
-.PHONY: all clean sys

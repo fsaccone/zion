@@ -5,6 +5,8 @@ OBJS = kmain.o
 
 CCCMD = $(CC) $(CFLAGS) -I../arch/$(ARCH)/include -I../include -c -o $@ $^
 
+.PHONY: clean
+
 clean:
 	rm -f $(OUT) $(OBJS)
 
@@ -13,5 +15,3 @@ $(OUT): $(OBJS)
 
 kmain.o: kmain.c
 	$(CCCMD)
-
-.PHONY: clean

@@ -5,6 +5,8 @@ OBJS = start.o
 
 ASCMD = $(AS) -o $@ $^
 
+.PHONY: clean
+
 clean:
 	rm -f $(OUT) $(OBJS)
 
@@ -13,5 +15,3 @@ $(OUT): $(OBJS)
 
 start.o: start.s
 	$(ASCMD)
-
-.PHONY: clean

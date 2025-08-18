@@ -3,6 +3,8 @@ include ../../../../config.mk
 OUT  = libarch.a
 OBJS =
 
+.PHONY: clean
+
 clean:
 	rm -f $(OUT) $(OBJS)
 
