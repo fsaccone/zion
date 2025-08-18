@@ -5,13 +5,13 @@ OUT = kernel.img
 all: $(OUT)
 
 clean:
-	rm -f $(OUT) boot.o libarch.a libkernel.a sys.a
+	rm -f $(OUT) boot.o libarch.a libkernel.a src.a
 	(cd arch/$(ARCH)/boot && $(MAKE) clean)
 	(cd arch/$(ARCH)/lib && $(MAKE) clean)
 	(cd lib && $(MAKE) clean)
 	(cd src && $(MAKE) clean)
 
-$(OUT): boot.o sys.a libkernel.a libarch.a
+$(OUT): boot.o src.a libkernel.a libarch.a
 	$(LD) $(LDFLAGS) -A $(ARCH) -T linker.ld -o $@ $^
 	$(OBJCOPY) -O binary $@ $@
 
@@ -27,7 +27,7 @@ libkernel.a:
 	(cd lib && $(MAKE) $@)
 	mv lib/$@ $@
 
-sys.a:
+src.a:
 	(cd src && $(MAKE) $@)
 	mv src/$@ $@
 
