@@ -9,6 +9,7 @@ _start:
 	j kmain
 
 loop:
+	wfi
 	j loop
 
 .section .bss
