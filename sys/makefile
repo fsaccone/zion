@@ -13,7 +13,7 @@ clean:
 
 $(OUT): boot.o src.a libkernel.a libarch.a
 	$(LD) $(LDFLAGS) -A $(ARCH) -T linker.ld -o $@ $^
-	$(OBJCOPY) -O binary $@ $@
+	$(OBJCOPY) -O binary $@
 
 boot.o:
 	(cd arch/$(ARCH)/boot && $(MAKE) $@)
