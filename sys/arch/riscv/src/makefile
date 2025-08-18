@@ -1,7 +1,7 @@
 include ../../../../config.mk
 
 OUT  = arch.a
-OBJS = uart.o boot.o
+OBJS = boot.o uart.o
 
 ASCMD = $(AS) -o $@ $^
 CCCMD = $(CC) $(CFLAGS) -I../include -c -o $@ $^
