@@ -1,19 +1,22 @@
 include ../config.mk
 
-OUT = kernel.img
+OUT   = kernel.img
+LDOUT = kernel.tmp
 
 all: $(OUT)
 
 clean:
-	rm -f $(OUT) boot.o libarch.a libkernel.a src.a
+	rm -f $(OUT) $(LDOUT) boot.o libarch.a libkernel.a src.a
 	(cd arch/$(ARCH)/boot && $(MAKE) clean)
 	(cd arch/$(ARCH)/lib && $(MAKE) clean)
 	(cd lib && $(MAKE) clean)
 	(cd src && $(MAKE) clean)
 
-$(OUT): boot.o src.a libkernel.a libarch.a
+$(OUT): $(LDOUT)
+	$(OBJCOPY) -O binary $^ $@
+
+$(LDOUT): boot.o src.a libkernel.a libarch.a
 	$(LD) $(LDFLAGS) -A $(ARCH) -T linker.ld -o $@ $^
-	$(OBJCOPY) -O binary $@
 
 boot.o:
 	(cd arch/$(ARCH)/boot && $(MAKE) $@)
