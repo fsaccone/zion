@@ -14,4 +14,4 @@ $(SYS):
 	(cd sys && $(MAKE) $@)
 	mv sys/$@ $@
 
-.PHONY: all clean
+.PHONY: all clean sys
