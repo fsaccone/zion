@@ -3,6 +3,8 @@ include ../../config.mk
 OUT  = sys.a
 OBJS = uart.o kmain.o
 
+CCCMD = $(CC) $(CFLAGS) -I../arch/$(ARCH)/include -c -o $@ $^
+
 clean:
 	rm -f $(OUT) $(OBJS)
 
@@ -10,9 +12,9 @@ $(OUT): $(OBJS)
 	$(AR) -r $@ $^
 
 kmain.o: kmain.c
-	$(CC) $(CFLAGS) -I../arch/$(ARCH)/include -c -o $@ $^
+	$(CCCMD)
 
 uart.o: uart.c
-	$(CC) $(CFLAGS) -I../arch/$(ARCH)/include -c -o $@ $^
+	$(CCCMD)
 
 .PHONY: clean
