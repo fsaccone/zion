@@ -1,7 +1,7 @@
 include ../../config.mk
 
-OUT  = sys.a
-OBJS = kmain.o
+OUT  = libkernel.a
+OBJS = uart.o
 
 CCCMD = $(CC) $(CFLAGS) -I../arch/$(ARCH)/include -I../include -c -o $@ $^
 
@@ -11,7 +11,7 @@ clean:
 $(OUT): $(OBJS)
 	$(AR) -r $@ $^
 
-kmain.o: kmain.c
+uart.o: uart.c
 	$(CCCMD)
 
 .PHONY: clean

@@ -1,5 +1,7 @@
 #include <uart.h>
 
+#include <arch/uart.h>
+
 void
 uart_print(const char *str)
 {
