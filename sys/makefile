@@ -3,10 +3,15 @@ include ../config.mk
 OUT   = kernel.img
 LDOUT = kernel.tmp
 
+ARCHBOOT = boot.o
+ARCHLIB  = libarch.a
+LIB      = libkernel.a
+SRC      = src.a
+
 all: $(OUT)
 
 clean:
-	rm -f $(OUT) $(LDOUT) boot.o libarch.a libkernel.a src.a
+	rm -f $(OUT) $(LDOUT) $(ARCHBOOT) $(ARCHLIB) $(LIB) $(SRC)
 	(cd arch/$(ARCH)/boot && $(MAKE) clean)
 	(cd arch/$(ARCH)/lib && $(MAKE) clean)
 	(cd lib && $(MAKE) clean)
@@ -17,22 +22,22 @@ $(OUT): $(LDOUT)
 	$(STRIP) $@
 	$(OBJCOPY) -O binary $@
 
-$(LDOUT): boot.o src.a libkernel.a libarch.a
+$(LDOUT): $(ARCHBOOT) $(SRC) $(LIB) $(ARCHLIB)
 	$(LD) $(LDFLAGS) -A $(ARCH) -T linker.ld -o $@ $^
 
-boot.o:
+$(ARCHBOOT):
 	(cd arch/$(ARCH)/boot && $(MAKE) $@)
 	mv arch/$(ARCH)/boot/$@ $@
 
-libarch.a:
+$(ARCHLIB):
 	(cd arch/$(ARCH)/lib && $(MAKE) $@)
 	mv arch/$(ARCH)/lib/$@ $@
 
-libkernel.a:
+$(LIB):
 	(cd lib && $(MAKE) $@)
 	mv lib/$@ $@
 
-src.a:
+$(SRC):
 	(cd src && $(MAKE) $@)
 	mv src/$@ $@
 
