@@ -5,7 +5,9 @@ OBJS = start.o
 
 ASCMD = $(AS) -o $@ $^
 
-.PHONY: clean
+.PHONY: all clean
+
+all: $(OUT)
 
 clean:
 	rm -f $(OUT) $(OBJS)
