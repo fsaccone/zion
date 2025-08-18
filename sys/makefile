@@ -17,6 +17,9 @@ clean:
 	(cd lib && $(MAKE) clean)
 	(cd src && $(MAKE) clean)
 
+test: $(LDOUT)
+	$(QEMU) $(QEMUFLAGS) -kernel $^
+
 $(OUT): $(LDOUT)
 	cp $^ $@
 	$(STRIP) $@
@@ -40,8 +43,5 @@ $(LIB):
 $(SRC):
 	(cd src && $(MAKE) $@)
 	mv src/$@ $@
-
-test: $(LDOUT)
-	$(QEMU) $(QEMUFLAGS) -kernel $^
 
 .PHONY: all clean test
