@@ -13,7 +13,9 @@ clean:
 	(cd src && $(MAKE) clean)
 
 $(OUT): $(LDOUT)
-	$(OBJCOPY) -O binary $^ $@
+	cp $^ $@
+	$(STRIP) $@
+	$(OBJCOPY) -O binary $@
 
 $(LDOUT): boot.o src.a libkernel.a libarch.a
 	$(LD) $(LDFLAGS) -A $(ARCH) -T linker.ld -o $@ $^

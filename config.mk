@@ -7,6 +7,7 @@ AS      = $(CROSS_COMPILE)as
 CC      = $(CROSS_COMPILE)cc
 LD      = $(CROSS_COMPILE)ld
 OBJCOPY = $(CROSS_COMPILE)objcopy
+STRIP   = $(CROSS_COMPILE)strip
 
 CFLAGS  = -std=c90 -Wall -Wextra -Wpedantic
 LDFLAGS = -static
