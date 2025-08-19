@@ -5,14 +5,9 @@ _start:
 	csrr t1, mhartid  # Hart ID in use
 	bne  t0, t1, loop # Disable non-0 harts
 
-	la sp, stacktop
+	la sp, _stack_end
 	j  kmain
 
 loop:
 	wfi
 	j loop
-
-.section .boot.bss
-.align 12
-.space 4096
-stacktop:

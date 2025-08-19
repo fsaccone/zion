@@ -30,4 +30,11 @@ SECTIONS
 		*(.boot.bss)
 		*(.bss)
 	} >RAM
+
+	.stack (NOLOAD) : {
+		. = ALIGN(8);
+		_stack_start = .;
+		. = . + 0x1000;
+		_stack_end = .;
+	}
 }
