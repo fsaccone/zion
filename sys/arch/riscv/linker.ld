@@ -38,4 +38,11 @@ SECTIONS
 		. = . + 0x1000;
 		_stack_end = .;
 	} >RAM
+
+	.heap (NOLOAD) : {
+		. = ALIGN(8);
+		_heap_start = .;
+		. = . + 0x1000;
+		_heap_end = .;
+	} >RAM
 }
