@@ -9,6 +9,22 @@ SECTIONS
 {
 	. = ORIGIN(RAM);
 
+	.boot.text : {
+		*(.boot.text)
+	} >RAM
+
+	.boot.rodata : {
+		*(.boot.rodata)
+	} >RAM
+
+	.boot.data : {
+		*(.boot.data)
+	} >RAM
+
+	.boot.bss : {
+		*(.boot.bss)
+	} >RAM
+
 	.text : {
 		*(.text)
 	} >RAM

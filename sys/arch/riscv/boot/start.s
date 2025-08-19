@@ -1,4 +1,4 @@
-.section .text
+.section .boot.text
 .globl _start
 _start:
 	li   t0, 0        # Hart ID to use
@@ -12,7 +12,7 @@ loop:
 	wfi
 	j loop
 
-.section .bss
+.section .boot.bss
 .align 12
 .space 4096
 stacktop:
