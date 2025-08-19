@@ -1,6 +1,6 @@
 include ../config.mk
 
-OUT   = kernel.img
+OUT   = kernel.bin
 LDOUT = kernel.tmp
 
 ARCHBOOT = boot.o
