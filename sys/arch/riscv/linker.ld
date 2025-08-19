@@ -37,5 +37,5 @@ SECTIONS
 		_stack_start = .;
 		. = . + 0x1000;
 		_stack_end = .;
-	}
+	} >RAM
 }
