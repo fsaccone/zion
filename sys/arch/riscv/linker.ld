@@ -4,7 +4,8 @@ ENTRY(_start)
 
 MEMORY
 {
-	RAM (rwx) : ORIGIN = 0x80000000, LENGTH = 32M
+	ROM (rx)  : ORIGIN = 0x80000000, LENGTH = 0x10000
+	RAM (rwx) : ORIGIN = 0x80010000, LENGTH = 32M
 }
 
 SECTIONS
@@ -14,12 +15,12 @@ SECTIONS
 	.text : {
 		*(.boot.text)
 		*(.text)
-	} >RAM
+	} >ROM
 
 	.rodata : {
 		*(.boot.rodata)
 		*(.rodata)
-	} >RAM
+	} >ROM
 
 	.data : {
 		*(.boot.data)
