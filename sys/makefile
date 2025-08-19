@@ -22,7 +22,7 @@ test: $(OUT)
 	$(QEMU) $(QEMUFLAGS) -kernel $^
 
 $(OUT): $(ARCHBOOT) $(SRC) $(LIB) $(ARCHLIB)
-	$(LD) $(LDFLAGS) -A $(ARCH) -T arch/$(ARCH)/linker.ld -o $@ $^
+	$(LD) $(LDFLAGS) -T arch/$(ARCH)/linker.ld -o $@ $^
 	$(STRIP) $@
 
 $(ARCHBOOT):
