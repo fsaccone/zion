@@ -1,7 +1,6 @@
 include ../config.mk
 
-OUT   = kernel.bin
-LDOUT = kernel.tmp
+OUT = kernel.bin
 
 ARCHBOOT = boot.o
 ARCHLIB  = libarch.a
@@ -13,22 +12,18 @@ SRC      = src.a
 all: $(OUT)
 
 clean:
-	rm -f $(OUT) $(LDOUT) $(ARCHBOOT) $(ARCHLIB) $(LIB) $(SRC)
+	rm -f $(OUT) $(ARCHBOOT) $(ARCHLIB) $(LIB) $(SRC)
 	(cd arch/$(ARCH)/boot && $(MAKE) clean)
 	(cd arch/$(ARCH)/lib && $(MAKE) clean)
 	(cd lib && $(MAKE) clean)
 	(cd src && $(MAKE) clean)
 
-test: $(LDOUT)
+test: $(OUT)
 	$(QEMU) $(QEMUFLAGS) -kernel $^
 
-$(OUT): $(LDOUT)
-	cp $^ $@
-	$(STRIP) $@
-	$(OBJCOPY) -O binary $@
-
-$(LDOUT): $(ARCHBOOT) $(SRC) $(LIB) $(ARCHLIB)
+$(OUT): $(ARCHBOOT) $(SRC) $(LIB) $(ARCHLIB)
 	$(LD) $(LDFLAGS) -A $(ARCH) -T linker.ld -o $@ $^
+	$(STRIP) $@
 
 $(ARCHBOOT):
 	(cd arch/$(ARCH)/boot && $(MAKE) $@)
