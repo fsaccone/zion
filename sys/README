@@ -16,7 +16,8 @@ It outputs the kernel.o file.
 
 It contains the header files accessible in the arch/ directory.
 
-These are all the header which need assembly to be defined.
+These are all the header which need architecture-specific features to be
+implemented.
 
 - arch/ARCH/lib/
 
