@@ -15,34 +15,34 @@ SECTIONS
 	.text : {
 		*(.boot.text)
 		*(.text)
-	} >rom
+	} >rom AT>rom
 
 	.rodata : {
 		*(.boot.rodata)
 		*(.rodata)
-	} >rom
+	} >rom AT>rom
 
 	.data : {
 		*(.boot.data)
 		*(.data)
-	} >ram
+	} >ram AT>ram
 
 	.bss : {
 		*(.boot.bss)
 		*(.bss)
-	} >ram
+	} >ram AT>ram
 
 	.stack (NOLOAD) : {
 		. = ALIGN(8);
 		_stack_start = .;
 		. = . + 0x1000;
 		_stack_end = .;
-	} >ram
+	} >ram AT>ram
 
 	.heap (NOLOAD) : {
 		. = ALIGN(8);
 		_heap_start = .;
 		. = . + 0x1000;
 		_heap_end = .;
-	} >ram
+	} >ram AT>ram
 }
