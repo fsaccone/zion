@@ -1,9 +1,9 @@
-#include <debug.h>
+#include <arch/uart.h>
 
 void
 kmain(void)
 {
-	debug("Kernel start.\n");
+	uart_print("Kernel start.\n");
 
 	for (;;);
 }
