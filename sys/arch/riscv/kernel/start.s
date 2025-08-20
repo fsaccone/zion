@@ -2,9 +2,10 @@
 .globl _start
 
 _start:
+	la sp, _stack_end
+
 	call lock_harts
 
-	la sp, _stack_end
 	j  kmain
 
 lock_harts:
