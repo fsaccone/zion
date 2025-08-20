@@ -6,12 +6,11 @@ This directory contains the kernel.
 Directory structure
 -------------------
 
-- arch/ARCH/boot/
+- arch/ARCH/kernel/
 
-It contains the _start symbol, which has the first instructions to be run in
-the kernel.
+It contains the entry point to the kernel code.
 
-It outputs the boot.o file.
+It outputs the kernel.o file.
 
 - arch/ARCH/include/
 

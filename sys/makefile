@@ -2,18 +2,18 @@ include ../config.mk
 
 OUT = kernel.bin
 
-ARCHBOOT = boot.o
-ARCHLIB  = libarch.a
-LIB      = libkernel.a
-SRC      = src.a
+ARCHKERNEL = kernel.o
+ARCHLIB    = libarch.a
+LIB        = libkernel.a
+SRC        = src.a
 
 .PHONY: all clean test
 
 all: $(OUT)
 
 clean:
-	rm -f $(OUT) $(ARCHBOOT) $(ARCHLIB) $(LIB) $(SRC)
-	(cd arch/$(ARCH)/boot && $(MAKE) clean)
+	rm -f $(OUT) $(ARCHKERNEL) $(ARCHLIB) $(LIB) $(SRC)
+	(cd arch/$(ARCH)/kernel && $(MAKE) clean)
 	(cd arch/$(ARCH)/lib && $(MAKE) clean)
 	(cd lib && $(MAKE) clean)
 	(cd src && $(MAKE) clean)
@@ -21,13 +21,13 @@ clean:
 test: $(OUT)
 	$(QEMU) $(QEMUFLAGS) -kernel $^
 
-$(OUT): $(ARCHBOOT) $(SRC) $(LIB) $(ARCHLIB)
+$(OUT): $(ARCHKERNEL) $(SRC) $(LIB) $(ARCHLIB)
 	$(LD) $(LDFLAGS) -T arch/$(ARCH)/linker.ld -o $@ $^
 	$(STRIP) $@
 
-$(ARCHBOOT):
-	(cd arch/$(ARCH)/boot && $(MAKE) $@)
-	mv arch/$(ARCH)/boot/$@ $@
+$(ARCHKERNEL):
+	(cd arch/$(ARCH)/kernel && $(MAKE) $@)
+	mv arch/$(ARCH)/kernel/$@ $@
 
 $(ARCHLIB):
 	(cd arch/$(ARCH)/lib && $(MAKE) $@)

@@ -1,6 +1,6 @@
 include ../../../../config.mk
 
-OUT  = boot.o
+OUT  = kernel.o
 OBJS = start.o
 
 ASCMD = $(AS) -o $@ $^
