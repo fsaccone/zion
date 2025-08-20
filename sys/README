@@ -6,22 +6,22 @@ This directory contains the kernel.
 Directory structure
 -------------------
 
-- arch/<arch>/boot/
+- arch/ARCH/boot/
 
 It contains the _start symbol, which has the first instructions to be run in
 the kernel.
 
 It outputs the boot.o file.
 
-- arch/<arch>/include/
+- arch/ARCH/include/
 
 It contains the header files accessible in the arch/ directory.
 
 These are all the header which need assembly to be defined.
 
-- arch/<arch>/lib/
+- arch/ARCH/lib/
 
-It contains the implementation of all the header files in arch/<arch>/include/.
+It contains the implementation of all the header files in arch/ARCH/include/.
 
 It outputs the libarch.a file.
 
