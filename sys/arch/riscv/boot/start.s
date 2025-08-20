@@ -1,5 +1,6 @@
 .section .entry.text
 .globl _start
+
 _start:
 	call lock_harts
 
