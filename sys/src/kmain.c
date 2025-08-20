@@ -1,9 +1,9 @@
-#include <arch/uart.h>
+#include <arch/serial.h>
 
 void
 kmain(void)
 {
-	uart_print("Kernel start.\n");
+	serial_print("Kernel start.\n");
 
 	for (;;);
 }

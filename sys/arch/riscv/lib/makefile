@@ -1,7 +1,7 @@
 include ../../../../config.mk
 
 OUT  = libarch.a
-OBJS = uart.o
+OBJS = serial.o
 
 CCCMD = $(CC) $(CFLAGS) -I../include -c -o $@ $^
 
@@ -15,5 +15,5 @@ clean:
 $(OUT): $(OBJS)
 	$(AR) -r $@ $^
 
-uart.o: uart.c
+serial.o: serial.c
 	$(CCCMD)

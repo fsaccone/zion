@@ -1,5 +1,5 @@
-#ifndef _ARCH_UART_H
-#define _ARCH_UART_H
+#ifndef _ARCH_SERIAL_H
+#define _ARCH_SERIAL_H
 
 #include <arch/types.h>
 
@@ -8,6 +8,6 @@
 #define UART_LSR            (uint8_t *)(UART0 + 0x05)
 #define UART_LSR_EMPTY_MASK (0x40)
 
-void uart_print(const char *str);
+void serial_print(const char *str);
 
 #endif

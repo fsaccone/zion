@@ -1,7 +1,7 @@
-#include <arch/uart.h>
+#include <arch/serial.h>
 
 void
-uart_print(const char *str)
+serial_print(const char *str)
 {
 	while (*str) {
 		while(!(*UART_LSR & UART_LSR_EMPTY_MASK));
