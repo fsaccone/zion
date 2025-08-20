@@ -13,4 +13,4 @@ CFLAGS  = -std=c90 -Wall -Wextra -Wpedantic
 LDFLAGS = -static
 
 QEMU      = qemu-system-$(ARCH)
-QEMUFLAGS = -machine virt -bios none -smp 4
+QEMUFLAGS = -machine virt -bios none -smp 4 -serial stdio
