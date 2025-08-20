@@ -4,45 +4,45 @@ ENTRY(_start)
 
 MEMORY
 {
-	ROM (rx)  : ORIGIN = 0x80000000, LENGTH = 0x10000
-	RAM (rwx) : ORIGIN = 0x80010000, LENGTH = 32M
+	rom (rx)  : ORIGIN = 0x80000000, LENGTH = 0x10000
+	ram (rwx) : ORIGIN = 0x80010000, LENGTH = 32M
 }
 
 SECTIONS
 {
-	. = ORIGIN(RAM);
+	. = ORIGIN(ram);
 
 	.text : {
 		*(.boot.text)
 		*(.text)
-	} >ROM
+	} >rom
 
 	.rodata : {
 		*(.boot.rodata)
 		*(.rodata)
-	} >ROM
+	} >rom
 
 	.data : {
 		*(.boot.data)
 		*(.data)
-	} >RAM
+	} >ram
 
 	.bss : {
 		*(.boot.bss)
 		*(.bss)
-	} >RAM
+	} >ram
 
 	.stack (NOLOAD) : {
 		. = ALIGN(8);
 		_stack_start = .;
 		. = . + 0x1000;
 		_stack_end = .;
-	} >RAM
+	} >ram
 
 	.heap (NOLOAD) : {
 		. = ALIGN(8);
 		_heap_start = .;
 		. = . + 0x1000;
 		_heap_end = .;
-	} >RAM
+	} >ram
 }
