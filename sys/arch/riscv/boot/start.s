@@ -1,4 +1,4 @@
-.section .boot.text
+.section .entry.text
 .globl _start
 _start:
 	li   t0, 0        # Hart ID to use

@@ -13,22 +13,19 @@ SECTIONS
 	. = ORIGIN(ram);
 
 	.text : {
-		*(.boot.text)
+		*(.entry.text)
 		*(.text)
 	} >rom AT>rom
 
 	.rodata : {
-		*(.boot.rodata)
 		*(.rodata)
 	} >rom AT>rom
 
 	.data : {
-		*(.boot.data)
 		*(.data)
 	} >ram AT>ram
 
 	.bss : {
-		*(.boot.bss)
 		*(.bss)
 	} >ram AT>ram
 
