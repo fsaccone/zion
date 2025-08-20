@@ -1,7 +1,7 @@
 include ../../config.mk
 
 OUT  = libkernel.a
-OBJS = uart.o
+OBJS = debug.o
 
 CCCMD = $(CC) $(CFLAGS) -I../arch/$(ARCH)/include -I../include -c -o $@ $^
 
@@ -15,5 +15,5 @@ clean:
 $(OUT): $(OBJS)
 	$(AR) -r $@ $^
 
-uart.o: uart.c
+debug.o: debug.c
 	$(CCCMD)
