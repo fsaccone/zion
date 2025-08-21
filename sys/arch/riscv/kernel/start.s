@@ -6,6 +6,12 @@ _start:
 	la   a1, zero_ctx
 	call switch_ctx
 
+	la   t0,    machine_trap_vector
+	csrw mtvec, t0
+
+	la   t0,    supervisor_trap_vector
+	csrw stvec, t0
+
 	call lock_harts
 
 	la sp, _stack_end
@@ -22,6 +28,16 @@ lock_harts:
 lock:
 	wfi
 	j lock
+
+machine_trap_vector:
+	csrr a0, mcause
+	call handle_trap
+	mret
+
+supervisor_trap_vector:
+	csrr a0, scause
+	call handle_trap
+	sret
 
 .section .rodata
 .align 4
