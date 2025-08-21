@@ -5,6 +5,7 @@
 void
 debug(const char *m)
 {
+	serial_print("DEBUG: ");
 	serial_print(m);
 	serial_print("\n");
 }
@@ -12,6 +13,7 @@ debug(const char *m)
 void
 panic(const char *m)
 {
+	serial_print("PANIC: ");
 	serial_print(m);
 	serial_print("\n");
 	for (;;);
