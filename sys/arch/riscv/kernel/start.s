@@ -6,17 +6,21 @@ _start:
 	la   a1, zero_ctx
 	call switch_ctx
 
+	call initialize_vectors
+	call lock_harts
+
+	la sp, _stack_end
+
+	j  kmain
+
+initialize_vectors:
 	la   t0,    machine_trap_vector
 	csrw mtvec, t0
 
 	la   t0,    supervisor_trap_vector
 	csrw stvec, t0
 
-	call lock_harts
-
-	la sp, _stack_end
-
-	j  kmain
+	ret
 
 lock_harts:
 	li   t0, 0
