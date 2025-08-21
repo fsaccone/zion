@@ -24,6 +24,7 @@ test: $(OUT)
 
 $(OUT): $(UNSTROUT)
 	$(STRIP) -o $@ $^
+	$(OBJCOPY) -O binary $@
 
 $(UNSTROUT): $(ARCHKERNEL) $(SRC) $(LIB) $(ARCHLIB)
 	$(LD) $(LDFLAGS) -T arch/$(ARCH)/linker.ld -o $@ $^
