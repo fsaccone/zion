@@ -11,7 +11,7 @@ _start:
 
 	la sp, _stack_end
 
-	j  kmain
+	j kmain
 
 initialize_vectors:
 	la   t0,    machine_trap_vector
