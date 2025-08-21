@@ -1,7 +1,7 @@
 include ../../config.mk
 
 OUT  = libkernel.a
-OBJS = log.o
+OBJS = log.o usermem.o
 
 CCCMD = $(CC) $(CFLAGS) -I../arch/$(ARCH)/include -I../include -c -o $@
 
@@ -17,3 +17,6 @@ $(OUT): $(OBJS)
 
 log.o:
 	$(CCCMD) log.c
+
+usermem.o:
+	$(CCCMD) usermem.c
