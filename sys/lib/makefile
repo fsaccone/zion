@@ -1,7 +1,7 @@
 include ../../config.mk
 
 OUT  = libkernel.a
-OBJS =
+OBJS = log.o
 
 CCCMD = $(CC) $(CFLAGS) -I../arch/$(ARCH)/include -I../include -c -o $@
 
@@ -13,4 +13,7 @@ clean:
 	rm -f $(OUT) $(OBJS)
 
 $(OUT): $(OBJS)
-	touch $@
+	$(AR) -r $@ $^
+
+log.o:
+	$(CCCMD) log.c
