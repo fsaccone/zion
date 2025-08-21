@@ -1,7 +1,7 @@
 include ../../../../config.mk
 
 OUT  = kernel.o
-OBJS = start.o
+OBJS = ctx.o start.o
 
 ASCMD = $(AS) -o $@ $^
 
@@ -14,6 +14,9 @@ clean:
 
 $(OUT): $(OBJS)
 	$(LD) $(LDFLAGS) -r -o $@ $^
+
+ctx.o: ctx.s
+	$(ASCMD)
 
 start.o: start.s
 	$(ASCMD)
