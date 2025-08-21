@@ -6,9 +6,8 @@ The kernel.
 Directory structure
 -------------------
 
-Each of these directories will output a library or an object file. They will
-be linked in the order they are listed here, so that the last will have all
-other symbols available.
+Each of these directories outputs a library or an object file. They are linked
+in the order listed here, so that the last has all the symbols available.
 
 The file arch/ARCH/linker.ld is the linker script to be used for the ARCH
 architecture.
@@ -26,8 +25,8 @@ They define and implement all the headers files which are not in arch/.
 
 - src/
 
-It contains the main implementation of the kernel. It defines the kmain symbol,
-which should be called by the main entry point.
+It contains the main implementation of the kernel. This defines the kmain
+symbol, which should be called by the main entry point.
 
 - arch/ARCH/kernel/
 
