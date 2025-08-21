@@ -1,9 +1,9 @@
-#include <arch/serial.h>
+#include <log.h>
 
 void
 kmain(void)
 {
-	serial_print("Kernel start.\n");
+	debug("Kernel start.");
 
 	for (;;);
 }
