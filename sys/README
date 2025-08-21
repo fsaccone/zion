@@ -6,39 +6,29 @@ This directory contains the kernel.
 Directory structure
 -------------------
 
-- arch/ARCH/kernel/
+Each of these directories will output a library or an object file. They will
+be linked in the order they are listed here, so that the last will have all
+other symbols available.
 
-It contains the entry point to the kernel code.
-
-It outputs the kernel.o file.
+The file arch/ARCH/linker.ld is the linker script to be used for the ARCH
+architecture.
 
 - arch/ARCH/include/
-
-It contains the header files accessible in the arch/ directory.
-
-These are all the header which need architecture-specific features to be
-implemented.
-
 - arch/ARCH/lib/
 
-It contains the implementation of all the header files in arch/ARCH/include/.
-
-It outputs the libarch.a file.
+They define and implement the header files accessible through the arch/
+directory. These need architecture-specific features to be implemented.
 
 - include/
-
-It contains all the headers files which are not in arch/.
-
 - lib/
 
-It contains the implementation of all the header files in include/.
-
-It outputs the libkernel.a file.
+They define and implement all the headers files which are not in arch/.
 
 - src/
 
-It contains the main implementation of the kernel.
+It contains the main implementation of the kernel. It defines the kmain symbol,
+which should be called by the main entry point.
 
-Its source files are linked against libarch and libkernel.
+- arch/ARCH/kernel/
 
-It contains the kmain symbol, which should be called by _start.
+It contains the entry point to the kernel code.
