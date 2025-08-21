@@ -3,8 +3,8 @@ include ../../../../config.mk
 OUT  = kernel.o
 OBJS = ctx.o exception.o interrupt.o trap.o start.o
 
-ASCMD = $(AS) -o $@ $^
-CCCMD = $(CC) $(CFLAGS) -I../include -I../../../include -c -o $@ $^
+ASCMD = $(AS) -o $@
+CCCMD = $(CC) $(CFLAGS) -I../include -I../../../include -c -o $@
 
 .PHONY: all clean
 
@@ -16,17 +16,17 @@ clean:
 $(OUT): $(OBJS)
 	$(LD) $(LDFLAGS) -r -o $@ $^
 
-ctx.o: ctx.s
-	$(ASCMD)
+ctx.o:
+	$(ASCMD) ctx.s
 
-exception.o: exception.c
-	$(CCCMD)
+exception.o:
+	$(CCCMD) exception.c
 
-interrupt.o: interrupt.c
-	$(CCCMD)
+interrupt.o:
+	$(CCCMD) interrupt.c
 
-start.o: start.s
-	$(ASCMD)
+start.o:
+	$(ASCMD) start.s
 
-trap.o: trap.c
-	$(CCCMD)
+trap.o:
+	$(CCCMD) trap.c

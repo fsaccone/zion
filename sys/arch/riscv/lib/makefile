@@ -3,7 +3,7 @@ include ../../../../config.mk
 OUT  = libarch.a
 OBJS = serial.o
 
-CCCMD = $(CC) $(CFLAGS) -I../include -c -o $@ $^
+CCCMD = $(CC) $(CFLAGS) -I../include -c -o $@
 
 .PHONY: all clean
 
@@ -15,5 +15,5 @@ clean:
 $(OUT): $(OBJS)
 	$(AR) -r $@ $^
 
-serial.o: serial.c
-	$(CCCMD)
+serial.o:
+	$(CCCMD) serial.c

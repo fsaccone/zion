@@ -3,7 +3,7 @@ include ../../config.mk
 OUT  = src.a
 OBJS = kmain.o
 
-CCCMD = $(CC) $(CFLAGS) -I../arch/$(ARCH)/include -I../include -c -o $@ $^
+CCCMD = $(CC) $(CFLAGS) -I../arch/$(ARCH)/include -I../include -c -o $@
 
 .PHONY: all clean
 
@@ -15,5 +15,5 @@ clean:
 $(OUT): $(OBJS)
 	$(AR) -r $@ $^
 
-kmain.o: kmain.c
-	$(CCCMD)
+kmain.o:
+	$(CCCMD) kmain.c

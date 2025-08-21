@@ -3,7 +3,7 @@ include ../../config.mk
 OUT  = libkernel.a
 OBJS =
 
-CCCMD = $(CC) $(CFLAGS) -I../arch/$(ARCH)/include -I../include -c -o $@ $^
+CCCMD = $(CC) $(CFLAGS) -I../arch/$(ARCH)/include -I../include -c -o $@
 
 .PHONY: all clean
 
