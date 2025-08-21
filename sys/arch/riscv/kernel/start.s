@@ -2,6 +2,10 @@
 .globl _start
 
 _start:
+	li   a0, 0
+	la   a1, zero_ctx
+	call switch_ctx
+
 	la sp, _stack_end
 
 	call lock_harts
@@ -18,3 +22,7 @@ lock_harts:
 lock:
 	wfi
 	j lock
+
+.section .rodata
+.align 4
+zero_ctx: .zero 127
