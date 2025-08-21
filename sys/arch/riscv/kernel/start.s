@@ -10,9 +10,7 @@ _start:
 	call initialize_vectors
 	call lock_harts
 
-	la sp, _stack_end
-
-	j kmain
+	j supervisor
 
 initialize_misa:
 	li   t0, 0
@@ -62,6 +60,32 @@ supervisor_trap_vector:
 	csrr a0, scause
 	call handle_trap
 	sret
+
+supervisor:
+	csrr t0, mstatus
+
+	# Set MPP[0] to 1
+	li t1, 1 << 11
+	or t0, t0, t1
+
+	# Set MPP[1] to 0 (MPP = 0b01)
+	li  t1, 1 << 12
+	not t1, t1
+	and t0, t0, t1
+
+	# Set MPIE to 0
+	li  t1, 1 << 7
+	not t1, t1
+	and t0, t0, t1
+
+	csrw mstatus, t0
+
+	la   t0,   kmain
+	csrw mepc, t0
+
+	la sp, _stack_end
+
+	mret
 
 .section .rodata
 .align 4
