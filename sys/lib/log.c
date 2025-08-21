@@ -3,6 +3,13 @@
 #include <arch/serial.h>
 
 void
+debug(const char *m)
+{
+	serial_print(m);
+	serial_print("\n");
+}
+
+void
 panic(const char *m)
 {
 	serial_print(m);
