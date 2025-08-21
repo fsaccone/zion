@@ -12,6 +12,8 @@ SECTIONS
 {
 	. = ORIGIN(ram);
 
+	_memory_start = .;
+
 	.text : {
 		*(.entry.text)
 		*(.text)
@@ -42,4 +44,6 @@ SECTIONS
 		. = . + 0x1000;
 		_heap_end = .;
 	} >ram AT>ram
+
+	_memory_end = .;
 }
