@@ -83,6 +83,10 @@ supervisor:
 	la   t0,   kmain
 	csrw mepc, t0
 
+	li   t0,      0xffff
+	csrw medeleg, t0
+	csrw mideleg, t0
+
 	la sp, _stack_end
 
 	mret
