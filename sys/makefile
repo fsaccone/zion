@@ -1,6 +1,7 @@
 include ../config.mk
 
-OUT = kernel.bin
+OUT      = kernel.bin
+UNSTROUT = kernel.out
 
 ARCHKERNEL = kernel.o
 ARCHLIB    = libarch.a
@@ -12,7 +13,7 @@ SRC        = src.a
 all: $(OUT)
 
 clean:
-	rm -f $(OUT) $(ARCHKERNEL) $(ARCHLIB) $(LIB) $(SRC)
+	rm -f $(OUT) $(UNSTROUT) $(ARCHKERNEL) $(ARCHLIB) $(LIB) $(SRC)
 	(cd arch/$(ARCH)/kernel && $(MAKE) clean)
 	(cd arch/$(ARCH)/lib && $(MAKE) clean)
 	(cd lib && $(MAKE) clean)
@@ -21,9 +22,11 @@ clean:
 test: $(OUT)
 	$(QEMU) $(QEMUFLAGS) -kernel $^
 
-$(OUT): $(ARCHKERNEL) $(SRC) $(LIB) $(ARCHLIB)
+$(OUT): $(UNSTROUT)
+	$(STRIP) -o $@ $^
+
+$(UNSTROUT): $(ARCHKERNEL) $(SRC) $(LIB) $(ARCHLIB)
 	$(LD) $(LDFLAGS) -T arch/$(ARCH)/linker.ld -o $@ $^
-	$(STRIP) $@
 
 $(ARCHKERNEL):
 	(cd arch/$(ARCH)/kernel && $(MAKE) $@)
