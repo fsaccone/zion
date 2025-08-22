@@ -2,6 +2,10 @@
 .globl _start
 
 _start:
+	# The argument, passed by the boot loader, is the starting address of
+	# the kernel space
+	mv s0, a0
+
 	call initialize_misa
 	call initialize_vectors
 	call lock_harts
@@ -76,7 +80,7 @@ supervisor:
 
 	csrw mstatus, t0
 
-	la   t0,   kmain
+	la   t0,   call_kmain
 	csrw mepc, t0
 
 	li   t0,      0xffff
@@ -101,9 +105,13 @@ supervisor:
 	or   t0,      t0, t1
 	csrw pmpcfg0, t0
 
-	la sp, _stack_end
-
 	mret
+
+call_kmain:
+	la sp, _stack_end
+	mv a0, s0
+
+	j kmain
 
 .section .rodata
 .align 4
