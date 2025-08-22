@@ -33,7 +33,7 @@ clean:
 	(cd kernel              && $(MAKE) clean)
 	(cd lib                 && $(MAKE) clean)
 
-testkernel: $(OUT)
+testkernel: $(KERNEL_OUT)
 	$(QEMU) $(QEMUFLAGS) -kernel $^
 
 $(DISKIMAGE): $(BOOT_OUT) $(KERNEL_OUT)
