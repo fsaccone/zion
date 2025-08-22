@@ -1,33 +1,36 @@
 /sys/
 =====
 
-The kernel.
+The boot loader and kernel.
 
-Directory structure
--------------------
+Structure
+---------
 
-Each of these directories outputs a library or an object file. They are linked
-in the order listed here, so that the last has all the symbols available.
+The target libarch.a is a standalone static library defined by the header files
+in arch/ARCH/include/ and their implementations in arch/ARCH/lib/.
 
-The file arch/ARCH/kernel/linker.ld is the linker script to be used for the ARCH
-architecture.
+The target libsys.a is a static library dependent on libarch.a defined by the
+header files in include/ and their implementations in lib/.
 
-- arch/ARCH/include/
-- arch/ARCH/lib/
+The target boot.o is a relocatable object which contains the primary
+implementation of the boot loader. It depends on libarch.a and libsys.a. It
+defines the bmain symbol, which should be called by the main
+architecture-dependent entry point.
 
-They define and implement the header files accessible through the arch/
-directory. These need architecture-specific features to be implemented.
+The target kernel.o is like boot.o, only for the kernel. It defines the kmain
+symbol, which should be called by the main architecture-dependent entry point.
 
-- include/
-- lib/
+The target archboot.o is a relocatable object which defines the main entry
+point of the boot loader. It depends on libarch.a, libsys.a and boot.o.
 
-They define and implement all the headers files which are not in arch/.
+The target archkernel.o is like archboot.o, only for the kernel. Their
+dependencies are the same, with the exception that it relies on kernel.o
+instead of boot.o.
 
-- src/
+The main targets are boot.out, stripped to boot.bin, which links archboot.o
+with all its dependencies, and kernel.out, stripped to kernel.bin, which does
+the same with archkernel.o.
 
-It contains the main implementation of the kernel. This defines the kmain
-symbol, which should be called by the main entry point.
-
-- arch/ARCH/kernel/
-
-It contains the entry point to the kernel code.
+The way the objects and libraries are linked for the boot loader and for the
+kernel are respectively defined in the linker scripts located at
+arch/ARCH/boot/linker.ld and arch/ARCH/kernel/linker.ld.
