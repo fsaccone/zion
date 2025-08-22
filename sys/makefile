@@ -31,16 +31,16 @@ $(UNSTROUT): $(ARCHKERNEL) $(SRC) $(LIB) $(ARCHLIB)
 
 $(ARCHKERNEL):
 	(cd arch/$(ARCH)/kernel && $(MAKE) $@)
-	mv arch/$(ARCH)/kernel/$@ $@
+	cp arch/$(ARCH)/kernel/$@ $@
 
 $(ARCHLIB):
 	(cd arch/$(ARCH)/lib && $(MAKE) $@)
-	mv arch/$(ARCH)/lib/$@ $@
+	cp arch/$(ARCH)/lib/$@ $@
 
 $(LIB):
 	(cd lib && $(MAKE) $@)
-	mv lib/$@ $@
+	cp lib/$@ $@
 
 $(SRC):
 	(cd src && $(MAKE) $@)
-	mv src/$@ $@
+	cp src/$@ $@

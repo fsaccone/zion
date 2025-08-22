@@ -14,4 +14,4 @@ clean:
 
 $(SYS):
 	(cd sys && $(MAKE) $@)
-	mv sys/$@ $@
+	cp sys/$@ $@
