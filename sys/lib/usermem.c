@@ -15,6 +15,21 @@ extern void *_memory_end;
 
 static struct page *freepages;
 
+void *
+usermem_alloc(size_t s)
+{
+	int i, pages = PAGE_CEIL(s) / PAGE_SIZE;
+	struct page *p = freepages;
+
+	if (!p)
+		panic("Unable to allocate memory.");
+
+	for (i = 0; i < pages; i++)
+		freepages = freepages->n;
+
+	return (void *)p;
+}
+
 void
 usermem_free(void *ptr)
 {
