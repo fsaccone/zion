@@ -1,6 +1,6 @@
 include ../../config.mk
 
-OUT  = src.a
+OUT  = kernel.a
 OBJS = kmain.o
 
 CCCMD = $(CC) $(CFLAGS) -I../arch/$(ARCH)/include -I../include -c -o $@
