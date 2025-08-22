@@ -6,6 +6,12 @@ The boot loader and kernel.
 Structure
 ---------
 
+The way the objects and libraries are linked for the boot loader and for the
+kernel are respectively defined in the linker scripts located at
+arch/ARCH/boot/linker.ld and arch/ARCH/kernel/linker.ld.
+
+---
+
 * libarch.a
 
 The target libarch.a is a standalone static library defined by the header files
@@ -46,9 +52,3 @@ instead of boot.o.
 The main targets are boot.out, stripped to boot.bin, which links archboot.o
 with all its dependencies, and kernel.out, stripped to kernel.bin, which does
 the same with archkernel.o.
-
----
-
-The way the objects and libraries are linked for the boot loader and for the
-kernel are respectively defined in the linker scripts located at
-arch/ARCH/boot/linker.ld and arch/ARCH/kernel/linker.ld.
