@@ -14,7 +14,7 @@ LIB        = libsys.a
 BOOT       = boot.o
 KERNEL     = kernel.o
 
-.PHONY: all clean test
+.PHONY: all clean testkernel
 
 all: $(BOOT_OUT) $(KERNEL_OUT)
 
@@ -30,7 +30,7 @@ clean:
 	(cd kernel              && $(MAKE) clean)
 	(cd lib                 && $(MAKE) clean)
 
-test: $(OUT)
+testkernel: $(OUT)
 	$(QEMU) $(QEMUFLAGS) -kernel $^
 
 $(BOOT_OUT): $(BOOT_UNSTROUT)
