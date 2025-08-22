@@ -34,7 +34,7 @@ clean:
 	(cd lib                 && $(MAKE) clean)
 
 test: $(DISKIMAGE)
-	$(QEMU) $(QEMUFLAGS) -drive file=$^,format=raw
+	$(QEMU) $(QEMUFLAGS) -no-shutdown -drive file=$^,format=raw
 
 $(DISKIMAGE): $(BOOT_OUT) $(KERNEL_OUT)
 	cat $^ > $@
