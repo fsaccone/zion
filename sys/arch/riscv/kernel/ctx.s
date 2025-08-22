@@ -5,7 +5,7 @@
 switch_ctx:
 	beqz a0, load
 
-	# skip 0a
+	# skip ra
 	# sw x1, 0(a0)
 	sw x2, 4(a0)
 	sw x3, 8(a0)
