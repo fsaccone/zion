@@ -15,9 +15,9 @@ all: $(OUT)
 clean:
 	rm -f $(OUT) $(UNSTROUT) $(ARCHKERNEL) $(ARCHLIB) $(LIB) $(SRC)
 	(cd arch/$(ARCH)/kernel && $(MAKE) clean)
-	(cd arch/$(ARCH)/lib && $(MAKE) clean)
-	(cd lib && $(MAKE) clean)
-	(cd src && $(MAKE) clean)
+	(cd arch/$(ARCH)/lib    && $(MAKE) clean)
+	(cd lib                 && $(MAKE) clean)
+	(cd src                 && $(MAKE) clean)
 
 test: $(OUT)
 	$(QEMU) $(QEMUFLAGS) -kernel $^
