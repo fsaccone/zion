@@ -1,7 +1,7 @@
 include ../../../../config.mk
 
 OUT  = archkernel.o
-OBJS = ctx.o exception.o interrupt.o trap.o start.o
+OBJS = exception.o interrupt.o trap.o start.o
 
 ASCMD = $(AS) -o $@
 CCCMD = $(CC) $(CFLAGS) -I../include -I../../../include -c -o $@
@@ -15,9 +15,6 @@ clean:
 
 $(OUT): $(OBJS)
 	$(LD) $(LDFLAGS) -r -o $@ $^
-
-ctx.o:
-	$(ASCMD) ctx.s
 
 exception.o:
 	$(CCCMD) exception.c
