@@ -1,7 +1,7 @@
 include ../../../../config.mk
 
 OUT  = archkernel.o
-OBJS = exception.o interrupt.o trap.o start.o
+OBJS = exception.o interrupt.o trap.o entry.o
 
 ASCMD = $(AS) -o $@
 CCCMD = $(CC) $(CFLAGS) -I../include -I../../../include -c -o $@
@@ -22,8 +22,8 @@ exception.o:
 interrupt.o:
 	$(CCCMD) interrupt.c
 
-start.o:
-	$(ASCMD) start.s
+entry.o:
+	$(ASCMD) entry.s
 
 trap.o:
 	$(CCCMD) trap.c

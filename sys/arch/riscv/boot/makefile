@@ -1,7 +1,7 @@
 include ../../../../config.mk
 
 OUT  = archboot.o
-OBJS = start.o
+OBJS = entry.o
 
 ASCMD = $(AS) -o $@
 CCCMD = $(CC) $(CFLAGS) -I../include -I../../../include -c -o $@
@@ -16,5 +16,5 @@ clean:
 $(OUT): $(OBJS)
 	$(LD) $(LDFLAGS) -r -o $@ $^
 
-start.o:
-	$(ASCMD) start.s
+entry.o:
+	$(ASCMD) entry.s
