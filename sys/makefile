@@ -37,7 +37,7 @@ test: $(DISKIMAGE)
 	$(QEMU) $(QEMUFLAGS) -drive file=$^,format=raw
 
 testkernel: $(KERNEL_OUT)
-	$(QEMU) $(QEMUFLAGS) -kernel $^
+	$(QEMU) $(QEMUFLAGS) -bios none -kernel $^
 
 $(DISKIMAGE): $(BOOT_OUT) $(KERNEL_OUT)
 	cat $^ > $@
