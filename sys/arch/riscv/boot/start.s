@@ -1,7 +1,7 @@
 .section .entry.text
-.globl _start
+.globl _entry
 
-_start:
+_entry:
 	la sp, _stack_end
 
 	j bmain

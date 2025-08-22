@@ -1,7 +1,7 @@
 .section .entry.text
-.globl _start
+.globl _entry
 
-_start:
+_entry:
 	# The argument, passed by the boot loader, is the starting address of
 	# the kernel space
 	mv s0, a0

@@ -1,6 +1,6 @@
 OUTPUT_FORMAT(elf32-littleriscv)
 OUTPUT_ARCH(riscv:rv32)
-ENTRY(_start)
+ENTRY(_entry)
 
 SECTIONS
 {
