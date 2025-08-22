@@ -1,10 +1,10 @@
 include ../config.mk
 
-BOOT_OUT      = boot.bin
-BOOT_UNSTROUT = boot.out
+BOOT_OUT            = boot.bin
+BOOT_UNSTRIPPED_OUT = boot.out
 
-KERNEL_OUT      = kernel.bin
-KERNEL_UNSTROUT = kernel.out
+KERNEL_OUT            = kernel.bin
+KERNEL_UNSTRIPPED_OUT = kernel.out
 
 ARCHBOOT   = archboot.o
 ARCHKERNEL = archkernel.o
@@ -21,8 +21,8 @@ DISKIMAGE = disk.img
 all: $(BOOT_OUT) $(KERNEL_OUT)
 
 clean:
-	rm -f $(BOOT_OUT)   $(BOOT_UNSTROUT) \
-	      $(KERNEL_OUT) $(KERNEL_UNSTROUT) \
+	rm -f $(BOOT_OUT)   $(BOOT_UNSTRIPPED_OUT) \
+	      $(KERNEL_OUT) $(KERNEL_UNSTRIPPED_OUT) \
 	      $(ARCHBOOT) $(ARCHKERNEL) $(ARCHLIB) \
 	      $(BOOT) $(KERNEL) $(LIB) \
 	      $(DISKIMAGE)
@@ -40,18 +40,18 @@ $(DISKIMAGE): $(BOOT_OUT) $(KERNEL_OUT)
 	cat $^ > $@
 	chmod +x $@
 
-$(BOOT_OUT): $(BOOT_UNSTROUT)
+$(BOOT_OUT): $(BOOT_UNSTRIPPED_OUT)
 	$(STRIP) -o $@ $^
 	$(OBJCOPY) -O binary $@
 
-$(KERNEL_OUT): $(KERNEL_UNSTROUT)
+$(KERNEL_OUT): $(KERNEL_UNSTRIPPED_OUT)
 	$(STRIP) -o $@ $^
 	$(OBJCOPY) -O binary $@
 
-$(BOOT_UNSTROUT): $(ARCHBOOT) $(BOOT) $(LIB) $(ARCHLIB)
+$(BOOT_UNSTRIPPED_OUT): $(ARCHBOOT) $(BOOT) $(LIB) $(ARCHLIB)
 	$(LD) $(LDFLAGS) -T arch/$(ARCH)/boot/linker.ld -o $@ $^
 
-$(KERNEL_UNSTROUT): $(ARCHKERNEL) $(KERNEL) $(LIB) $(ARCHLIB)
+$(KERNEL_UNSTRIPPED_OUT): $(ARCHKERNEL) $(KERNEL) $(LIB) $(ARCHLIB)
 	$(LD) $(LDFLAGS) -T arch/$(ARCH)/kernel/linker.ld -o $@ $^
 
 $(ARCHBOOT):
