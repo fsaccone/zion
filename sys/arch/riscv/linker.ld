@@ -29,6 +29,7 @@ SECTIONS
 
 	.bss : {
 		*(.bss)
+		*(COMMON)
 	} >ram AT>ram
 
 	.stack (NOLOAD) : {
