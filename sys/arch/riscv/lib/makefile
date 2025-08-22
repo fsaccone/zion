@@ -13,7 +13,7 @@ clean:
 	rm -f $(OUT) $(OBJS)
 
 $(OUT): $(OBJS)
-	$(AR) -r $@ $^
+	$(AR) -cr $@ $^
 
 serial.o:
 	$(CCCMD) serial.c
