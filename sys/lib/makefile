@@ -1,6 +1,6 @@
 include ../../config.mk
 
-OUT  = libkernel.a
+OUT  = libsys.a
 OBJS = log.o usermem.o
 
 CCCMD = $(CC) $(CFLAGS) -I../arch/$(ARCH)/include -I../include -c -o $@

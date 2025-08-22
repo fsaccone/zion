@@ -10,7 +10,7 @@ ARCHBOOT   = archboot.o
 ARCHKERNEL = archkernel.o
 ARCHLIB    = libarch.a
 
-LIB        = libkernel.a
+LIB        = libsys.a
 BOOT       = boot.a
 KERNEL     = kernel.a
 
