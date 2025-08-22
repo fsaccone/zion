@@ -18,7 +18,9 @@ defines the bmain symbol, which should be called by the main
 architecture-dependent entry point.
 
 The target kernel.o is like boot.o, only for the kernel. It defines the kmain
-symbol, which should be called by the main architecture-dependent entry point.
+symbol, which should be called by the main architecture-dependent entry point,
+passing the void *kstart pointer argument. This argument is the start address
+of the kernel code and should have been provided by the boot loader.
 
 The target archboot.o is a relocatable object which defines the main entry
 point of the boot loader. It depends on libarch.a, libsys.a and boot.o.

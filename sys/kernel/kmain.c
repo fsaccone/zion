@@ -2,11 +2,11 @@
 #include <usermem.h>
 
 void
-kmain(void)
+kmain(void *kstart)
 {
 	debug("Kernel start.");
 
-	usermem_freeall();
+	usermem_init(kstart);
 
 	for (;;);
 }

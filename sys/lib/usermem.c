@@ -11,9 +11,8 @@ struct page {
 	struct page *n;
 };
 
-extern void *_memory_end;
-
 static struct page *freepages;
+static void *memend;
 
 void *
 usermem_alloc(size_t s)
@@ -35,10 +34,13 @@ usermem_free(void *ptr)
 {
 	struct page *p;
 
+	if (!memend)
+		panic("Called free before usermem_init.");
+
 	if ((int)ptr % PAGE_SIZE)
 		panic("Invalid address passed to free.");
 
-	if (ptr >= _memory_end)
+	if (ptr >= memend)
 		panic("Restricted address passed to free.");
 
 	usermem_memset(ptr, 0, PAGE_SIZE);
@@ -51,12 +53,14 @@ usermem_free(void *ptr)
 }
 
 void
-usermem_freeall(void)
+usermem_init(void *kstart)
 {
 	int p;
 
+	memend = (void *)PAGE_FLOOR((int)kstart - 1);
+
 	/* Free all memory */
-	for (p = 0; p <= (int)_memory_end - PAGE_SIZE; p += PAGE_SIZE)
+	for (p = 0; p <= PAGE_FLOOR((int)kstart); p += PAGE_SIZE)
 		usermem_free((void *)p);
 }
 
