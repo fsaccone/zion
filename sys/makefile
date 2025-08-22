@@ -16,7 +16,7 @@ KERNEL     = kernel.o
 
 DISKIMAGE = disk.img
 
-.PHONY: all clean testkernel
+.PHONY: all clean test testkernel
 
 all: $(BOOT_OUT) $(KERNEL_OUT)
 
@@ -32,6 +32,9 @@ clean:
 	(cd boot                && $(MAKE) clean)
 	(cd kernel              && $(MAKE) clean)
 	(cd lib                 && $(MAKE) clean)
+
+test: $(DISKIMAGE)
+	$(QEMU) $(QEMUFLAGS) -drive file=$^,format=raw
 
 testkernel: $(KERNEL_OUT)
 	$(QEMU) $(QEMUFLAGS) -kernel $^
