@@ -69,8 +69,10 @@ usermem_memset(void *s, int c, size_t n)
 {
 	void *r = s;
 
-	while (n--)
-		*(int *)s++ = c;
+	while (n--) {
+		*(int *)s = c;
+		s = (void *)((int)s + 1);
+	}
 
 	return r;
 }
