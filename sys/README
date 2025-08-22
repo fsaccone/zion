@@ -9,7 +9,7 @@ Directory structure
 Each of these directories outputs a library or an object file. They are linked
 in the order listed here, so that the last has all the symbols available.
 
-The file arch/ARCH/linker.ld is the linker script to be used for the ARCH
+The file arch/ARCH/kernel/linker.ld is the linker script to be used for the ARCH
 architecture.
 
 - arch/ARCH/include/

@@ -27,7 +27,7 @@ $(OUT): $(UNSTROUT)
 	$(OBJCOPY) -O binary $@
 
 $(UNSTROUT): $(ARCHKERNEL) $(SRC) $(LIB) $(ARCHLIB)
-	$(LD) $(LDFLAGS) -T arch/$(ARCH)/linker.ld -o $@ $^
+	$(LD) $(LDFLAGS) -T arch/$(ARCH)/kernel/linker.ld -o $@ $^
 
 $(ARCHKERNEL):
 	(cd arch/$(ARCH)/kernel && $(MAKE) $@)
