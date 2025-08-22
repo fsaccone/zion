@@ -1,4 +1,4 @@
-.section .mbr
+.section .entry.text
 .globl _start
 
 _start:

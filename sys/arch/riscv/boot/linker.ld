@@ -9,7 +9,7 @@ SECTIONS
 	_memory_start = .;
 
 	.mbr : {
-		*(.mbr)
+		*(.entry.text)
 		. = ALIGN(510);
 		BYTE(0x55);
 		BYTE(0xaa);
