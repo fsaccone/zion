@@ -2,10 +2,6 @@
 .globl _start
 
 _start:
-	li   a0, 0
-	la   a1, zero_ctx
-	call switch_ctx
-
 	call initialize_misa
 	call initialize_vectors
 	call lock_harts
