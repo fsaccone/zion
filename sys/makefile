@@ -11,8 +11,8 @@ ARCHKERNEL = archkernel.o
 ARCHLIB    = libarch.a
 
 LIB        = libsys.a
-BOOT       = boot.a
-KERNEL     = kernel.a
+BOOT       = boot.o
+KERNEL     = kernel.o
 
 .PHONY: all clean test
 

@@ -1,6 +1,6 @@
 include ../../config.mk
 
-OUT  = kernel.a
+OUT  = kernel.o
 OBJS = kmain.o
 
 CCCMD = $(CC) $(CFLAGS) -I../arch/$(ARCH)/include -I../include -c -o $@
@@ -13,7 +13,7 @@ clean:
 	rm -f $(OUT) $(OBJS)
 
 $(OUT): $(OBJS)
-	$(AR) -r $@ $^
+	$(LD) $(LDFLAGS) -r -o $@ $^
 
 kmain.o:
 	$(CCCMD) kmain.c

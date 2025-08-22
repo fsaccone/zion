@@ -1,6 +1,6 @@
 include ../../config.mk
 
-OUT  = boot.a
+OUT  = boot.o
 OBJS = bmain.o
 
 CCCMD = $(CC) $(CFLAGS) -I../arch/$(ARCH)/include -I../include -c -o $@
@@ -13,7 +13,7 @@ clean:
 	rm -f $(OUT) $(OBJS)
 
 $(OUT): $(OBJS)
-	$(AR) -r $@ $^
+	$(LD) $(LDFLAGS) -r -o $@ $^
 
 bmain.o:
 	$(CCCMD) bmain.c
