@@ -14,6 +14,8 @@ LIB        = libsys.a
 BOOT       = boot.o
 KERNEL     = kernel.o
 
+DISKIMAGE = disk.img
+
 .PHONY: all clean testkernel
 
 all: $(BOOT_OUT) $(KERNEL_OUT)
@@ -22,7 +24,8 @@ clean:
 	rm -f $(BOOT_OUT)   $(BOOT_UNSTROUT) \
 	      $(KERNEL_OUT) $(KERNEL_UNSTROUT) \
 	      $(ARCHBOOT) $(ARCHKERNEL) $(ARCHLIB) \
-	      $(BOOT) $(KERNEL) $(LIB)
+	      $(BOOT) $(KERNEL) $(LIB) \
+	      $(DISKIMAGE)
 	(cd arch/$(ARCH)/boot   && $(MAKE) clean)
 	(cd arch/$(ARCH)/kernel && $(MAKE) clean)
 	(cd arch/$(ARCH)/lib    && $(MAKE) clean)
@@ -32,6 +35,10 @@ clean:
 
 testkernel: $(OUT)
 	$(QEMU) $(QEMUFLAGS) -kernel $^
+
+$(DISKIMAGE): $(BOOT_OUT) $(KERNEL_OUT)
+	cat $^ > $@
+	chmod +x $@
 
 $(BOOT_OUT): $(BOOT_UNSTROUT)
 	$(STRIP) -o $@ $^

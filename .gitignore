@@ -1,4 +1,5 @@
 *.a
 *.bin
+*.img
 *.o
 *.out
