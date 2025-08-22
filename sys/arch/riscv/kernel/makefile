@@ -1,6 +1,6 @@
 include ../../../../config.mk
 
-OUT  = kernel.o
+OUT  = archkernel.o
 OBJS = ctx.o exception.o interrupt.o trap.o start.o
 
 ASCMD = $(AS) -o $@

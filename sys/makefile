@@ -3,7 +3,7 @@ include ../config.mk
 OUT      = kernel.bin
 UNSTROUT = kernel.out
 
-ARCHKERNEL = kernel.o
+ARCHKERNEL = archkernel.o
 ARCHLIB    = libarch.a
 LIB        = libkernel.a
 SRC        = src.a
