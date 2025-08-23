@@ -38,6 +38,12 @@ test: $(DISKIMAGE)
 
 $(DISKIMAGE): $(BOOT_OUT) $(KERNEL_OUT)
 	cat $^ > $@
+
+	@echo "Padding disk.img to make it up to a sector"
+	for i in $$(seq $$((512 - $$(stat -c '%s' $(KERNEL_OUT)) % 512))); do \
+		dd if=/dev/zero bs=1 count=1 >> $@ 2> /dev/null; \
+	done
+
 	chmod +x $@
 
 $(BOOT_OUT): $(BOOT_UNSTRIPPED_OUT)
