@@ -10,10 +10,6 @@ MEMORY
 
 SECTIONS
 {
-	. = 0;
-	
-	_memory_start = .;
-
 	.mbr : {
 		*(.entry.text)
 		. = ALIGN(510);
@@ -44,6 +40,4 @@ SECTIONS
 		. = . + 0x1000;
 		_stack_end = .;
 	} > RAM
-
-	_memory_end = .;
 }
