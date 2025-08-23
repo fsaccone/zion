@@ -1,7 +1,7 @@
 include ../../config.mk
 
 OUT  = libsys.a
-OBJS = log.o usermem.o
+OBJS = log.o
 
 CCCMD = $(CC) $(CFLAGS) -I../arch/$(ARCH)/include -I../include -c -o $@
 
@@ -17,6 +17,3 @@ $(OUT): $(OBJS)
 
 log.o:
 	$(CCCMD) log.c
-
-usermem.o:
-	$(CCCMD) usermem.c
