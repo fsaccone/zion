@@ -1,5 +1,3 @@
-OUTPUT_FORMAT(elf32-littleriscv)
-OUTPUT_ARCH(riscv:rv32)
 ENTRY(_entry)
 
 MEMORY
@@ -10,8 +8,14 @@ MEMORY
 
 SECTIONS
 {
-	.text : {
+	.mbr : {
 		*(.entry.text)
+		. = ALIGN(510);
+		BYTE(0x55);
+		BYTE(0xaa);
+	} > ROM
+
+	.text : {
 		*(.text)
 	} > ROM
 
@@ -33,12 +37,5 @@ SECTIONS
 		_stack_start = .;
 		. = . + 0x1000;
 		_stack_end = .;
-	} > RAM
-
-	.heap (NOLOAD) : {
-		. = ALIGN(8);
-		_heap_start = .;
-		. = . + 0x1000;
-		_heap_end = .;
 	} > RAM
 }

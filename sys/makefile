@@ -57,10 +57,10 @@ $(KERNEL_OUT): $(KERNEL_UNSTRIPPED_OUT)
 	$(OBJCOPY) -O binary $@
 
 $(BOOT_UNSTRIPPED_OUT): $(ARCHBOOT) $(BOOT) $(LIB) $(ARCHLIB)
-	$(LD) $(LDFLAGS) -T arch/$(ARCH)/boot/linker.ld -o $@ $^
+	$(LD) $(LDFLAGS) -T boot.ld -o $@ $^
 
 $(KERNEL_UNSTRIPPED_OUT): $(ARCHKERNEL) $(KERNEL) $(LIB) $(ARCHLIB)
-	$(LD) $(LDFLAGS) -T arch/$(ARCH)/kernel/linker.ld -o $@ $^
+	$(LD) $(LDFLAGS) -T kernel.ld -o $@ $^
 
 $(ARCHBOOT):
 	(cd arch/$(ARCH)/boot && $(MAKE) $@)
