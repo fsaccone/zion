@@ -26,12 +26,14 @@ clean:
 	      $(ARCHBOOT) $(ARCHKERNEL) $(ARCHLIB) \
 	      $(BOOT) $(KERNEL) $(LIB) \
 	      $(DISKIMAGE)
-	(cd arch/$(ARCH)/boot   && $(MAKE) clean)
-	(cd arch/$(ARCH)/kernel && $(MAKE) clean)
-	(cd arch/$(ARCH)/lib    && $(MAKE) clean)
-	(cd boot                && $(MAKE) clean)
-	(cd kernel              && $(MAKE) clean)
-	(cd lib                 && $(MAKE) clean)
+	for d in arch/*/; do \
+		(cd $$d/boot   && $(MAKE) clean); \
+		(cd $$d/kernel && $(MAKE) clean); \
+		(cd $$d/lib    && $(MAKE) clean); \
+	done
+	(cd boot          && $(MAKE) clean)
+	(cd kernel        && $(MAKE) clean)
+	(cd lib           && $(MAKE) clean)
 
 test: $(DISKIMAGE)
 	$(QEMU) $(QEMUFLAGS) -no-shutdown -drive file=$^,format=raw
