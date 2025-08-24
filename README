@@ -2,3 +2,8 @@ Arcadia
 =======
 
 Operating system.
+
+Structure
+---------
+
+* /sys/ - Boot loader and kernel
