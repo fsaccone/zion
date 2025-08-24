@@ -8,6 +8,12 @@ typedef struct {
 	int32_t low;
 	int32_t high;
 } int64_t;
+typedef struct {
+	int32_t low;
+	int32_t mid_low;
+	int32_t mid_high;
+	int32_t high;
+} int128_t;
 
 typedef int32_t intn_t;
 
@@ -18,6 +24,12 @@ typedef struct {
 	uint32_t low;
 	uint32_t high;
 } uint64_t;
+typedef struct {
+	uint32_t low;
+	uint32_t mid_low;
+	uint32_t mid_high;
+	uint32_t high;
+} uint128_t;
 
 typedef uint32_t uintn_t;
 
