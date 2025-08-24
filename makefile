@@ -1,6 +1,6 @@
 include config.mk
 
-SYS = kernel.bin
+SYS = sys.bin
 
 .PHONY: all clean sys
 

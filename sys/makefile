@@ -1,5 +1,7 @@
 include ../config.mk
 
+OUT = sys.bin
+
 BOOTLOADER_OUT            = bootloader.bin
 BOOTLOADER_UNSTRIPPED_OUT = bootloader.out
 
@@ -14,18 +16,16 @@ LIB        = libsys.a
 BOOTLOADER = bootloader.o
 KERNEL     = kernel.o
 
-DISKIMAGE = disk.img
-
 .PHONY: all clean test
 
-all: $(BOOTLOADER_OUT) $(KERNEL_OUT)
+all: $(OUT)
 
 clean:
-	rm -f $(BOOTLOADER_OUT)   $(BOOTLOADER_UNSTRIPPED_OUT) \
+	rm -f $(OUT) \
+	      $(BOOTLOADER_OUT)   $(BOOTLOADER_UNSTRIPPED_OUT) \
 	      $(KERNEL_OUT) $(KERNEL_UNSTRIPPED_OUT) \
 	      $(ARCHBOOTLOADER) $(ARCHKERNEL) $(ARCHLIB) \
-	      $(BOOTLOADER) $(KERNEL) $(LIB) \
-	      $(DISKIMAGE)
+	      $(BOOTLOADER) $(KERNEL) $(LIB)
 	for d in arch/*/; do \
 		(cd $$d/bootloader && $(MAKE) clean); \
 		(cd $$d/kernel     && $(MAKE) clean); \
@@ -35,13 +35,13 @@ clean:
 	(cd kernel        && $(MAKE) clean)
 	(cd lib           && $(MAKE) clean)
 
-test: $(DISKIMAGE)
+test: $(OUT)
 	$(QEMU) $(QEMUFLAGS) -no-shutdown -drive file=$^,format=raw
 
-$(DISKIMAGE): $(BOOTLOADER_OUT) $(KERNEL_OUT)
+$(OUT): $(BOOTLOADER_OUT) $(KERNEL_OUT)
 	cat $^ > $@
 
-	@echo "Padding disk.img to make it up to a sector"
+	@echo "Padding $(OUT) to make it up to a sector"
 	for i in $$(seq $$((512 - $$(stat -c '%s' $(KERNEL_OUT)) % 512))); do \
 		dd if=/dev/zero bs=1 count=1 >> $@ 2> /dev/null; \
 	done
