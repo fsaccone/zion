@@ -56,5 +56,4 @@ kernel.bin, which does the same with archkernel.o.
 
 * sys.bin
 
-The OUT target sys.bin is made by concatenating bootloader.bin with kernel.bin
-and padding the output with zeros to make it up to a sector.
+The OUT target sys.bin is made by concatenating bootloader.bin with kernel.bin.

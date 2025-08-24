@@ -40,12 +40,6 @@ test: $(OUT)
 
 $(OUT): $(BOOTLOADER_OUT) $(KERNEL_OUT)
 	cat $^ > $@
-
-	@echo "Padding $(OUT) to make it up to a sector"
-	for i in $$(seq $$((512 - $$(stat -c '%s' $(KERNEL_OUT)) % 512))); do \
-		dd if=/dev/zero bs=1 count=1 >> $@ 2> /dev/null; \
-	done
-
 	chmod +x $@
 
 $(BOOTLOADER_OUT): $(BOOTLOADER_UNSTRIPPED_OUT)
