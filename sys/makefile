@@ -1,44 +1,44 @@
 include ../config.mk
 
-BOOT_OUT            = boot.bin
-BOOT_UNSTRIPPED_OUT = boot.out
+BOOTLOADER_OUT            = bootloader.bin
+BOOTLOADER_UNSTRIPPED_OUT = bootloader.out
 
 KERNEL_OUT            = kernel.bin
 KERNEL_UNSTRIPPED_OUT = kernel.out
 
-ARCHBOOT   = archboot.o
-ARCHKERNEL = archkernel.o
-ARCHLIB    = libarch.a
+ARCHBOOTLOADER = archbootloader.o
+ARCHKERNEL     = archkernel.o
+ARCHLIB        = libarch.a
 
 LIB        = libsys.a
-BOOT       = boot.o
+BOOTLOADER = bootloader.o
 KERNEL     = kernel.o
 
 DISKIMAGE = disk.img
 
 .PHONY: all clean test
 
-all: $(BOOT_OUT) $(KERNEL_OUT)
+all: $(BOOTLOADER_OUT) $(KERNEL_OUT)
 
 clean:
-	rm -f $(BOOT_OUT)   $(BOOT_UNSTRIPPED_OUT) \
+	rm -f $(BOOTLOADER_OUT)   $(BOOTLOADER_UNSTRIPPED_OUT) \
 	      $(KERNEL_OUT) $(KERNEL_UNSTRIPPED_OUT) \
-	      $(ARCHBOOT) $(ARCHKERNEL) $(ARCHLIB) \
-	      $(BOOT) $(KERNEL) $(LIB) \
+	      $(ARCHBOOTLOADER) $(ARCHKERNEL) $(ARCHLIB) \
+	      $(BOOTLOADER) $(KERNEL) $(LIB) \
 	      $(DISKIMAGE)
 	for d in arch/*/; do \
-		(cd $$d/boot   && $(MAKE) clean); \
-		(cd $$d/kernel && $(MAKE) clean); \
-		(cd $$d/lib    && $(MAKE) clean); \
+		(cd $$d/bootloader && $(MAKE) clean); \
+		(cd $$d/kernel     && $(MAKE) clean); \
+		(cd $$d/lib        && $(MAKE) clean); \
 	done
-	(cd boot          && $(MAKE) clean)
+	(cd bootloader    && $(MAKE) clean)
 	(cd kernel        && $(MAKE) clean)
 	(cd lib           && $(MAKE) clean)
 
 test: $(DISKIMAGE)
 	$(QEMU) $(QEMUFLAGS) -no-shutdown -drive file=$^,format=raw
 
-$(DISKIMAGE): $(BOOT_OUT) $(KERNEL_OUT)
+$(DISKIMAGE): $(BOOTLOADER_OUT) $(KERNEL_OUT)
 	cat $^ > $@
 
 	@echo "Padding disk.img to make it up to a sector"
@@ -48,7 +48,7 @@ $(DISKIMAGE): $(BOOT_OUT) $(KERNEL_OUT)
 
 	chmod +x $@
 
-$(BOOT_OUT): $(BOOT_UNSTRIPPED_OUT)
+$(BOOTLOADER_OUT): $(BOOTLOADER_UNSTRIPPED_OUT)
 	$(STRIP) -o $@ $^
 	$(OBJCOPY) -O binary $@
 
@@ -56,15 +56,15 @@ $(KERNEL_OUT): $(KERNEL_UNSTRIPPED_OUT)
 	$(STRIP) -o $@ $^
 	$(OBJCOPY) -O binary $@
 
-$(BOOT_UNSTRIPPED_OUT): $(ARCHBOOT) $(BOOT) $(LIB) $(ARCHLIB)
-	$(LD) $(LDFLAGS) -T boot.ld -o $@ $^
+$(BOOTLOADER_UNSTRIPPED_OUT): $(ARCHBOOTLOADER) $(BOOTLOADER) $(LIB) $(ARCHLIB)
+	$(LD) $(LDFLAGS) -T bootloader.ld -o $@ $^
 
 $(KERNEL_UNSTRIPPED_OUT): $(ARCHKERNEL) $(KERNEL) $(LIB) $(ARCHLIB)
 	$(LD) $(LDFLAGS) -T kernel.ld -o $@ $^
 
-$(ARCHBOOT):
-	(cd arch/$(ARCH)/boot && $(MAKE) $@)
-	cp arch/$(ARCH)/boot/$@ $@
+$(ARCHBOOTLOADER):
+	(cd arch/$(ARCH)/bootloader && $(MAKE) $@)
+	cp arch/$(ARCH)/bootloader/$@ $@
 
 $(ARCHKERNEL):
 	(cd arch/$(ARCH)/kernel && $(MAKE) $@)
@@ -74,9 +74,9 @@ $(ARCHLIB):
 	(cd arch/$(ARCH)/lib && $(MAKE) $@)
 	cp arch/$(ARCH)/lib/$@ $@
 
-$(BOOT):
-	(cd boot && $(MAKE) $@)
-	cp boot/$@ $@
+$(BOOTLOADER):
+	(cd bootloader && $(MAKE) $@)
+	cp bootloader/$@ $@
 
 $(KERNEL):
 	(cd kernel && $(MAKE) $@)

@@ -1,6 +1,6 @@
 include ../../../../config.mk
 
-OUT  = archboot.o
+OUT  = archbootloader.o
 OBJS = entry.o
 
 ASCMD = $(AS) -o $@

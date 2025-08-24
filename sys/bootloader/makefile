@@ -1,6 +1,6 @@
 include ../../config.mk
 
-OUT  = boot.o
+OUT  = bootloader.o
 OBJS = bmain.o
 
 CCCMD = $(CC) $(CFLAGS) -I../arch/$(ARCH)/include -I../include -c -o $@
