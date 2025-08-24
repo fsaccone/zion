@@ -53,3 +53,8 @@ instead of bootloader.o.
 The main targets are bootloader.out, stripped to bootloader.bin, which links
 archbootloader.o with all its dependencies, and kernel.out, stripped to
 kernel.bin, which does the same with archkernel.o.
+
+* sys.bin
+
+The OUT target sys.bin is made by concatenating bootloader.bin with kernel.bin
+and padding the output with zeros to make it up to a sector.
