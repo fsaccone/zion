@@ -2,6 +2,7 @@
 .globl _entry
 
 _entry:
+	call lock_harts
 	call initialize_misa
 	call zero_registers
 
@@ -27,6 +28,17 @@ initialize_misa:
 	csrw misa, t0
 
 	ret
+
+lock_harts:
+	li   t0, 0
+	csrr t1, mhartid
+	bne  t0, t1, lock
+
+	ret
+
+lock:
+	wfi
+	j lock
 
 zero_registers:
 	li x2,  0
