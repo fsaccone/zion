@@ -51,10 +51,10 @@ $(KERNEL_OUT): $(KERNEL_UNSTRIPPED_OUT)
 	$(OBJCOPY) -O binary $@
 
 $(BOOTLOADER_UNSTRIPPED_OUT): $(ARCHBOOTLOADER) $(BOOTLOADER) $(LIB) $(ARCHLIB)
-	$(LD) $(LDFLAGS) -T bootloader.ld -o $@ $^
+	$(LD) $(LDFLAGS) -T arch/$(ARCH)/bootloader.ld -o $@ $^
 
 $(KERNEL_UNSTRIPPED_OUT): $(ARCHKERNEL) $(KERNEL) $(LIB) $(ARCHLIB)
-	$(LD) $(LDFLAGS) -T kernel.ld -o $@ $^
+	$(LD) $(LDFLAGS) -T arch/$(ARCH)/kernel.ld -o $@ $^
 
 $(ARCHBOOTLOADER):
 	(cd arch/$(ARCH)/bootloader && $(MAKE) $@)

@@ -7,7 +7,8 @@ Structure
 ---------
 
 The way objects and libraries are linked for the boot loader and for the kernel
-are respectively defined by the linker scripts bootloader.ld and kernel.ld.
+are respectively defined by the linker scripts arch/ARCH/bootloader.ld and
+arch/ARCH/kernel.ld.
 
 The following is a list of targets which describes where they are defined and
 how they depend on each other.
