@@ -3,9 +3,9 @@
 
 _entry:
 	call initialize_misa
+	call clear_registers
 	call lock_harts
 	call clear_bss
-	call clear_registers
 
 	la sp, _stack_end
 

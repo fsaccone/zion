@@ -7,10 +7,10 @@ _entry:
 	mv s0, a0
 
 	call initialize_misa
+	call initialize_vectors
+	call clear_registers
 	call lock_harts
 	call clear_bss
-	call clear_registers
-	call initialize_vectors
 
 	j supervisor
 
