@@ -1,10 +1,8 @@
 #include <log.h>
 
 void
-kmain(void *kstart)
+kmain(void)
 {
-	(void)kstart;
-
 	debug("Kernel start.");
 
 	for (;;);

@@ -2,10 +2,6 @@
 .globl _entry
 
 _entry:
-	# The argument, passed by the boot loader, is the starting address of
-	# the kernel space
-	mv s0, a0
-
 	call initialize_misa
 	call initialize_vectors
 	call clear_registers
@@ -111,7 +107,6 @@ supervisor:
 
 call_kmain:
 	la sp, _stack_end
-	mv a0, s0
 
 	j kmain
 
