@@ -1,7 +1,7 @@
 include ../../../../config.mk
 
 OUT  = libarch.a
-OBJS = bss.o serial.o
+OBJS = boot.o serial.o
 
 ASCMD = $(AS) -o $@
 CCCMD = $(CC) $(CFLAGS) -I../include -c -o $@
@@ -16,8 +16,8 @@ clean:
 $(OUT): $(OBJS)
 	$(AR) -cr $@ $^
 
-bss.o:
-	$(ASCMD) bss.s
+boot.o:
+	$(ASCMD) boot.s
 
 serial.o:
 	$(CCCMD) serial.c
