@@ -2,8 +2,9 @@ ENTRY(_entry)
 
 MEMORY
 {
-	ROM (rx)  : ORIGIN = 0,       LENGTH = 0x80000
-	RAM (rwx) : ORIGIN = 0x80000, LENGTH = 0x20000
+	# Qemu's virt machine loads the kernel at this starting address
+	ROM (rx)  : ORIGIN = 0x80000000, LENGTH = 0x80000
+	RAM (rwx) : ORIGIN = 0x80080000, LENGTH = 0x20000
 }
 
 SECTIONS
