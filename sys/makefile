@@ -16,7 +16,7 @@ LIB        = libsys.a
 BOOTLOADER = bootloader.o
 KERNEL     = kernel.o
 
-.PHONY: all clean test
+.PHONY: all clean test testkernel
 
 all: $(OUT)
 
@@ -37,6 +37,9 @@ clean:
 
 test: $(OUT)
 	$(QEMU) $(QEMUFLAGS) -no-shutdown -drive file=$^,format=raw
+
+testkernel: $(KERNEL_OUT)
+	$(QEMU) $(QEMUFLAGS) -machine virt -bios none -kernel $^
 
 $(OUT): $(BOOTLOADER_OUT) $(KERNEL_OUT)
 	cat $^ > $@
