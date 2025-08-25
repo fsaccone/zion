@@ -4,6 +4,7 @@
 _entry:
 	call lock_harts
 	call initialize_misa
+	call clear_bss
 	call zero_registers
 
 	la sp, _stack_end

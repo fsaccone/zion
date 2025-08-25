@@ -7,6 +7,7 @@ _entry:
 	mv s0, a0
 
 	call initialize_misa
+	call clear_bss
 	call initialize_vectors
 	call lock_harts
 
