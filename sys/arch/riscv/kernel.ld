@@ -23,8 +23,10 @@ SECTIONS
 	} > RAM
 
 	.bss : {
+		_bss_start = .;
 		*(.bss)
 		*(COMMON)
+		_bss_end = .;
 	} > RAM
 
 	.stack (NOLOAD) : {
