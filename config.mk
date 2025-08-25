@@ -13,4 +13,6 @@ CFLAGS  = $(EXTRACFLAGS) -std=c90 -Wall -Wextra -Wpedantic
 LDFLAGS = $(EXTRALDFLAGS) -static
 
 QEMU      = qemu-system-$(ARCH)
-QEMUFLAGS = $(EXTRAQEMUFLAGS) -smp 4 -m 512 -serial stdio
+QEMUCPUS  = 4
+QEMURAM   = 512
+QEMUFLAGS = $(EXTRAQEMUFLAGS) -smp $(QEMUCPUS) -m $(QEMURAM) -serial stdio
