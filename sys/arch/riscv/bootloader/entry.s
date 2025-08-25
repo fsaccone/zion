@@ -2,8 +2,8 @@
 .globl _entry
 
 _entry:
-	call lock_harts
 	call initialize_misa
+	call lock_harts
 	call clear_bss
 	call zero_registers
 
