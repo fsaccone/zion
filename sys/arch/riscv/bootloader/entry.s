@@ -2,16 +2,16 @@
 .globl _entry
 
 _entry:
-	call initialize_misa
+	call initmisa
 	call clearregs
-	call lock_harts
+	call lockharts
 	call clearbss
 
 	la sp, _stack_end
 
 	j bmain
 
-initialize_misa:
+initmisa:
 	li   t0, 0
 
 	# RV32I/64I base ISA
@@ -30,7 +30,7 @@ initialize_misa:
 
 	ret
 
-lock_harts:
+lockharts:
 	li   t0, 0
 	csrr t1, mhartid
 	bne  t0, t1, lock

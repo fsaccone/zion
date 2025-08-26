@@ -2,15 +2,15 @@
 .globl _entry
 
 _entry:
-	call initialize_misa
-	call initialize_vectors
+	call initmisa
+	call initvecs
 	call clearregs
-	call lock_harts
+	call lockharts
 	call clearbss
 
 	j supervisor
 
-initialize_misa:
+initmisa:
 	li   t0, 0
 
 	# RV32I/64I base ISA
@@ -29,16 +29,16 @@ initialize_misa:
 
 	ret
 
-initialize_vectors:
-	la   t0,    machine_trap_vector
+initvecs:
+	la   t0,    mtrapvec
 	csrw mtvec, t0
 
-	la   t0,    supervisor_trap_vector
+	la   t0,    strapvec
 	csrw stvec, t0
 
 	ret
 
-lock_harts:
+lockharts:
 	li   t0, 0
 	csrr t1, mhartid
 	bne  t0, t1, lock
@@ -49,14 +49,14 @@ lock:
 	wfi
 	j lock
 
-machine_trap_vector:
+mtrapvec:
 	csrr a0, mcause
-	call handle_trap
+	call handletrap
 	mret
 
-supervisor_trap_vector:
+strapvec:
 	csrr a0, scause
-	call handle_trap
+	call handletrap
 	sret
 
 supervisor:
@@ -78,7 +78,7 @@ supervisor:
 
 	csrw mstatus, t0
 
-	la   t0,   call_kmain
+	la   t0,   callkmain
 	csrw mepc, t0
 
 	li   t0,      0xffff
@@ -105,11 +105,11 @@ supervisor:
 
 	mret
 
-call_kmain:
+callkmain:
 	la sp, _stack_end
 
 	j kmain
 
 .section .rodata
 .align 4
-zero_ctx: .zero 127
+zeroctx: .zero 127

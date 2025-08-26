@@ -22,7 +22,7 @@
 #define CAUSE_HARDWARE_ERROR   19
 
 void
-handle_exception(uint32_t cause)
+handleexception(uint32_t cause)
 {
 	switch (cause) {
 	case CAUSE_INSTR_ADDR_MISAL:

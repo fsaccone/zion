@@ -3,6 +3,6 @@
 
 #include <arch.h>
 
-void handle_trap(int32_t cause);
+void handletrap(int32_t cause);
 
 #endif
