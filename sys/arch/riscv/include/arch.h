@@ -1,7 +1,8 @@
 #ifndef _ARCH_H
 #define _ARCH_H
 
-#define PAGE_SIZE 4096
+#define PAGE_SIZE_EXPONENT 12
+#define PAGE_SIZE          (1 << PAGE_SIZE_EXPONENT)
 
 typedef signed char  int8_t;
 typedef signed short int16_t;
