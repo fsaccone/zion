@@ -16,7 +16,7 @@ how they depend on each other.
 * libarch.a (defined in arch/ARCH/lib/)
 
 The target libarch.a is a standalone static library which implements the header
-files in arch/ARCH/include/.
+files in include/arch/.
 
 * libsys.a (defined in lib/)
 
