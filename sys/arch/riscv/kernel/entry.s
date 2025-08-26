@@ -41,13 +41,11 @@ initvecs:
 lockharts:
 	li   t0, 0
 	csrr t1, mhartid
-	bne  t0, t1, lock
-
+	bne  t0, t1, 1f
 	ret
-
-lock:
+1:
 	wfi
-	j lock
+	j 1b
 
 mtrapvec:
 	csrr a0, mcause
