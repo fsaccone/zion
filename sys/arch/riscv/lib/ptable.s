@@ -1,4 +1,4 @@
-.section .rodata
+.section .data
 .globl p1table
 .globl p2table
 .globl p3table
