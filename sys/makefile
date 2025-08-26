@@ -2,11 +2,11 @@ include ../config.mk
 
 OUT = sys.bin
 
-BOOTLOADER_OUT            = bootloader.bin
-BOOTLOADER_UNSTRIPPED_OUT = bootloader.out
+BOOTLOADERBIN = bootloader.bin
+BOOTLOADEROUT = bootloader.out
 
-KERNEL_OUT            = kernel.bin
-KERNEL_UNSTRIPPED_OUT = kernel.out
+KERNELBIN = kernel.bin
+KERNELOUT = kernel.out
 
 ARCHBOOTLOADER = archbootloader.o
 ARCHKERNEL     = archkernel.o
@@ -21,8 +21,8 @@ all: $(OUT)
 
 clean:
 	rm -f $(OUT) \
-	      $(BOOTLOADER_OUT)   $(BOOTLOADER_UNSTRIPPED_OUT) \
-	      $(KERNEL_OUT) $(KERNEL_UNSTRIPPED_OUT) \
+	      $(BOOTLOADERBIN) $(BOOTLOADEROUT) \
+	      $(KERNELBIN) $(KERNELOUT) \
 	      $(ARCHBOOTLOADER) $(ARCHKERNEL) \
 	      $(BOOTLOADER) $(KERNEL) $(LIB)
 	for d in arch/*/; do \
@@ -37,25 +37,25 @@ clean:
 test: $(OUT)
 	$(QEMU) $(QEMUFLAGS) -no-shutdown -drive file=$^,format=raw
 
-testkernel: $(KERNEL_OUT)
+testkernel: $(KERNELBIN)
 	$(QEMU) $(QEMUFLAGS) -machine virt -bios none -kernel $^
 
-$(OUT): $(BOOTLOADER_OUT) $(KERNEL_OUT)
+$(OUT): $(BOOTLOADERBIN) $(KERNELBIN)
 	cat $^ > $@
 	chmod +x $@
 
-$(BOOTLOADER_OUT): $(BOOTLOADER_UNSTRIPPED_OUT)
+$(BOOTLOADERBIN): $(BOOTLOADEROUT)
 	$(STRIP) -o $@ $^
 	$(OBJCOPY) -O binary $@
 
-$(KERNEL_OUT): $(KERNEL_UNSTRIPPED_OUT)
+$(KERNELBIN): $(KERNELOUT)
 	$(STRIP) -o $@ $^
 	$(OBJCOPY) -O binary $@
 
-$(BOOTLOADER_UNSTRIPPED_OUT): $(ARCHBOOTLOADER) $(BOOTLOADER) $(LIB)
+$(BOOTLOADEROUT): $(ARCHBOOTLOADER) $(BOOTLOADER) $(LIB)
 	$(LD) $(LDFLAGS) -T arch/$(ARCH)/bootloader.ld -o $@ $^
 
-$(KERNEL_UNSTRIPPED_OUT): $(ARCHKERNEL) $(KERNEL) $(LIB)
+$(KERNELOUT): $(ARCHKERNEL) $(KERNEL) $(LIB)
 	$(LD) $(LDFLAGS) -T arch/$(ARCH)/kernel.ld -o $@ $^
 
 $(ARCHBOOTLOADER):
