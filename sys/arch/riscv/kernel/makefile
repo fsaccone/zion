@@ -2,7 +2,7 @@ include ../../../../config.mk
 
 OUT   = archkernel.o
 COBJS = exception.o interrupt.o trap.o
-SOBJS = entry.o
+SOBJS = entry.o status.o
 
 .PHONY: all clean
 
