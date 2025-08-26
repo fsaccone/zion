@@ -1,7 +1,7 @@
 #include "exception.h"
 
 #include <arch.h>
-#include <arch/serial.h>
+#include <serial.h>
 
 #define CAUSE_INSTR_ADDR_MISAL 0
 #define CAUSE_INSTR_ACC_FAULT  1

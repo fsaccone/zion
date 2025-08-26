@@ -1,7 +1,7 @@
 #include "interrupt.h"
 
 #include <arch.h>
-#include <arch/serial.h>
+#include <serial.h>
 
 #define CAUSE_SSI 1
 #define CAUSE_MSI 3

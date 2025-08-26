@@ -1,6 +1,6 @@
 #include <log.h>
 
-#include <arch/serial.h>
+#include <serial.h>
 
 void
 debug(const char *m)

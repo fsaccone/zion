@@ -1,4 +1,4 @@
-#include <arch/serial.h>
+#include <serial.h>
 
 #include <arch.h>
 
