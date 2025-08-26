@@ -1,6 +1,6 @@
 include ../../../../config.mk
 
-OBJS = boot.o serial.o
+OBJS = boot.o
 
 ASCMD = $(AS) -o $@
 CCCMD = $(CC) $(CFLAGS) -I../include -I../../../include -c -o $@
@@ -14,6 +14,3 @@ clean:
 
 boot.o:
 	$(ASCMD) boot.s
-
-serial.o:
-	$(CCCMD) serial.c

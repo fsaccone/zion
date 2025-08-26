@@ -3,7 +3,7 @@ include ../../config.mk
 OUT  = libsys.a
 OBJS = log.o
 
-ARCHOBJS = boot.o serial.o
+ARCHOBJS = boot.o
 
 CCCMD = $(CC) $(CFLAGS) -I../arch/$(ARCH)/include -I../include -c -o $@
 

@@ -1,6 +1,15 @@
 #include <log.h>
 
-#include <serial.h>
+#include <arch.h>
+
+static void
+serial_print(const char *str)
+{
+	while (*str) {
+		while(!(*UART_LSR & UART_LSR_EMPTY_MASK));
+		*UART_THR = *str++;
+	}
+}
 
 void
 debug(const char *m)

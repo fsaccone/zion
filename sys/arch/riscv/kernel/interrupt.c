@@ -1,7 +1,7 @@
 #include "interrupt.h"
 
 #include <arch.h>
-#include <serial.h>
+#include <log.h>
 
 #define CAUSE_SSI 1
 #define CAUSE_MSI 3
@@ -17,21 +17,20 @@ handle_interrupt(uint32_t cause)
 	switch (cause) {
 	case CAUSE_SSI:
 	case CAUSE_MSI:
-		serial_print("Interrupt raised: Software interrupt.\n");
+		panic("Interrupt raised: Software interrupt.\n");
 		break;
 	case CAUSE_STI:
 	case CAUSE_MTI:
-		serial_print("Interrupt raised: Timer interrupt.\n");
+		panic("Interrupt raised: Timer interrupt.\n");
 		break;
 	case CAUSE_SEI:
 	case CAUSE_MEI:
-		serial_print("Interrupt raised: External interrupt.\n");
+		panic("Interrupt raised: External interrupt.\n");
 		break;
 	case CAUSE_COI:
-		serial_print("Interrupt raised: "
-		             "Counter overflow interrupt.\n");
+		panic("Interrupt raised: Counter overflow interrupt.\n");
 		break;
 	default:
-		serial_print("Interrupt raised: Unkown.\n");
+		panic("Interrupt raised: Unkown.\n");
 	}
 }

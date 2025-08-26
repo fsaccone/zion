@@ -1,7 +1,7 @@
 #include "exception.h"
 
 #include <arch.h>
-#include <serial.h>
+#include <log.h>
 
 #define CAUSE_INSTR_ADDR_MISAL 0
 #define CAUSE_INSTR_ACC_FAULT  1
@@ -26,62 +26,57 @@ handle_exception(uint32_t cause)
 {
 	switch (cause) {
 	case CAUSE_INSTR_ADDR_MISAL:
-		serial_print("Exception raised: "
-		             "Instruction address misaligned.\n");
+		panic("Exception raised: Instruction address misaligned.\n");
 		break;
 	case CAUSE_INSTR_ACC_FAULT:
-		serial_print("Exception raised: Instruction access fault.\n");
+		panic("Exception raised: Instruction access fault.\n");
 		break;
 	case CAUSE_ILLEGAL_INSTR:
-		serial_print("Exception raised: Illegal instruction.\n");
+		panic("Exception raised: Illegal instruction.\n");
 		break;
 	case CAUSE_BREAKPOINT:
-		serial_print("Exception raised: Breakpoint.\n");
+		panic("Exception raised: Breakpoint.\n");
 		break;
 	case CAUSE_LOAD_ADDR_MISAL:
-		serial_print("Exception raised: Load address misaligned.\n");
+		panic("Exception raised: Load address misaligned.\n");
 		break;
 	case CAUSE_LOAD_ACC_FAULT:
-		serial_print("Exception raised: Load access fault.\n");
+		panic("Exception raised: Load access fault.\n");
 		break;
 	case CAUSE_STORE_ADDR_MISAL:
-		serial_print("Exception raised: "
-		             "Store/AMO address misaligned.\n");
+		panic("Exception raised: Store/AMO address misaligned.\n");
 		break;
 	case CAUSE_STORE_ACC_FAULT:
-		serial_print("Exception raised: Store/AMO access fault.\n");
+		panic("Exception raised: Store/AMO access fault.\n");
 		break;
 	case CAUSE_UMODE_ECALL:
-		serial_print("Exception raised: "
-		             "Environment call from U-mode.\n");
+		panic("Exception raised: Environment call from U-mode.\n");
 		break;
 	case CAUSE_SMODE_ECALL:
-		serial_print("Exception raised: "
-		             "Environment call from S-mode.\n");
+		panic("Exception raised: Environment call from S-mode.\n");
 		break;
 	case CAUSE_MMODE_ECALL:
-		serial_print("Exception raised: "
-		             "Environment call from M-mode.\n");
+		panic("Exception raised: Environment call from M-mode.\n");
 		break;
 	case CAUSE_INSTR_PAGE_FAULT:
-		serial_print("Exception raised: Instruction page fault.\n");
+		panic("Exception raised: Instruction page fault.\n");
 		break;
 	case CAUSE_LOAD_PAGE_FAULT:
-		serial_print("Exception raised: Load page fault.\n");
+		panic("Exception raised: Load page fault.\n");
 		break;
 	case CAUSE_STORE_PAGE_FAULT:
-		serial_print("Exception raised: Store/AMO page fault.\n");
+		panic("Exception raised: Store/AMO page fault.\n");
 		break;
 	case CAUSE_DOUBLE_TRAP:
-		serial_print("Exception raised: Double trap.\n");
+		panic("Exception raised: Double trap.\n");
 		break;
 	case CAUSE_SOFTWARE_CHECK:
-		serial_print("Exception raised: Software check.\n");
+		panic("Exception raised: Software check.\n");
 		break;
 	case CAUSE_HARDWARE_ERROR:
-		serial_print("Exception raised: Hardware error.\n");
+		panic("Exception raised: Hardware error.\n");
 		break;
 	default:
-		serial_print("Exception raised: Unkown.\n");
+		panic("Exception raised: Unkown.\n");
 	}
 }
