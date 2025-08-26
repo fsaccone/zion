@@ -3,7 +3,7 @@
 
 _entry:
 	call initialize_misa
-	call clear_registers
+	call clearregs
 	call lock_harts
 	call clear_bss
 

@@ -1,6 +1,6 @@
 .section .text
 .globl clear_bss
-.globl clear_registers
+.globl clearregs
 
 clear_bss:
 	la t0, _bss_start
@@ -14,7 +14,7 @@ clear_bss:
 2:
 	ret
 
-clear_registers:
+clearregs:
 	li x2,  0
 	li x3,  0
 	li x4,  0
