@@ -2,7 +2,7 @@ include ../../config.mk
 
 OUT      = libsys.a
 OBJS     = log.o
-ARCHOBJS = boot.o ptable.o
+ARCHOBJS = boot.o
 
 .PHONY: all clean
 

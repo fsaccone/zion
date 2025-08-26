@@ -1,7 +1,7 @@
 include ../../../../config.mk
 
 COBJS =
-SOBJS = boot.o ptable.o
+SOBJS = boot.o
 
 .PHONY: all clean
 
