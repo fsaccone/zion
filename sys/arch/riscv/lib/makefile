@@ -1,19 +1,17 @@
 include ../../../../config.mk
 
-OBJS = boot.o ptable.o
-
-ASCMD = $(AS) -o $@
-CCCMD = $(CC) $(CFLAGS) -I../include -I../../../include -c -o $@
+COBJS =
+SOBJS = boot.o ptable.o
 
 .PHONY: all clean
 
-all: $(OBJS)
+all: $(COBJS) $(SOBJS)
 
 clean:
-	rm -f $(OBJS)
+	rm -f $(COBJS) $(SOBJS)
 
-boot.o:
-	$(ASCMD) boot.s
+$(COBJS):
+	$(CC) $(CFLAGS) -I../include -I../../../include -c -o $@ $(@:.o=.c)
 
-ptable.o:
-	$(ASCMD) ptable.s
+$(SOBJS):
+	$(AS) -o $@ $(@:.o=.s)

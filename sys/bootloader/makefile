@@ -3,8 +3,6 @@ include ../../config.mk
 OUT  = bootloader.o
 OBJS = bmain.o
 
-CCCMD = $(CC) $(CFLAGS) -I../arch/$(ARCH)/include -I../include -c -o $@
-
 .PHONY: all clean
 
 all: $(OUT)
@@ -15,5 +13,6 @@ clean:
 $(OUT): $(OBJS)
 	$(LD) $(LDFLAGS) -r -o $@ $^
 
-bmain.o:
-	$(CCCMD) bmain.c
+$(OBJS):
+	$(CC) $(CFLAGS) -I../arch/$(ARCH)/include -I../include -c \
+	                -o $@ $(@:.o=.c)

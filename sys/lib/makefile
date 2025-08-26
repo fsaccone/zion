@@ -4,8 +4,6 @@ OUT      = libsys.a
 OBJS     = log.o
 ARCHOBJS = boot.o ptable.o
 
-CCCMD = $(CC) $(CFLAGS) -I../arch/$(ARCH)/include -I../include -c -o $@
-
 .PHONY: all clean
 
 all: $(OUT)
@@ -16,8 +14,9 @@ clean:
 $(OUT): $(OBJS) $(ARCHOBJS)
 	$(AR) -cr $@ $^
 
-log.o:
-	$(CCCMD) log.c
+$(OBJS):
+	$(CC) $(CFLAGS) -I../arch/$(ARCH)/include -I../include -c \
+	                -o $@ $(@:.o=.c)
 
 $(ARCHOBJS):
 	(cd ../arch/$(ARCH)/lib && $(MAKE) $@)

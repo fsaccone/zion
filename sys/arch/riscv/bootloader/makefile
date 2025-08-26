@@ -1,20 +1,21 @@
 include ../../../../config.mk
 
-OUT  = archbootloader.o
-OBJS = entry.o
-
-ASCMD = $(AS) -o $@
-CCCMD = $(CC) $(CFLAGS) -I../include -I../../../include -c -o $@
+OUT   = archbootloader.o
+COBJS =
+SOBJS = entry.o
 
 .PHONY: all clean
 
 all: $(OUT)
 
 clean:
-	rm -f $(OUT) $(OBJS)
+	rm -f $(OUT) $(COBJS) $(SOBJS)
 
-$(OUT): $(OBJS)
+$(OUT): $(COBJS) $(SOBJS)
 	$(LD) $(LDFLAGS) -r -o $@ $^
 
-entry.o:
-	$(ASCMD) entry.s
+$(COBJS):
+	$(CC) $(CFLAGS) -I../include -I../../../include -c -o $@ $(@:.o=.c)
+
+$(SOBJS):
+	$(AS) -o $@ $(@:.o=.s)

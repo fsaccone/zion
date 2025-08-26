@@ -1,29 +1,21 @@
 include ../../../../config.mk
 
-OUT  = archkernel.o
-OBJS = exception.o interrupt.o trap.o entry.o
-
-ASCMD = $(AS) -o $@
-CCCMD = $(CC) $(CFLAGS) -I../include -I../../../include -c -o $@
+OUT   = archkernel.o
+COBJS = exception.o interrupt.o trap.o
+SOBJS = entry.o
 
 .PHONY: all clean
 
 all: $(OUT)
 
 clean:
-	rm -f $(OUT) $(OBJS)
+	rm -f $(OUT) $(COBJS) $(SOBJS)
 
-$(OUT): $(OBJS)
+$(OUT): $(COBJS) $(SOBJS)
 	$(LD) $(LDFLAGS) -r -o $@ $^
 
-exception.o:
-	$(CCCMD) exception.c
+$(COBJS):
+	$(CC) $(CFLAGS) -I../include -I../../../include -c -o $@ $(@:.o=.c)
 
-interrupt.o:
-	$(CCCMD) interrupt.c
-
-entry.o:
-	$(ASCMD) entry.s
-
-trap.o:
-	$(CCCMD) trap.c
+$(SOBJS):
+	$(AS) -o $@ $(@:.o=.s)
