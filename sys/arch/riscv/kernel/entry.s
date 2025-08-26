@@ -97,7 +97,7 @@ supervisor:
 	or   t0,      t0, t1
 	li   t1,      1 << 2 # Execute permission
 	or   t0,      t0, t1
-	li   t1,      1 << 3 # TOR addess-matching mode
+	li   t1,      1 << 3 # TOR address-matching mode
 	or   t0,      t0, t1
 	li   t1,      1 << 7 # Lock
 	or   t0,      t0, t1
