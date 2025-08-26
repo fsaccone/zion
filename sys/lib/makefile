@@ -1,8 +1,7 @@
 include ../../config.mk
 
-OUT  = libsys.a
-OBJS = log.o
-
+OUT      = libsys.a
+OBJS     = log.o
 ARCHOBJS = boot.o ptable.o
 
 CCCMD = $(CC) $(CFLAGS) -I../arch/$(ARCH)/include -I../include -c -o $@
