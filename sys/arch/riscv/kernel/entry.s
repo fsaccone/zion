@@ -84,8 +84,10 @@ supervisor:
 	csrw mideleg, t0
 
 	# Kernel PMP address range (all addresses)
-	li   t0,       0xffffffff
+	li   t0,       0x00000000
+	li   t1,       0xffffffff
 	csrw pmpaddr0, t0
+	csrw pmpaddr1, t1
 
 	# Kernel PMP configuration
 	li   t0,      0
@@ -95,10 +97,11 @@ supervisor:
 	or   t0,      t0, t1
 	li   t1,      1 << 2 # Execute permission
 	or   t0,      t0, t1
-	li   t1,      3 << 3 # NAPOT addess-matching mode
+	li   t1,      1 << 3 # TOR addess-matching mode
 	or   t0,      t0, t1
 	li   t1,      1 << 7 # Lock
 	or   t0,      t0, t1
+	slli t0,      t0, 8  # Write to pmp1cfg
 	csrw pmpcfg0, t0
 
 	mret
