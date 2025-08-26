@@ -9,6 +9,7 @@ _entry:
 	call clearbss
 
 	call setmstatus
+	call setsstatus
 
 	j supervisor
 

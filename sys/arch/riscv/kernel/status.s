@@ -1,5 +1,6 @@
 .section .text
 .globl setmstatus
+.globl setsstatus
 
 setmstatus:
 	csrr t0, mstatus
@@ -19,5 +20,20 @@ setmstatus:
 	and t0, t0, t1
 
 	csrw mstatus, t0
+
+	ret
+
+setsstatus:
+	csrr t0, sstatus
+
+	# Set SUM to 1
+	li t1, 1 << 18
+	or t0, t0, t1
+
+	# Set MXR to 1
+	li t1, 1 << 19
+	or t0, t0, t1
+
+	csrw sstatus, t0
 
 	ret
