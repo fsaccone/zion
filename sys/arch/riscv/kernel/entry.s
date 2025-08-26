@@ -6,7 +6,7 @@ _entry:
 	call initialize_vectors
 	call clearregs
 	call lock_harts
-	call clear_bss
+	call clearbss
 
 	j supervisor
 

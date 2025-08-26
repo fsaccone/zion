@@ -5,7 +5,7 @@ _entry:
 	call initialize_misa
 	call clearregs
 	call lock_harts
-	call clear_bss
+	call clearbss
 
 	la sp, _stack_end
 

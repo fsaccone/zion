@@ -1,8 +1,8 @@
 .section .text
-.globl clear_bss
+.globl clearbss
 .globl clearregs
 
-clear_bss:
+clearbss:
 	la t0, _bss_start
 	la t1, _bss_end
 1:
