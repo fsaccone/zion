@@ -26,57 +26,57 @@ handle_exception(uint32_t cause)
 {
 	switch (cause) {
 	case CAUSE_INSTR_ADDR_MISAL:
-		panic("Exception raised: Instruction address misaligned.\n");
+		panic("Exception raised: Instruction address misaligned.");
 		break;
 	case CAUSE_INSTR_ACC_FAULT:
-		panic("Exception raised: Instruction access fault.\n");
+		panic("Exception raised: Instruction access fault.");
 		break;
 	case CAUSE_ILLEGAL_INSTR:
-		panic("Exception raised: Illegal instruction.\n");
+		panic("Exception raised: Illegal instruction.");
 		break;
 	case CAUSE_BREAKPOINT:
-		panic("Exception raised: Breakpoint.\n");
+		panic("Exception raised: Breakpoint.");
 		break;
 	case CAUSE_LOAD_ADDR_MISAL:
-		panic("Exception raised: Load address misaligned.\n");
+		panic("Exception raised: Load address misaligned.");
 		break;
 	case CAUSE_LOAD_ACC_FAULT:
-		panic("Exception raised: Load access fault.\n");
+		panic("Exception raised: Load access fault.");
 		break;
 	case CAUSE_STORE_ADDR_MISAL:
-		panic("Exception raised: Store/AMO address misaligned.\n");
+		panic("Exception raised: Store/AMO address misaligned.");
 		break;
 	case CAUSE_STORE_ACC_FAULT:
-		panic("Exception raised: Store/AMO access fault.\n");
+		panic("Exception raised: Store/AMO access fault.");
 		break;
 	case CAUSE_UMODE_ECALL:
-		panic("Exception raised: Environment call from U-mode.\n");
+		panic("Exception raised: Environment call from U-mode.");
 		break;
 	case CAUSE_SMODE_ECALL:
-		panic("Exception raised: Environment call from S-mode.\n");
+		panic("Exception raised: Environment call from S-mode.");
 		break;
 	case CAUSE_MMODE_ECALL:
-		panic("Exception raised: Environment call from M-mode.\n");
+		panic("Exception raised: Environment call from M-mode.");
 		break;
 	case CAUSE_INSTR_PAGE_FAULT:
-		panic("Exception raised: Instruction page fault.\n");
+		panic("Exception raised: Instruction page fault.");
 		break;
 	case CAUSE_LOAD_PAGE_FAULT:
-		panic("Exception raised: Load page fault.\n");
+		panic("Exception raised: Load page fault.");
 		break;
 	case CAUSE_STORE_PAGE_FAULT:
-		panic("Exception raised: Store/AMO page fault.\n");
+		panic("Exception raised: Store/AMO page fault.");
 		break;
 	case CAUSE_DOUBLE_TRAP:
-		panic("Exception raised: Double trap.\n");
+		panic("Exception raised: Double trap.");
 		break;
 	case CAUSE_SOFTWARE_CHECK:
-		panic("Exception raised: Software check.\n");
+		panic("Exception raised: Software check.");
 		break;
 	case CAUSE_HARDWARE_ERROR:
-		panic("Exception raised: Hardware error.\n");
+		panic("Exception raised: Hardware error.");
 		break;
 	default:
-		panic("Exception raised: Unkown.\n");
+		panic("Exception raised: Unkown.");
 	}
 }

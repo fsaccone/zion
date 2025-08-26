@@ -17,20 +17,20 @@ handle_interrupt(uint32_t cause)
 	switch (cause) {
 	case CAUSE_SSI:
 	case CAUSE_MSI:
-		panic("Interrupt raised: Software interrupt.\n");
+		panic("Interrupt raised: Software interrupt.");
 		break;
 	case CAUSE_STI:
 	case CAUSE_MTI:
-		panic("Interrupt raised: Timer interrupt.\n");
+		panic("Interrupt raised: Timer interrupt.");
 		break;
 	case CAUSE_SEI:
 	case CAUSE_MEI:
-		panic("Interrupt raised: External interrupt.\n");
+		panic("Interrupt raised: External interrupt.");
 		break;
 	case CAUSE_COI:
-		panic("Interrupt raised: Counter overflow interrupt.\n");
+		panic("Interrupt raised: Counter overflow interrupt.");
 		break;
 	default:
-		panic("Interrupt raised: Unkown.\n");
+		panic("Interrupt raised: Unkown.");
 	}
 }
