@@ -16,15 +16,10 @@ should be considered a header-only library.
 The following is a list of targets which describes where they are defined and
 how they depend on each other.
 
-* libarch.a (defined in arch/ARCH/lib/)
+* libsys.a (defined in lib/, uses objects from arch/ARCH/lib/)
 
-The target libarch.a is a standalone static library which implements the header
-files in include/arch/.
-
-* libsys.a (defined in lib/)
-
-The target libsys.a is a static library dependent on libarch.a which implements
-the header files in include/.
+The target libsys.a is a static library which implements the header files in
+include/.
 
 * bootloader.o (defined in bootloader/)
 

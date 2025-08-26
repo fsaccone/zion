@@ -1,6 +1,5 @@
 include ../../../../config.mk
 
-OUT  = libarch.a
 OBJS = boot.o serial.o
 
 ASCMD = $(AS) -o $@
@@ -8,13 +7,10 @@ CCCMD = $(CC) $(CFLAGS) -I../include -I../../../include -c -o $@
 
 .PHONY: all clean
 
-all: $(OUT)
+all: $(OBJS)
 
 clean:
-	rm -f $(OUT) $(OBJS)
-
-$(OUT): $(OBJS)
-	$(AR) -cr $@ $^
+	rm -f $(OBJS)
 
 boot.o:
 	$(ASCMD) boot.s

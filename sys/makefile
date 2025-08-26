@@ -10,7 +10,6 @@ KERNEL_UNSTRIPPED_OUT = kernel.out
 
 ARCHBOOTLOADER = archbootloader.o
 ARCHKERNEL     = archkernel.o
-ARCHLIB        = libarch.a
 
 LIB        = libsys.a
 BOOTLOADER = bootloader.o
@@ -24,7 +23,7 @@ clean:
 	rm -f $(OUT) \
 	      $(BOOTLOADER_OUT)   $(BOOTLOADER_UNSTRIPPED_OUT) \
 	      $(KERNEL_OUT) $(KERNEL_UNSTRIPPED_OUT) \
-	      $(ARCHBOOTLOADER) $(ARCHKERNEL) $(ARCHLIB) \
+	      $(ARCHBOOTLOADER) $(ARCHKERNEL) \
 	      $(BOOTLOADER) $(KERNEL) $(LIB)
 	for d in arch/*/; do \
 		(cd $$d/bootloader && $(MAKE) clean); \
@@ -53,10 +52,10 @@ $(KERNEL_OUT): $(KERNEL_UNSTRIPPED_OUT)
 	$(STRIP) -o $@ $^
 	$(OBJCOPY) -O binary $@
 
-$(BOOTLOADER_UNSTRIPPED_OUT): $(ARCHBOOTLOADER) $(BOOTLOADER) $(LIB) $(ARCHLIB)
+$(BOOTLOADER_UNSTRIPPED_OUT): $(ARCHBOOTLOADER) $(BOOTLOADER) $(LIB)
 	$(LD) $(LDFLAGS) -T arch/$(ARCH)/bootloader.ld -o $@ $^
 
-$(KERNEL_UNSTRIPPED_OUT): $(ARCHKERNEL) $(KERNEL) $(LIB) $(ARCHLIB)
+$(KERNEL_UNSTRIPPED_OUT): $(ARCHKERNEL) $(KERNEL) $(LIB)
 	$(LD) $(LDFLAGS) -T arch/$(ARCH)/kernel.ld -o $@ $^
 
 $(ARCHBOOTLOADER):
@@ -66,10 +65,6 @@ $(ARCHBOOTLOADER):
 $(ARCHKERNEL):
 	(cd arch/$(ARCH)/kernel && $(MAKE) $@)
 	cp arch/$(ARCH)/kernel/$@ $@
-
-$(ARCHLIB):
-	(cd arch/$(ARCH)/lib && $(MAKE) $@)
-	cp arch/$(ARCH)/lib/$@ $@
 
 $(BOOTLOADER):
 	(cd bootloader && $(MAKE) $@)
