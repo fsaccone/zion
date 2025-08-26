@@ -11,8 +11,8 @@ are respectively defined by the linker scripts arch/ARCH/bootloader.ld and
 arch/ARCH/kernel.ld.
 
 The only architecture-specific header file is arch/ARCH/include/arch.h, and it
-should be considered a header-only library. Each architecture's arch.h file
-must define a consistent API by providing a common set of identifiers.
+must be considered a header-only library. Each architecture's arch.h file must
+define a consistent API by providing a common set of identifiers.
 
 The following is a list of targets which describes where they are defined and
 how they depend on each other.
