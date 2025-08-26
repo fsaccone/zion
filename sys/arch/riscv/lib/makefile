@@ -1,6 +1,6 @@
 include ../../../../config.mk
 
-OBJS = boot.o
+OBJS = boot.o ptable.o
 
 ASCMD = $(AS) -o $@
 CCCMD = $(CC) $(CFLAGS) -I../include -I../../../include -c -o $@
@@ -14,3 +14,6 @@ clean:
 
 boot.o:
 	$(ASCMD) boot.s
+
+ptable.o:
+	$(ASCMD) ptable.s
