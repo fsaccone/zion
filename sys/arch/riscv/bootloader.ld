@@ -28,16 +28,16 @@ SECTIONS
 	} > RAM
 
 	.bss : {
-		_bss_start = .;
+		_bssstart = .;
 		*(.bss)
 		*(COMMON)
-		_bss_end = .;
+		_bssend = .;
 	} > RAM
 
 	.stack (NOLOAD) : {
 		. = ALIGN(8);
-		_stack_start = .;
+		_stackstart = .;
 		. = . + 0x1000;
-		_stack_end = .;
+		_stackend = .;
 	} > RAM
 }

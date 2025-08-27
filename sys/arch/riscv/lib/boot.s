@@ -3,8 +3,8 @@
 .globl clearregs
 
 clearbss:
-	la t0, _bss_start
-	la t1, _bss_end
+	la t0, _bssstart
+	la t1, _bssend
 1:
 	bge  t0,   t1,   2f
 	sw   zero, 0(t0)

@@ -92,7 +92,7 @@ supervisor:
 	mret
 
 callkmain:
-	la sp, _stack_end
+	la sp, _stackend
 
 	j kmain
 
