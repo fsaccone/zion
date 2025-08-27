@@ -35,11 +35,4 @@ SECTIONS
 		. = . + 0x1000;
 		_stackend = .;
 	} > RAM
-
-	.heap (NOLOAD) : {
-		. = ALIGN(8);
-		_heapstart = .;
-		. = . + 0x1000;
-		_heapend = .;
-	} > RAM
 }
