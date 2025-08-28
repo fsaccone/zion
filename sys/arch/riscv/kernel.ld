@@ -35,4 +35,6 @@ SECTIONS
 		. = . + 0x1000;
 		_stackend = .;
 	} > RAM
+
+	_memoryend = .;
 }
