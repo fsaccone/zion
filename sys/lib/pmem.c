@@ -44,7 +44,7 @@ pfree(void *p)
 	struct node *n;
 
 	if ((uintn_t)p % PAGE_SIZE)
-		panic("pfree");
+		panic("pfree: misaligned page");
 
 	n = p;
 
