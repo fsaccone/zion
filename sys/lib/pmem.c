@@ -57,6 +57,9 @@ pfreerange(void *s, void *e)
 {
 	void *p;
 
+	if (PAGE_CEIL(s) >= e)
+		panic("pfreerange: no pages in range");
+
 	for (p = PAGE_CEIL(s);
 	     (uintn_t)p + PAGE_SIZE <= (uintn_t)e;
 	     p = (void *)((uintn_t)p + PAGE_SIZE))
