@@ -8,14 +8,8 @@ MEMORY
 
 SECTIONS
 {
-	.mbr : {
-		*(.entry.text)
-		. = ALIGN(510);
-		BYTE(0x55);
-		BYTE(0xaa);
-	} > ROM
-
 	.text : {
+		*(.entry.text)
 		*(.text)
 	} > ROM
 
