@@ -1,6 +1,7 @@
 #include <pmem.h>
 
 #include <arch.h>
+#include <log.h>
 
 struct node {
 	struct node *n;
@@ -31,4 +32,18 @@ palloc(void)
 	}
 
 	return n;
+}
+
+void
+pfree(void *p)
+{
+	struct node *n;
+
+	if ((uintn_t)p % PAGE_SIZE)
+		panic("pfree");
+
+	n = p;
+
+	n->n = freepages;
+	freepages = n;
 }
