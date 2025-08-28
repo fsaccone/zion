@@ -15,7 +15,9 @@ $(OUT): $(OBJS) $(ARCHOBJS)
 	$(AR) -cr $@ $^
 
 $(OBJS):
-	$(CC) $(CFLAGS) -I../arch/$(ARCH)/include -I../include -c \
+	$(CC) $(CFLAGS) -I../machine/$(MACHINE)/include \
+	                -I../arch/$(ARCH)/include \
+	                -I../include -c \
 	                -o $@ $(@:.o=.c)
 
 $(ARCHOBJS):

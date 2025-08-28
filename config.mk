@@ -1,4 +1,6 @@
-ARCH = riscv
+# To build /sys/, ARCH should match the architecture of MACHINE
+MACHINE = qemu
+ARCH    = riscv
 
 CROSS_COMPILE = $(ARCH)-none-elf-
 

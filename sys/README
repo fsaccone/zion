@@ -14,6 +14,12 @@ The only architecture-specific header file is arch/ARCH/include/arch.h, and it
 must be considered a header-only library. Each architecture's arch.h file must
 define a consistent API by providing a common set of identifiers.
 
+The only machine-specific header file is machine/MACHINE/include/machine.h and
+it must be defined like arch.h, only for machines.
+
+The file machine/MACHINE/arch must be a symlink the the directory of the
+architecture of the machine.
+
 The following is a list of targets which describes where they are defined and
 how they depend on each other.
 
