@@ -59,11 +59,11 @@ $(KERNELBIN): $(KERNELOUT)
 
 $(BOOTLOADEROUT): $(ARCHBOOTLOADER) $(BOOTLOADER) $(LIB)
 	$(MAKE) checkarch
-	$(LD) $(LDFLAGS) -T arch/$(ARCH)/bootloader.ld -o $@ $^
+	$(LD) $(LDFLAGS) -T machine/$(MACHINE)/bootloader.ld -o $@ $^
 
 $(KERNELOUT): $(ARCHKERNEL) $(KERNEL) $(LIB)
 	$(MAKE) checkarch
-	$(LD) $(LDFLAGS) -T arch/$(ARCH)/kernel.ld -o $@ $^
+	$(LD) $(LDFLAGS) -T machine/$(MACHINE)/kernel.ld -o $@ $^
 
 $(ARCHBOOTLOADER):
 	$(MAKE) checkarch

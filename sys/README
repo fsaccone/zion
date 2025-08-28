@@ -7,8 +7,8 @@ Structure
 ---------
 
 The way objects and libraries are linked for the boot loader and for the kernel
-are respectively defined by the linker scripts arch/ARCH/bootloader.ld and
-arch/ARCH/kernel.ld.
+are respectively defined by the linker scripts machine/MACHINE/bootloader.ld
+and machine/MACHINE/kernel.ld.
 
 The only architecture-specific header file is arch/ARCH/include/arch.h, and it
 must be considered a header-only library. Each architecture's arch.h file must
