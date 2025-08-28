@@ -3,6 +3,10 @@
 #include <arch.h>
 #include <log.h>
 
+#define PAGE_CEIL(a)  (void *)(((uintn_t)a) & ~(PAGE_SIZE - 1))
+#define PAGE_FLOOR(a) (void *)((((uintn_t)a) + PAGE_SIZE - 1) \
+                               & ~(PAGE_SIZE - 1))
+
 struct node {
 	struct node *n;
 };
@@ -46,4 +50,15 @@ pfree(void *p)
 
 	n->n = freepages;
 	freepages = n;
+}
+
+void
+pfreerange(void *s, void *e)
+{
+	void *p;
+
+	for (p = PAGE_CEIL(s);
+	     (uintn_t)p + PAGE_SIZE <= (uintn_t)e;
+	     p = (void *)((uintn_t)p + PAGE_SIZE))
+		pfree(p);
 }
