@@ -12,7 +12,7 @@ OBJCOPY = $(CROSS_COMPILE)objcopy
 STRIP   = $(CROSS_COMPILE)strip
 
 CFLAGS  = $(EXTRACFLAGS) -W
-LDFLAGS = $(EXTRALDFLAGS) -static
+LDFLAGS = $(EXTRALDFLAGS)
 
 QEMU        = qemu-system-$(ARCH)
 QEMUCPUS    = 4
