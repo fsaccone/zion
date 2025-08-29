@@ -1,7 +1,7 @@
 #ifndef _MACHINE_H
 #define _MACHINE_H
 
-#define RAM_SIZE 128 * 1024 * 1024
+#define RAM_SIZE (128 * 1024 * 1024)
 
 #define KERNEL_START 0x80000000
 #define KERNEL_SIZE  0xa0000
