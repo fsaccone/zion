@@ -6,11 +6,6 @@
 #define PAGE_SIZE_EXPONENT 12
 #define PAGE_SIZE          (1 << PAGE_SIZE_EXPONENT)
 
-#define UART0               (uint8_t *)(0x10000000)
-#define UART_THR            (uint8_t *)(UART0 + 0x00)
-#define UART_LSR            (uint8_t *)(UART0 + 0x05)
-#define UART_LSR_EMPTY_MASK (0x40)
-
 typedef signed char  int8_t;
 typedef signed short int16_t;
 typedef signed int   int32_t;
