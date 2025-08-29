@@ -11,7 +11,7 @@ LD      = $(CROSS_COMPILE)ld
 OBJCOPY = $(CROSS_COMPILE)objcopy
 STRIP   = $(CROSS_COMPILE)strip
 
-CFLAGS  = $(EXTRACFLAGS) -std=c90 -Wall -Wextra -Wpedantic
+CFLAGS  = $(EXTRACFLAGS) -W
 LDFLAGS = $(EXTRALDFLAGS) -static
 
 QEMU        = qemu-system-$(ARCH)
