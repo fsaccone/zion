@@ -6,6 +6,12 @@
 #define KERNEL_START 0x80000000
 #define KERNEL_SIZE  0xa0000
 
+#define FREE_MEMORY_REGIONS 1
+void *freememregions[FREE_MEMORY_REGIONS][2] = {
+	/* start                       size */
+	{  KERNEL_START + KERNEL_SIZE, RAM_SIZE - KERNEL_START - KERNEL_SIZE },
+};
+
 #define HAS_UART
 
 #define UART0               (uint8_t *)(0x10000000)
