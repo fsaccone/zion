@@ -64,13 +64,13 @@ supervisor:
 	la   t0,   callkmain
 	csrw mepc, t0
 
-	li   t0,      0xffff
+	li   t0,      0xffffffffffffffff
 	csrw medeleg, t0
 	csrw mideleg, t0
 
 	# Kernel PMP address range (all addresses)
 	li   t0,       0x00000000
-	li   t1,       0xffffffff
+	li   t1,       0xffffffffffffffff
 	csrw pmpaddr0, t0
 	csrw pmpaddr1, t1
 

@@ -1,6 +1,6 @@
 # To build /sys/, ARCH should match the architecture of MACHINE
 MACHINE = virt
-ARCH    = riscv
+ARCH    = riscv64
 
 CROSS_COMPILE = $(ARCH)-none-elf-
 

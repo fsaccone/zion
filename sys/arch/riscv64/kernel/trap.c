@@ -6,7 +6,7 @@
 #include "interrupt.h"
 
 void
-handletrap(int32_t cause)
+handletrap(intn_t cause)
 {
 	if (cause < 0)
 		handleinterrupt(cause + 16);
