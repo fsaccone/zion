@@ -3,7 +3,7 @@
 #include <arch.h>
 
 static void
-sprint(const char *str)
+sprint(char *str)
 {
 	while (*str) {
 		while(!(*UART_LSR & UART_LSR_EMPTY_MASK));
@@ -12,7 +12,7 @@ sprint(const char *str)
 }
 
 void
-debug(const char *m)
+debug(char *m)
 {
 	sprint("DEBUG: ");
 	sprint(m);
@@ -20,7 +20,7 @@ debug(const char *m)
 }
 
 void
-panic(const char *m)
+panic(char *m)
 {
 	sprint("PANIC: ");
 	sprint(m);
