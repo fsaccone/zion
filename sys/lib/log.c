@@ -9,7 +9,7 @@ static void sprint(char *str);
 static void
 inttostr(char *str, int n, int base)
 {
-	int i = 0, j, l;
+	int i = 0, j, l, neg = 0;
 
 	if (!n) {
 		str[i++] = '0';
@@ -18,7 +18,7 @@ inttostr(char *str, int n, int base)
 	}
 
 	if (n < 0) {
-		str[i++] = '-';
+		neg = 1;
 		n = -n;
 	}
 
@@ -27,6 +27,9 @@ inttostr(char *str, int n, int base)
 
 		str[i] = (r > 9) ? ('a' + r - 10) : ('0' + r);
 	}
+
+	if (neg)
+		str[i++] = '-';
 
 	l = i;
 
@@ -55,6 +58,28 @@ debug(char *m)
 {
 	sprint("DEBUG: ");
 	sprint(m);
+	sprint("\n");
+}
+
+void
+debugptr(void *ptr)
+{
+#ifdef BIT32
+	char str[11];
+#endif
+#ifdef BIT64
+	char str[19];
+#endif
+#ifdef BIT128
+	char str[35];
+#endif
+	str[0] = '0';
+	str[1] = 'x';
+
+	inttostr(&str[2], (int)ptr, 16);
+
+	sprint("DEBUG: ");
+	sprint(str);
 	sprint("\n");
 }
 
