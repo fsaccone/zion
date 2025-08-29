@@ -14,7 +14,11 @@ STRIP   = $(CROSS_COMPILE)strip
 CFLAGS  = $(EXTRACFLAGS) -std=c90 -Wall -Wextra -Wpedantic
 LDFLAGS = $(EXTRALDFLAGS) -static
 
-QEMU      = qemu-system-$(ARCH)
-QEMUCPUS  = 4
-QEMURAM   = 128M
-QEMUFLAGS = $(EXTRAQEMUFLAGS) -smp $(QEMUCPUS) -m $(QEMURAM) -serial stdio
+QEMU        = qemu-system-$(ARCH)
+QEMUCPUS    = 4
+QEMUMACHINE = $(MACHINE)
+QEMURAM     = 128M
+QEMUFLAGS   = $(EXTRAQEMUFLAGS) -machine $(QEMUMACHINE) \
+                                -smp $(QEMUCPUS) \
+                                -m $(QEMURAM) \
+                                -serial stdio
