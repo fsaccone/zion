@@ -10,8 +10,8 @@
 
 #define FREE_MEMORY_REGIONS_LEN 1
 #define FREE_MEMORY_REGIONS \
-	/* start                       size */ \
-	{  KERNEL_START + KERNEL_SIZE, RAM_SIZE - (KERNEL_START + KERNEL_SIZE) },
+	/* start  size            */ \
+	{  0,     KERNEL_START - 1 },
 
 #define HAS_UART
 
