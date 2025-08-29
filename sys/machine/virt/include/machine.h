@@ -6,7 +6,7 @@
 #define RAM_SIZE (128 * 1024 * 1024)
 
 #define KERNEL_START (uintn_t)0x80000000
-#define KERNEL_SIZE  (uintn_t)(256 * 1024 + 32 * 1024 * 1024)
+#define KERNEL_SIZE  (uintn_t)(256 * 1024 + 1 * 1024 * 1024)
 
 #define FREE_MEMORY_REGIONS_LEN 1
 #define FREE_MEMORY_REGIONS \
