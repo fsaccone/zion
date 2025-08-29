@@ -3,6 +3,9 @@
 
 #define RAM_SIZE 128 * 1024 * 1024
 
+#define KERNEL_START 0x80000000
+#define KERNEL_SIZE  0xa0000
+
 #define HAS_UART
 
 #define UART0               (uint8_t *)(0x10000000)
