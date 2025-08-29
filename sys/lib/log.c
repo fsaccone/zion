@@ -1,6 +1,7 @@
 #include <log.h>
 
 #include <arch.h>
+#include <machine.h>
 
 static void
 sprint(char *str)
