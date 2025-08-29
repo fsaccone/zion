@@ -3,7 +3,7 @@
 
 #include <arch.h>
 
-#define RAM_SIZE (128 * 1024 * 1024)
+#define RAM_SIZE (4U * 1024U * 1024U * 1024U)
 
 #define KERNEL_START (uintn_t)0x80000000
 #define KERNEL_SIZE  (uintn_t)(256 * 1024 + 1 * 1024 * 1024)

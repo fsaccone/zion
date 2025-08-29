@@ -17,7 +17,7 @@ LDFLAGS = $(EXTRALDFLAGS) -static
 QEMU        = qemu-system-$(ARCH)
 QEMUCPUS    = 4
 QEMUMACHINE = $(MACHINE)
-QEMURAM     = 128M
+QEMURAM     = 4G
 QEMUFLAGS   = $(EXTRAQEMUFLAGS) -machine $(QEMUMACHINE) \
                                 -smp $(QEMUCPUS) \
                                 -m $(QEMURAM) \
