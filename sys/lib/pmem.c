@@ -7,11 +7,11 @@
 #define PAGE_FLOOR(a) (void *)((((uintn_t)(a)) + PAGE_SIZE - 1) \
                                & ~(PAGE_SIZE - 1))
 
-struct node {
-	struct node *n;
+struct page {
+	struct page *n;
 };
 
-struct node *freepages;
+struct page *freepages;
 
 static void *
 memset(void *s, int c, size_t n)
@@ -27,29 +27,29 @@ memset(void *s, int c, size_t n)
 void *
 palloc(void)
 {
-	struct node *n;
+	struct page *p;
 
-	n = freepages;
-	if (n) {
-		freepages = n->n;
-		memset(n, 0, PAGE_SIZE);
+	p = freepages;
+	if (p) {
+		freepages = p->n;
+		memset(p, 0, PAGE_SIZE);
 	}
 
-	return n;
+	return p;
 }
 
 void
 pfree(void *p)
 {
-	struct node *n;
+	struct page *ap;
 
 	if ((uintn_t)p % PAGE_SIZE)
 		panic("pfree: misaligned page");
 
-	n = p;
+	ap = p;
 
-	n->n = freepages;
-	freepages = n;
+	ap->n = freepages;
+	freepages = ap;
 }
 
 void
