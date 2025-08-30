@@ -7,7 +7,7 @@ struct page {
 	struct page *n;
 };
 
-struct page *freepages;
+struct page *freepages = NULL;
 
 static void *
 memset(void *s, int c, size_t n)
