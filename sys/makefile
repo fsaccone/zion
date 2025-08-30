@@ -11,7 +11,7 @@ LIB     = libsys.a
 all: $(OUT)
 
 checkarch:
-	@[ $$(basename $$(readlink machine/$(MACHINE)/arch)) = $(ARCH) ] \
+	@[ $$(readlink machine/$(MACHINE)/arch) = ../../arch/$(ARCH) ] \
 	 || (echo "ARCH does not match the architecture of MACHINE" >&2 \
 	     && exit 1)
 
