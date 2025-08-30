@@ -5,7 +5,6 @@
 
 static void inttostr(char *str, int n, int base);
 static void sprint(char *str);
-
 static void
 inttostr(char *str, int n, int base)
 {
@@ -76,7 +75,7 @@ debugptr(void *ptr)
 	str[0] = '0';
 	str[1] = 'x';
 
-	inttostr(&str[2], (int)ptr, 16);
+	inttostr(&str[2], (uintn_t)ptr, 16);
 
 	sprint("DEBUG: ");
 	sprint(str);
