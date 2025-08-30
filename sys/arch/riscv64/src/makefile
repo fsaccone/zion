@@ -1,6 +1,6 @@
 include ../../../../config.mk
 
-OUT   = archkernel.o
+OUT   = archsys.o
 COBJS = exception.o interrupt.o trap.o
 SOBJS = entry.o status.o
 

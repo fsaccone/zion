@@ -2,9 +2,9 @@ include ../config.mk
 
 OUT = sys.bin
 
-ARCHKERNEL = archkernel.o
-KERNEL     = kernel.o
-LIB        = libsys.a
+ARCHOBJ = archsys.o
+COMOBJ  = sys.o
+LIB     = libsys.a
 
 .PHONY: all checkarch clean test
 
@@ -16,7 +16,7 @@ checkarch:
 	     && exit 1)
 
 clean:
-	rm -f $(OUT) $(ARCHKERNEL) $(KERNEL) $(LIB)
+	rm -f $(OUT) $(ARCHOBJ) $(COMOBJ) $(LIB)
 	for d in arch/*/; do \
 		(cd $$d/lib && $(MAKE) clean); \
 		(cd $$d/src && $(MAKE) clean); \
@@ -27,18 +27,18 @@ clean:
 test: $(OUT)
 	$(QEMU) $(QEMUFLAGS) -machine virt -bios none -kernel $^
 
-$(OUT): $(ARCHKERNEL) $(KERNEL) $(LIB)
+$(OUT): $(ARCHOBJ) $(COMOBJ) $(LIB)
 	$(MAKE) checkarch
-	$(LD) $(LDFLAGS) -T machine/$(MACHINE)/kernel.ld -o $@ $^
+	$(LD) $(LDFLAGS) -T machine/$(MACHINE)/sys.ld -o $@ $^
 	$(STRIP) $@
 	$(OBJCOPY) -O binary $@
 
-$(ARCHKERNEL):
+$(ARCHOBJ):
 	$(MAKE) checkarch
 	(cd arch/$(ARCH)/src && $(MAKE) $@)
 	cp arch/$(ARCH)/src/$@ $@
 
-$(KERNEL):
+$(COMOBJ):
 	(cd src && $(MAKE) $@)
 	cp src/$@ $@
 

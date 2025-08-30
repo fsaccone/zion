@@ -7,7 +7,7 @@ Structure
 ---------
 
 The way objects and libraries are defined by the linker script located at
-machine/MACHINE/kernel.ld.
+machine/MACHINE/sys.ld.
 
 The only architecture-specific header file is arch/ARCH/include/arch.h, and it
 must be considered a header-only library. Each architecture's arch.h file must
@@ -27,18 +27,18 @@ how they depend on each other.
 The target libsys.a is a static library which implements the header files in
 include/.
 
-* kernel.o (defined in src/)
+* sys.o (defined in src/)
 
-The target kernel.o is a relocatable object which contains the primary
+The target sys.o is a relocatable object which contains the primary
 implementation of the kernel. It depends on libarch.a and libsys.a. It defines
 the kmain symbol, which should be called by the main architecture-dependent
 entry point.
 
-* archkernel.o (defined in arch/ARCH/src/)
+* archsys.o (defined in arch/ARCH/src/)
 
-The target archkernel.o is a relocatable object which defines the main entry
-point of the kernel. It depends on libarch.a, libsys.a and kernel.o.
+The target archsys.o is a relocatable object which defines the main entry
+point of the kernel. It depends on libarch.a, libsys.a and sys.o.
 
 * sys.bin (defined in /)
 
-The main target is sys.bin, which links archkernel.o with all its dependencies.
+The main target is sys.bin, which links archsys.o with all its dependencies.

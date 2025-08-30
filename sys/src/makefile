@@ -1,6 +1,6 @@
 include ../../config.mk
 
-OUT  = kernel.o
+OUT  = sys.o
 OBJS = kmain.o
 
 .PHONY: all clean
