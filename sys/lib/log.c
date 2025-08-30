@@ -58,8 +58,17 @@ sprint(char *str)
 void
 debug(char *m)
 {
-	sprint("DEBUG: ");
+	/*      DEBUG: */
+	sprint("       ");
 	sprint(m);
+	sprint("\n");
+}
+
+void
+debughead(char *h)
+{
+	sprint("DEBUG: ");
+	sprint(h);
 	sprint("\n");
 }
 
@@ -80,7 +89,8 @@ debugptr(void *ptr)
 
 	inttostr(&str[2], (long)ptr, 16);
 
-	sprint("DEBUG: ");
+	/*      DEBUG: */
+	sprint("       ");
 	sprint(str);
 	sprint("\n");
 }
