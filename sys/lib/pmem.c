@@ -2,6 +2,7 @@
 
 #include <arch.h>
 #include <log.h>
+#include <math.h>
 
 struct page {
 	struct page *n;
@@ -53,10 +54,10 @@ pfreerange(void *s, void *e)
 {
 	void *p;
 
-	if (PAGE_CEIL(s) >= e)
+	if (CEIL((uintn_t)s, PAGE_SIZE) >= (uintn_t)e)
 		panic("pfreerange: no pages in range");
 
-	for (p = PAGE_CEIL(s);
+	for (p = (void *)CEIL((uintn_t)s, PAGE_SIZE);
 	     (uintn_t)p + PAGE_SIZE <= (uintn_t)e;
 	     p = (void *)((uintn_t)p + PAGE_SIZE))
 		pfree(p);
