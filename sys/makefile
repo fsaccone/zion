@@ -2,20 +2,11 @@ include ../config.mk
 
 OUT = sys.bin
 
-BOOTLOADERBIN = bootloader.bin
-BOOTLOADEROUT = bootloader.out
-
-KERNELBIN = kernel.bin
-KERNELOUT = kernel.out
-
-ARCHBOOTLOADER = archbootloader.o
-ARCHKERNEL     = archkernel.o
-
-LIB        = libsys.a
-BOOTLOADER = bootloader.o
+ARCHKERNEL = archkernel.o
 KERNEL     = kernel.o
+LIB        = libsys.a
 
-.PHONY: all checkarch clean test testkernel
+.PHONY: all checkarch clean test
 
 all: $(OUT)
 
@@ -25,63 +16,31 @@ checkarch:
 	     && exit 1)
 
 clean:
-	rm -f $(OUT) \
-	      $(BOOTLOADERBIN) $(BOOTLOADEROUT) \
-	      $(KERNELBIN) $(KERNELOUT) \
-	      $(ARCHBOOTLOADER) $(ARCHKERNEL) \
-	      $(BOOTLOADER) $(KERNEL) $(LIB)
+	rm -f $(OUT) $(ARCHKERNEL) $(KERNEL) $(LIB)
 	for d in arch/*/; do \
-		(cd $$d/bootloader && $(MAKE) clean); \
-		(cd $$d/kernel     && $(MAKE) clean); \
-		(cd $$d/lib        && $(MAKE) clean); \
+		(cd $$d/lib && $(MAKE) clean); \
+		(cd $$d/src && $(MAKE) clean); \
 	done
-	(cd bootloader    && $(MAKE) clean)
-	(cd kernel        && $(MAKE) clean)
-	(cd lib           && $(MAKE) clean)
+	(cd lib && $(MAKE) clean)
+	(cd src && $(MAKE) clean)
 
 test: $(OUT)
-	$(QEMU) $(QEMUFLAGS) -no-shutdown -drive file=$^,format=raw
-
-testkernel: $(KERNELBIN)
 	$(QEMU) $(QEMUFLAGS) -machine virt -bios none -kernel $^
 
-$(OUT): $(BOOTLOADERBIN) $(KERNELBIN)
-	cat $^ > $@
-	chmod +x $@
-
-$(BOOTLOADERBIN): $(BOOTLOADEROUT)
-	$(STRIP) -o $@ $^
-	$(OBJCOPY) -O binary $@
-
-$(KERNELBIN): $(KERNELOUT)
-	$(STRIP) -o $@ $^
-	$(OBJCOPY) -O binary $@
-
-$(BOOTLOADEROUT): $(ARCHBOOTLOADER) $(BOOTLOADER) $(LIB)
-	$(MAKE) checkarch
-	$(LD) $(LDFLAGS) -T machine/$(MACHINE)/bootloader.ld -o $@ $^
-
-$(KERNELOUT): $(ARCHKERNEL) $(KERNEL) $(LIB)
+$(OUT): $(ARCHKERNEL) $(KERNEL) $(LIB)
 	$(MAKE) checkarch
 	$(LD) $(LDFLAGS) -T machine/$(MACHINE)/kernel.ld -o $@ $^
-
-$(ARCHBOOTLOADER):
-	$(MAKE) checkarch
-	(cd arch/$(ARCH)/bootloader && $(MAKE) $@)
-	cp arch/$(ARCH)/bootloader/$@ $@
+	$(STRIP) $@
+	$(OBJCOPY) -O binary $@
 
 $(ARCHKERNEL):
 	$(MAKE) checkarch
-	(cd arch/$(ARCH)/kernel && $(MAKE) $@)
-	cp arch/$(ARCH)/kernel/$@ $@
-
-$(BOOTLOADER):
-	(cd bootloader && $(MAKE) $@)
-	cp bootloader/$@ $@
+	(cd arch/$(ARCH)/src && $(MAKE) $@)
+	cp arch/$(ARCH)/src/$@ $@
 
 $(KERNEL):
-	(cd kernel && $(MAKE) $@)
-	cp kernel/$@ $@
+	(cd src && $(MAKE) $@)
+	cp src/$@ $@
 
 $(LIB):
 	(cd lib && $(MAKE) $@)

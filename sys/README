@@ -1,14 +1,13 @@
 /sys/
 =====
 
-Boot loader and kernel.
+Kernel.
 
 Structure
 ---------
 
-The way objects and libraries are linked for the boot loader and for the kernel
-are respectively defined by the linker scripts machine/MACHINE/bootloader.ld
-and machine/MACHINE/kernel.ld.
+The way objects and libraries are defined by the linker script located at
+machine/MACHINE/kernel.ld.
 
 The only architecture-specific header file is arch/ARCH/include/arch.h, and it
 must be considered a header-only library. Each architecture's arch.h file must
@@ -28,38 +27,18 @@ how they depend on each other.
 The target libsys.a is a static library which implements the header files in
 include/.
 
-* bootloader.o (defined in bootloader/)
+* kernel.o (defined in src/)
 
-The target bootloader.o is a relocatable object which contains the primary
-implementation of the boot loader. It depends on libarch.a and libsys.a. It
-defines the bmain symbol, which should be called by the main
-architecture-dependent entry point.
+The target kernel.o is a relocatable object which contains the primary
+implementation of the kernel. It depends on libarch.a and libsys.a. It defines
+the kmain symbol, which should be called by the main architecture-dependent
+entry point.
 
-* kernel.o (defined in kernel/)
+* archkernel.o (defined in arch/ARCH/src/)
 
-The target kernel.o is like bootloader.o, only for the kernel. It defines the
-kmain symbol, which should be called by the main architecture-dependent entry
-point, passing the void *kstart pointer argument. This argument is the start
-address of the kernel code and should have been provided by the boot loader.
-
-* archbootloader.o (defined in arch/ARCH/booloader/)
-
-The target archbootloader.o is a relocatable object which defines the main
-entry point of the boot loader. It depends on libarch.a, libsys.a and
-bootloader.o.
-
-* archkernel.o (defined in arch/ARCH/kernel/)
-
-The target archkernel.o is like archbootloader.o, only for the kernel. Their
-dependencies are the same, with the exception that it relies on kernel.o
-instead of bootloader.o.
-
-* bootloader.out, bootloader.bin, kernel.out, kernel.bin (defined in /)
-
-The main targets are bootloader.out, stripped to bootloader.bin, which links
-archbootloader.o with all its dependencies, and kernel.out, stripped to
-kernel.bin, which does the same with archkernel.o.
+The target archkernel.o is a relocatable object which defines the main entry
+point of the kernel. It depends on libarch.a, libsys.a and kernel.o.
 
 * sys.bin (defined in /)
 
-The OUT target sys.bin is made by concatenating bootloader.bin with kernel.bin.
+The main target is sys.bin, which links archkernel.o with all its dependencies.
