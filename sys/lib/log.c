@@ -91,5 +91,7 @@ panic(char *m)
 	sprint("PANIC: ");
 	sprint(m);
 	sprint("\n");
-	for (;;);
+
+loop:
+	goto loop;
 }
