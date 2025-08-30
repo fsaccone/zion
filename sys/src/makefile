@@ -1,7 +1,7 @@
 include ../../config.mk
 
 OUT  = sys.o
-OBJS = kmain.o
+OBJS = kmain.o mem.o
 
 .PHONY: all clean
 
