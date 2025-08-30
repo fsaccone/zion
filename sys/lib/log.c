@@ -3,13 +3,13 @@
 #include <arch.h>
 #include <machine.h>
 
-static void inttostr(char *str, int n, int base);
+static void inttostr(char *str, long n, int base);
 static void sprint(char *str);
 
 static char digits[36] = "0123456789abcdefghijklmnopqrstuvwxyz";
 
 static void
-inttostr(char *str, int n, int base)
+inttostr(char *str, long n, int base)
 {
 	int i = 0, j, l, neg = 0;
 
@@ -78,7 +78,7 @@ debugptr(void *ptr)
 	str[0] = '0';
 	str[1] = 'x';
 
-	inttostr(&str[2], (uintn_t)ptr, 16);
+	inttostr(&str[2], (long)ptr, 16);
 
 	sprint("DEBUG: ");
 	sprint(str);
