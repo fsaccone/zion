@@ -65,7 +65,7 @@ debug(char *m)
 }
 
 void
-debughead(char *h)
+debugheader(char *h)
 {
 	sprint("DEBUG: ");
 	sprint(h);

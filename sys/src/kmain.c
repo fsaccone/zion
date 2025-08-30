@@ -5,7 +5,7 @@
 void
 kmain(void)
 {
-	debughead("Kernel start.");
+	debugheader("Kernel start.");
 
 	freeallmem();
 

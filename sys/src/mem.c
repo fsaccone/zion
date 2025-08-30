@@ -13,7 +13,7 @@ freeallmem(void)
 		uintn_t start = freemem[i][0],
 		        size  = freemem[i][1];
 
-		debughead("Freeing user memory:");
+		debugheader("Freeing user memory:");
 		debug("From:");
 		debugptr((void *)start);
 		debug("To:");

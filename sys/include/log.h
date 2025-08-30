@@ -1,13 +1,13 @@
 #ifndef _LOG_H
 #define _LOG_H
 
-/* Prints a message indented to the last debughead */
+/* Prints a message indented to the last debugheader */
 void debug(char *m);
 
 /* Prints a message prefixed with 'DEBUG: ' */
-void debughead(char *h);
+void debugheader(char *h);
 
-/* Prints an address indented to the last debughead */
+/* Prints an address indented to the last debugheader */
 void debugptr(void *ptr);
 
 /* Prints an error message and panics */
