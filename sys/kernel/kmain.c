@@ -24,5 +24,5 @@ kmain(void)
 		pfreerange((void *)start, (void *)(start + size));
 	}
 
-	for (;;);
+	panic("Reached end of kernel execution.");
 }
