@@ -5,6 +5,9 @@
 
 static void inttostr(char *str, int n, int base);
 static void sprint(char *str);
+
+static char digits[36] = "0123456789abcdefghijklmnopqrstuvwxyz";
+
 static void
 inttostr(char *str, int n, int base)
 {
@@ -24,7 +27,7 @@ inttostr(char *str, int n, int base)
 	for (; n; n /= base, i++) {
 		int r = n % base;
 
-		str[i] = (r > 9) ? ('a' + r - 10) : ('0' + r);
+		str[i] = digits[r % sizeof(digits)];
 	}
 
 	if (neg)
