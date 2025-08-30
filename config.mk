@@ -2,7 +2,7 @@
 MACHINE = virt
 ARCH    = riscv64
 
-CROSS_COMPILE = $(ARCH)-none-elf-
+CROSS_COMPILE = $(ARCH)-linux-musl-
 
 AR      = $(CROSS_COMPILE)ar
 AS      = $(CROSS_COMPILE)as
