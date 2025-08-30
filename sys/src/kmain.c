@@ -6,7 +6,7 @@
 void
 kmain(void)
 {
-	int i, *p, *q;
+	int i;
 	uintn_t freemem[FREE_MEMORY_REGIONS_LEN][2] = { FREE_MEMORY_REGIONS };
 
 	debughead("Kernel start.");
