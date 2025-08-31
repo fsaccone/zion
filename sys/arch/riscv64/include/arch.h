@@ -28,6 +28,4 @@ typedef struct {
 
 typedef uint64 uintn;
 
-typedef uint64 size;
-
 #endif

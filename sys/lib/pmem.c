@@ -11,7 +11,7 @@ struct page {
 struct page *freepages = NULL;
 
 static void *
-memset(void *s, int c, size n)
+memset(void *s, int c, uintn n)
 {
 	int *p = s;
 
