@@ -28,9 +28,6 @@ typedef struct {
 
 typedef uint64 uintn;
 
-typedef float  float32;
-typedef double float64;
-
 typedef uint64 size;
 
 #endif
