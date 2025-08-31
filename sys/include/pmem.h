@@ -8,8 +8,8 @@
 
 #define NULL ((void *)0)
 
-/* Allocate as much adjacent frames as needed to fit size s and return the
-   pointer to the first one */
+/* Allocate as much adjacent frames as needed to fit size s, fill with zeros
+   and return the pointer to the first one */
 void *palloc(uintn s);
 
 /* Free enough frames from p to fit size s */
