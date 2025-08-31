@@ -60,13 +60,9 @@ pfreerange(void *s, void *e)
 		pfree(p);
 }
 
-void *
+void
 pmemset(void *s, int c, uintn n)
 {
-	int *p = s;
-
 	while (n--)
-		*p++ = c;
-
-	return p;
+		*(int *)s++ = c;
 }

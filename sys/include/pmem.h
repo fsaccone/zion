@@ -15,7 +15,7 @@ void pfree(void *p);
 /* Free all frames in range s-e */
 void pfreerange(void *s, void *e);
 
-/* Sets all n bytes starting from s to c and returns s */
-void *pmemset(void *s, int c, uintn n);
+/* Sets all n bytes starting from s to c */
+void pmemset(void *s, int c, uintn n);
 
 #endif
