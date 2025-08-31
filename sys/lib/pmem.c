@@ -10,17 +10,6 @@ struct page {
 
 struct page *freepages = NULL;
 
-static void *
-memset(void *s, int c, uintn n)
-{
-	int *p = s;
-
-	while (n--)
-		*p++ = c;
-
-	return p;
-}
-
 void *
 palloc(uintn s)
 {
@@ -36,7 +25,7 @@ palloc(uintn s)
 			return NULL;
 
 		freepages = p->n;
-		memset(p, 0, PAGE_SIZE);
+		pmemset(p, 0, PAGE_SIZE);
 		p = freepages;
 	}
 
@@ -69,4 +58,15 @@ pfreerange(void *s, void *e)
 	     (uintn)p + PAGE_SIZE <= (uintn)e;
 	     p = (void *)((uintn)p + PAGE_SIZE))
 		pfree(p);
+}
+
+void *
+pmemset(void *s, int c, uintn n)
+{
+	int *p = s;
+
+	while (n--)
+		*p++ = c;
+
+	return p;
 }
