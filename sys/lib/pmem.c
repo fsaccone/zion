@@ -75,6 +75,10 @@ nextfirst:
 		}
 	}
 
+	/* Since the search happens from the highest to the lowest address,
+	   first is needed to be set to the last element of pages */
+	first = pages[npages - 1];
+
 	for (i = 0; i < npages; i++) {
 		allocpage(pages[i]);
 		pmemset(pages[i], 0, PAGE_SIZE);
