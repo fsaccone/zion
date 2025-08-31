@@ -14,7 +14,7 @@ static void allocpage(struct page *p);
 /* Finds p in freepages and returns it as a struct page * */
 static struct page *freepage(void *p);
 
-struct page *freepages = NULL;
+static struct page *freepages = NULL;
 
 static void
 allocpage(struct page *p)
