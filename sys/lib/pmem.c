@@ -8,28 +8,79 @@ struct page {
 	struct page *n;
 };
 
+/* Removes p from freepages */
+static void allocpage(struct page *p);
+
+/* Finds p in freepages and returns it as a struct page * */
+static struct page *freepage(void *p);
+
 struct page *freepages = NULL;
+
+static void
+allocpage(struct page *p)
+{
+	struct page *prev;
+
+	if (!p)
+		return;
+
+	if (freepages == p) {
+		freepages = freepages->n;
+		return;
+	}
+
+	/* Find prev freepages element which points to p */
+	for (prev = freepages; prev->n != p; prev = prev->n) {
+		if (!prev)
+			return;
+	}
+
+	prev->n = p->n;
+}
+
+static struct page *
+freepage(void *p)
+{
+	struct page *q;
+
+	for (q = freepages; q; q = q->n) {
+		if ((uintn)p == (uintn)q)
+			return p;
+	}
+
+	return NULL;
+}
 
 void *
 palloc(uintn s)
 {
-	struct page *p;
+	struct page *first;
+	struct page *pages[MAX_PALLOC_FRAMES];
 	uintn i, npages = CEIL(s, PAGE_SIZE) / PAGE_SIZE;
 
-	if (!s)
+	if (!s || s > MAX_PALLOC)
 		return NULL;
 
-	p = freepages;
-	for (i = 0; i < npages; i++) {
-		if (!p)
-			return NULL;
+	first = freepages;
+nextfirst:
+	if (!first)
+		return NULL;
 
-		freepages = p->n;
-		pmemset(p, 0, PAGE_SIZE);
-		p = freepages;
+	for (i = 0; i < npages; i++) {
+		pages[i] = freepage((void *)((uintn)first - i * PAGE_SIZE));
+
+		if (!pages[i]) {
+			first = first->n;
+			goto nextfirst;
+		}
 	}
 
-	return p;
+	for (i = 0; i < npages; i++) {
+		allocpage(pages[i]);
+		pmemset(pages[i], 0, PAGE_SIZE);
+	}
+
+	return first;
 }
 
 void
