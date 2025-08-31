@@ -88,17 +88,19 @@ nextfirst:
 }
 
 void
-pfree(void *p)
+pfree(void *p, uintn s)
 {
-	struct page *ap;
+	uintn i;
 
 	if ((uintn)p % PAGE_SIZE)
 		panic("pfree: misaligned page");
 
-	ap = p;
+	for (i = 0; i < CEIL(s, PAGE_SIZE) / PAGE_SIZE; i++) {
+		struct page *q = (struct page *)((uintn)p + i * PAGE_SIZE);
 
-	ap->n = freepages;
-	freepages = ap;
+		q->n = freepages;
+		freepages = q;
+	}
 }
 
 void
@@ -112,7 +114,7 @@ pfreerange(void *s, void *e)
 	for (p = (void *)CEIL((uintn)s, PAGE_SIZE);
 	     (uintn)p + PAGE_SIZE <= (uintn)e;
 	     p = (void *)((uintn)p + PAGE_SIZE))
-		pfree(p);
+		pfree(p, PAGE_SIZE);
 }
 
 void

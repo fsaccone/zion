@@ -12,8 +12,8 @@
    pointer to the first one */
 void *palloc(uintn s);
 
-/* Free the p frame */
-void pfree(void *p);
+/* Free enough frames from p to fit size s */
+void pfree(void *p, uintn s);
 
 /* Free all frames in range s-e */
 void pfreerange(void *s, void *e);
