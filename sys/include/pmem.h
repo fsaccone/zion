@@ -1,10 +1,13 @@
 #ifndef _PMEM_H
 #define _PMEM_H
 
+#include <arch.h>
+
 #define NULL ((void *)0)
 
-/* Allocate one frame and return its address */
-void *palloc(void);
+/* Allocate as much adjacent frames as needed to fit size s and return the
+   pointer to the first one */
+void *palloc(uintn s);
 
 /* Free the p frame */
 void pfree(void *p);

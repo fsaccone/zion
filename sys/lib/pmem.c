@@ -22,14 +22,22 @@ memset(void *s, int c, uintn n)
 }
 
 void *
-palloc(void)
+palloc(uintn s)
 {
 	struct page *p;
+	uintn i, npages = CEIL(s, PAGE_SIZE) / PAGE_SIZE;
+
+	if (!s)
+		return NULL;
 
 	p = freepages;
-	if (p) {
+	for (i = 0; i < npages; i++) {
+		if (!p)
+			return NULL;
+
 		freepages = p->n;
 		memset(p, 0, PAGE_SIZE);
+		p = freepages;
 	}
 
 	return p;
