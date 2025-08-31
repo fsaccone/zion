@@ -3,6 +3,6 @@
 
 #include <arch.h>
 
-void handleexception(uintn_t cause);
+void handleexception(uintn cause);
 
 #endif

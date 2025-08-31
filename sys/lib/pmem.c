@@ -11,7 +11,7 @@ struct page {
 struct page *freepages = NULL;
 
 static void *
-memset(void *s, int c, size_t n)
+memset(void *s, int c, size n)
 {
 	int *p = s;
 
@@ -40,7 +40,7 @@ pfree(void *p)
 {
 	struct page *ap;
 
-	if ((uintn_t)p % PAGE_SIZE)
+	if ((uintn)p % PAGE_SIZE)
 		panic("pfree: misaligned page");
 
 	ap = p;
@@ -54,11 +54,11 @@ pfreerange(void *s, void *e)
 {
 	void *p;
 
-	if (CEIL((uintn_t)s, PAGE_SIZE) >= (uintn_t)e)
+	if (CEIL((uintn)s, PAGE_SIZE) >= (uintn)e)
 		panic("pfreerange: no pages in range");
 
-	for (p = (void *)CEIL((uintn_t)s, PAGE_SIZE);
-	     (uintn_t)p + PAGE_SIZE <= (uintn_t)e;
-	     p = (void *)((uintn_t)p + PAGE_SIZE))
+	for (p = (void *)CEIL((uintn)s, PAGE_SIZE);
+	     (uintn)p + PAGE_SIZE <= (uintn)e;
+	     p = (void *)((uintn)p + PAGE_SIZE))
 		pfree(p);
 }

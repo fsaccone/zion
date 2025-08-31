@@ -3,6 +3,6 @@
 
 #include <arch.h>
 
-void handleinterrupt(uintn_t cause);
+void handleinterrupt(uintn cause);
 
 #endif
