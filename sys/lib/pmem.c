@@ -93,7 +93,7 @@ pfree(void *p, uintn s)
 	uintn i;
 
 	if ((uintn)p % PAGE_SIZE)
-		panic("pfree: misaligned page");
+		panic("pfree: Misaligned page.");
 
 	for (i = 0; i < CEIL(s, PAGE_SIZE) / PAGE_SIZE; i++) {
 		struct page *q = (struct page *)((uintn)p + i * PAGE_SIZE);
@@ -109,7 +109,7 @@ pfreerange(void *s, void *e)
 	void *p;
 
 	if (CEIL((uintn)s, PAGE_SIZE) >= (uintn)e)
-		panic("pfreerange: no pages in range");
+		panic("pfreerange: No pages in range.");
 
 	for (p = (void *)CEIL((uintn)s, PAGE_SIZE);
 	     (uintn)p + PAGE_SIZE <= (uintn)e;
