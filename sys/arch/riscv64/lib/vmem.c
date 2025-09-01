@@ -116,3 +116,45 @@ createpagetable(void)
 	   fills all allocated frames with zeros, and that is what we want. */
 	return palloc(PAGE_TABLE_ENTRIES * sizeof(uintn));
 }
+
+void *
+valloc(void *pt, struct pageoptions opts)
+{
+	uint64 *lastpt, *pte;
+	void *f;
+
+	if (!opts.r && !opts.w && !opts.x)
+		panic("addpage: No permissions passed.");
+
+	if (opts.x && !opts.r)
+		panic("addpage: Execute permission passed without read one.");
+
+	if (!(lastpt = levelpagetable(pt, PAGE_TABLE_LEVELS)))
+		return NULL;
+
+	/* lastp is non-full, so it is assured that pte is valid */
+	pte = invalidentry(lastpt);
+
+	/* PPN bits */
+	f = palloc(PAGE_SIZE);
+	/* Since f is already aligned to PAGE_SIZE, there is no need to zero
+	   the option bits */
+	*pte |= (uintn)f;
+
+	/* V bit */
+	*pte |= 1;
+
+	/* U bit */
+	*pte |= opts.u << 4;
+
+	/* R bit */
+	*pte |= opts.r << 1;
+
+	/* W bit */
+	*pte |= opts.w << 2;
+
+	/* X bit */
+	*pte |= opts.x << 3;
+
+	return f;
+}
