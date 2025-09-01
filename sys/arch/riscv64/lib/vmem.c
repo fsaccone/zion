@@ -11,6 +11,8 @@
 
 /* Returns the first valid l-level page table it encounters, or NULL if pt is
    full. It creates one if needed */
+static void *levelpagetable(void *pt, int l);
+
 static void *
 levelpagetable(void *pt, int l)
 {
