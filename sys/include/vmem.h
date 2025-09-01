@@ -24,8 +24,8 @@ struct pageoptions {
    pointer */
 void *createpagetable(void);
 
-/* Allocates a frame and adds a page entry pointing to it with options opts to
-   page table pt. Returns NULL if page table is full */
+/* Allocates and returns a frame and adds a page entry pointing to it with
+   options opts to page table pt. Returns NULL if page table is full */
 void *valloc(void *pt, struct pageoptions opts);
 
 #endif
