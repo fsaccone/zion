@@ -158,3 +158,21 @@ valloc(void *pt, struct pageoptions opts)
 
 	return pte;
 }
+
+void
+vfree(void *pte)
+{
+	uint64 f = *(uint64 *)pte;
+
+	/* Set all option bits to 0 */
+	f >>= 10;
+	f <<= 10;
+
+	/* Set upper reserved bits to 0 */
+	f <<= 10;
+	f >>= 10;
+
+	pfree((void *)f, PAGE_SIZE);
+
+	*(uint64 *)pte = 0;
+}

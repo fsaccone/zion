@@ -29,4 +29,7 @@ void *createpagetable(void);
    table is full */
 void *valloc(void *pt, struct pageoptions opts);
 
+/* Makes page table entry pte invalid and frees the frame it points to */
+void vfree(void *pte);
+
 #endif
