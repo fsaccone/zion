@@ -156,5 +156,5 @@ valloc(void *pt, struct pageoptions opts)
 	/* X bit */
 	*pte |= opts.x << 3;
 
-	return f;
+	return pte;
 }
