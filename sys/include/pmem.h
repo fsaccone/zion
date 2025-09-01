@@ -13,7 +13,7 @@
 void *palloc(uintn s);
 
 /* Free enough frames from p to fit size s */
-void pfree(void *p, uintn s);
+void pfree(void *f, uintn s);
 
 /* Free all frames in range s-e */
 void pfreerange(void *s, void *e);

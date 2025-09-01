@@ -88,15 +88,15 @@ nextfirst:
 }
 
 void
-pfree(void *p, uintn s)
+pfree(void *f, uintn s)
 {
 	uintn i;
 
-	if ((uintn)p % PAGE_SIZE)
+	if ((uintn)f % PAGE_SIZE)
 		panic("pfree: Misaligned page.");
 
 	for (i = 0; i < CEIL(s, PAGE_SIZE) / PAGE_SIZE; i++) {
-		struct page *q = (struct page *)((uintn)p + i * PAGE_SIZE);
+		struct page *q = (struct page *)((uintn)f + i * PAGE_SIZE);
 
 		q->n = freepages;
 		freepages = q;
