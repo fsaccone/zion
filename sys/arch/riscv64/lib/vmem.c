@@ -3,7 +3,7 @@
 #include <arch.h>
 #include <pmem.h>
 
-#define PAGE_TABLE_ENTRIES 1024
+#define PAGE_TABLE_ENTRIES 512
 
 void *
 createpagetable(void)
