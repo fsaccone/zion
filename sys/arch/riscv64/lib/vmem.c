@@ -11,9 +11,9 @@
 
 /* Returns the first valid l-level page table it encounters, or NULL if pt is
    full. It creates one if needed */
-static void *levelpagetable(void *pt, int l);
+static uint64 *levelpagetable(void *pt, int l);
 
-static void *
+static uint64 *
 levelpagetable(void *pt, int l)
 {
 	int i, lvlidx[PAGE_TABLE_LEVELS] = { 0 };
