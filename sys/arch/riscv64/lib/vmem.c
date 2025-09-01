@@ -12,8 +12,8 @@
 /* Returns the first invalid entry in page table pt, or NULL if pt is full */
 static uint64 *invalidentry(void *pt);
 
-/* Returns the first valid l-level page table it encounters, or NULL if pt is
-   full. It creates one if needed */
+/* Returns the first non-full l-level page table it encounters, or NULL if pt
+   is full. It creates one if needed */
 static uint64 *levelpagetable(void *pt, int l);
 
 static uint64 *
@@ -82,6 +82,7 @@ levelpagetable(void *pt, int l)
 			}
 		}
 
+walkback:
 		/* If we walked through the whole root page table, then it is
 		   full */
 		if (lvlidx[0] == PAGE_TABLE_ENTRIES - 1)
@@ -91,7 +92,17 @@ levelpagetable(void *pt, int l)
 		   lastpt: we need to go back one level and continue from
 		   where we left */
 		i -= 2;
+		continue;
+
 nextlevel:
+		if (i < l - 1)
+			continue;
+
+		/* Last iteration only */
+
+		/* If lastpt is full, walk back and continue */
+		if (!invalidentry(lastpt))
+			goto walkback;
 	}
 
 	return lastpt;
