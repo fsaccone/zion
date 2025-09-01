@@ -9,9 +9,27 @@
 #define PAGE_TABLE_ENTRIES 512
 #define PAGE_TABLE_LEVELS  5
 
+/* Returns the first invalid entry in page table pt, or NULL if pt is full */
+static uint64 *invalidentry(void *pt);
+
 /* Returns the first valid l-level page table it encounters, or NULL if pt is
    full. It creates one if needed */
 static uint64 *levelpagetable(void *pt, int l);
+
+static uint64 *
+invalidentry(void *pt)
+{
+	int i;
+
+	for (i = 0; i < PAGE_TABLE_ENTRIES; i++) {
+		uint64 *pte = (void *)((uintn)pt + i * sizeof(uint64));
+
+		if (!(*pte & 1))
+			return pte;
+	}
+
+	return NULL;
+}
 
 static uint64 *
 levelpagetable(void *pt, int l)
