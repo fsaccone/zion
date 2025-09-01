@@ -1,3 +1,5 @@
+#include "mem.h"
+
 #include <arch.h>
 #include <log.h>
 #include <machine.h>
