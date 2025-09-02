@@ -16,6 +16,11 @@ static uint64 *invalidentry(void *pt);
    is full. It creates one if needed */
 static uint64 *levelpagetable(void *pt, int l);
 
+/* Returns a NULL terminated array of size PAGE_TABLE_LEVELS containing, in
+   order from root to close parent, the path of tables eventually pointing to
+   page table entry pte. Returns NULL if pte is not found */
+static uint64 **parenttables(void *pt, void *pte);
+
 static uint64 *
 invalidentry(void *pt)
 {
@@ -106,6 +111,63 @@ nextlevel:
 	}
 
 	return lastpt;
+}
+
+static uint64 **
+parenttables(void *pt, void *pte)
+{
+	int i, lvlidx[PAGE_TABLE_LEVELS] = { 0 };
+	uint64 **tables = palloc((PAGE_TABLE_LEVELS + 1) * sizeof(uint64 *));
+
+	/* Walk the whole tree saving each level to tables until pte is
+	   found */
+	tables[0] = pt;
+	for (i = 0; i < PAGE_TABLE_LEVELS; i++) {
+		for (; lvlidx[i] < PAGE_TABLE_ENTRIES; lvlidx[i]++) {
+			uint64 *e = (void *)((uintn)tables[i]
+			                     + lvlidx[i] * sizeof(uint64));
+
+			if ((uintn)e == (uintn)pte) {
+				tables[i + 1] = NULL;
+				goto done;
+			}
+
+			/* If R, W and X are all 0, walk in the pt at PPN */
+			if (!(*e & 0b1110)) {
+				uint64 addr = *e;
+
+				/* Set all option bits to 0 */
+				addr >>= 10;
+				addr <<= 10;
+
+				/* Set upper reserved bits to 0 */
+				addr <<= 10;
+				addr >>= 10;
+
+				tables[i + 1] = (uint64 *)addr;
+
+				goto nextlevel;
+			}
+		}
+
+		/* If we walked through the whole root page table, then pte was
+		   not found */
+		if (lvlidx[0] == PAGE_TABLE_ENTRIES - 1)
+			break;
+
+		/* If we walked through a table full of non-walkable entries,
+		   walk back */
+		i -= 2;
+
+nextlevel:
+	}
+
+	/* If not jump to done was done, then pte was not found */
+	pfree(tables, PAGE_TABLE_LEVELS * sizeof(uint64 *));
+	return NULL;
+
+done:
+	return tables;
 }
 
 void *
