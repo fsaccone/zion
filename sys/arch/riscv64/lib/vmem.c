@@ -9,6 +9,10 @@
 #define PAGE_TABLE_ENTRIES 512
 #define PAGE_TABLE_LEVELS  5
 
+/* Returns the first valid inner node in page tree pt which points to address
+   ptr, or NULL if ptr is not found */
+static uint64 *findpointerentry(void *pt, void *ptr);
+
 /* Returns the first invalid entry in page table pt, or NULL if pt is full */
 static uint64 *invalidentry(void *pt);
 
@@ -23,6 +27,51 @@ static int pagetableisempty(void *pt);
    order from root to close parent, the path of tables eventually pointing to
    page table entry pte. Returns NULL if pte is not found */
 static uint64 **parenttables(void *pt, void *pte);
+
+static uint64 *
+findpointerentry(void *pt, void *ptr)
+{
+	void *curpt = pt;
+	int i;
+
+redowalk:
+	for (i = 0; i < PAGE_TABLE_ENTRIES; i++) {
+		uint64 *pte = (void *)((uintn)curpt + i * sizeof(uint64));
+		uint64 ppn;
+
+		ppn = *pte;
+
+		/* Set all option bits to 0 */
+		ppn >>= 10;
+		ppn <<= 10;
+
+		/* Set upper reserved bits to 0 */
+		ppn <<= 10;
+		ppn >>= 10;
+
+		if (ppn == (uint64)ptr)
+			return pte;
+
+		/* If R, W and X are all 0, walk in the pt at PPN */
+		if (!(*pte & 0b1110)) {
+			uint64 addr = *pte;
+
+			/* Set all option bits to 0 */
+			addr >>= 10;
+			addr <<= 10;
+
+			/* Set upper reserved bits to 0 */
+			addr <<= 10;
+			addr >>= 10;
+
+			curpt = (uint64 *)addr;
+
+			goto redowalk;
+		}
+	}
+
+	return NULL;
+}
 
 static uint64 *
 invalidentry(void *pt)
