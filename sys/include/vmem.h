@@ -29,7 +29,9 @@ void *createpagetable(void);
    table is full */
 void *valloc(void *pt, struct pageoptions opts);
 
-/* Makes page table entry pte invalid and frees the frame it points to */
-void vfree(void *pte);
+/* Makes page table entry pte invalid and frees the frame it points to and all
+   the parent tables in page tree pt which became empty after the removal of
+   pte */
+void vfree(void *pte, void *pt);
 
 #endif

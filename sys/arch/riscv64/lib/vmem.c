@@ -293,9 +293,16 @@ valloc(void *pt, struct pageoptions opts)
 }
 
 void
-vfree(void *pte)
+vfree(void *pte, void *pt)
 {
-	uint64 f = *(uint64 *)pte;
+	uint64 f, **parents;
+	int i;
+
+	/* If pte is not found in pt */
+	if (!(parents = parenttables(pt, pte)))
+		return;
+
+	f = *(uint64 *)pte;
 
 	/* Set all option bits to 0 */
 	f >>= 10;
@@ -308,4 +315,20 @@ vfree(void *pte)
 	pfree((void *)f, PAGE_SIZE);
 
 	*(uint64 *)pte = 0;
+
+	/* Free parent page tables which became empty after pte removal */
+	/* Skip root page table (i = 1) */
+	for (i = 1; parents[i] && i < PAGE_TABLE_LEVELS; i++) {
+		void *ptrentry;
+
+		if (!pagetableisempty(parents[i]))
+			continue;
+
+		pfree(parents[i], PAGE_TABLE_ENTRIES * sizeof(uintn));
+
+		/* Remove entry pointing to invalidated table */
+		ptrentry = findpointerentry(parents[i - 1], parents[i]);
+
+		*(uint64 *)ptrentry = 0;
+	}
 }
