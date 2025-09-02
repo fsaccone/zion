@@ -20,13 +20,13 @@ static uint64 *invalidentry(void *pt);
    is full. It creates one if needed */
 static uint64 *levelpagetable(void *pt, int l);
 
-/* Returns 1 if page table pt is full of invalid entries, or 0 otherwise */
-static int pagetableisempty(void *pt);
-
 /* Returns a NULL terminated array of size PAGE_TABLE_LEVELS containing, in
    order from root to close parent, the path of tables eventually pointing to
    page table entry pte. Returns NULL if pte is not found */
 static uint64 **parenttables(void *pt, void *pte);
+
+/* Returns the first valid entry in page table pt, or NULL if pt is empty */
+static uint64 *validentry(void *pt);
 
 static uint64 *
 findpointerentry(void *pt, void *ptr)
@@ -165,21 +165,6 @@ nextlevel:
 	return lastpt;
 }
 
-static int
-pagetableisempty(void *pt)
-{
-	int i;
-
-	for (i = 0; i < PAGE_TABLE_ENTRIES; i++) {
-		uint64 *pte = (void *)((uintn)pt + i * sizeof(uint64));
-
-		if (*pte & 1)
-			return 0;
-	}
-
-	return 1;
-}
-
 static uint64 **
 parenttables(void *pt, void *pte)
 {
@@ -239,6 +224,21 @@ nextlevel:
 
 done:
 	return tables;
+}
+
+static uint64 *
+validentry(void *pt)
+{
+	int i;
+
+	for (i = 0; i < PAGE_TABLE_ENTRIES; i++) {
+		uint64 *pte = (void *)((uintn)pt + i * sizeof(uint64));
+
+		if (*pte & 1)
+			return pte;
+	}
+
+	return NULL;
 }
 
 void *
@@ -321,7 +321,8 @@ vfree(void *pte, void *pt)
 	for (i = 1; parents[i] && i < PAGE_TABLE_LEVELS; i++) {
 		void *ptrentry;
 
-		if (!pagetableisempty(parents[i]))
+		/* If parents[i] is non-empty */
+		if (validentry(parents[i]))
 			continue;
 
 		pfree(parents[i], PAGE_TABLE_ENTRIES * sizeof(uintn));
