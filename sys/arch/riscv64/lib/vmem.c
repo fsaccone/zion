@@ -167,7 +167,7 @@ nextlevel:
 	}
 
 	/* If not jump to done was done, then pte was not found */
-	pfree(tables, PAGE_TABLE_LEVELS * sizeof(uint64 *));
+	pfree(tables, (PAGE_TABLE_LEVELS + 1) * sizeof(uint64 *));
 	return NULL;
 
 done:
