@@ -90,7 +90,7 @@ levelpagetable(void *pt, int l)
 walkback:
 		/* If we walked through the whole root page table, then it is
 		   full */
-		if (lvlidx[0] == PAGE_TABLE_ENTRIES - 1)
+		if (lvlidx[0] >= PAGE_TABLE_ENTRIES - 1)
 			return NULL;
 
 		/* If none of the entries are walkable, there is no space in
@@ -152,7 +152,7 @@ parenttables(void *pt, void *pte)
 
 		/* If we walked through the whole root page table, then pte was
 		   not found */
-		if (lvlidx[0] == PAGE_TABLE_ENTRIES - 1)
+		if (lvlidx[0] >= PAGE_TABLE_ENTRIES - 1)
 			break;
 
 		/* If we walked through a table full of non-walkable entries,
