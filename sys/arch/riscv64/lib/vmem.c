@@ -127,6 +127,10 @@ parenttables(void *pt, void *pte)
 			uint64 *e = (void *)((uintn)tables[i]
 			                     + lvlidx[i] * sizeof(uint64));
 
+			/* Skip invalid entries */
+			if (!(*e & 0b1))
+				continue;
+
 			if ((uintn)e == (uintn)pte) {
 				tables[i + 1] = NULL;
 				goto done;
