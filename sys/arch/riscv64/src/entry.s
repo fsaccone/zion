@@ -4,9 +4,7 @@
 _entry:
 	call initmisa
 	call initvecs
-	call clearregs
 	call lockharts
-	call clearbss
 
 	call setmstatus
 	call setsstatus
