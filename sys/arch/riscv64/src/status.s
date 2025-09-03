@@ -5,6 +5,10 @@
 setmstatus:
 	csrr t0, mstatus
 
+	# Set SIE to 1
+	li t1, 1 << 1
+	or t0, t0, t1
+
 	# Set MPP[0] to 1
 	li t1, 1 << 11
 	or t0, t0, t1
