@@ -2,6 +2,8 @@
 .global _entry
 
 _entry:
+	la sp, _stackend
+
 	call initmisa
 	call initvecs
 	call lockharts
@@ -90,8 +92,6 @@ supervisor:
 	mret
 
 callkmain:
-	la sp, _stackend
-
 	j kmain
 
 .section .rodata
