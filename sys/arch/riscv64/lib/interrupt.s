@@ -1,6 +1,7 @@
 .section .text
 .globl disableinterrupts
 .globl enableinterrupts
+.globl interruptsenabled
 
 disableinterrupts:
 	csrr t0,      sstatus
@@ -16,5 +17,13 @@ enableinterrupts:
 	li   t1,      1 << 1
 	or   t0,      t0, t1
 	csrw sstatus, t0
+
+	ret
+
+interruptsenabled:
+	csrr a0, sstatus
+	li   t0, 1 << 1
+	and  a0, a0, t0
+	srli a0, a0, 1
 
 	ret

@@ -8,4 +8,7 @@ void disableinterrupts(void);
 /* Enables device interrupts */
 void enableinterrupts(void);
 
+/* Returns 1 if interrupts are enabled and 0 otherwise */
+int interruptsenabled(void);
+
 #endif
