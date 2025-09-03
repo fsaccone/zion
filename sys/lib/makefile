@@ -1,7 +1,7 @@
 include ../../config.mk
 
 OUT      = libsys.a
-OBJS     = log.o pmem.o
+OBJS     = log.o pmem.o spinlock.o
 ARCHOBJS = atomic.o boot.o ctx.o interrupt.o vmem.o
 
 .PHONY: all clean
