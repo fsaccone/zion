@@ -9,6 +9,10 @@ setmstatus:
 	li t1, 1 << 1
 	or t0, t0, t1
 
+	# Set MIE to 1
+	li t1, 1 << 3
+	or t0, t0, t1
+
 	# Set MPP[0] to 1
 	li t1, 1 << 11
 	or t0, t0, t1
