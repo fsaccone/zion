@@ -20,10 +20,11 @@ static uint64 *invalidentry(void *pt);
    is full. It creates one if needed */
 static uint64 *levelpagetable(void *pt, int l);
 
-/* Returns a NULL terminated array of size PAGE_TABLE_LEVELS containing, in
-   order from root to close parent, the path of tables eventually pointing to
-   page table entry pte. Returns NULL if pte is not found */
-static uint64 **parenttables(void *pt, void *pte);
+/* Makes tables a NULL terminated array containing, in order from root to close
+   parent, the path of tables eventually pointing to page table entry pte.
+   tables[0] is set to NULL if pte is not found */
+static void parenttables(uint64 *tables[PAGE_TABLE_LEVELS + 1], void *pt,
+                         void *pte);
 
 /* Returns the first valid entry in page table pt, or NULL if pt is empty */
 static uint64 *validentry(void *pt);
@@ -165,11 +166,10 @@ nextlevel:
 	return lastpt;
 }
 
-static uint64 **
-parenttables(void *pt, void *pte)
+static void
+parenttables(uint64 *tables[PAGE_TABLE_LEVELS + 1], void *pt, void *pte)
 {
 	int i, lvlidx[PAGE_TABLE_LEVELS] = { 0 };
-	uint64 **tables = palloc((PAGE_TABLE_LEVELS + 1) * sizeof(uint64 *));
 
 	/* Walk the whole tree saving each level to tables until pte is
 	   found */
@@ -185,7 +185,7 @@ parenttables(void *pt, void *pte)
 
 			if ((uintn)e == (uintn)pte) {
 				tables[i + 1] = NULL;
-				goto done;
+				return;
 			}
 
 			/* If R, W and X are all 0, walk in the pt at PPN */
@@ -218,12 +218,8 @@ parenttables(void *pt, void *pte)
 nextlevel:
 	}
 
-	/* If not jump to done was done, then pte was not found */
-	pfree(tables, (PAGE_TABLE_LEVELS + 1) * sizeof(uint64 *));
-	return NULL;
-
-done:
-	return tables;
+	/* If no return, then pte was not found */
+	tables[0] = NULL;
 }
 
 static uint64 *
@@ -295,11 +291,13 @@ valloc(void *pt, struct pageoptions opts)
 void
 vfree(void *pte, void *pt)
 {
-	uint64 f, **parents;
+	uint64 f, *parents[PAGE_TABLE_LEVELS + 1];
 	int i;
 
+	parenttables(parents, pt, pte);
+
 	/* If pte is not found in pt */
-	if (!(parents = parenttables(pt, pte)))
+	if (!parents[0])
 		return;
 
 	f = *(uint64 *)pte;
