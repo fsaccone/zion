@@ -1,7 +1,7 @@
 include ../../../../config.mk
 
 COBJS = vmem.o
-SOBJS = boot.o
+SOBJS = boot.o ctx.o
 
 .PHONY: all clean
 
