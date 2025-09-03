@@ -31,6 +31,6 @@ handleinterrupt(uintn cause)
 		panic("Interrupt raised: Counter overflow interrupt.");
 		break;
 	default:
-		panic("Interrupt raised: Unkown.");
+		panic("Interrupt raised: Unknown.");
 	}
 }

@@ -77,6 +77,6 @@ handleexception(uintn cause)
 		panic("Exception raised: Hardware error.");
 		break;
 	default:
-		panic("Exception raised: Unkown.");
+		panic("Exception raised: Unknown.");
 	}
 }
