@@ -1,5 +1,5 @@
 .section .entry.text
-.globl _entry
+.global _entry
 
 _entry:
 	call initmisa

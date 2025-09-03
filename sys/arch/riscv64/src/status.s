@@ -1,6 +1,6 @@
 .section .text
-.globl setmstatus
-.globl setsstatus
+.global setmstatus
+.global setsstatus
 
 setmstatus:
 	csrr t0, mstatus

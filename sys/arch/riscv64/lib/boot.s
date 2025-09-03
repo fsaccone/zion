@@ -1,6 +1,6 @@
 .section .text
-.globl clearbss
-.globl clearregs
+.global clearbss
+.global clearregs
 
 clearbss:
 	la t0, _bssstart

@@ -1,7 +1,7 @@
 .section .text
-.globl disableinterrupts
-.globl enableinterrupts
-.globl interruptsenabled
+.global disableinterrupts
+.global enableinterrupts
+.global interruptsenabled
 
 disableinterrupts:
 	csrr t0,      sstatus

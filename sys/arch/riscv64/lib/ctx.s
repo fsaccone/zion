@@ -1,5 +1,5 @@
 .section .text
-.globl switchctx
+.global switchctx
 
 switchctx:
 	# Save all registers to old
