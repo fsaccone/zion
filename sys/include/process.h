@@ -18,7 +18,7 @@ struct processlist {
 
 struct process {
 	/* The process ID */
-	u32 pid;
+	u16 pid;
 
 	/* The process state */
 	enum processstate state;
