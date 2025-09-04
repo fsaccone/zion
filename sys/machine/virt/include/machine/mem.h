@@ -1,5 +1,5 @@
-#ifndef _MACHINE_H
-#define _MACHINE_H
+#ifndef _MACHINE_MEM_H
+#define _MACHINE_MEM_H
 
 #include <types.h>
 

@@ -9,13 +9,10 @@ Structure
 The way objects and libraries are defined by the linker script located at
 machine/MACHINE/sys.ld.
 
-All architecture-specific header files must be in arch/ARCH/include/arch/, and
-they must have no implementation. Each architecture must have the same header
-files and each header file must define a consistent API by providing a common
-set of identifiers.
-
-The only machine-specific header file is machine/MACHINE/include/machine.h and
-it must be defined like arch.h, only for machines.
+All architecture-specific and machine-specific header files must be in
+arch/ARCH/include/arch/ and machine/MACHINE/include/machine/ respectively, and
+they must have no implementation. Each architecture's and each machine's header
+files must define a consistent API by providing a common set of identifiers.
 
 The file machine/MACHINE/arch must be a symlink the the directory of the
 architecture of the machine.
