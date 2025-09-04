@@ -30,7 +30,8 @@ include/.
 The target sys.o is a relocatable object which contains the primary
 implementation of the kernel. It depends on libarch.a and libsys.a. It defines
 the kmain symbol, which should be called by the main architecture-dependent
-entry point.
+entry point, and the interrupt symbol, which gets a byte as argument and should
+be set by the main architecture-dependent entry point as the interrupt handler.
 
 * archsys.o (defined in arch/ARCH/src/)
 

@@ -1,7 +1,7 @@
 include ../../../../config.mk
 
 OUT   = archsys.o
-COBJS = exception.o interrupt.o trap.o
+COBJS =
 SOBJS = entry.o status.o
 
 .PHONY: all clean

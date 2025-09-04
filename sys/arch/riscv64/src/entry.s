@@ -52,12 +52,12 @@ lockharts:
 
 mtrapvec:
 	csrr a0, mcause
-	call handletrap
+	call interrupt
 	mret
 
 strapvec:
 	csrr a0, scause
-	call handletrap
+	call interrupt
 	sret
 
 supervisor:
