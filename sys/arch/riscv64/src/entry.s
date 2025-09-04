@@ -43,8 +43,8 @@ initvecs:
 
 lockharts:
 	li   t0, 0
-	csrr t1, mhartid
-	bne  t0, t1, 1f
+	csrr tp, mhartid
+	bne  t0, tp, 1f
 	ret
 1:
 	wfi
