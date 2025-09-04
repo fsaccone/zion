@@ -119,8 +119,8 @@ pfreerange(void *s, void *e)
 }
 
 void
-pmemset(void *s, int c, un n)
+pmemset(void *s, u8 c, un n)
 {
 	while (n--)
-		*(int *)s++ = c;
+		*(u8 *)s++ = c;
 }

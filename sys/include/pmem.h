@@ -20,6 +20,6 @@ void pfree(void *f, un s);
 void pfreerange(void *s, void *e);
 
 /* Sets all n bytes starting from s to c */
-void pmemset(void *s, int c, un n);
+void pmemset(void *s, u8 c, un n);
 
 #endif
