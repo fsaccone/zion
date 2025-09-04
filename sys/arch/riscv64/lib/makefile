@@ -1,7 +1,7 @@
 include ../../../../config.mk
 
 COBJS = vmem.o
-SOBJS = atomic.o ctx.o interrupt.o
+SOBJS = atomic.o core.o ctx.o interrupt.o
 
 .PHONY: all clean
 
