@@ -52,11 +52,74 @@ lockharts:
 
 mtrapvec:
 	csrr a0, mcause
+
+	call setinterrupttype
+
 	call interrupt
 	mret
 
+setinterrupttype:
+	# Get mcause or scause in a0 and set t0 to it
+	mv t0, a0
+
+	# Remove sign bit in t1 copy of a0
+	mv   t1, t0
+	li   t2, 1 << 63
+	not  t2, t2
+	and  t1, t1, t2
+
+	# Negative - Exception -> type = 0x01 (exception)
+	li a0, 0x01
+	bgez t0, 1f
+
+	# Positive - Interrupt
+
+	# 1 - Supervisor software interrupt -> type = 0x03 (software)
+	li  a0, 0x03
+	li  t2, 1
+	beq t1, t2, 1f
+
+	# 3 - Machine software interrupt -> type = 0x03 (software)
+	li  a0, 0x03
+	li  t2, 3
+	beq t1, t2, 1f
+
+	# 5 - Supervisor timer interrupt -> type = 0x04 (timer)
+	li  a0, 0x04
+	li  t2, 5
+	beq t1, t2, 1f
+
+	# 7 - Machine timer interrupt -> type = 0x04 (timer)
+	li  a0, 0x04
+	li  t2, 7
+	beq t1, t2, 1f
+
+	# 9 - Supervisor external interrupt -> type = 0x02 (hardware)
+	li  a0, 0x02
+	li  t2, 9
+	beq t1, t2, 1f
+
+	# 11 - Machine external interrupt -> type = 0x02 (hardware)
+	li  a0, 0x02
+	li  t2, 11
+	beq t1, t2, 1f
+
+	# 13 - Counter-overflow interrupt -> type = 0x04 (timer)
+	li  a0, 0x04
+	li  t2, 13
+	beq t1, t2, 1f
+
+	# If we get here, type = 0x00 (unknown)
+	li a0, 0x00
+
+1:
+	ret
+
 strapvec:
 	csrr a0, scause
+
+	call setinterrupttype
+
 	call interrupt
 	sret
 
