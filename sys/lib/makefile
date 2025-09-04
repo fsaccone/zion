@@ -30,6 +30,6 @@ $(ARCHOBJS):
 		$(AS) -o $@ ../arch/$(ARCH)/lib/$(@:.o=.s); \
 	else \
 		printf "No arch/$(ARCH)/lib/$(@:.o=.c) or "; \
-		printf "arch/$(ARCH)/lib/$(@:.o=.s) file.\n"; \
+		printf "arch/$(ARCH)/lib/$(@:.o=.s) was found.\n"; \
 		exit 1; \
 	fi
