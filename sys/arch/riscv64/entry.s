@@ -1,8 +1,8 @@
 .section .entry.text
-.global _entry
+.global entry
 
-_entry:
-	la sp, _stackend
+entry:
+	la sp, stackend
 
 	call initmisa
 	call initvecs

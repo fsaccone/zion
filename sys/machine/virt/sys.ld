@@ -1,4 +1,4 @@
-ENTRY(_entry)
+ENTRY(entry)
 
 MEMORY
 {
@@ -23,16 +23,16 @@ SECTIONS
 	} > RAM
 
 	.bss : {
-		_bssstart = .;
+		bssstart = .;
 		*(.bss)
 		*(COMMON)
-		_bssend = .;
+		bssend = .;
 	} > RAM
 
 	.stack (NOLOAD) : {
 		. = ALIGN(8);
-		_stackstart = .;
+		stackstart = .;
 		. = . + 0x1000;
-		_stackend = .;
+		stackend = .;
 	} > RAM
 }
