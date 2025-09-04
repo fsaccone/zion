@@ -1,6 +1,6 @@
 #include <log.h>
 
-#include <arch/bits.h>
+#include <bits.h>
 #include <machine.h>
 
 #define UART_THR            (UART0 + 0x00)
