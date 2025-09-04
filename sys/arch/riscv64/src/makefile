@@ -2,7 +2,7 @@ include ../../../../config.mk
 
 OUT   = archsys.o
 COBJS =
-SOBJS = entry.o status.o
+SOBJS = entry.o
 
 .PHONY: all clean
 
