@@ -1,6 +1,5 @@
 #include <log.h>
 
-#include <arch.h>
 #include <machine.h>
 
 static void inttostr(char *str, long n, int base);
