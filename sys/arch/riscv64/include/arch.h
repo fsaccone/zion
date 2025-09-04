@@ -6,26 +6,26 @@
 #define PAGE_SIZE_EXPONENT 12
 #define PAGE_SIZE          (1 << PAGE_SIZE_EXPONENT)
 
-typedef signed char  int8;
-typedef signed short int16;
-typedef signed int   int32;
-typedef signed long  int64;
+typedef signed char  s8;
+typedef signed short s16;
+typedef signed int   s32;
+typedef signed long  s64;
 typedef struct {
-	int64 low;
-	int64 high;
-} int128;
+	s64 low;
+	s64 high;
+} s128;
 
-typedef int64 intn;
+typedef s64 sn;
 
-typedef unsigned char  uint8;
-typedef unsigned short uint16;
-typedef unsigned int   uint32;
-typedef unsigned long  uint64;
+typedef unsigned char  u8;
+typedef unsigned short u16;
+typedef unsigned int   u32;
+typedef unsigned long  u64;
 typedef struct {
-	uint64 low;
-	uint64 high;
-} uint128;
+	u64 low;
+	u64 high;
+} u128;
 
-typedef uint64 uintn;
+typedef u64 un;
 
 #endif

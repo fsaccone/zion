@@ -12,7 +12,7 @@
 #define CAUSE_COI 13
 
 void
-handleinterrupt(uintn cause)
+handleinterrupt(un cause)
 {
 	switch (cause) {
 	case CAUSE_SSI:

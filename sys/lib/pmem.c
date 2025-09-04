@@ -44,7 +44,7 @@ freepage(void *p)
 	struct page *q;
 
 	for (q = freepages; q; q = q->n) {
-		if ((uintn)p == (uintn)q)
+		if ((un)p == (un)q)
 			return p;
 	}
 
@@ -52,11 +52,11 @@ freepage(void *p)
 }
 
 void *
-palloc(uintn s)
+palloc(un s)
 {
 	struct page *first;
 	struct page *pages[MAX_PALLOC_FRAMES];
-	uintn i, npages = CEIL(s, PAGE_SIZE) / PAGE_SIZE;
+	un i, npages = CEIL(s, PAGE_SIZE) / PAGE_SIZE;
 
 	if (!s || s > MAX_PALLOC)
 		return NULL;
@@ -67,7 +67,7 @@ nextfirst:
 		return NULL;
 
 	for (i = 0; i < npages; i++) {
-		pages[i] = freepage((void *)((uintn)first - i * PAGE_SIZE));
+		pages[i] = freepage((void *)((un)first - i * PAGE_SIZE));
 
 		if (!pages[i]) {
 			first = first->n;
@@ -88,15 +88,15 @@ nextfirst:
 }
 
 void
-pfree(void *f, uintn s)
+pfree(void *f, un s)
 {
-	uintn i;
+	un i;
 
-	if ((uintn)f % PAGE_SIZE)
+	if ((un)f % PAGE_SIZE)
 		panic("pfree: Misaligned page.");
 
 	for (i = 0; i < CEIL(s, PAGE_SIZE) / PAGE_SIZE; i++) {
-		struct page *q = (struct page *)((uintn)f + i * PAGE_SIZE);
+		struct page *q = (struct page *)((un)f + i * PAGE_SIZE);
 
 		q->n = freepages;
 		freepages = q;
@@ -108,17 +108,17 @@ pfreerange(void *s, void *e)
 {
 	void *p;
 
-	if (CEIL((uintn)s, PAGE_SIZE) >= (uintn)e)
+	if (CEIL((un)s, PAGE_SIZE) >= (un)e)
 		panic("pfreerange: No pages in range.");
 
-	for (p = (void *)CEIL((uintn)s, PAGE_SIZE);
-	     (uintn)p + PAGE_SIZE <= (uintn)e;
-	     p = (void *)((uintn)p + PAGE_SIZE))
+	for (p = (void *)CEIL((un)s, PAGE_SIZE);
+	     (un)p + PAGE_SIZE <= (un)e;
+	     p = (void *)((un)p + PAGE_SIZE))
 		pfree(p, PAGE_SIZE);
 }
 
 void
-pmemset(void *s, int c, uintn n)
+pmemset(void *s, int c, un n)
 {
 	while (n--)
 		*(int *)s++ = c;

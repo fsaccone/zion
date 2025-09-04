@@ -6,18 +6,18 @@
 
 struct pageoptions {
 	/* If 1, the page is for user-mode; otherwise, it is for kernel-mode */
-	uint8 u : 1;
+	u8 u : 1;
 
 	/* If 1, the page is readable */
-	uint8 r : 1;
+	u8 r : 1;
 
 	/* If 1, the page is writable */
-	uint8 w : 1;
+	u8 w : 1;
 
 	/* If 1, the page is executable */
-	uint8 x: 1;
+	u8 x: 1;
 
-	uint8 reserved : 4;
+	u8 reserved : 4;
 };
 
 /* Creates an empty page table full of invalid entries and returns its

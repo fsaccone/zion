@@ -5,6 +5,6 @@
 #include <arch.h>
 
 /* Atomically swaps the value at d with s and returns the old value */
-uintn atomicswap(uintn *d, uintn s);
+un atomicswap(un *d, un s);
 
 #endif

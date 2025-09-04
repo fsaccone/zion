@@ -3,6 +3,6 @@
 
 #include <arch.h>
 
-void handletrap(intn cause);
+void handletrap(sn cause);
 
 #endif

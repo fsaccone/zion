@@ -4,8 +4,8 @@
 #include <arch.h>
 
 struct lock {
-	uintn locked;
-	uint8 intenabled;
+	un locked;
+	u8 intenabled;
 };
 
 /* Acquires lock l after waiting for it to be released */

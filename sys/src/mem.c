@@ -9,11 +9,11 @@ void
 freeallmem(void)
 {
 	int i;
-	uintn freemem[FREE_MEMORY_REGIONS_LEN][2] = { FREE_MEMORY_REGIONS };
+	un freemem[FREE_MEMORY_REGIONS_LEN][2] = { FREE_MEMORY_REGIONS };
 
 	for (i = 0; i < FREE_MEMORY_REGIONS_LEN; i++) {
-		uintn start = freemem[i][0],
-		      size  = freemem[i][1];
+		un start = freemem[i][0],
+		   size  = freemem[i][1];
 
 		debugheader("Freeing user memory:");
 		debug("From:");

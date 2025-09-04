@@ -11,25 +11,25 @@
 
 /* Returns the first valid inner node in page tree pt which points to address
    ptr, or NULL if ptr is not found */
-static uint64 *findpointerentry(void *pt, void *ptr);
+static u64 *findpointerentry(void *pt, void *ptr);
 
 /* Returns the first invalid entry in page table pt, or NULL if pt is full */
-static uint64 *invalidentry(void *pt);
+static u64 *invalidentry(void *pt);
 
 /* Returns the first non-full l-level page table it encounters, or NULL if pt
    is full. It creates one if needed */
-static uint64 *levelpagetable(void *pt, int l);
+static u64 *levelpagetable(void *pt, int l);
 
 /* Makes tables a NULL terminated array containing, in order from root to close
    parent, the path of tables eventually pointing to page table entry pte.
    tables[0] is set to NULL if pte is not found */
-static void parenttables(uint64 *tables[PAGE_TABLE_LEVELS + 1], void *pt,
+static void parenttables(u64 *tables[PAGE_TABLE_LEVELS + 1], void *pt,
                          void *pte);
 
 /* Returns the first valid entry in page table pt, or NULL if pt is empty */
-static uint64 *validentry(void *pt);
+static u64 *validentry(void *pt);
 
-static uint64 *
+static u64 *
 findpointerentry(void *pt, void *ptr)
 {
 	void *curpt = pt;
@@ -37,8 +37,8 @@ findpointerentry(void *pt, void *ptr)
 
 redowalk:
 	for (i = 0; i < PAGE_TABLE_ENTRIES; i++) {
-		uint64 *pte = (void *)((uintn)curpt + i * sizeof(uint64));
-		uint64 ppn;
+		u64 *pte = (void *)((un)curpt + i * sizeof(u64));
+		u64 ppn;
 
 		ppn = *pte;
 
@@ -50,12 +50,12 @@ redowalk:
 		ppn <<= 10;
 		ppn >>= 10;
 
-		if (ppn == (uint64)ptr)
+		if (ppn == (u64)ptr)
 			return pte;
 
 		/* If R, W and X are all 0, walk in the pt at PPN */
 		if (!(*pte & 0b1110)) {
-			uint64 addr = *pte;
+			u64 addr = *pte;
 
 			/* Set all option bits to 0 */
 			addr >>= 10;
@@ -65,7 +65,7 @@ redowalk:
 			addr <<= 10;
 			addr >>= 10;
 
-			curpt = (uint64 *)addr;
+			curpt = (u64 *)addr;
 
 			goto redowalk;
 		}
@@ -74,13 +74,13 @@ redowalk:
 	return NULL;
 }
 
-static uint64 *
+static u64 *
 invalidentry(void *pt)
 {
 	int i;
 
 	for (i = 0; i < PAGE_TABLE_ENTRIES; i++) {
-		uint64 *pte = (void *)((uintn)pt + i * sizeof(uint64));
+		u64 *pte = (void *)((un)pt + i * sizeof(u64));
 
 		if (!(*pte & 1))
 			return pte;
@@ -89,23 +89,23 @@ invalidentry(void *pt)
 	return NULL;
 }
 
-static uint64 *
+static u64 *
 levelpagetable(void *pt, int l)
 {
 	int i, lvlidx[PAGE_TABLE_LEVELS] = { 0 };
-	uint64 *lastpt;
+	u64 *lastpt;
 
 	if (l < 1 && l > PAGE_TABLE_LEVELS)
 		panic("lastlevelpt: Passed non-existent level");
 
-	lastpt = (uint64 *)pt;
+	lastpt = (u64 *)pt;
 	for (i = 0; i < l - 1; i++) {
 		/* We need to keep track of the last entry index of each level
 		   in case we need to go backwards after walking through a
 		   full table: lvlidx does that */
 		for (; lvlidx[i] < PAGE_TABLE_ENTRIES; lvlidx[i]++) {
-			uint64 *pte = (void *)((uintn)lastpt
-			                       + lvlidx[i] * sizeof(uint64));
+			u64 *pte = (void *)((un)lastpt
+			                    + lvlidx[i] * sizeof(u64));
 
 			/* If V is 0, create and walk in a new pt */
 			if (!(*pte & 1)) {
@@ -114,7 +114,7 @@ levelpagetable(void *pt, int l)
 				/* Set PPN to point to new table (since lastpt
 				   is aligned, upper reserved bits and option
 				   bits are already 0) */
-				*pte = (uintn)lastpt;
+				*pte = (un)lastpt;
 
 				/* Set V to 1 */
 				*pte |= 1;
@@ -124,7 +124,7 @@ levelpagetable(void *pt, int l)
 
 			/* If R, W and X are all 0, walk in the pt at PPN */
 			if (!(*pte & 0b1110)) {
-				uint64 addr = *pte;
+				u64 addr = *pte;
 
 				/* Set all option bits to 0 */
 				addr >>= 10;
@@ -134,7 +134,7 @@ levelpagetable(void *pt, int l)
 				addr <<= 10;
 				addr >>= 10;
 
-				lastpt = (uint64 *)addr;
+				lastpt = (u64 *)addr;
 
 				goto nextlevel;
 			}
@@ -167,7 +167,7 @@ nextlevel:
 }
 
 static void
-parenttables(uint64 *tables[PAGE_TABLE_LEVELS + 1], void *pt, void *pte)
+parenttables(u64 *tables[PAGE_TABLE_LEVELS + 1], void *pt, void *pte)
 {
 	int i, lvlidx[PAGE_TABLE_LEVELS] = { 0 };
 
@@ -176,21 +176,21 @@ parenttables(uint64 *tables[PAGE_TABLE_LEVELS + 1], void *pt, void *pte)
 	tables[0] = pt;
 	for (i = 0; i < PAGE_TABLE_LEVELS; i++) {
 		for (; lvlidx[i] < PAGE_TABLE_ENTRIES; lvlidx[i]++) {
-			uint64 *e = (void *)((uintn)tables[i]
-			                     + lvlidx[i] * sizeof(uint64));
+			u64 *e = (void *)((un)tables[i]
+			                  + lvlidx[i] * sizeof(u64));
 
 			/* Skip invalid entries */
 			if (!(*e & 0b1))
 				continue;
 
-			if ((uintn)e == (uintn)pte) {
+			if ((un)e == (un)pte) {
 				tables[i + 1] = NULL;
 				return;
 			}
 
 			/* If R, W and X are all 0, walk in the pt at PPN */
 			if (!(*e & 0b1110)) {
-				uint64 addr = *e;
+				u64 addr = *e;
 
 				/* Set all option bits to 0 */
 				addr >>= 10;
@@ -200,7 +200,7 @@ parenttables(uint64 *tables[PAGE_TABLE_LEVELS + 1], void *pt, void *pte)
 				addr <<= 10;
 				addr >>= 10;
 
-				tables[i + 1] = (uint64 *)addr;
+				tables[i + 1] = (u64 *)addr;
 
 				goto nextlevel;
 			}
@@ -222,13 +222,13 @@ nextlevel:
 	tables[0] = NULL;
 }
 
-static uint64 *
+static u64 *
 validentry(void *pt)
 {
 	int i;
 
 	for (i = 0; i < PAGE_TABLE_ENTRIES; i++) {
-		uint64 *pte = (void *)((uintn)pt + i * sizeof(uint64));
+		u64 *pte = (void *)((un)pt + i * sizeof(u64));
 
 		if (*pte & 1)
 			return pte;
@@ -243,13 +243,13 @@ createpagetable(void)
 	/* Since palloc allocates frames aligned with PAGE_SIZE=4096, it is
 	   assured that the page table is also aligned to 4096. Also, palloc
 	   fills all allocated frames with zeros, and that is what we want. */
-	return palloc(PAGE_TABLE_ENTRIES * sizeof(uintn));
+	return palloc(PAGE_TABLE_ENTRIES * sizeof(un));
 }
 
 void *
 valloc(void *pt, struct pageoptions opts)
 {
-	uint64 *lastpt, *pte;
+	u64 *lastpt, *pte;
 	void *f;
 
 	if (!opts.r && !opts.w && !opts.x)
@@ -268,7 +268,7 @@ valloc(void *pt, struct pageoptions opts)
 	f = palloc(PAGE_SIZE);
 	/* Since f is already aligned to PAGE_SIZE, there is no need to zero
 	   the option bits */
-	*pte |= (uintn)f;
+	*pte |= (un)f;
 
 	/* V bit */
 	*pte |= 1;
@@ -291,7 +291,7 @@ valloc(void *pt, struct pageoptions opts)
 void
 vfree(void *pte, void *pt)
 {
-	uint64 f, *parents[PAGE_TABLE_LEVELS + 1];
+	u64 f, *parents[PAGE_TABLE_LEVELS + 1];
 	int i;
 
 	parenttables(parents, pt, pte);
@@ -300,7 +300,7 @@ vfree(void *pte, void *pt)
 	if (!parents[0])
 		return;
 
-	f = *(uint64 *)pte;
+	f = *(u64 *)pte;
 
 	/* Set all option bits to 0 */
 	f >>= 10;
@@ -312,7 +312,7 @@ vfree(void *pte, void *pt)
 
 	pfree((void *)f, PAGE_SIZE);
 
-	*(uint64 *)pte = 0;
+	*(u64 *)pte = 0;
 
 	/* Free parent page tables which became empty after pte removal */
 	/* Skip root page table (i = 1) */
@@ -323,11 +323,11 @@ vfree(void *pte, void *pt)
 		if (validentry(parents[i]))
 			continue;
 
-		pfree(parents[i], PAGE_TABLE_ENTRIES * sizeof(uintn));
+		pfree(parents[i], PAGE_TABLE_ENTRIES * sizeof(un));
 
 		/* Remove entry pointing to invalidated table */
 		ptrentry = findpointerentry(parents[i - 1], parents[i]);
 
-		*(uint64 *)ptrentry = 0;
+		*(u64 *)ptrentry = 0;
 	}
 }

@@ -1,6 +1,5 @@
 #include <spinlock.h>
 
-#include <arch.h>
 #include <atomic.h>
 #include <interrupt.h>
 #include <log.h>
