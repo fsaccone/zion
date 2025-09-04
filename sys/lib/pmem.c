@@ -1,6 +1,7 @@
 #include <pmem.h>
 
-#include <arch.h>
+#include <arch/page.h>
+#include <arch/types.h>
 #include <log.h>
 #include <math.h>
 

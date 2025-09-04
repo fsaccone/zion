@@ -1,6 +1,6 @@
 #include "interrupt.h"
 
-#include <arch.h>
+#include <arch/types.h>
 #include <log.h>
 
 #define CAUSE_SSI 1

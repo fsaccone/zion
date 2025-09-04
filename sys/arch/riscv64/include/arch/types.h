@@ -1,10 +1,5 @@
-#ifndef _ARCH_H
-#define _ARCH_H
-
-#define BIT64
-
-#define PAGE_SIZE_EXPONENT 12
-#define PAGE_SIZE          (1 << PAGE_SIZE_EXPONENT)
+#ifndef _ARCH_TYPES_H
+#define _ARCH_TYPES_H
 
 typedef signed char  s8;
 typedef signed short s16;

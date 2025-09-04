@@ -1,6 +1,6 @@
 #include "exception.h"
 
-#include <arch.h>
+#include <arch/types.h>
 #include <log.h>
 
 #define CAUSE_INSTR_ADDR_MISAL 0
