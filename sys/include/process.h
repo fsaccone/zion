@@ -3,6 +3,9 @@
 
 #include <types.h>
 
+/* Maximum 16 bits unsigned integer */
+#define PID_MAX 65535
+
 enum processstate {
 	CREATED,
 	READY,
