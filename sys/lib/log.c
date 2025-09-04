@@ -1,7 +1,7 @@
 #include <log.h>
 
-#include <bits.h>
-#include <mem.h>
+#include <arch/bits.h>
+#include <machine/mem.h>
 
 #define UART_THR            (UART0 + 0x00)
 #define UART_LSR            (UART0 + 0x05)

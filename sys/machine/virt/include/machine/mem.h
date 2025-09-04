@@ -1,7 +1,7 @@
 #ifndef _MACHINE_MEM_H
 #define _MACHINE_MEM_H
 
-#include <types.h>
+#include <arch/types.h>
 
 #define RAM_SIZE (4L * 1024L * 1024L * 1024L)
 

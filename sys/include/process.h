@@ -1,7 +1,7 @@
 #ifndef _PROCESS_H
 #define _PROCESS_H
 
-#include <types.h>
+#include <arch/types.h>
 
 /* Maximum 16 bits unsigned integer */
 #define PID_MAX 65535

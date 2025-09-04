@@ -1,8 +1,8 @@
 #ifndef _PMEM_H
 #define _PMEM_H
 
-#include <page.h>
-#include <types.h>
+#include <arch/page.h>
+#include <arch/types.h>
 
 #define MAX_PALLOC_FRAMES 4
 #define MAX_PALLOC        (MAX_PALLOC_FRAMES * PAGE_SIZE)

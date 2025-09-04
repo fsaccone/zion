@@ -1,7 +1,7 @@
 #ifndef _SPINLOCK_H
 #define _SPINLOCK_H
 
-#include <types.h>
+#include <arch/types.h>
 
 struct lock {
 	un locked;

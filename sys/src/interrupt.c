@@ -1,6 +1,6 @@
+#include <arch/types.h>
 #include <interrupt.h>
 #include <log.h>
-#include <types.h>
 
 void
 interrupt(u8 type)

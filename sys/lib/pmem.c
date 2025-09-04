@@ -1,9 +1,9 @@
 #include <pmem.h>
 
+#include <arch/page.h>
+#include <arch/types.h>
 #include <log.h>
 #include <math.h>
-#include <page.h>
-#include <types.h>
 
 struct page {
 	struct page *n;
