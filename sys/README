@@ -25,19 +25,15 @@ how they depend on each other.
 The target libsys.a is a static library which implements the header files in
 include/.
 
-* sys.o (defined in src/)
+* sys.o (defined in src/, uses source file arch/ARCH/entry.s)
 
 The target sys.o is a relocatable object which contains the primary
 implementation of the kernel. It depends on libarch.a and libsys.a. It defines
 the kmain symbol, which should be called by the main architecture-dependent
-entry point, and the interrupt symbol, which gets a byte as argument and should
-be set by the main architecture-dependent entry point as the interrupt handler.
-
-* archsys.o (defined in arch/ARCH/src/)
-
-The target archsys.o is a relocatable object which defines the main entry
-point of the kernel. It depends on libarch.a, libsys.a and sys.o.
+entry point defined in arch/ARCH/entry.s, and the interrupt symbol, which gets
+a byte as argument and should be set by the main architecture-dependent entry
+point as the interrupt handler.
 
 * sys.bin (defined in /)
 
-The main target is sys.bin, which links archsys.o with all its dependencies.
+The main target is sys.bin, which links sys.o with all its dependencies.
