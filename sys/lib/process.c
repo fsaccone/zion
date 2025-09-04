@@ -1,6 +1,7 @@
 #include <process.h>
 
 #include <log.h>
+#include <pmem.h>
 #include <vmem.h>
 
 static struct process init     = { 0 };
@@ -25,6 +26,27 @@ unusedpid(void)
 	}
 
 	return 0;
+}
+
+struct process *
+createprocess(struct process *parent)
+{
+	struct process *p         = palloc(sizeof(struct process));
+	struct processlist *child = palloc(sizeof(struct processlist));
+
+	if (!(p->pid = unusedpid()))
+		return NULL;
+
+	p->state = CREATED;
+	p->pagetable = createpagetable();
+	p->children = NULL;
+
+	child->p = p;
+
+	child->n = parent->children;
+	parent->children = child;
+
+	return p;
 }
 
 struct process *
