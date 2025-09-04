@@ -100,6 +100,7 @@ debugintbase2(u64 n)
 void
 debugintbase16(u64 n)
 {
+	/* 0x + 16 digits + \0 = 19 */
 	char str[19];
 
 	str[0] = '0';
