@@ -21,5 +21,15 @@ $(OBJS):
 	                -o $@ $(@:.o=.c)
 
 $(ARCHOBJS):
-	(cd ../arch/$(ARCH)/lib && $(MAKE) $@)
-	cp ../arch/$(ARCH)/lib/$@ $@
+	if [ -f ../arch/$(ARCH)/lib/$(@:.o=.c) ]; then \
+		$(CC) $(CFLAGS) -I../machine/$(MACHINE)/include \
+		                -I../arch/$(ARCH)/include \
+		                -I../include \
+		                -c -o $@ ../arch/$(ARCH)/lib/$(@:.o=.c); \
+	elif [ -f ../arch/$(ARCH)/lib/$(@:.o=.s) ]; then \
+		$(AS) -o $@ ../arch/$(ARCH)/lib/$(@:.o=.s); \
+	else \
+		@printf "No arch/$(ARCH)/lib/$(@:.o=.c) or "; \
+		@printf "arch/$(ARCH)/lib/$(@:.o=.s) file.\n"; \
+		exit 1; \
+	fi
