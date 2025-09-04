@@ -17,9 +17,9 @@ freeallmem(void)
 
 		debugheader("Freeing user memory:");
 		debug("From:");
-		debugptr((void *)start);
+		debugintbase16(start);
 		debug("To:");
-		debugptr((void *)(start + size));
+		debugintbase16((start + size));
 
 		pfreerange((void *)start, (void *)(start + size));
 	}

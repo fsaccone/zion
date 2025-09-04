@@ -77,21 +77,14 @@ debugheader(char *h)
 }
 
 void
-debugptr(void *ptr)
+debugintbase16(u64 n)
 {
-#ifdef BIT32
-	char str[11];
-#endif
-#ifdef BIT64
 	char str[19];
-#endif
-#ifdef BIT128
-	char str[35];
-#endif
+
 	str[0] = '0';
 	str[1] = 'x';
 
-	inttostr(&str[2], (long)ptr, 16);
+	inttostr(&str[2], n, 16);
 
 	/*      DEBUG: */
 	sprint("       ");
