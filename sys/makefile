@@ -2,9 +2,8 @@ include ../config.mk
 
 OUT = sys.bin
 
-ENTRY = entry.o
-LIB   = libsys.a
-OBJ   = sys.o
+LIB = libsys.a
+OBJ = sys.o
 
 CHECKMACHINE = [ $$(readlink machine/$(MACHINE)/arch) = ../../arch/$(ARCH) ]
 
@@ -13,21 +12,18 @@ CHECKMACHINE = [ $$(readlink machine/$(MACHINE)/arch) = ../../arch/$(ARCH) ]
 all: $(OUT)
 
 clean:
-	rm -f $(ENTRY) $(LIB) $(OBJ) $(OUT)
+	rm -f $(LIB) $(OBJ) $(OUT)
 	(cd lib && $(MAKE) clean)
 	(cd src && $(MAKE) clean)
 
 test: $(OUT)
 	$(QEMU) $(QEMUFLAGS) -machine virt -bios none -kernel $^
 
-$(OUT): $(ENTRY) $(LIB) $(OBJ)
+$(OUT): $(OBJ) $(LIB)
 	$(CHECKMACHINE)
 	$(LD) $(LDFLAGS) -T machine/$(MACHINE)/sys.ld -o $@ $^
 	$(STRIP) $@
 	$(OBJCOPY) -O binary $@
-
-$(ENTRY):
-	$(AS) -o $@ arch/$(ARCH)/$(@:.o=.s)
 
 $(LIB):
 	(cd lib && $(MAKE) $@)

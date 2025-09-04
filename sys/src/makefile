@@ -1,17 +1,21 @@
 include ../../config.mk
 
-OUT  = sys.o
-OBJS = interrupt.o kmain.o mem.o
+OUT   = sys.o
+ENTRY = entry.o
+OBJS  = interrupt.o kmain.o mem.o
 
 .PHONY: all clean
 
 all: $(OUT)
 
 clean:
-	rm -f $(OUT) $(OBJS)
+	rm -f $(ENTRY) $(OUT) $(OBJS)
 
-$(OUT): $(OBJS)
+$(OUT): $(ENTRY) $(OBJS)
 	$(LD) $(LDFLAGS) -r -o $@ $^
+
+$(ENTRY):
+	$(AS) -o $@ ../arch/$(ARCH)/$(@:.o=.s)
 
 $(OBJS):
 	$(CC) $(CFLAGS) -I../machine/$(MACHINE)/include \
