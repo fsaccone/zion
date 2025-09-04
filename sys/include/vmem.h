@@ -2,7 +2,7 @@
 #ifndef _VMEM_H
 #define _VMEM_H
 
-#include <arch/types.h>
+#include <types.h>
 
 struct pageoptions {
 	/* If 1, the page is for user-mode; otherwise, it is for kernel-mode */

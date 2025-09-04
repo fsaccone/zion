@@ -1,6 +1,6 @@
 #include "trap.h"
 
-#include <arch/types.h>
+#include <types.h>
 
 #include "exception.h"
 #include "interrupt.h"

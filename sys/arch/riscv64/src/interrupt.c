@@ -1,7 +1,7 @@
 #include "interrupt.h"
 
-#include <arch/types.h>
 #include <log.h>
+#include <types.h>
 
 #define CAUSE_SSI 1
 #define CAUSE_MSI 3

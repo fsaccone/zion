@@ -1,9 +1,9 @@
 #include "mem.h"
 
-#include <arch/types.h>
 #include <log.h>
 #include <machine.h>
 #include <pmem.h>
+#include <types.h>
 
 void
 freeallmem(void)

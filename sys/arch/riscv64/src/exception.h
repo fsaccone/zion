@@ -1,7 +1,7 @@
 #ifndef __EXCEPTION_H
 #define __EXCEPTION_H
 
-#include <arch/types.h>
+#include <types.h>
 
 void handleexception(un cause);
 

@@ -1,9 +1,9 @@
 #include <vmem.h>
 
-#include <arch/page.h>
-#include <arch/types.h>
 #include <log.h>
+#include <page.h>
 #include <pmem.h>
+#include <types.h>
 
 /* The used scheme is Sv57 */
 
