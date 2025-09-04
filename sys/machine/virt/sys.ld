@@ -23,10 +23,8 @@ SECTIONS
 	} > RAM
 
 	.bss : {
-		bssstart = .;
 		*(.bss)
 		*(COMMON)
-		bssend = .;
 	} > RAM
 
 	.stack (NOLOAD) : {
