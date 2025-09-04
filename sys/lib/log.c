@@ -7,7 +7,11 @@
 #define UART_LSR            (UART0 + 0x05)
 #define UART_LSR_EMPTY_MASK (0x40)
 
+/* Writes a NULL-terminated string to str which contains the number n written
+   in base base */
 static void inttostr(char *str, long n, int base);
+
+/* Writes NULL-terminated string str to UART */
 static void sprint(char *str);
 
 static char digits[36] = "0123456789abcdefghijklmnopqrstuvwxyz";
