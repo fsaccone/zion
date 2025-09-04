@@ -15,6 +15,7 @@ initprocess(void)
 	init.pid = 0;
 	init.state = CREATED;
 	init.pagetable = createpagetable();
+	init.children = NULL;
 
 	initdone = 1;
 

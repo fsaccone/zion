@@ -11,6 +11,11 @@ enum processstate {
 	TERMINATED,
 };
 
+struct processlist {
+	struct process *p;
+	struct processlist *n;
+};
+
 struct process {
 	/* The process ID */
 	u32 pid;
@@ -20,6 +25,9 @@ struct process {
 
 	/* The pointer to the root table of the virtual page tree */
 	void *pagetable;
+
+	/* A linked list containing the children processes of the process */
+	struct processlist *children;
 };
 
 /* Initializes first process and returns its pointer. Panics if run more than
