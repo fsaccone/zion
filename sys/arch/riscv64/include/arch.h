@@ -10,10 +10,6 @@ typedef signed char  s8;
 typedef signed short s16;
 typedef signed int   s32;
 typedef signed long  s64;
-typedef struct {
-	s64 low;
-	s64 high;
-} s128;
 
 typedef s64 sn;
 
@@ -21,10 +17,6 @@ typedef unsigned char  u8;
 typedef unsigned short u16;
 typedef unsigned int   u32;
 typedef unsigned long  u64;
-typedef struct {
-	u64 low;
-	u64 high;
-} u128;
 
 typedef u64 un;
 
