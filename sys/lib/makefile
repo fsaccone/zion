@@ -21,7 +21,7 @@ $(OBJS):
 	                -o $@ $(@:.o=.c)
 
 $(ARCHOBJS):
-	if [ -f ../arch/$(ARCH)/lib/$(@:.o=.c) ]; then \
+	@if [ -f ../arch/$(ARCH)/lib/$(@:.o=.c) ]; then \
 		$(CC) $(CFLAGS) -I../machine/$(MACHINE)/include \
 		                -I../arch/$(ARCH)/include \
 		                -I../include \
@@ -29,7 +29,7 @@ $(ARCHOBJS):
 	elif [ -f ../arch/$(ARCH)/lib/$(@:.o=.s) ]; then \
 		$(AS) -o $@ ../arch/$(ARCH)/lib/$(@:.o=.s); \
 	else \
-		@printf "No arch/$(ARCH)/lib/$(@:.o=.c) or "; \
-		@printf "arch/$(ARCH)/lib/$(@:.o=.s) file.\n"; \
+		printf "No arch/$(ARCH)/lib/$(@:.o=.c) or "; \
+		printf "arch/$(ARCH)/lib/$(@:.o=.s) file.\n"; \
 		exit 1; \
 	fi
