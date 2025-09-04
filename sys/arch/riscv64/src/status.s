@@ -1,8 +1,8 @@
 .section .text
-.global setmstatus
-.global setsstatus
+.global initmstatus
+.global initsstatus
 
-setmstatus:
+initmstatus:
 	csrr t0, mstatus
 
 	# Set SIE to 1
@@ -31,7 +31,7 @@ setmstatus:
 
 	ret
 
-setsstatus:
+initsstatus:
 	csrr t0, sstatus
 
 	# Set SUM to 1

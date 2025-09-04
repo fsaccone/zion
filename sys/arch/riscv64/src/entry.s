@@ -8,8 +8,8 @@ _entry:
 	call initvecs
 	call lockharts
 
-	call setmstatus
-	call setsstatus
+	call initmstatus
+	call initsstatus
 
 	j supervisor
 
