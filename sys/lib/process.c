@@ -31,8 +31,14 @@ unusedpid(void)
 struct process *
 createprocess(struct process *parent)
 {
-	struct process *p         = palloc(sizeof(struct process));
-	struct processlist *child = palloc(sizeof(struct processlist));
+	struct process *p;
+	struct processlist *child;
+
+	if (!(p = palloc(sizeof(struct process))))
+		panic("palloc");
+
+	if (!(child = palloc(sizeof(struct processlist))))
+		panic("palloc");
 
 	if (!(p->pid = unusedpid()))
 		return NULL;
