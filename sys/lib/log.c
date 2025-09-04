@@ -9,7 +9,7 @@
 
 /* Writes a NULL-terminated string to str which contains the number n written
    in base base */
-static void inttostr(char *str, long n, int base);
+static void inttostr(char *str, s64 n, u8 base);
 
 /* Writes NULL-terminated string str to UART */
 static void sprint(char *str);
@@ -17,7 +17,7 @@ static void sprint(char *str);
 static char digits[36] = "0123456789abcdefghijklmnopqrstuvwxyz";
 
 static void
-inttostr(char *str, long n, int base)
+inttostr(char *str, s64 n, u8 base)
 {
 	int i = 0, j, l, neg = 0;
 
