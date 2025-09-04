@@ -12,8 +12,13 @@ enum processstate {
 };
 
 struct process {
+	/* The process ID */
 	u32 pid;
+
+	/* The process state */
 	enum processstate state;
+
+	/* The pointer to the root table of the virtual page tree */
 	void *pagetable;
 };
 
