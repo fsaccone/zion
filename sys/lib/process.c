@@ -3,8 +3,8 @@
 #include <log.h>
 #include <vmem.h>
 
-static struct process init = { 0 };
-static int initdone = 0;
+static struct process init     = { 0 };
+static int            initdone = 0;
 
 struct process *
 initprocess(void)
