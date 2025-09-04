@@ -204,3 +204,6 @@ callkmain:
 .section .rodata
 .align 4
 zeroctx: .zero 127
+
+.section .data
+stackend: .space 4096

@@ -26,11 +26,4 @@ SECTIONS
 		*(.bss)
 		*(COMMON)
 	} > RAM
-
-	.stack (NOLOAD) : {
-		. = ALIGN(8);
-		stackstart = .;
-		. = . + 0x1000;
-		stackend = .;
-	} > RAM
 }
