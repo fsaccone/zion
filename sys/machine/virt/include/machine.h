@@ -18,4 +18,6 @@
 #define UART_LSR            (u8 *)(UART0 + 0x05)
 #define UART_LSR_EMPTY_MASK (0x40)
 
+#define CLINT (u8 *)(0x02000000)
+
 #endif
