@@ -81,6 +81,23 @@ debugheader(char *h)
 }
 
 void
+debugintbase2(u64 n)
+{
+	/* 0b + 64 digits + \0  = 67 */
+	char str[67];
+
+	str[0] = '0';
+	str[1] = 'b';
+
+	inttostr(&str[2], n, 2);
+
+	/*      DEBUG: */
+	sprint("       ");
+	sprint(str);
+	sprint("\n");
+}
+
+void
 debugintbase16(u64 n)
 {
 	char str[19];

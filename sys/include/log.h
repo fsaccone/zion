@@ -9,6 +9,9 @@ void debug(char *m);
 /* Prints a message prefixed with 'DEBUG: ' */
 void debugheader(char *h);
 
+/* Prints an integer in binary form */
+void debugintbase2(u64 n);
+
 /* Prints an integer in hexadecimal form */
 void debugintbase16(u64 n);
 
