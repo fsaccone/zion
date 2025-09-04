@@ -1,4 +1,3 @@
-/* ARCHITECTURE-SPECIFIC */
 #ifndef _VMEM_H
 #define _VMEM_H
 
