@@ -3,6 +3,10 @@
 #include <arch/bits.h>
 #include <machine.h>
 
+#define UART_THR            (UART0 + 0x00)
+#define UART_LSR            (UART0 + 0x05)
+#define UART_LSR_EMPTY_MASK (0x40)
+
 static void inttostr(char *str, long n, int base);
 static void sprint(char *str);
 

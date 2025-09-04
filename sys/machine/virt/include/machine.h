@@ -13,10 +13,7 @@
 	/* start                       size                                   */ \
 	{  KERNEL_START + KERNEL_SIZE, RAM_SIZE - (KERNEL_START + KERNEL_SIZE) },
 
-#define UART0               (u8 *)(0x10000000)
-#define UART_THR            (u8 *)(UART0 + 0x00)
-#define UART_LSR            (u8 *)(UART0 + 0x05)
-#define UART_LSR_EMPTY_MASK (0x40)
+#define UART0 (u8 *)(0x10000000)
 
 #define CLINT (u8 *)(0x02000000)
 
