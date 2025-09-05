@@ -18,11 +18,13 @@ SRC     = src/kmain.o \
           src/interrupt.o \
           src/mem.o
 
-ASCMD = $(AS) -o $@ $(@:.o=.s)
+ASCMD = $(AS) -o $@ $(@:.o=.s) \
+        && echo "AS  $@"
 CCCMD = $(CC) $(CFLAGS) -Imachine/$(MACHINE)/include \
                         -Iarch/$(ARCH)/include \
                         -Iinclude \
-                        -c -o $@ $(@:.o=.c)
+                        -c -o $@ $(@:.o=.c) \
+        && echo "CC  $@"
 
 CHECKMACHINE = [ $$(readlink machine/$(MACHINE)/arch) = ../../arch/$(ARCH) ] \
                || (printf "machine/$(MACHINE)/arch does not point to " \
@@ -47,11 +49,11 @@ $(OUT): $(START) $(ASTART) $(ARCHLIB) $(LIB) $(SRC)
 
 $(START):
 	@$(CHECKMACHINE)
-	$(ASCMD)
+	@$(ASCMD)
 
 $(ASTART):
 	@$(CHECKMACHINE)
-	$(ASCMD)
+	@$(ASCMD)
 
 $(ARCHLIB):
 	@$(CHECKMACHINE)
@@ -60,7 +62,7 @@ $(ARCHLIB):
 	 else echo "No $(@:.o=.c) or $(@:.o=.s) file was found." && exit; fi
 
 $(LIB):
-	$(CCCMD)
+	@$(CCCMD)
 
 $(SRC):
-	$(CCCMD)
+	@$(CCCMD)
