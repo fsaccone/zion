@@ -2,8 +2,27 @@ include ../config.mk
 
 OUT = sys.bin
 
-LIB = libsys.a
-OBJ = sys.o
+START  = machine/$(MACHINE)/start.o
+ASTART = arch/$(ARCH)/astart.o
+
+ARCHLIB = arch/$(ARCH)/lib/atomic.o \
+          arch/$(ARCH)/lib/core.o \
+          arch/$(ARCH)/lib/ctx.o \
+          arch/$(ARCH)/lib/interrupt.o \
+          arch/$(ARCH)/lib/vmem.o
+LIB     = lib/log.o \
+          lib/pmem.o \
+          lib/process.o \
+          lib/spinlock.o
+SRC     = src/kmain.o \
+          src/interrupt.o \
+          src/mem.o
+
+ASCMD = $(AS) -o $@ $(@:.o=.s)
+CCCMD = $(CC) $(CFLAGS) -Imachine/$(MACHINE)/include \
+                        -Iarch/$(ARCH)/include \
+                        -Iinclude \
+                        -c -o $@ $(@:.o=.c)
 
 CHECKMACHINE = [ $$(readlink machine/$(MACHINE)/arch) = ../../arch/$(ARCH) ]
 
@@ -12,23 +31,33 @@ CHECKMACHINE = [ $$(readlink machine/$(MACHINE)/arch) = ../../arch/$(ARCH) ]
 all: $(OUT)
 
 clean:
-	rm -f $(LIB) $(OBJ) $(OUT)
-	(cd lib && $(MAKE) clean)
-	(cd src && $(MAKE) clean)
+	rm -f $(OUT) $(START) $(ASTART) $(ARCHLIB) $(LIB) $(SRC)
 
 test: $(OUT)
 	$(QEMU) $(QEMUFLAGS) -machine virt -bios none -kernel $^
 
-$(OUT): $(OBJ) $(LIB)
+$(OUT): $(START) $(ASTART) $(ARCHLIB) $(LIB) $(SRC)
 	$(CHECKMACHINE)
 	$(LD) $(LDFLAGS) -e start -o $@ $^
 	$(STRIP) $@
 	$(OBJCOPY) -O binary $@
 
-$(LIB):
-	(cd lib && $(MAKE) $@)
-	cp lib/$@ $@
+$(START):
+	$(CHECKMACHINE)
+	$(ASCMD)
 
-$(OBJ):
-	(cd src && $(MAKE) $@)
-	cp src/$@ $@
+$(ASTART):
+	$(CHECKMACHINE)
+	$(ASCMD)
+
+$(ARCHLIB):
+	$(CHECKMACHINE)
+	@if   [ -f $(@:.o=.c) ]; then $(CCCMD); \
+	 elif [ -f $(@:.o=.s) ]; then $(ASCMD); \
+	 else echo "No $(@:.o=.c) or $(@:.o=.s) file was found." && exit; fi
+
+$(LIB):
+	$(CCCMD)
+
+$(SRC):
+	$(CCCMD)
