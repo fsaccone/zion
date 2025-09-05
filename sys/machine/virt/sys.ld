@@ -1,4 +1,4 @@
-ENTRY(entry)
+ENTRY(start)
 
 MEMORY
 {
@@ -10,6 +10,7 @@ MEMORY
 SECTIONS
 {
 	.text : {
+		*(.start.text)
 		*(.entry.text)
 		*(.text)
 	} > ROM
