@@ -4,11 +4,13 @@
 #include <interrupt.h>
 #include <log.h>
 
-void
+int
 acquirelock(struct lock *l)
 {
-	if (l->locked)
-		panic("acquirelock: Lock already acquired.");
+	if (l->locked) {
+		setpanicmsg("Lock already acquired.");
+		return -1;
+	}
 
 	l->intenabled = interruptsenabled();
 
@@ -17,16 +19,22 @@ acquirelock(struct lock *l)
 
 	/* Wait for lock to be unlocked */
 	while (atomicswap(&l->locked, 1));
+
+	return 0;
 }
 
-void
+int
 releaselock(struct lock *l)
 {
-	if (!l->locked)
-		panic("releaselock: Lock already released.");
+	if (!l->locked) {
+		setpanicmsg("Lock already released.");
+		return -1;
+	}
 
 	atomicswap(&l->locked, 0);
 
 	if (l->intenabled)
 		enableinterrupts();
+
+	return 0;
 }

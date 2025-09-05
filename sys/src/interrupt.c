@@ -7,22 +7,24 @@ interrupt(u8 type)
 {
 	switch (type) {
 	case INTERRUPT_TYPE_EXCEPTION:
-		panic("Exception.\n");
+		setpanicmsg("Exception.");
 		break;
 	case INTERRUPT_TYPE_HARDWARE:
-		panic("Hardware interrupt.\n");
+		setpanicmsg("Hardware.");
 		break;
 	case INTERRUPT_TYPE_SOFTWARE:
-		panic("Software interrupt.\n");
+		setpanicmsg("Software.");
 		break;
 	case INTERRUPT_TYPE_TIMER:
-		panic("Timer interrupt.\n");
+		setpanicmsg("Timer.");
 		break;
 	case INTERRUPT_TYPE_SYSCALL:
-		panic("Syscall.\n");
+		setpanicmsg("Syscall.");
 		break;
 	case INTERRUPT_TYPE_UNKNOWN:
 	default:
-		panic("Unknown interrupt.\n");
+		setpanicmsg("Unknown.");
 	}
+
+	panic("interrupt");
 }

@@ -88,13 +88,15 @@ nextfirst:
 	return first;
 }
 
-void
+int
 pfree(void *f, un s)
 {
 	un i;
 
-	if ((un)f % PAGE_SIZE)
-		panic("pfree: Misaligned page.");
+	if ((un)f % PAGE_SIZE) {
+		setpanicmsg("Misaligned page.");
+		return -1;
+	}
 
 	for (i = 0; i < CEIL(s, PAGE_SIZE) / PAGE_SIZE; i++) {
 		struct page *q = (struct page *)((un)f + i * PAGE_SIZE);
@@ -102,20 +104,28 @@ pfree(void *f, un s)
 		q->n = freepages;
 		freepages = q;
 	}
+
+	return 0;
 }
 
-void
+int
 pfreerange(void *s, void *e)
 {
 	void *p;
 
-	if (CEIL((un)s, PAGE_SIZE) >= (un)e)
-		panic("pfreerange: No pages in range.");
+	if (CEIL((un)s, PAGE_SIZE) >= (un)e) {
+		setpanicmsg("No pages in range.");
+		return -1;
+	}
 
 	for (p = (void *)CEIL((un)s, PAGE_SIZE);
 	     (un)p + PAGE_SIZE <= (un)e;
-	     p = (void *)((un)p + PAGE_SIZE))
-		pfree(p, PAGE_SIZE);
+	     p = (void *)((un)p + PAGE_SIZE)) {
+		if (pfree(p, PAGE_SIZE))
+			panic("pfree");
+	}
+
+	return 0;
 }
 
 void

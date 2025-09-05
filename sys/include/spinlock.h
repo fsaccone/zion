@@ -8,10 +8,11 @@ struct lock {
 	u8 intenabled;
 };
 
-/* Acquires lock l after waiting for it to be released */
-void acquirelock(struct lock *l);
+/* Acquires lock l after waiting for it to be released. Returns -1 in case of
+   error and 0 otherwise */
+int acquirelock(struct lock *l);
 
-/* Releases acquired lock l */
-void releaselock(struct lock *l);
+/* Releases acquired lock l. Returns -1 in case of error and 0 otherwise */
+int releaselock(struct lock *l);
 
 #endif

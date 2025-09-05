@@ -13,11 +13,12 @@
    and return the pointer to the first one */
 void *palloc(un s);
 
-/* Free enough frames from p to fit size s */
-void pfree(void *f, un s);
+/* Free enough frames from p to fit size s. Returns -1 in case of error and 0
+   otherwise */
+int pfree(void *f, un s);
 
-/* Free all frames in range s-e */
-void pfreerange(void *s, void *e);
+/* Free all frames in range s-e. Returns -1 in case of error and 0 otherwise */
+int pfreerange(void *s, void *e);
 
 /* Sets all n bytes starting from s to c */
 void pmemset(void *s, u8 c, un n);

@@ -96,8 +96,10 @@ levelpagetable(void *pt, int l)
 	int i, lvlidx[PAGE_TABLE_LEVELS] = { 0 };
 	u64 *lastpt;
 
-	if (l < 1 && l > PAGE_TABLE_LEVELS)
-		panic("lastlevelpt: Passed non-existent level");
+	if (l < 1 && l > PAGE_TABLE_LEVELS) {
+		setpanicmsg("Passed non-existent level.");
+		return NULL;
+	}
 
 	lastpt = (u64 *)pt;
 	for (i = 0; i < l - 1; i++) {
@@ -244,11 +246,15 @@ allocpage(void *pt, struct pageoptions opts)
 	u64 *lastpt, *pte;
 	void *f;
 
-	if (!opts.r && !opts.w && !opts.x)
-		panic("addpage: No permissions passed.");
+	if (!opts.r && !opts.w && !opts.x) {
+		setpanicmsg("No permissions passed.");
+		return NULL;
+	}
 
-	if (opts.x && !opts.r)
-		panic("addpage: Execute permission passed without read one.");
+	if (opts.x && !opts.r) {
+		setpanicmsg("Execute permission passed without read one.");
+		return NULL;
+	}
 
 	if (!(lastpt = levelpagetable(pt, PAGE_TABLE_LEVELS)))
 		return NULL;
