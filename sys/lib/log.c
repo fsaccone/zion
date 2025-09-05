@@ -80,7 +80,7 @@ debugintbase2(u64 n)
 
 	inttostr(&str[2], n, 2, 0);
 
-	sprint(str);
+	debug(str);
 }
 
 void
@@ -91,7 +91,7 @@ debugintbase10s(s64 n)
 
 	inttostr(str, n, 10, 1);
 
-	sprint(str);
+	debug(str);
 }
 
 void
@@ -102,7 +102,7 @@ debugintbase10u(u64 n)
 
 	inttostr(str, n, 10, 0);
 
-	sprint(str);
+	debug(str);
 }
 
 void
@@ -116,7 +116,7 @@ debugintbase16(u64 n)
 
 	inttostr(&str[2], n, 16, 0);
 
-	sprint(str);
+	debug(str);
 }
 
 void
