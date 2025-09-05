@@ -18,17 +18,19 @@ SRC     = src/kmain.o \
           src/interrupt.o \
           src/mem.o
 
-ASCMD    = $(AS) -o $@ $(@:.o=.s) \
-           && echo "AS     $@"
-CCCMD    = $(CC) $(CFLAGS) -Imachine/$(MACHINE)/include \
-                           -Iarch/$(ARCH)/include \
-                           -Iinclude \
-                           -c -o $@ $(@:.o=.c) \
-           && echo "CC     $@"
-LDCMD    = $(LD) $(LDFLAGS) -e start -o $@ $^ \
-           && echo "LD     $@"
-STRIPCMD = $(STRIP) $@ \
-           && echo "STRIP  $@"
+ASCMD      = $(AS) -o $@ $(@:.o=.s) \
+             && echo "AS       $@"
+CCCMD      = $(CC) $(CFLAGS) -Imachine/$(MACHINE)/include \
+                             -Iarch/$(ARCH)/include \
+                             -Iinclude \
+                             -c -o $@ $(@:.o=.c) \
+             && echo "CC       $@"
+LDCMD      = $(LD) $(LDFLAGS) -e start -o $@ $^ \
+             && echo "LD       $@"
+OBJCOPYCMD = $(OBJCOPY) -O binary $@ \
+             && echo "OBJCOPY  $@"
+STRIPCMD   = $(STRIP) $@ \
+             && echo "STRIP    $@"
 
 CHECKMACHINE = [ $$(readlink machine/$(MACHINE)/arch) = ../../arch/$(ARCH) ] \
                || (printf "machine/$(MACHINE)/arch does not point to " \
@@ -49,7 +51,7 @@ $(OUT): $(START) $(ASTART) $(ARCHLIB) $(LIB) $(SRC)
 	@$(CHECKMACHINE)
 	@$(LDCMD)
 	@$(STRIPCMD)
-	$(OBJCOPY) -O binary $@
+	@$(OBJCOPYCMD)
 
 $(START):
 	@$(CHECKMACHINE)
