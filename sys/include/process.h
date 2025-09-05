@@ -29,6 +29,9 @@ struct process {
 	/* The pointer to the root table of the virtual page tree */
 	void *pagetable;
 
+	/* The CPU context */
+	void *ctx;
+
 	/* A linked list containing the children processes of the process */
 	struct processlist *children;
 };
