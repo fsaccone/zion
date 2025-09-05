@@ -2,6 +2,9 @@
 .global switchctx
 
 switchctx:
+	# Since ra is already set to the address that called switchctx, we do
+	# not need to store the pc manually
+
 	# Save all registers to old
 	sw x1,  0(a0)
 	sw x2,  8(a0)
