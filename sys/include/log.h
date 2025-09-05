@@ -21,4 +21,7 @@ void debugintbase16(u64 n);
 /* Prints an error message and panics */
 void panic(char *m);
 
+/* Sets the additional message the next panic call will print to m */
+void setpanicmsg(char *m);
+
 #endif

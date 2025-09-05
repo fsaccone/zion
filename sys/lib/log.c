@@ -3,6 +3,7 @@
 #include <arch/bits.h>
 #include <config.h>
 #include <machine/mem.h>
+#include <pmem.h>
 
 #define UART_THR            (UART0 + 0x00)
 #define UART_LSR            (UART0 + 0x05)
@@ -15,6 +16,8 @@ static void inttostr(char *str, u64 n, u8 base, u8 sign);
 
 /* Writes NULL-terminated string str to UART */
 static void sprint(char *str);
+
+static char *panicmsg = NULL;
 
 static void
 inttostr(char *str, u64 n, u8 base, u8 sign)
@@ -130,6 +133,17 @@ panic(char *m)
 	sprint("PANIC: ");
 	sprint(m);
 
+	if (panicmsg) {
+		sprint(": ");
+		sprint(panicmsg);
+	}
+
 loop:
 	goto loop;
+}
+
+void
+setpanicmsg(char *m)
+{
+	panicmsg = m;
 }
