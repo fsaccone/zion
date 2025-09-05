@@ -203,9 +203,5 @@ supervisor:
 callkmain:
 	j kmain
 
-.section .rodata
-.align 4
-zeroctx: .zero 127
-
 .section .data
 stackend: .space 4096
