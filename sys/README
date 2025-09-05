@@ -6,34 +6,23 @@ Kernel.
 Structure
 ---------
 
-The way objects and libraries are defined by the linker script located at
-machine/MACHINE/sys.ld.
+The machine/MACHINE/start.s source file defines the start symbol, which is the
+entry point of the kernel binary.
 
-All architecture-specific and machine-specific header files must be in
-arch/ARCH/include/arch/ and machine/MACHINE/include/machine/ respectively, and
-they must have no implementation. Each architecture's and each machine's header
-files must define a consistent API by providing a common set of identifiers.
+The arch/ARCH/astart.s source file defines the astart symbol, which is the
+function start eventually jumps to.
 
-The file machine/MACHINE/arch must be a symlink the the directory of the
-architecture of the machine.
+The src/ source files define two main symbols:
 
-The following is a list of targets which describes where they are defined and
-how they depend on each other.
+* kmain, which is the function astart eventually jumps to
 
-* libsys.a (defined in lib/, uses objects from arch/ARCH/lib/)
+* interrupt, which is set by astart as the interrupt handler
 
-The target libsys.a is a static library which implements the header files in
-include/.
+The lib/ and arch/ARCH/lib/ source files implement the include/ header files.
 
-* sys.o (defined in src/, uses source file arch/ARCH/entry.s)
+The arch/ARCH/include/arch/ and machine/MACHINE/include/machine/ header files
+define architecture-specific and machine-specific APIs in a non-implementation
+manner. The APIs are consistent across different architectures and machines.
 
-The target sys.o is a relocatable object which contains the primary
-implementation of the kernel. It depends on libarch.a and libsys.a. It defines
-the kmain symbol, which should be called by the main architecture-dependent
-entry point defined in arch/ARCH/entry.s, and the interrupt symbol, which gets
-a byte as argument and should be set by the main architecture-dependent entry
-point as the interrupt handler.
-
-* sys.bin (defined in /)
-
-The main target is sys.bin, which links sys.o with all its dependencies.
+The file machine/MACHINE/arch is a symlink to the directory of the machine
+architecture.
