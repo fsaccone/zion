@@ -17,7 +17,7 @@ static struct page *freepage(void *p);
 
 static struct page *freepages = NULL;
 
-static void
+void
 allocpage(struct page *p)
 {
 	struct page *prev;
@@ -39,7 +39,7 @@ allocpage(struct page *p)
 	prev->n = p->n;
 }
 
-static struct page *
+struct page *
 freepage(void *p)
 {
 	struct page *q;

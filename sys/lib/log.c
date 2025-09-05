@@ -19,7 +19,7 @@ static void sprint(char *str);
 
 static char *panicmsg = NULL;
 
-static void
+void
 inttostr(char *str, u64 n, u8 base, u8 sign)
 {
 	int i = 0, j, l, neg = 0;
@@ -58,7 +58,7 @@ inttostr(char *str, u64 n, u8 base, u8 sign)
 	str[l] = '\0';
 }
 
-static void
+void
 sprint(char *str)
 {
 	u16 i;

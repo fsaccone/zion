@@ -30,7 +30,7 @@ static void parenttables(u64 *tables[PAGE_TABLE_LEVELS + 1], void *pt,
 /* Returns the first valid entry in page table pt, or NULL if pt is empty */
 static u64 *validentry(void *pt);
 
-static u64 *
+u64 *
 findpointerentry(void *pt, void *ptr)
 {
 	void *curpt = pt;
@@ -75,7 +75,7 @@ redowalk:
 	return NULL;
 }
 
-static u64 *
+u64 *
 invalidentry(void *pt)
 {
 	int i;
@@ -90,7 +90,7 @@ invalidentry(void *pt)
 	return NULL;
 }
 
-static u64 *
+u64 *
 levelpagetable(void *pt, int l)
 {
 	int i, lvlidx[PAGE_TABLE_LEVELS] = { 0 };
@@ -169,7 +169,7 @@ nextlevel:
 	return lastpt;
 }
 
-static void
+void
 parenttables(u64 *tables[PAGE_TABLE_LEVELS + 1], void *pt, void *pte)
 {
 	int i, lvlidx[PAGE_TABLE_LEVELS] = { 0 };
@@ -225,7 +225,7 @@ nextlevel:
 	tables[0] = NULL;
 }
 
-static u64 *
+u64 *
 validentry(void *pt)
 {
 	int i;
