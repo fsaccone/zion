@@ -98,12 +98,26 @@ debugintbase2(u64 n)
 }
 
 void
-debugintbase10(u64 n)
+debugintbase10s(s64 n)
 {
 	/* 20 digits + \0  = 21 */
 	char str[21];
 
 	inttostr(str, n, 10, 1);
+
+	/*      DEBUG: */
+	sprint("       ");
+	sprint(str);
+	sprint("\n");
+}
+
+void
+debugintbase10u(u64 n)
+{
+	/* 20 digits + \0  = 21 */
+	char str[21];
+
+	inttostr(str, n, 10, 0);
 
 	/*      DEBUG: */
 	sprint("       ");
