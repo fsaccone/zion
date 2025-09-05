@@ -42,7 +42,8 @@ CHECKMACHINE = [ $$(readlink machine/$(MACHINE)/arch) = ../../arch/$(ARCH) ] \
 all: $(OUT)
 
 clean:
-	rm -f $(OUT) $(START) $(ASTART) $(ARCHLIB) $(LIB) $(SRC)
+	@rm -f $(OUT) $(START) $(ASTART) $(ARCHLIB) $(LIB) $(SRC)
+	@echo "CLEAN"
 
 test: $(OUT)
 	$(QEMU) $(QEMUFLAGS) -machine virt -bios none -kernel $^
