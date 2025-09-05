@@ -1,7 +1,7 @@
 #include <process.h>
 #include <log.h>
+#include <pagetable.h>
 #include <pmem.h>
-#include <vmem.h>
 
 static struct process init     = { 0 };
 
