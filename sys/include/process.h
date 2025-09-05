@@ -37,8 +37,7 @@ struct process {
    process could not be created, NULL is returned */
 struct process *createprocess(struct process *parent);
 
-/* Initializes first process and returns its pointer. Panics if run more than
-   one time */
+/* Initializes first process and returns its pointer. */
 struct process *initprocess(void);
 
 #endif

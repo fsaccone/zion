@@ -1,11 +1,9 @@
 #include <process.h>
-
 #include <log.h>
 #include <pmem.h>
 #include <vmem.h>
 
 static struct process init     = { 0 };
-static int            initdone = 0;
 
 static u8             pidbitmap[PID_MAX / 8] = { 0 };
 
@@ -58,9 +56,6 @@ createprocess(struct process *parent)
 struct process *
 initprocess(void)
 {
-	if (initdone)
-		panic("initprocess: Called for the second time.");
-
 	/* Set bit 0 to used */
 	pidbitmap[0] |= 1;
 
@@ -68,8 +63,6 @@ initprocess(void)
 	init.state = CREATED;
 	init.pagetable = createpagetable();
 	init.children = NULL;
-
-	initdone = 1;
 
 	return &init;
 }
