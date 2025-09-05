@@ -46,12 +46,12 @@ $(OUT): $(START) $(ASTART) $(ARCHLIB) $(LIB) $(SRC)
 
 $(START) $(ASTART):
 	$(CHECKMACHINE)
-	$(AS) -o $@ $(@:.o=.s)
+	$(AS) $(ASFLAGS) -o $@ $(@:.o=.s)
 
 $(ARCHLIB):
 	$(CHECKMACHINE)
 	if   [ -f $(@:.o=.c) ]; then $(CC) $(NEWCFLAGS) -c -o $@ $(@:.o=.c); \
-	elif [ -f $(@:.o=.s) ]; then $(AS) -o $@ $(@:.o=.s); \
+	elif [ -f $(@:.o=.s) ]; then $(AS) $(ASFLAGS) -o $@ $(@:.o=.s); \
 	else echo "No $(@:.o=.c) or $(@:.o=.s) file was found." && exit; fi
 
 $(LIB):
