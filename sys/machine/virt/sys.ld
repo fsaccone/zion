@@ -1,5 +1,3 @@
-ENTRY(start)
-
 MEMORY
 {
 	# Qemu's virt machine loads the kernel at this starting address

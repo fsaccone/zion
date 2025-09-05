@@ -21,7 +21,7 @@ test: $(OUT)
 
 $(OUT): $(OBJ) $(LIB)
 	$(CHECKMACHINE)
-	$(LD) $(LDFLAGS) -T machine/$(MACHINE)/sys.ld -o $@ $^
+	$(LD) $(LDFLAGS) -e start -T machine/$(MACHINE)/sys.ld -o $@ $^
 	$(STRIP) $@
 	$(OBJCOPY) -O binary $@
 
