@@ -239,20 +239,7 @@ validentry(void *pt)
 }
 
 void *
-createpagetable(void)
-{
-	void *pt;
-	/* Since palloc allocates frames aligned with PAGE_SIZE=4096, it is
-	   assured that the page table is also aligned to 4096. Also, palloc
-	   fills all allocated frames with zeros, and that is what we want. */
-	if (!(pt = palloc(PAGE_TABLE_ENTRIES * sizeof(un))))
-		panic("palloc");
-
-	return pt;
-}
-
-void *
-valloc(void *pt, struct pageoptions opts)
+allocpage(void *pt, struct pageoptions opts)
 {
 	u64 *lastpt, *pte;
 	void *f;
@@ -294,8 +281,21 @@ valloc(void *pt, struct pageoptions opts)
 	return pte;
 }
 
+void *
+createpagetable(void)
+{
+	void *pt;
+	/* Since palloc allocates frames aligned with PAGE_SIZE=4096, it is
+	   assured that the page table is also aligned to 4096. Also, palloc
+	   fills all allocated frames with zeros, and that is what we want. */
+	if (!(pt = palloc(PAGE_TABLE_ENTRIES * sizeof(un))))
+		panic("palloc");
+
+	return pt;
+}
+
 void
-vfree(void *pte, void *pt)
+freepage(void *pte, void *pt)
 {
 	u64 f, *parents[PAGE_TABLE_LEVELS + 1];
 	int i;

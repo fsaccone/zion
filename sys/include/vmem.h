@@ -19,18 +19,18 @@ struct pageoptions {
 	u8 reserved : 4;
 };
 
+/* Allocates a frame and adds a page entry pointing to it with options opts to
+   page table pt. It returns the pointer to the page entry or NULL if page
+   table is full */
+void *allocpage(void *pt, struct pageoptions opts);
+
 /* Creates an empty page table full of invalid entries and returns its
    pointer */
 void *createpagetable(void);
 
-/* Allocates a frame and adds a page entry pointing to it with options opts to
-   page table pt. It returns the pointer to the page entry or NULL if page
-   table is full */
-void *valloc(void *pt, struct pageoptions opts);
-
 /* Makes page table entry pte invalid and frees the frame it points to and all
    the parent tables in page tree pt which became empty after the removal of
    pte */
-void vfree(void *pte, void *pt);
+void freepage(void *pte, void *pt);
 
 #endif
