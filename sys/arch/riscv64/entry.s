@@ -1,4 +1,4 @@
-.section .entry.text
+.section .text
 .global entry
 
 entry:
