@@ -21,21 +21,24 @@ LIB     = lib/log.o \
 SRC     = src/kmain.o \
           src/interrupt.o
 
+# Logs
+
+ASLOG      = echo "AS       $@"
+CCLOG      = echo "CC       $@"
+LDLOG      = echo "LD       $@"
+OBJCOPYLOG = echo "OBJCOPY  $@"
+STRIPLOG   = echo "STRIP    $@"
+
 # Commands
 
-ASCMD      = $(AS) -o $@ $(@:.o=.s) \
-             && echo "AS       $@"
-CCCMD      = $(CC) $(CFLAGS) -Imachine/$(MACHINE)/include \
-                             -Iarch/$(ARCH)/include \
-                             -Iinclude \
-                             -c -o $@ $(@:.o=.c) \
-             && echo "CC       $@"
-LDCMD      = $(LD) $(LDFLAGS) -e start -o $@ $^ \
-             && echo "LD       $@"
-OBJCOPYCMD = $(OBJCOPY) -O binary $@ \
-             && echo "OBJCOPY  $@"
-STRIPCMD   = $(STRIP) $@ \
-             && echo "STRIP    $@"
+ASCMD      = $(ASLOG) && $(AS) -o $@ $(@:.o=.s)
+CCCMD      = $(CCLOG) && $(CC) $(CFLAGS) -Imachine/$(MACHINE)/include \
+                                         -Iarch/$(ARCH)/include \
+                                         -Iinclude \
+                                         -c -o $@ $(@:.o=.c)
+LDCMD      = $(LDLOG) && $(LD) $(LDFLAGS) -e start -o $@ $^
+OBJCOPYCMD = $(OBJCOPYLOG) && $(OBJCOPY) -O binary $@
+STRIPCMD   = $(STRIPLOG) && $(STRIP) $@
 
 CHECKMACHINE = [ $$(readlink machine/$(MACHINE)/arch) = ../../arch/$(ARCH) ] \
                || (printf "machine/$(MACHINE)/arch does not point to " \
