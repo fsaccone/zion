@@ -6,9 +6,34 @@
 static struct process init                   = { 0 };
 static u8             pidbitmap[PID_MAX / 8] = { 0 };
 
+/* Enqueues process p to queue at address q */
+static void enqueue(struct process *p, struct processlist **q);
+
 /* Returns the first unused PID from pidbitmap and sets it to used. Returns 0
    if pidbitmap is full */
 static u16 unusedpid(void);
+
+void
+enqueue(struct process *p, struct processlist **q)
+{
+	struct processlist *new, *tail;
+
+	if (!(new = palloc(sizeof(struct processlist))))
+		panic("palloc");
+
+	new->p = p;
+	new->n = NULL;
+
+	if (!*q) {
+		*q = new;
+		return;
+	}
+
+	/* Find tail of q */
+	for (tail = *q; tail->n; tail = tail->n);
+
+	tail->n = new;
+}
 
 u16
 unusedpid(void)
