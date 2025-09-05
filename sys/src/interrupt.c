@@ -6,9 +6,6 @@ void
 interrupt(u8 type)
 {
 	switch (type) {
-	case INTERRUPT_TYPE_UNKNOWN:
-		panic("Unknown interrupt.");
-		break;
 	case INTERRUPT_TYPE_EXCEPTION:
 		panic("Exception.");
 		break;
@@ -24,5 +21,8 @@ interrupt(u8 type)
 	case INTERRUPT_TYPE_SYSCALL:
 		panic("Syscall.");
 		break;
+	case INTERRUPT_TYPE_UNKNOWN:
+	default:
+		panic("Unknown interrupt.");
 	}
 }
