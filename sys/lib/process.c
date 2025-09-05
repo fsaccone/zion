@@ -3,8 +3,7 @@
 #include <pagetable.h>
 #include <pmem.h>
 
-static struct process init     = { 0 };
-
+static struct process init                   = { 0 };
 static u8             pidbitmap[PID_MAX / 8] = { 0 };
 
 /* Returns the first unused PID from pidbitmap and sets it to used. Returns 0
