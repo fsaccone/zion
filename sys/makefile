@@ -27,6 +27,7 @@ ASLOG      = echo "AS       $@"
 CCLOG      = echo "CC       $@"
 LDLOG      = echo "LD       $@"
 OBJCOPYLOG = echo "OBJCOPY  $@"
+RMLOG      = echo "RM       $$f"
 STRIPLOG   = echo "STRIP    $@"
 
 # Commands
@@ -38,6 +39,9 @@ CCCMD      = $(CCLOG) && $(CC) $(CFLAGS) -Imachine/$(MACHINE)/include \
                                          -c -o $@ $(@:.o=.c)
 LDCMD      = $(LDLOG) && $(LD) $(LDFLAGS) -e start -o $@ $^
 OBJCOPYCMD = $(OBJCOPYLOG) && $(OBJCOPY) -O binary $@
+RMCMD      = for f in $(OUT) $(START) $(ASTART) $(ARCHLIB) $(LIB) $(SRC); do \
+             if [ -f $$f ]; then $(RMLOG) && rm -f $$f; fi; \
+             done
 STRIPCMD   = $(STRIPLOG) && $(STRIP) $@
 
 CHECKMACHINE = [ $$(readlink machine/$(MACHINE)/arch) = ../../arch/$(ARCH) ] \
@@ -52,9 +56,7 @@ CHECKMACHINE = [ $$(readlink machine/$(MACHINE)/arch) = ../../arch/$(ARCH) ] \
 all: $(OUT)
 
 clean:
-	@for f in $(OUT) $(START) $(ASTART) $(ARCHLIB) $(LIB) $(SRC); do \
-	 if [ -f $$f ]; then rm -f $$f && echo "RM  $$f"; fi; \
-	 done
+	@$(RMCMD)
 
 test: $(OUT)
 	@printf "\n"
