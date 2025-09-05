@@ -27,6 +27,7 @@ ASLOG      = echo "AS       $@"
 CCLOG      = echo "CC       $@"
 LDLOG      = echo "LD       $@"
 OBJCOPYLOG = echo "OBJCOPY  $@"
+QEMULOG    = echo "QEMU     $^"
 RMLOG      = echo "RM       $$f"
 STRIPLOG   = echo "STRIP    $@"
 
@@ -39,6 +40,10 @@ CCCMD      = $(CCLOG) && $(CC) $(CFLAGS) -Imachine/$(MACHINE)/include \
                                          -c -o $@ $(@:.o=.c)
 LDCMD      = $(LDLOG) && $(LD) $(LDFLAGS) -e start -o $@ $^
 OBJCOPYCMD = $(OBJCOPYLOG) && $(OBJCOPY) -O binary $@
+QEMUCMD    = $(QEMULOG) && printf "\n" && $(QEMU) $(QEMUFLAGS) \
+                                                  -machine virt \
+                                                  -bios none \
+                                                  -kernel $^
 RMCMD      = for f in $(OUT) $(START) $(ASTART) $(ARCHLIB) $(LIB) $(SRC); do \
              if [ -f $$f ]; then $(RMLOG) && rm -f $$f; fi; \
              done
@@ -59,8 +64,7 @@ clean:
 	@$(RMCMD)
 
 test: $(OUT)
-	@printf "\n"
-	@$(QEMU) $(QEMUFLAGS) -machine virt -bios none -kernel $^
+	@$(QEMUCMD)
 
 $(OUT): $(START) $(ASTART) $(ARCHLIB) $(LIB) $(SRC)
 	@$(CHECKMACHINE)
