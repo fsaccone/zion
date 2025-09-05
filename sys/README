@@ -26,3 +26,6 @@ manner. The APIs are consistent across different architectures and machines.
 
 The file machine/MACHINE/arch is a symlink to the directory of the machine
 architecture.
+
+The config.def.h file is used to configure the kernel and is copied to
+include/config.h at build time.

@@ -2,6 +2,8 @@ include ../config.mk
 
 OUT = sys.bin
 
+CONFIGH = include/config.h
+
 START  = machine/$(MACHINE)/start.o
 
 ASTART = arch/$(ARCH)/astart.o
@@ -33,16 +35,19 @@ NEWCFLAGS = $(CFLAGS) -Imachine/$(MACHINE)/include \
 all: $(OUT)
 
 clean:
-	rm -f $(OUT) $(START) $(ASTART) $(ARCHLIB) $(LIB) $(SRC)
+	rm -f $(OUT) $(CONFIGH) $(START) $(ASTART) $(ARCHLIB) $(LIB) $(SRC)
 
 test: $(OUT)
 	$(QEMU) $(QEMUFLAGS) -machine virt -bios none -kernel $^
 
-$(OUT): $(START) $(ASTART) $(ARCHLIB) $(LIB) $(SRC)
+$(OUT): $(CONFIGH) $(START) $(ASTART) $(ARCHLIB) $(LIB) $(SRC)
 	$(CHECKMACHINE)
 	$(LD) $(LDFLAGS) -e start -o $@ $^
 	$(STRIP) $@
 	$(OBJCOPY) -O binary $@
+
+$(CONFIGH):
+	cp config.def.h include/config.h
 
 $(START) $(ASTART):
 	$(CHECKMACHINE)
