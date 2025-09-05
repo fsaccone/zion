@@ -61,9 +61,15 @@ inttostr(char *str, u64 n, u8 base, u8 sign)
 static void
 sprint(char *str)
 {
-	while (*str) {
+	u16 i;
+
+	for (i = 0; i < LOG_MAX; i++) {
+		if (!str[i])
+			break;
+
 		while(!(*UART_LSR & UART_LSR_EMPTY_MASK));
-		*UART_THR = *str++;
+
+		*UART_THR = str[i];
 	}
 }
 

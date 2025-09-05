@@ -3,6 +3,8 @@
 
 #include <arch/types.h>
 
+#define LOG_MAX 4096
+
 /* Prints a message */
 void debug(char *m);
 
