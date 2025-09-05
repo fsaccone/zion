@@ -14,12 +14,11 @@ static void inttostr(char *str, s64 n, u8 base);
 /* Writes NULL-terminated string str to UART */
 static void sprint(char *str);
 
-static char digits[36] = "0123456789abcdefghijklmnopqrstuvwxyz";
-
 static void
 inttostr(char *str, s64 n, u8 base)
 {
 	int i = 0, j, l, neg = 0;
+	char digits[36] = "0123456789abcdefghijklmnopqrstuvwxyz";
 
 	if (!n) {
 		str[i++] = '0';
