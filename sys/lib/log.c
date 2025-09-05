@@ -1,6 +1,7 @@
 #include <log.h>
 
 #include <arch/bits.h>
+#include <config.h>
 #include <machine/mem.h>
 
 #define UART_THR            (UART0 + 0x00)
@@ -66,7 +67,11 @@ sprint(char *str)
 void
 debug(char *m)
 {
+#ifdef CONFIG_DEBUG
 	sprint(m);
+#else
+	(void)m;
+#endif
 }
 
 void
