@@ -25,6 +25,8 @@ CCCMD = $(CC) $(CFLAGS) -Imachine/$(MACHINE)/include \
                         -Iinclude \
                         -c -o $@ $(@:.o=.c) \
         && echo "CC  $@"
+LDCMD = $(LD) $(LDFLAGS) -e start -o $@ $^ \
+        && echo "LD  $@"
 
 CHECKMACHINE = [ $$(readlink machine/$(MACHINE)/arch) = ../../arch/$(ARCH) ] \
                || (printf "machine/$(MACHINE)/arch does not point to " \
@@ -43,7 +45,7 @@ test: $(OUT)
 
 $(OUT): $(START) $(ASTART) $(ARCHLIB) $(LIB) $(SRC)
 	@$(CHECKMACHINE)
-	$(LD) $(LDFLAGS) -e start -o $@ $^
+	@$(LDCMD)
 	$(STRIP) $@
 	$(OBJCOPY) -O binary $@
 
