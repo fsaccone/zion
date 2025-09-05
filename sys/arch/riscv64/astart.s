@@ -1,7 +1,7 @@
 .section .text
-.global entry
+.global astart
 
-entry:
+astart:
 	la sp, stackend
 
 	call initmisa

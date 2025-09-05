@@ -3,4 +3,4 @@
 
 .org 0x0
 start:
-	j entry
+	j astart

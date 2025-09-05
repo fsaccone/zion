@@ -1,21 +1,21 @@
 include ../../config.mk
 
-OUT   = sys.o
-ENTRY = entry.o
-OBJS  = interrupt.o kmain.o mem.o
-START = start.o
+OUT    = sys.o
+ASTART = astart.o
+OBJS   = interrupt.o kmain.o mem.o
+START  = start.o
 
 .PHONY: all clean
 
 all: $(OUT)
 
 clean:
-	rm -f $(START) $(ENTRY) $(OUT) $(OBJS)
+	rm -f $(ASTART) $(START) $(OUT) $(OBJS)
 
-$(OUT): $(START) $(ENTRY) $(OBJS)
+$(OUT): $(START) $(ASTART) $(OBJS)
 	$(LD) $(LDFLAGS) -r -o $@ $^
 
-$(ENTRY):
+$(ASTART):
 	$(AS) -o $@ ../arch/$(ARCH)/$(@:.o=.s)
 
 $(OBJS):
