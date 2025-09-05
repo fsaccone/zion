@@ -8,14 +8,15 @@
 #define UART_LSR_EMPTY_MASK (0x40)
 
 /* Writes a NULL-terminated string to str which contains the number n written
-   in base base */
-static void inttostr(char *str, s64 n, u8 base);
+   in base base. If sign is not 0, it treats n as signed and prefixes str with
+   the - character if n is negative */
+static void inttostr(char *str, u64 n, u8 base, u8 sign);
 
 /* Writes NULL-terminated string str to UART */
 static void sprint(char *str);
 
 static void
-inttostr(char *str, s64 n, u8 base)
+inttostr(char *str, u64 n, u8 base, u8 sign)
 {
 	int i = 0, j, l, neg = 0;
 	char digits[36] = "0123456789abcdefghijklmnopqrstuvwxyz";
@@ -26,7 +27,7 @@ inttostr(char *str, s64 n, u8 base)
 		return;
 	}
 
-	if (n < 0) {
+	if (sign && (s64)n < 0) {
 		neg = 1;
 		n = -n;
 	}
@@ -88,7 +89,7 @@ debugintbase2(u64 n)
 	str[0] = '0';
 	str[1] = 'b';
 
-	inttostr(&str[2], n, 2);
+	inttostr(&str[2], n, 2, 0);
 
 	/*      DEBUG: */
 	sprint("       ");
@@ -102,7 +103,7 @@ debugintbase10(u64 n)
 	/* 20 digits + \0  = 21 */
 	char str[21];
 
-	inttostr(str, n, 10);
+	inttostr(str, n, 10, 1);
 
 	/*      DEBUG: */
 	sprint("       ");
@@ -119,7 +120,7 @@ debugintbase16(u64 n)
 	str[0] = '0';
 	str[1] = 'x';
 
-	inttostr(&str[2], n, 16);
+	inttostr(&str[2], n, 16, 0);
 
 	/*      DEBUG: */
 	sprint("       ");
