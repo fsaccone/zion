@@ -42,8 +42,9 @@ CHECKMACHINE = [ $$(readlink machine/$(MACHINE)/arch) = ../../arch/$(ARCH) ] \
 all: $(OUT)
 
 clean:
-	@rm -f $(OUT) $(START) $(ASTART) $(ARCHLIB) $(LIB) $(SRC)
-	@echo "CLEAN"
+	@for f in $(OUT) $(START) $(ASTART) $(ARCHLIB) $(LIB) $(SRC); do \
+	 if [ -f $$f ]; then rm -f $$f && echo "RM  $$f"; fi; \
+	 done
 
 test: $(OUT)
 	$(QEMU) $(QEMUFLAGS) -machine virt -bios none -kernel $^
