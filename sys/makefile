@@ -19,8 +19,7 @@ LIB     = lib/log.o \
           lib/process.o \
           lib/spinlock.o
 SRC     = src/kmain.o \
-          src/interrupt.o \
-          src/mem.o
+          src/interrupt.o
 
 # Commands
 
