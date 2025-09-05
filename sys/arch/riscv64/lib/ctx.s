@@ -2,6 +2,9 @@
 .global switchctx
 
 switchctx:
+	# If old is NULL, just load new
+	beqz a0, 1f
+
 	# Since ra is already set to the address that called switchctx, we do
 	# not need to store the pc manually
 
@@ -38,6 +41,7 @@ switchctx:
 	sw x30, 232(a0)
 	sw x31, 240(a0)
 
+1:
 	# Load all registers from new
 	lw x1,  0(a1)
 	lw x2,  8(a1)
