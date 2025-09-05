@@ -1,6 +1,10 @@
 include ../config.mk
 
+# Out file
+
 OUT = sys.bin
+
+# Object files
 
 START  = machine/$(MACHINE)/start.o
 ASTART = arch/$(ARCH)/astart.o
@@ -17,6 +21,8 @@ LIB     = lib/log.o \
 SRC     = src/kmain.o \
           src/interrupt.o \
           src/mem.o
+
+# Commands
 
 ASCMD      = $(AS) -o $@ $(@:.o=.s) \
              && echo "AS       $@"
@@ -36,6 +42,8 @@ CHECKMACHINE = [ $$(readlink machine/$(MACHINE)/arch) = ../../arch/$(ARCH) ] \
                || (printf "machine/$(MACHINE)/arch does not point to " \
                 && printf "arch/$(ARCH).\n" \
                 && exit 1)
+
+# Targets
 
 .PHONY: all clean test
 
