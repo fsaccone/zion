@@ -16,7 +16,7 @@ freeallmem(void)
 		un start = freemem[i][0],
 		   size  = freemem[i][1];
 
-		debugheader("Freeing user memory:");
+		debug("Freeing user memory:");
 		debug("From:");
 		debugintbase16(start);
 		debug("To:");
@@ -29,7 +29,7 @@ freeallmem(void)
 void
 kmain(void)
 {
-	debugheader("Kernel start.");
+	debug("Kernel start.");
 
 	freeallmem();
 

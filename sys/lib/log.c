@@ -66,17 +66,7 @@ sprint(char *str)
 void
 debug(char *m)
 {
-	/*      DEBUG: */
-	sprint("       ");
 	sprint(m);
-	sprint("\n");
-}
-
-void
-debugheader(char *h)
-{
-	sprint("DEBUG: ");
-	sprint(h);
 	sprint("\n");
 }
 
@@ -91,8 +81,6 @@ debugintbase2(u64 n)
 
 	inttostr(&str[2], n, 2, 0);
 
-	/*      DEBUG: */
-	sprint("       ");
 	sprint(str);
 	sprint("\n");
 }
@@ -105,8 +93,6 @@ debugintbase10s(s64 n)
 
 	inttostr(str, n, 10, 1);
 
-	/*      DEBUG: */
-	sprint("       ");
 	sprint(str);
 	sprint("\n");
 }
@@ -119,8 +105,6 @@ debugintbase10u(u64 n)
 
 	inttostr(str, n, 10, 0);
 
-	/*      DEBUG: */
-	sprint("       ");
 	sprint(str);
 	sprint("\n");
 }
@@ -136,8 +120,6 @@ debugintbase16(u64 n)
 
 	inttostr(&str[2], n, 16, 0);
 
-	/*      DEBUG: */
-	sprint("       ");
 	sprint(str);
 	sprint("\n");
 }

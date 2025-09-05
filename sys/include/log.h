@@ -3,11 +3,8 @@
 
 #include <arch/types.h>
 
-/* Prints a message indented to the last debugheader */
+/* Prints a message */
 void debug(char *m);
-
-/* Prints a message prefixed with 'DEBUG: ' */
-void debugheader(char *h);
 
 /* Prints an integer in binary form */
 void debugintbase2(u64 n);
