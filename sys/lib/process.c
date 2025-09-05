@@ -66,7 +66,7 @@ createprocess(struct process *parent)
 		return NULL;
 
 	p->state = CREATED;
-	p->pagetable = createpagetable();
+	p->pagetable = allocpagetable();
 	p->children = NULL;
 
 	child->p = p;
@@ -85,7 +85,7 @@ initprocess(void)
 
 	init.pid = 0;
 	init.state = CREATED;
-	init.pagetable = createpagetable();
+	init.pagetable = allocpagetable();
 	init.children = NULL;
 
 	return &init;

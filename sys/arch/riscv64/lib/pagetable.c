@@ -112,7 +112,7 @@ levelpagetable(void *pt, int l)
 
 			/* If V is 0, create and walk in a new pt */
 			if (!(*pte & 1)) {
-				lastpt = createpagetable();
+				lastpt = allocpagetable();
 
 				/* Set PPN to point to new table (since lastpt
 				   is aligned, upper reserved bits and option
@@ -288,7 +288,7 @@ allocpage(void *pt, struct pageoptions opts)
 }
 
 void *
-createpagetable(void)
+allocpagetable(void)
 {
 	void *pt;
 	/* Since palloc allocates frames aligned with PAGE_SIZE=4096, it is

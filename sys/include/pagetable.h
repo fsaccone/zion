@@ -25,9 +25,9 @@ struct pageoptions {
    table is full. */
 void *allocpage(void *pt, struct pageoptions opts);
 
-/* Creates an empty page table full of invalid entries and returns its
+/* Allocates an empty page table full of invalid entries and returns its
    pointer. */
-void *createpagetable(void);
+void *allocpagetable(void);
 
 /* Makes page table entry pte invalid and frees the frame it points to and all
    the parent tables in page tree pt which became empty after the removal of
