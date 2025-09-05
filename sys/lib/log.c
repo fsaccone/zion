@@ -67,7 +67,6 @@ void
 debug(char *m)
 {
 	sprint(m);
-	sprint("\n");
 }
 
 void
@@ -82,7 +81,6 @@ debugintbase2(u64 n)
 	inttostr(&str[2], n, 2, 0);
 
 	sprint(str);
-	sprint("\n");
 }
 
 void
@@ -94,7 +92,6 @@ debugintbase10s(s64 n)
 	inttostr(str, n, 10, 1);
 
 	sprint(str);
-	sprint("\n");
 }
 
 void
@@ -106,7 +103,6 @@ debugintbase10u(u64 n)
 	inttostr(str, n, 10, 0);
 
 	sprint(str);
-	sprint("\n");
 }
 
 void
@@ -121,7 +117,6 @@ debugintbase16(u64 n)
 	inttostr(&str[2], n, 16, 0);
 
 	sprint(str);
-	sprint("\n");
 }
 
 void
@@ -129,7 +124,6 @@ panic(char *m)
 {
 	sprint("PANIC: ");
 	sprint(m);
-	sprint("\n");
 
 loop:
 	goto loop;
