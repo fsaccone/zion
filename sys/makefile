@@ -24,7 +24,10 @@ CCCMD = $(CC) $(CFLAGS) -Imachine/$(MACHINE)/include \
                         -Iinclude \
                         -c -o $@ $(@:.o=.c)
 
-CHECKMACHINE = [ $$(readlink machine/$(MACHINE)/arch) = ../../arch/$(ARCH) ]
+CHECKMACHINE = [ $$(readlink machine/$(MACHINE)/arch) = ../../arch/$(ARCH) ] \
+               || (printf "machine/$(MACHINE)/arch does not point to " \
+                && printf "arch/$(ARCH).\n" \
+                && exit 1)
 
 .PHONY: all clean test
 
@@ -37,21 +40,21 @@ test: $(OUT)
 	$(QEMU) $(QEMUFLAGS) -machine virt -bios none -kernel $^
 
 $(OUT): $(START) $(ASTART) $(ARCHLIB) $(LIB) $(SRC)
-	$(CHECKMACHINE)
+	@$(CHECKMACHINE)
 	$(LD) $(LDFLAGS) -e start -o $@ $^
 	$(STRIP) $@
 	$(OBJCOPY) -O binary $@
 
 $(START):
-	$(CHECKMACHINE)
+	@$(CHECKMACHINE)
 	$(ASCMD)
 
 $(ASTART):
-	$(CHECKMACHINE)
+	@$(CHECKMACHINE)
 	$(ASCMD)
 
 $(ARCHLIB):
-	$(CHECKMACHINE)
+	@$(CHECKMACHINE)
 	@if   [ -f $(@:.o=.c) ]; then $(CCCMD); \
 	 elif [ -f $(@:.o=.s) ]; then $(ASCMD); \
 	 else echo "No $(@:.o=.c) or $(@:.o=.s) file was found." && exit; fi
