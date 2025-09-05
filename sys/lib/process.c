@@ -3,15 +3,15 @@
 #include <pagetable.h>
 #include <pmem.h>
 
-static struct process init                   = { 0 };
-static u8             pidbitmap[PID_MAX / 8] = { 0 };
-
 /* Enqueues process p to queue at address q */
 static void enqueue(struct process *p, struct processlist **q);
 
 /* Returns the first unused PID from pidbitmap and sets it to used. Returns 0
    if pidbitmap is full */
 static u16 unusedpid(void);
+
+static struct process init                   = { 0 };
+static u8             pidbitmap[PID_MAX / 8] = { 0 };
 
 void
 enqueue(struct process *p, struct processlist **q)
