@@ -3,7 +3,7 @@
 
 #include <arch/types.h>
 
-/* Maximum 16 bits unsigned integer */
+/* Maximum 16 bits unsigned integer. */
 #define PID_MAX 65535
 
 enum processstate {
@@ -20,24 +20,24 @@ struct processlist {
 };
 
 struct process {
-	/* The process ID */
+	/* The process ID. */
 	u16 pid;
 
-	/* The process state */
+	/* The process state. */
 	enum processstate state;
 
-	/* The pointer to the root table of the virtual page tree */
+	/* The pointer to the root table of the virtual page tree. */
 	void *pagetable;
 
-	/* The CPU context */
+	/* The CPU context. */
 	void *ctx;
 
-	/* A linked list containing the children processes of the process */
+	/* A linked list containing the children processes of the process. */
 	struct processlist *children;
 };
 
 /* Creates a child process of process parent and returns its pointer. If the
-   process could not be created, NULL is returned */
+   process could not be created, NULL is returned. */
 struct process *createprocess(struct process *parent);
 
 /* Initializes first process and returns its pointer. */

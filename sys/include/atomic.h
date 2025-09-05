@@ -3,7 +3,7 @@
 
 #include <arch/types.h>
 
-/* Atomically swaps the value at d with s and returns the old value */
+/* Atomically swaps the value at d with s and returns the old value. */
 un atomicswap(un *d, un s);
 
 #endif
