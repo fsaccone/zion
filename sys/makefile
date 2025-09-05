@@ -47,7 +47,8 @@ clean:
 	 done
 
 test: $(OUT)
-	$(QEMU) $(QEMUFLAGS) -machine virt -bios none -kernel $^
+	@printf "\n"
+	@$(QEMU) $(QEMUFLAGS) -machine virt -bios none -kernel $^
 
 $(OUT): $(START) $(ASTART) $(ARCHLIB) $(LIB) $(SRC)
 	@$(CHECKMACHINE)
