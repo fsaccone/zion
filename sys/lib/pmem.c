@@ -59,13 +59,17 @@ palloc(un s)
 	struct page *pages[MAX_PALLOC_FRAMES];
 	un i, npages = CEIL(s, PAGE_SIZE) / PAGE_SIZE;
 
-	if (!s || s > MAX_PALLOC)
+	if (!s || s > MAX_PALLOC) {
+		setpanicmsg("Invalid size.");
 		return NULL;
+	}
 
 	first = freepages;
 nextfirst:
-	if (!first)
+	if (!first) {
+		setpanicmsg("Memory full.");
 		return NULL;
+	}
 
 	for (i = 0; i < npages; i++) {
 		pages[i] = freepage((void *)((un)first - i * PAGE_SIZE));
