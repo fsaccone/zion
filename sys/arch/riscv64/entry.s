@@ -112,51 +112,53 @@ setinterrupttype:
 	not  t2, t2
 	and  t1, t1, t2
 
-	# Negative - Exception -> type = 0x01 (exception)
-	li a0, 0x01
+	# Negative - Interrupt
 	bgez t0, 1f
-
-	# Positive - Interrupt
 
 	# 1 - Supervisor software interrupt -> type = 0x03 (software)
 	li  a0, 0x03
 	li  t2, 1
-	beq t1, t2, 1f
+	beq t1, t2, 2f
 
 	# 3 - Machine software interrupt -> type = 0x03 (software)
 	li  a0, 0x03
 	li  t2, 3
-	beq t1, t2, 1f
+	beq t1, t2, 2f
 
 	# 5 - Supervisor timer interrupt -> type = 0x04 (timer)
 	li  a0, 0x04
 	li  t2, 5
-	beq t1, t2, 1f
+	beq t1, t2, 2f
 
 	# 7 - Machine timer interrupt -> type = 0x04 (timer)
 	li  a0, 0x04
 	li  t2, 7
-	beq t1, t2, 1f
+	beq t1, t2, 2f
 
 	# 9 - Supervisor external interrupt -> type = 0x02 (hardware)
 	li  a0, 0x02
 	li  t2, 9
-	beq t1, t2, 1f
+	beq t1, t2, 2f
 
 	# 11 - Machine external interrupt -> type = 0x02 (hardware)
 	li  a0, 0x02
 	li  t2, 11
-	beq t1, t2, 1f
+	beq t1, t2, 2f
 
 	# 13 - Counter-overflow interrupt -> type = 0x04 (timer)
 	li  a0, 0x04
 	li  t2, 13
-	beq t1, t2, 1f
+	beq t1, t2, 2f
 
 	# If we get here, type = 0x00 (unknown)
 	li a0, 0x00
+	j  2f
 
 1:
+	# Positive - Exception -> type = 0x01 (exception)
+	li a0, 0x01
+
+2:
 	ret
 
 strapvec:
