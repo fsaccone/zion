@@ -6,7 +6,8 @@
 #define RAM_SIZE (4L * 1024L * 1024L * 1024L)
 
 #define KERNEL_START (un)0x80000000
-#define KERNEL_SIZE  (un)(256 * 1024 + 1 * 1024 * 1024)
+/* This is hardcoded to guess the size of this codebase's binary */
+#define KERNEL_SIZE  (un)(256 * 1024)
 
 #define FREE_MEMORY_REGIONS_LEN 1
 #define FREE_MEMORY_REGIONS \
