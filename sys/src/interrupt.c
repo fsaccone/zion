@@ -21,5 +21,8 @@ interrupt(u8 type)
 	case INTERRUPT_TYPE_TIMER:
 		panic("TIMER interrupt.");
 		break;
+	case INTERRUPT_TYPE_SYSCALL:
+		panic("Syscall.");
+		break;
 	}
 }

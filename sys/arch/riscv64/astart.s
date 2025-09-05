@@ -155,7 +155,14 @@ setinterrupttype:
 	j  2f
 
 1:
-	# Positive - Exception -> type = 0x01 (exception)
+	# Positive - Exception
+
+	# 8 - Environment call from U-mode -> type = 0x05 (syscall)
+	li  a0, 0x05
+	li  t2, 8
+	beq t1, t2, 2f
+
+	# If we get here, type = 0x01 (exception)
 	li a0, 0x01
 
 2:

@@ -6,6 +6,7 @@
 #define INTERRUPT_TYPE_HARDWARE  0x02
 #define INTERRUPT_TYPE_SOFTWARE  0x03
 #define INTERRUPT_TYPE_TIMER     0x04
+#define INTERRUPT_TYPE_SYSCALL   0x05
 
 /* Disables device interrupts */
 void disableinterrupts(void);
