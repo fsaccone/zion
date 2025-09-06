@@ -46,10 +46,7 @@ redowalk:
 		if (ppn == (pageentry)ptr)
 			return pte;
 
-		/* If R, W and X are all 0, walk in the pt at PPN */
-		if (!PAGE_ENTRY_GET_R(*pte)
-		 && !PAGE_ENTRY_GET_W(*pte)
-		 && !PAGE_ENTRY_GET_X(*pte)) {
+		if (PAGE_ENTRY_GET_WALKABLE(*pte)) {
 			curpt = (pageentry *)ppn;
 
 			goto redowalk;
@@ -98,20 +95,15 @@ levelpagetable(void *pt, int l)
 			if (!PAGE_ENTRY_GET_VALID(*pte)) {
 				lastpt = allocpagetable();
 
-				/* Set PPN to point to new table */
 				*pte = PAGE_ENTRY_SET_PPN(*pte,
 				                          (pageentry)lastpt);
-
-				/* Set V to 1 */
 				*pte = PAGE_ENTRY_ADD_VALID(*pte);
+				*pte = PAGE_ENTRY_SET_WALKABLE(*pte);
 
 				goto nextlevel;
 			}
 
-			/* If R, W and X are all 0, walk in the pt at PPN */
-			if (!PAGE_ENTRY_GET_R(*pte)
-			 && !PAGE_ENTRY_GET_W(*pte)
-			 && !PAGE_ENTRY_GET_X(*pte)) {
+			if (PAGE_ENTRY_GET_WALKABLE(*pte)) {
 				pageentry addr = PAGE_ENTRY_GET_PPN(*pte);
 
 				lastpt = (pageentry *)addr;
@@ -168,10 +160,7 @@ parenttables(pageentry *tables[PAGE_TABLE_LEVELS + 1], void *pt, void *pte)
 				return;
 			}
 
-			/* If R, W and X are all 0, walk in the pt at PPN */
-			if (!PAGE_ENTRY_GET_R(*e)
-			 && !PAGE_ENTRY_GET_W(*e)
-			 && !PAGE_ENTRY_GET_X(*e)) {
+			if (PAGE_ENTRY_GET_WALKABLE(*e)) {
 				pageentry addr = PAGE_ENTRY_GET_PPN(*e);
 
 				tables[i + 1] = (pageentry *)addr;
