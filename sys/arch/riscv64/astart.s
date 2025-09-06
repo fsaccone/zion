@@ -5,13 +5,26 @@ astart:
 	la sp, stackend
 
 	call initmisa
-	call initvecs
+	call delegate
 	call lockharts
 
 	call initmstatus
 	call initsstatus
 
 	j supervisor
+
+delegate:
+	li   t0,      0xffff
+	csrw medeleg, t0
+	csrw mideleg, t0
+
+	# Set sie.STIE and sie.SEIE both to 1
+	csrr t0,  sie
+	li   t1,  (1 << 5) | (1 << 9)
+	or   t0,  t0, t1
+	csrw sie, t0
+
+	ret
 
 initmisa:
 	li   t0, 0
@@ -89,10 +102,6 @@ supervisor:
 	la   t0,   callkmain
 	csrw mepc, t0
 
-	li   t0,      0xffffffffffffffff
-	csrw medeleg, t0
-	csrw mideleg, t0
-
 	# Kernel PMP address range (all addresses)
 	li   t0,       0x00000000
 	li   t1,       0xffffffffffffffff
@@ -122,6 +131,3 @@ callkmain:
 .section .data
 
 stackend: .space 4096
-
-# (6 arguments * 8 bytes)
-interruptargs: .space (6 * 8)
