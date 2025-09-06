@@ -107,6 +107,10 @@ mtrapvec:
 	# Sets a1
 	call setinterruptargs
 
+	# Clean up
+	li s0, 0
+	li s1, 0
+
 	call interrupt
 	mret
 
@@ -133,10 +137,6 @@ setinterruptargs:
 	li a1, 0
 
 2:
-	# Clean up
-	li s0, 0
-	li s1, 0
-
 	ret
 
 setinterrupttype:
@@ -217,6 +217,10 @@ strapvec:
 
 	# Sets a1
 	call setinterruptargs
+
+	# Clean up
+	li s0, 0
+	li s1, 0
 
 	call interrupt
 	sret
