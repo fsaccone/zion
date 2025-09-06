@@ -95,9 +95,40 @@ lockharts:
 	j 1b
 
 mtrapvec:
+	# Needed to avoid overwriting
+	mv s0, a0
+	mv s1, a1
+
 	csrr a0, mcause
 
+	# Sets a0
 	call setinterrupttype
+
+	# If type != 0x05 (syscall), pass NULL as args; otherwise, load args
+	# array and pass it as args
+	li  t0, 0x05
+	bne a0, t0, 1f
+
+	la a1, interruptargs
+
+	sw s0, 0(a1)
+	sw s1, 8(a1)
+	sw a2, 16(a1)
+	sw a3, 24(a1)
+	sw a4, 32(a1)
+	sw a5, 40(a1)
+	sw a6, 48(a1)
+	sw a7, 56(a1)
+
+	j 2f
+
+1:
+	li a1, 0
+
+2:
+	# Clean up
+	li s0, 0
+	li s1, 0
 
 	call interrupt
 	mret
@@ -211,4 +242,8 @@ callkmain:
 	j kmain
 
 .section .data
+
 stackend: .space 4096
+
+# (6 arguments * 8 bytes)
+interruptargs: .space (6 * 8)

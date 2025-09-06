@@ -2,9 +2,15 @@
 #include <interrupt.h>
 #include <log.h>
 
+/* type - The interrupt type code.
+   args - The array of arguments passed to the system call. Always NULL if the
+          interrupt type is not syscall.
+*/
 void
-interrupt(u8 type)
+interrupt(u8 type, un args[8])
 {
+	(void)args;
+
 	switch (type) {
 	case INTERRUPT_TYPE_EXCEPTION:
 		setpanicmsg("Exception.");
