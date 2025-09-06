@@ -95,20 +95,9 @@ lockharts:
 	j 1b
 
 mtrapvec:
-	# Needed to avoid overwriting
-	mv s0, a0
-	mv s1, a1
-
-	# Sets a0
-	csrr a0, mcause
-	call setinterrupttype
-
-	# Sets a1
-	call setinterruptargs
-
-	# Clean up
-	li s0, 0
-	li s1, 0
+	# Always set type to 0x01 (exception) for machine traps
+	li a0, 0x01
+	li a1, 0
 
 	call interrupt
 	mret
