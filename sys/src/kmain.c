@@ -33,5 +33,6 @@ kmain(void)
 
 	freeallmem();
 
-	panic("Reached end of kernel execution.");
+	setpanicmsg("Reached end of kernel execution.");
+	panic("kmain");
 }
