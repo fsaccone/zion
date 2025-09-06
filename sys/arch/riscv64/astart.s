@@ -104,6 +104,13 @@ mtrapvec:
 	# Sets a0
 	call setinterrupttype
 
+	# Sets a1
+	call setinterruptargs
+
+	call interrupt
+	mret
+
+setinterruptargs:
 	# If type != 0x05 (syscall), pass NULL as args; otherwise, load args
 	# array and pass it as args
 	li  t0, 0x05
@@ -130,8 +137,7 @@ mtrapvec:
 	li s0, 0
 	li s1, 0
 
-	call interrupt
-	mret
+	ret
 
 setinterrupttype:
 	# Get mcause or scause in a0 and set t0 to it
@@ -200,9 +206,17 @@ setinterrupttype:
 	ret
 
 strapvec:
+	# Needed to avoid overwriting
+	mv s0, a0
+	mv s1, a1
+
 	csrr a0, scause
 
+	# Sets a0
 	call setinterrupttype
+
+	# Sets a1
+	call setinterruptargs
 
 	call interrupt
 	sret
