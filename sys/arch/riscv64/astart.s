@@ -135,21 +135,6 @@ strapvec:
 	sd ra,  (27 * 8)(sp)
 	sd gp,  (28 * 8)(sp)
 
-	# Needed to avoid overwriting
-	mv s0, a0
-	mv s1, a1
-
-	# Sets a0
-	csrr a0, scause
-	call setinterrupttype
-
-	# Sets a1
-	call setinterruptargs
-
-	# Clean up
-	li s0, 0
-	li s1, 0
-
 	call interrupt
 
 	# See top of function
@@ -185,97 +170,6 @@ strapvec:
 	addi sp, sp, ((7 + 12 + 8 + 1 + 1) * 8)
 
 	sret
-
-setinterruptargs:
-	# If type != 0x05 (syscall), pass NULL as args; otherwise, load args
-	# array and pass it as args
-	li  t0, 0x05
-	bne a0, t0, 1f
-
-	la a1, interruptargs
-
-	sw s0, 0(a1)
-	sw s1, 8(a1)
-	sw a2, 16(a1)
-	sw a3, 24(a1)
-	sw a4, 32(a1)
-	sw a5, 40(a1)
-	sw a6, 48(a1)
-	sw a7, 56(a1)
-
-	j 2f
-
-1:
-	li a1, 0
-
-2:
-	ret
-
-setinterrupttype:
-	# Get mcause or scause in a0 and set t0 to it
-	mv t0, a0
-
-	# Remove sign bit in t1 copy of a0
-	mv   t1, t0
-	li   t2, 1 << 63
-	not  t2, t2
-	and  t1, t1, t2
-
-	# Negative - Interrupt
-	bgez t0, 1f
-
-	# 1 - Supervisor software interrupt -> type = 0x03 (software)
-	li  a0, 0x03
-	li  t2, 1
-	beq t1, t2, 2f
-
-	# 3 - Machine software interrupt -> type = 0x03 (software)
-	li  a0, 0x03
-	li  t2, 3
-	beq t1, t2, 2f
-
-	# 5 - Supervisor timer interrupt -> type = 0x04 (timer)
-	li  a0, 0x04
-	li  t2, 5
-	beq t1, t2, 2f
-
-	# 7 - Machine timer interrupt -> type = 0x04 (timer)
-	li  a0, 0x04
-	li  t2, 7
-	beq t1, t2, 2f
-
-	# 9 - Supervisor external interrupt -> type = 0x02 (hardware)
-	li  a0, 0x02
-	li  t2, 9
-	beq t1, t2, 2f
-
-	# 11 - Machine external interrupt -> type = 0x02 (hardware)
-	li  a0, 0x02
-	li  t2, 11
-	beq t1, t2, 2f
-
-	# 13 - Counter-overflow interrupt -> type = 0x04 (timer)
-	li  a0, 0x04
-	li  t2, 13
-	beq t1, t2, 2f
-
-	# If we get here, type = 0x00 (unknown)
-	li a0, 0x00
-	j  2f
-
-1:
-	# Positive - Exception
-
-	# 8 - Environment call from U-mode -> type = 0x05 (syscall)
-	li  a0, 0x05
-	li  t2, 8
-	beq t1, t2, 2f
-
-	# If we get here, type = 0x01 (exception)
-	li a0, 0x01
-
-2:
-	ret
 
 supervisor:
 	la   t0,   callkmain
