@@ -10,8 +10,9 @@ static void enqueue(struct process *p, struct processlist **q);
    if pidbitmap is full */
 static u16 unusedpid(void);
 
-static struct process init                   = { 0 };
-static u8             pidbitmap[PID_MAX / 8] = { 0 };
+static struct process      init                   = { 0 };
+static u8                  pidbitmap[PID_MAX / 8] = { 0 };
+static struct processlist *createdqueue           = NULL;
 
 void
 enqueue(struct process *p, struct processlist **q)
@@ -74,6 +75,8 @@ createprocess(struct process *parent)
 	child->n = parent->children;
 	parent->children = child;
 
+	enqueue(p, &createdqueue);
+
 	return p;
 }
 
@@ -87,6 +90,8 @@ initprocess(void)
 	init.state = CREATED;
 	init.pagetable = allocpagetable();
 	init.children = NULL;
+
+	enqueue(&init, &createdqueue);
 
 	return &init;
 }
