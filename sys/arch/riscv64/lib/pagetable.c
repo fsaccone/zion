@@ -154,7 +154,6 @@ parenttables(pageentry **tables[PAGE_TABLE_LEVELS + 1],
 			e = (pageentry *)((un)tables[i]
 			                  + lvlidx[i] * sizeof(pageentry *));
 
-			/* Skip invalid entries */
 			if (!PAGE_ENTRY_GET_VALID(*e))
 				continue;
 
@@ -222,32 +221,24 @@ allocpage(pageentry *pt[PAGE_TABLE_ENTRIES], struct pageoptions opts)
 	if (!(lastpt = levelpagetable(pt, PAGE_TABLE_LEVELS)))
 		return NULL;
 
-	/* lastp is non-full, so it is assured that pte is valid */
+	/* lastpt is non-full, so it is assured that an invalid pte is found */
 	pte = invalidentry(lastpt);
 
-	/* PPN bits */
 	if (!(f = palloc(PAGE_SIZE)))
 		panic("palloc");
-	/* Since f is already aligned to PAGE_SIZE, there is no need to zero
-	   the option bits */
-	*pte = PAGE_ENTRY_SET_PPN(*pte, (pageentry)f);
 
-	/* V bit */
+	*pte = PAGE_ENTRY_SET_PPN(*pte, (pageentry)f);
 	*pte = PAGE_ENTRY_ADD_VALID(*pte);
 
-	/* U bit */
 	if (opts.u)
 		*pte = PAGE_ENTRY_ADD_USER(*pte);
 
-	/* R bit */
 	if (opts.r)
 		*pte = PAGE_ENTRY_ADD_R(*pte);
 
-	/* W bit */
 	if (opts.w)
 		*pte = PAGE_ENTRY_ADD_W(*pte);
 
-	/* X bit */
 	if (opts.x)
 		*pte = PAGE_ENTRY_ADD_X(*pte);
 
@@ -259,9 +250,6 @@ allocpagetable(void)
 {
 	pageentry **pt;
 
-	/* Since palloc allocates frames aligned with PAGE_SIZE=4096, it is
-	   assured that the page table is also aligned to 4096. Also, palloc
-	   fills all allocated frames with zeros, and that is what we want. */
 	if (!(pt = palloc(PAGE_TABLE_ENTRIES * sizeof(pageentry *))))
 		panic("palloc");
 
