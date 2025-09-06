@@ -98,13 +98,12 @@ levelpagetable(void *pt, int l)
 			if (!PAGE_ENTRY_GET_VALID(*pte)) {
 				lastpt = allocpagetable();
 
-				/* Set PPN to point to new table (since lastpt
-				   is aligned, upper reserved bits and option
-				   bits are already 0) */
-				*pte = (un)lastpt;
+				/* Set PPN to point to new table */
+				*pte = PAGE_ENTRY_SET_PPN(*pte,
+				                          (pageentry)lastpt);
 
 				/* Set V to 1 */
-				*pte |= 1;
+				*pte = PAGE_ENTRY_ADD_VALID(*pte);
 
 				goto nextlevel;
 			}
@@ -239,22 +238,26 @@ allocpage(void *pt, struct pageoptions opts)
 		panic("palloc");
 	/* Since f is already aligned to PAGE_SIZE, there is no need to zero
 	   the option bits */
-	*pte |= (un)f;
+	*pte = PAGE_ENTRY_SET_PPN(*pte, (pageentry)f);
 
 	/* V bit */
-	*pte |= 1;
+	*pte = PAGE_ENTRY_ADD_VALID(*pte);
 
 	/* U bit */
-	*pte |= opts.u << 4;
+	if (opts.u)
+		*pte = PAGE_ENTRY_ADD_USER(*pte);
 
 	/* R bit */
-	*pte |= opts.r << 1;
+	if (opts.r)
+		*pte = PAGE_ENTRY_ADD_R(*pte);
 
 	/* W bit */
-	*pte |= opts.w << 2;
+	if (opts.w)
+		*pte = PAGE_ENTRY_ADD_W(*pte);
 
 	/* X bit */
-	*pte |= opts.x << 3;
+	if (opts.x)
+		*pte = PAGE_ENTRY_ADD_X(*pte);
 
 	return pte;
 }
@@ -288,7 +291,7 @@ freepage(void *pte, void *pt)
 
 	pfree((void *)f, PAGE_SIZE);
 
-	*(pageentry *)pte = 0;
+	*(pageentry *)pte = PAGE_ENTRY_REM_VALID(*(pageentry *)pte);
 
 	/* Free parent page tables which became empty after pte removal */
 	/* Skip root page table (i = 1) */
@@ -304,6 +307,7 @@ freepage(void *pte, void *pt)
 		/* Remove entry pointing to invalidated table */
 		ptrentry = findpointerentry(parents[i - 1], parents[i]);
 
-		*(pageentry *)ptrentry = 0;
+		*(pageentry *)ptrentry
+		              = PAGE_ENTRY_REM_VALID(*(pageentry *)ptrentry);
 	}
 }
