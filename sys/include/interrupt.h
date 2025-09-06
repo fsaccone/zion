@@ -8,10 +8,10 @@
 #define INTERRUPT_TYPE_TIMER     0x04
 #define INTERRUPT_TYPE_SYSCALL   0x05
 
-/* Disables device interrupts. */
+/* Disables interrupts. */
 void disableinterrupts(void);
 
-/* Enables device interrupts. */
+/* Enables interrupts. */
 void enableinterrupts(void);
 
 /* Returns 1 if interrupts are enabled and 0 otherwise. */
