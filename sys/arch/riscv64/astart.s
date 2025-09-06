@@ -99,9 +99,8 @@ mtrapvec:
 	mv s0, a0
 	mv s1, a1
 
-	csrr a0, mcause
-
 	# Sets a0
+	csrr a0, mcause
 	call setinterrupttype
 
 	# Sets a1
@@ -210,9 +209,8 @@ strapvec:
 	mv s0, a0
 	mv s1, a1
 
-	csrr a0, scause
-
 	# Sets a0
+	csrr a0, scause
 	call setinterrupttype
 
 	# Sets a1
