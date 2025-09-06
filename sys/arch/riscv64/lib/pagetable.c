@@ -41,32 +41,14 @@ redowalk:
 		u64 *pte = (void *)((un)curpt + i * sizeof(u64));
 		u64 ppn;
 
-		ppn = *pte;
-
-		/* Set all option bits to 0 */
-		ppn >>= 10;
-		ppn <<= 10;
-
-		/* Set upper reserved bits to 0 */
-		ppn <<= 10;
-		ppn >>= 10;
+		ppn = PAGE_ENTRY_PPN(*pte);
 
 		if (ppn == (u64)ptr)
 			return pte;
 
 		/* If R, W and X are all 0, walk in the pt at PPN */
 		if (!(*pte & 0b1110)) {
-			u64 addr = *pte;
-
-			/* Set all option bits to 0 */
-			addr >>= 10;
-			addr <<= 10;
-
-			/* Set upper reserved bits to 0 */
-			addr <<= 10;
-			addr >>= 10;
-
-			curpt = (u64 *)addr;
+			curpt = (u64 *)ppn;
 
 			goto redowalk;
 		}
@@ -127,15 +109,7 @@ levelpagetable(void *pt, int l)
 
 			/* If R, W and X are all 0, walk in the pt at PPN */
 			if (!(*pte & 0b1110)) {
-				u64 addr = *pte;
-
-				/* Set all option bits to 0 */
-				addr >>= 10;
-				addr <<= 10;
-
-				/* Set upper reserved bits to 0 */
-				addr <<= 10;
-				addr >>= 10;
+				u64 addr = PAGE_ENTRY_PPN(*pte);
 
 				lastpt = (u64 *)addr;
 
@@ -193,15 +167,7 @@ parenttables(u64 *tables[PAGE_TABLE_LEVELS + 1], void *pt, void *pte)
 
 			/* If R, W and X are all 0, walk in the pt at PPN */
 			if (!(*e & 0b1110)) {
-				u64 addr = *e;
-
-				/* Set all option bits to 0 */
-				addr >>= 10;
-				addr <<= 10;
-
-				/* Set upper reserved bits to 0 */
-				addr <<= 10;
-				addr >>= 10;
+				u64 addr = PAGE_ENTRY_PPN(*e);
 
 				tables[i + 1] = (u64 *)addr;
 
@@ -312,15 +278,7 @@ freepage(void *pte, void *pt)
 	if (!parents[0])
 		return;
 
-	f = *(u64 *)pte;
-
-	/* Set all option bits to 0 */
-	f >>= 10;
-	f <<= 10;
-
-	/* Set upper reserved bits to 0 */
-	f <<= 10;
-	f >>= 10;
+	f = PAGE_ENTRY_PPN(*(u64 *)pte);
 
 	pfree((void *)f, PAGE_SIZE);
 
