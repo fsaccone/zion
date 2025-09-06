@@ -113,6 +113,25 @@ mtrapvec:
 	call interrupt
 	mret
 
+strapvec:
+	# Needed to avoid overwriting
+	mv s0, a0
+	mv s1, a1
+
+	# Sets a0
+	csrr a0, scause
+	call setinterrupttype
+
+	# Sets a1
+	call setinterruptargs
+
+	# Clean up
+	li s0, 0
+	li s1, 0
+
+	call interrupt
+	sret
+
 setinterruptargs:
 	# If type != 0x05 (syscall), pass NULL as args; otherwise, load args
 	# array and pass it as args
@@ -203,25 +222,6 @@ setinterrupttype:
 
 2:
 	ret
-
-strapvec:
-	# Needed to avoid overwriting
-	mv s0, a0
-	mv s1, a1
-
-	# Sets a0
-	csrr a0, scause
-	call setinterrupttype
-
-	# Sets a1
-	call setinterruptargs
-
-	# Clean up
-	li s0, 0
-	li s1, 0
-
-	call interrupt
-	sret
 
 supervisor:
 	la   t0,   callkmain
