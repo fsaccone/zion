@@ -12,11 +12,9 @@ entry point of the kernel binary.
 The arch/ARCH/astart.s source file defines the astart symbol, which is the
 function start eventually jumps to.
 
-The src/ source files define two main symbols:
-
-* kmain, which is the function astart eventually jumps to
-
-* interrupt, which is set by astart as the interrupt handler
+The src/ source files define two main symbols: kmain, which is the function
+astart eventually jumps to; interrupt, which is set by astart as the interrupt
+handler.
 
 The lib/ and arch/ARCH/lib/ source files implement the include/ header files.
 
