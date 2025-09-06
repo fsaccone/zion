@@ -38,7 +38,7 @@ findpointerentry(void *pt, void *ptr)
 
 redowalk:
 	for (i = 0; i < PAGE_TABLE_ENTRIES; i++) {
-		pageentry *pte = (void *)((un)curpt + i * sizeof(pageentry));
+		pageentry *pte = (void *)((un)curpt + i * sizeof(pageentry *));
 		pageentry ppn;
 
 		ppn = PAGE_ENTRY_GET_PPN(*pte);
@@ -62,7 +62,7 @@ invalidentry(void *pt)
 	int i;
 
 	for (i = 0; i < PAGE_TABLE_ENTRIES; i++) {
-		pageentry *pte = (void *)((un)pt + i * sizeof(pageentry));
+		pageentry *pte = (void *)((un)pt + i * sizeof(pageentry *));
 
 		if (!PAGE_ENTRY_GET_VALID(*pte))
 			return pte;
@@ -89,7 +89,7 @@ levelpagetable(void *pt, int l)
 		   full table: lvlidx does that */
 		for (; lvlidx[i] < PAGE_TABLE_ENTRIES; lvlidx[i]++) {
 			pageentry *pte = (void *)((un)lastpt
-			                    + lvlidx[i] * sizeof(pageentry));
+			                    + lvlidx[i] * sizeof(pageentry *));
 
 			/* If invalid, create and walk in a new pt */
 			if (!PAGE_ENTRY_GET_VALID(*pte)) {
@@ -149,7 +149,7 @@ parenttables(pageentry *tables[PAGE_TABLE_LEVELS + 1], void *pt, void *pte)
 	for (i = 0; i < PAGE_TABLE_LEVELS; i++) {
 		for (; lvlidx[i] < PAGE_TABLE_ENTRIES; lvlidx[i]++) {
 			pageentry *e = (void *)((un)tables[i]
-			                  + lvlidx[i] * sizeof(pageentry));
+			                  + lvlidx[i] * sizeof(pageentry *));
 
 			/* Skip invalid entries */
 			if (!PAGE_ENTRY_GET_VALID(*e))
@@ -191,7 +191,7 @@ validentry(void *pt)
 	int i;
 
 	for (i = 0; i < PAGE_TABLE_ENTRIES; i++) {
-		pageentry *pte = (void *)((un)pt + i * sizeof(pageentry));
+		pageentry *pte = (void *)((un)pt + i * sizeof(pageentry *));
 
 		if (PAGE_ENTRY_GET_VALID(*pte))
 			return pte;
@@ -258,7 +258,7 @@ allocpagetable(void)
 	/* Since palloc allocates frames aligned with PAGE_SIZE=4096, it is
 	   assured that the page table is also aligned to 4096. Also, palloc
 	   fills all allocated frames with zeros, and that is what we want. */
-	if (!(pt = palloc(PAGE_TABLE_ENTRIES * sizeof(un))))
+	if (!(pt = palloc(PAGE_TABLE_ENTRIES * sizeof(pageentry *))))
 		panic("palloc");
 
 	return pt;
@@ -291,7 +291,7 @@ freepage(void *pte, void *pt)
 		if (validentry(parents[i]))
 			continue;
 
-		pfree(parents[i], PAGE_TABLE_ENTRIES * sizeof(un));
+		pfree(parents[i], PAGE_TABLE_ENTRIES * sizeof(pageentry *));
 
 		/* Remove entry pointing to invalidated table */
 		ptrentry = findpointerentry(parents[i - 1], parents[i]);
