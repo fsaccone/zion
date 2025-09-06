@@ -47,7 +47,9 @@ redowalk:
 			return pte;
 
 		/* If R, W and X are all 0, walk in the pt at PPN */
-		if (!(*pte & 0b1110)) {
+		if (!PAGE_ENTRY_R(*pte)
+		 && !PAGE_ENTRY_W(*pte)
+		 && !PAGE_ENTRY_X(*pte)) {
 			curpt = (u64 *)ppn;
 
 			goto redowalk;
@@ -108,7 +110,9 @@ levelpagetable(void *pt, int l)
 			}
 
 			/* If R, W and X are all 0, walk in the pt at PPN */
-			if (!(*pte & 0b1110)) {
+			if (!PAGE_ENTRY_R(*pte)
+			 && !PAGE_ENTRY_W(*pte)
+			 && !PAGE_ENTRY_X(*pte)) {
 				u64 addr = PAGE_ENTRY_PPN(*pte);
 
 				lastpt = (u64 *)addr;
@@ -166,7 +170,9 @@ parenttables(u64 *tables[PAGE_TABLE_LEVELS + 1], void *pt, void *pte)
 			}
 
 			/* If R, W and X are all 0, walk in the pt at PPN */
-			if (!(*e & 0b1110)) {
+			if (!PAGE_ENTRY_R(*e)
+			 && !PAGE_ENTRY_W(*e)
+			 && !PAGE_ENTRY_X(*e)) {
 				u64 addr = PAGE_ENTRY_PPN(*e);
 
 				tables[i + 1] = (u64 *)addr;
