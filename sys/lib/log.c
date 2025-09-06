@@ -139,7 +139,7 @@ panic(char *m)
 {
 	disableinterrupts();
 
-	sprint("PANIC: ");
+	sprint("[PANIC] ");
 	sprint(m);
 
 	if (panicmsg) {
