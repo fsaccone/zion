@@ -2,6 +2,7 @@
 
 #include <arch/bits.h>
 #include <config.h>
+#include <interrupt.h>
 #include <machine/mem.h>
 #include <pmem.h>
 
@@ -136,6 +137,8 @@ debugintbase16(u64 n)
 void
 panic(char *m)
 {
+	disableinterrupts();
+
 	sprint("PANIC: ");
 	sprint(m);
 
