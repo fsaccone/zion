@@ -7,42 +7,44 @@
 
 /* Returns the first valid entry in page tree pt which points to address ptr,
    or NULL if ptr is not found */
-static pageentry *findpointerentry(void *pt, void *ptr);
+static pageentry *findpointerentry(pageentry *pt[PAGE_TABLE_ENTRIES],
+                                   void *ptr);
 
 /* Returns the first invalid entry in page table pt, or NULL if pt is full */
-static pageentry *invalidentry(void *pt);
+static pageentry *invalidentry(pageentry *pt[PAGE_TABLE_ENTRIES]);
 
 /* Returns the first non-full l-level page table it encounters in page tree pt,
    or NULL if pt is full. It creates one if needed */
-static pageentry *levelpagetable(void *pt, int l);
+static pageentry **levelpagetable(pageentry *pt[PAGE_TABLE_ENTRIES], u8 l);
 
 /* Makes tables a NULL terminated array containing, in order from root to close
    parent, the path of tables eventually pointing to page table entry pte.
    tables[0] is set to NULL if pte is not found */
-static void parenttables(pageentry *tables[PAGE_TABLE_LEVELS + 1], void *pt,
-                         void *pte);
+static void parenttables(pageentry **tables[PAGE_TABLE_LEVELS + 1],
+                         pageentry *pt[PAGE_TABLE_ENTRIES],
+                         pageentry *pte);
 
 /* Returns the first valid entry in page table pt, or NULL if pt is empty */
-static pageentry *validentry(void *pt);
+static pageentry *validentry(pageentry *pt[PAGE_TABLE_ENTRIES]);
 
 pageentry *
-findpointerentry(void *pt, void *ptr)
+findpointerentry(pageentry *pt[PAGE_TABLE_ENTRIES], void *ptr)
 {
-	void *curpt = pt;
+	pageentry **curpt = pt;
 	int i;
 
 redowalk:
 	for (i = 0; i < PAGE_TABLE_ENTRIES; i++) {
-		pageentry *pte = (void *)((un)curpt + i * sizeof(pageentry *));
-		pageentry ppn;
+		pageentry ppn, *pte;
 
+		pte = (pageentry *)((un)curpt + i * sizeof(pageentry *));
 		ppn = PAGE_ENTRY_GET_PPN(*pte);
 
 		if (ppn == (pageentry)ptr)
 			return pte;
 
 		if (PAGE_ENTRY_GET_WALKABLE(*pte)) {
-			curpt = (pageentry *)ppn;
+			curpt = (pageentry **)ppn;
 
 			goto redowalk;
 		}
@@ -52,7 +54,7 @@ redowalk:
 }
 
 pageentry *
-invalidentry(void *pt)
+invalidentry(pageentry *pt[PAGE_TABLE_ENTRIES])
 {
 	int i;
 
@@ -66,24 +68,26 @@ invalidentry(void *pt)
 	return NULL;
 }
 
-pageentry *
-levelpagetable(void *pt, int l)
+pageentry **
+levelpagetable(pageentry *pt[PAGE_TABLE_ENTRIES], u8 l)
 {
 	int i, lvlidx[PAGE_TABLE_LEVELS] = { 0 };
-	pageentry *lastpt;
+	pageentry **lastpt;
 
 	if (l < 1 && l > PAGE_TABLE_LEVELS) {
 		setpanicmsg("Passed non-existent level.");
 		return NULL;
 	}
 
-	lastpt = (pageentry *)pt;
+	lastpt = pt;
 	for (i = 0; i < l - 1; i++) {
 		/* We need to keep track of the last entry index of each level
 		   in case we need to go backwards after walking through a
 		   full table: lvlidx does that */
 		for (; lvlidx[i] < PAGE_TABLE_ENTRIES; lvlidx[i]++) {
-			pageentry *pte = (void *)((un)lastpt
+			pageentry *pte;
+
+			pte = (pageentry *)((un)lastpt
 			                    + lvlidx[i] * sizeof(pageentry *));
 
 			/* If invalid, create and walk in a new pt */
@@ -99,9 +103,9 @@ levelpagetable(void *pt, int l)
 			}
 
 			if (PAGE_ENTRY_GET_WALKABLE(*pte)) {
-				pageentry addr = PAGE_ENTRY_GET_PPN(*pte);
+				un addr = PAGE_ENTRY_GET_PPN(*pte);
 
-				lastpt = (pageentry *)addr;
+				lastpt = (pageentry **)addr;
 
 				goto nextlevel;
 			}
@@ -134,7 +138,9 @@ nextlevel:
 }
 
 void
-parenttables(pageentry *tables[PAGE_TABLE_LEVELS + 1], void *pt, void *pte)
+parenttables(pageentry **tables[PAGE_TABLE_LEVELS + 1],
+             pageentry *pt[PAGE_TABLE_ENTRIES],
+             pageentry *pte)
 {
 	int i, lvlidx[PAGE_TABLE_LEVELS] = { 0 };
 
@@ -143,7 +149,9 @@ parenttables(pageentry *tables[PAGE_TABLE_LEVELS + 1], void *pt, void *pte)
 	tables[0] = pt;
 	for (i = 0; i < PAGE_TABLE_LEVELS; i++) {
 		for (; lvlidx[i] < PAGE_TABLE_ENTRIES; lvlidx[i]++) {
-			pageentry *e = (void *)((un)tables[i]
+			pageentry *e;
+
+			e = (pageentry *)((un)tables[i]
 			                  + lvlidx[i] * sizeof(pageentry *));
 
 			/* Skip invalid entries */
@@ -158,7 +166,7 @@ parenttables(pageentry *tables[PAGE_TABLE_LEVELS + 1], void *pt, void *pte)
 			if (PAGE_ENTRY_GET_WALKABLE(*e)) {
 				pageentry addr = PAGE_ENTRY_GET_PPN(*e);
 
-				tables[i + 1] = (pageentry *)addr;
+				tables[i + 1] = (pageentry **)addr;
 
 				goto nextlevel;
 			}
@@ -181,7 +189,7 @@ nextlevel:
 }
 
 pageentry *
-validentry(void *pt)
+validentry(pageentry *pt[PAGE_TABLE_ENTRIES])
 {
 	int i;
 
@@ -195,10 +203,10 @@ validentry(void *pt)
 	return NULL;
 }
 
-void *
-allocpage(void *pt, struct pageoptions opts)
+pageentry *
+allocpage(pageentry *pt[PAGE_TABLE_ENTRIES], struct pageoptions opts)
 {
-	pageentry *lastpt, *pte;
+	pageentry **lastpt, *pte;
 	void *f;
 
 	if (!opts.r && !opts.w && !opts.x) {
@@ -246,10 +254,11 @@ allocpage(void *pt, struct pageoptions opts)
 	return pte;
 }
 
-void *
+pageentry **
 allocpagetable(void)
 {
-	void *pt;
+	pageentry **pt;
+
 	/* Since palloc allocates frames aligned with PAGE_SIZE=4096, it is
 	   assured that the page table is also aligned to 4096. Also, palloc
 	   fills all allocated frames with zeros, and that is what we want. */
@@ -260,9 +269,9 @@ allocpagetable(void)
 }
 
 void
-freepage(void *pte, void *pt)
+freepage(pageentry *pte, pageentry *pt[PAGE_TABLE_ENTRIES])
 {
-	pageentry f, *parents[PAGE_TABLE_LEVELS + 1];
+	pageentry f, **parents[PAGE_TABLE_LEVELS + 1];
 	int i;
 
 	parenttables(parents, pt, pte);
@@ -280,7 +289,7 @@ freepage(void *pte, void *pt)
 	/* Free parent page tables which became empty after pte removal */
 	/* Skip root page table (i = 1) */
 	for (i = 1; parents[i] && i < PAGE_TABLE_LEVELS; i++) {
-		void *ptrentry;
+		pageentry *ptrentry;
 
 		/* If parents[i] is non-empty */
 		if (validentry(parents[i]))
@@ -291,7 +300,6 @@ freepage(void *pte, void *pt)
 		/* Remove entry pointing to invalidated table */
 		ptrentry = findpointerentry(parents[i - 1], parents[i]);
 
-		*(pageentry *)ptrentry
-		              = PAGE_ENTRY_REM_VALID(*(pageentry *)ptrentry);
+		*ptrentry = PAGE_ENTRY_REM_VALID(*ptrentry);
 	}
 }
