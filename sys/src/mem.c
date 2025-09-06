@@ -4,6 +4,7 @@
 #include <log.h>
 #include <machine/mem.h>
 #include <pmem.h>
+#include <vmem.h>
 
 void
 freeallmem(void)
@@ -23,4 +24,10 @@ freeallmem(void)
 
 		pfreerange((void *)start, (void *)(start + size));
 	}
+}
+
+void
+physicalmem(void)
+{
+	memswitch(NULL, 0);
 }

@@ -9,6 +9,7 @@ kmain(void)
 {
 	debug("Kernel start.\n");
 
+	physicalmem();
 	setinterrupthandler(interrupt);
 
 	freeallmem();
