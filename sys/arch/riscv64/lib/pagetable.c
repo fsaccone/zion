@@ -7,9 +7,6 @@
 
 /* The used scheme is Sv57 */
 
-#define PAGE_TABLE_ENTRIES 512
-#define PAGE_TABLE_LEVELS  5
-
 /* Returns the first valid inner node in page tree pt which points to address
    ptr, or NULL if ptr is not found */
 static pageentry *findpointerentry(void *pt, void *ptr);

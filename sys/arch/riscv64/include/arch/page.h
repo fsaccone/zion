@@ -3,6 +3,9 @@
 
 #include <arch/types.h>
 
+#define PAGE_TABLE_ENTRIES 512
+#define PAGE_TABLE_LEVELS  5
+
 #define PAGE_SIZE_EXPONENT 12
 #define PAGE_SIZE          (1 << PAGE_SIZE_EXPONENT)
 
