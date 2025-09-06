@@ -1,13 +1,14 @@
 #include <arch/types.h>
 #include <interrupt.h>
 #include <log.h>
+#include <syscall.h>
 
 /* type - The interrupt type code.
    args - The array of arguments passed to the system call. Always NULL if the
           interrupt type is not syscall.
 */
 void
-interrupt(u8 type, un args[8])
+interrupt(u8 type, un args[SYSCALL_ARGS_LEN])
 {
 	(void)args;
 
