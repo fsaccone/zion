@@ -4,10 +4,10 @@
 #define PAGE_SIZE_EXPONENT 12
 #define PAGE_SIZE          (1 << PAGE_SIZE_EXPONENT)
 
-#define PAGE_ENTRY_VALID(e) ((e) & 1)
-#define PAGE_ENTRY_PPN(e)   (((((e) >> 10) << 20) >> 10))
-#define PAGE_ENTRY_R(e)     (((e) >> 1) & 1)
-#define PAGE_ENTRY_W(e)     (((e) >> 2) & 1)
-#define PAGE_ENTRY_X(e)     (((e) >> 3) & 1)
+#define PAGE_ENTRY_GET_VALID(e) ((e) & 1)
+#define PAGE_ENTRY_GET_PPN(e)   (((((e) >> 10) << 20) >> 10))
+#define PAGE_ENTRY_GET_R(e)     (((e) >> 1) & 1)
+#define PAGE_ENTRY_GET_W(e)     (((e) >> 2) & 1)
+#define PAGE_ENTRY_GET_X(e)     (((e) >> 3) & 1)
 
 #endif

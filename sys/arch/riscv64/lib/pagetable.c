@@ -41,15 +41,15 @@ redowalk:
 		u64 *pte = (void *)((un)curpt + i * sizeof(u64));
 		u64 ppn;
 
-		ppn = PAGE_ENTRY_PPN(*pte);
+		ppn = PAGE_ENTRY_GET_PPN(*pte);
 
 		if (ppn == (u64)ptr)
 			return pte;
 
 		/* If R, W and X are all 0, walk in the pt at PPN */
-		if (!PAGE_ENTRY_R(*pte)
-		 && !PAGE_ENTRY_W(*pte)
-		 && !PAGE_ENTRY_X(*pte)) {
+		if (!PAGE_ENTRY_GET_R(*pte)
+		 && !PAGE_ENTRY_GET_W(*pte)
+		 && !PAGE_ENTRY_GET_X(*pte)) {
 			curpt = (u64 *)ppn;
 
 			goto redowalk;
@@ -67,7 +67,7 @@ invalidentry(void *pt)
 	for (i = 0; i < PAGE_TABLE_ENTRIES; i++) {
 		u64 *pte = (void *)((un)pt + i * sizeof(u64));
 
-		if (!PAGE_ENTRY_VALID(*pte))
+		if (!PAGE_ENTRY_GET_VALID(*pte))
 			return pte;
 	}
 
@@ -95,7 +95,7 @@ levelpagetable(void *pt, int l)
 			                    + lvlidx[i] * sizeof(u64));
 
 			/* If invalid, create and walk in a new pt */
-			if (!PAGE_ENTRY_VALID(*pte)) {
+			if (!PAGE_ENTRY_GET_VALID(*pte)) {
 				lastpt = allocpagetable();
 
 				/* Set PPN to point to new table (since lastpt
@@ -110,10 +110,10 @@ levelpagetable(void *pt, int l)
 			}
 
 			/* If R, W and X are all 0, walk in the pt at PPN */
-			if (!PAGE_ENTRY_R(*pte)
-			 && !PAGE_ENTRY_W(*pte)
-			 && !PAGE_ENTRY_X(*pte)) {
-				u64 addr = PAGE_ENTRY_PPN(*pte);
+			if (!PAGE_ENTRY_GET_R(*pte)
+			 && !PAGE_ENTRY_GET_W(*pte)
+			 && !PAGE_ENTRY_GET_X(*pte)) {
+				u64 addr = PAGE_ENTRY_GET_PPN(*pte);
 
 				lastpt = (u64 *)addr;
 
@@ -161,7 +161,7 @@ parenttables(u64 *tables[PAGE_TABLE_LEVELS + 1], void *pt, void *pte)
 			                  + lvlidx[i] * sizeof(u64));
 
 			/* Skip invalid entries */
-			if (!PAGE_ENTRY_VALID(*e))
+			if (!PAGE_ENTRY_GET_VALID(*e))
 				continue;
 
 			if ((un)e == (un)pte) {
@@ -170,10 +170,10 @@ parenttables(u64 *tables[PAGE_TABLE_LEVELS + 1], void *pt, void *pte)
 			}
 
 			/* If R, W and X are all 0, walk in the pt at PPN */
-			if (!PAGE_ENTRY_R(*e)
-			 && !PAGE_ENTRY_W(*e)
-			 && !PAGE_ENTRY_X(*e)) {
-				u64 addr = PAGE_ENTRY_PPN(*e);
+			if (!PAGE_ENTRY_GET_R(*e)
+			 && !PAGE_ENTRY_GET_W(*e)
+			 && !PAGE_ENTRY_GET_X(*e)) {
+				u64 addr = PAGE_ENTRY_GET_PPN(*e);
 
 				tables[i + 1] = (u64 *)addr;
 
@@ -205,7 +205,7 @@ validentry(void *pt)
 	for (i = 0; i < PAGE_TABLE_ENTRIES; i++) {
 		u64 *pte = (void *)((un)pt + i * sizeof(u64));
 
-		if (PAGE_ENTRY_VALID(*pte))
+		if (PAGE_ENTRY_GET_VALID(*pte))
 			return pte;
 	}
 
@@ -284,7 +284,7 @@ freepage(void *pte, void *pt)
 	if (!parents[0])
 		return;
 
-	f = PAGE_ENTRY_PPN(*(u64 *)pte);
+	f = PAGE_ENTRY_GET_PPN(*(u64 *)pte);
 
 	pfree((void *)f, PAGE_SIZE);
 
