@@ -5,15 +5,15 @@
 #include <log.h>
 #include <pmem.h>
 
-/* Returns the first valid inner node in page tree pt which points to address
-   ptr, or NULL if ptr is not found */
+/* Returns the first valid entry in page tree pt which points to address ptr,
+   or NULL if ptr is not found */
 static pageentry *findpointerentry(void *pt, void *ptr);
 
 /* Returns the first invalid entry in page table pt, or NULL if pt is full */
 static pageentry *invalidentry(void *pt);
 
-/* Returns the first non-full l-level page table it encounters, or NULL if pt
-   is full. It creates one if needed */
+/* Returns the first non-full l-level page table it encounters in page tree pt,
+   or NULL if pt is full. It creates one if needed */
 static pageentry *levelpagetable(void *pt, int l);
 
 /* Makes tables a NULL terminated array containing, in order from root to close
