@@ -22,7 +22,8 @@ LIB     = lib/log.o \
           lib/spinlock.o
 
 SRC     = src/kmain.o \
-          src/interrupt.o
+          src/interrupt.o \
+          src/mem.o
 
 CHECKMACHINE = [ $$(readlink machine/$(MACHINE)/arch) = ../../arch/$(ARCH) ]
 
