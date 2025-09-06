@@ -83,7 +83,7 @@ invalidentry(void *pt)
 	for (i = 0; i < PAGE_TABLE_ENTRIES; i++) {
 		u64 *pte = (void *)((un)pt + i * sizeof(u64));
 
-		if (!(*pte & 1))
+		if (!PAGE_ENTRY_VALID(*pte))
 			return pte;
 	}
 
@@ -110,8 +110,8 @@ levelpagetable(void *pt, int l)
 			u64 *pte = (void *)((un)lastpt
 			                    + lvlidx[i] * sizeof(u64));
 
-			/* If V is 0, create and walk in a new pt */
-			if (!(*pte & 1)) {
+			/* If invalid, create and walk in a new pt */
+			if (!PAGE_ENTRY_VALID(*pte)) {
 				lastpt = allocpagetable();
 
 				/* Set PPN to point to new table (since lastpt
@@ -183,7 +183,7 @@ parenttables(u64 *tables[PAGE_TABLE_LEVELS + 1], void *pt, void *pte)
 			                  + lvlidx[i] * sizeof(u64));
 
 			/* Skip invalid entries */
-			if (!(*e & 0b1))
+			if (!PAGE_ENTRY_VALID(*e))
 				continue;
 
 			if ((un)e == (un)pte) {
@@ -233,7 +233,7 @@ validentry(void *pt)
 	for (i = 0; i < PAGE_TABLE_ENTRIES; i++) {
 		u64 *pte = (void *)((un)pt + i * sizeof(u64));
 
-		if (*pte & 1)
+		if (PAGE_ENTRY_VALID(*pte))
 			return pte;
 	}
 
