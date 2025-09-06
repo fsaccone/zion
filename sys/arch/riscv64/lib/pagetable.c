@@ -5,8 +5,6 @@
 #include <log.h>
 #include <pmem.h>
 
-/* The used scheme is Sv57 */
-
 /* Returns the first valid inner node in page tree pt which points to address
    ptr, or NULL if ptr is not found */
 static pageentry *findpointerentry(void *pt, void *ptr);

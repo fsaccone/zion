@@ -3,6 +3,8 @@
 
 #include <arch/types.h>
 
+/* The used scheme is Sv57 */
+
 #define PAGE_TABLE_ENTRIES 512
 #define PAGE_TABLE_LEVELS  5
 
