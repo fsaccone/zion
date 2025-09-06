@@ -12,11 +12,11 @@ ARCHLIB = arch/$(ARCH)/lib/atomic.o \
           arch/$(ARCH)/lib/core.o \
           arch/$(ARCH)/lib/ctx.o \
           arch/$(ARCH)/lib/interrupt.o \
-          arch/$(ARCH)/lib/pagetable.o \
           arch/$(ARCH)/lib/user.o \
           arch/$(ARCH)/lib/vmem.o
 
 LIB     = lib/log.o \
+          lib/pagetable.o \
           lib/pmem.o \
           lib/process.o \
           lib/spinlock.o
