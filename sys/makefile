@@ -60,8 +60,5 @@ $(ARCHLIB):
 	elif [ -f $(@:.o=.s) ]; then $(AS) $(ASFLAGS) -o $@ $(@:.o=.s); \
 	else echo "No $(@:.o=.c) or $(@:.o=.s) file was found." && exit; fi
 
-$(LIB):
-	$(CC) $(NEWCFLAGS) -c -o $@ $(@:.o=.c)
-
-$(SRC):
+$(LIB) $(SRC):
 	$(CC) $(NEWCFLAGS) -c -o $@ $(@:.o=.c)
