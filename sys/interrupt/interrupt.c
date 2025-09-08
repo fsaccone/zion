@@ -4,7 +4,7 @@
 void
 interrupt(void)
 {
-	switch (getinterrupttype()) {
+	switch (interrupttype()) {
 	case INTERRUPT_TYPE_EXCEPTION:
 		setpanicmsg("Exception.");
 		break;

@@ -1,8 +1,8 @@
 .section .text
 .global disableinterrupts
 .global enableinterrupts
-.global getinterrupttype
 .global interruptsenabled
+.global interrupttype
 
 disableinterrupts:
 	csrr t0,      sstatus
@@ -21,7 +21,15 @@ enableinterrupts:
 
 	ret
 
-getinterrupttype:
+interruptsenabled:
+	csrr a0, sstatus
+	li   t0, 1 << 1
+	and  a0, a0, t0
+	srli a0, a0, 1
+
+	ret
+
+interrupttype:
 	# code:
 	# 0x00 - Unknown
 	# 0x01 - Exception
@@ -111,12 +119,4 @@ getinterrupttype:
 4:
 	# Hardware
 	li a0, 0x04
-	ret
-
-interruptsenabled:
-	csrr a0, sstatus
-	li   t0, 1 << 1
-	and  a0, a0, t0
-	srli a0, a0, 1
-
 	ret

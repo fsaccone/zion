@@ -16,10 +16,10 @@ void disableinterrupts(void);
 /* Enables interrupts. */
 void enableinterrupts(void);
 
-/* Returns the interrupt type code. */
-u8 getinterrupttype(void);
-
 /* Returns 1 if interrupts are enabled and 0 otherwise. */
 int interruptsenabled(void);
+
+/* Returns the interrupt type code. */
+u8 interrupttype(void);
 
 #endif
