@@ -3,7 +3,7 @@
 #include <log.h>
 
 void
-syscall(u8 type, un args[SYSCALL_ARGS])
+syscall(u16 type, un args[SYSCALL_ARGS])
 {
 	int i;
 

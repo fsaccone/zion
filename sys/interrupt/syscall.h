@@ -8,6 +8,6 @@
 #define SYSCALL_ARGS (INTERRUPT_ARGS - 1)
 
 /* Handles system call of type type having arguments args. */
-void syscall(u8 type, un args[SYSCALL_ARGS]);
+void syscall(u16 type, un args[SYSCALL_ARGS]);
 
 #endif

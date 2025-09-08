@@ -10,7 +10,7 @@ interrupt(void)
 
 	switch (interrupttype()) {
 	case INTERRUPT_TYPE_SYSCALL:
-		syscall((u8)args[0], &args[1]);
+		syscall((u16)args[0], &args[1]);
 		return;
 	case INTERRUPT_TYPE_EXCEPTION:
 		setpanicmsg("Exception.");
