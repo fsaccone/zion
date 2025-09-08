@@ -48,10 +48,10 @@ interruptsenabled:
 interrupttype:
 	# type code:
 	# 0x00 - Exception
-	# 0x01 - Hardware
-	# 0x02 - Software
-	# 0x03 - Timer
-	# 0x04 - Syscall
+	# 0x01 - Syscall
+	# 0x02 - Hardware
+	# 0x03 - Software
+	# 0x04 - Timer
 
 	csrr t0, scause
 
@@ -76,7 +76,7 @@ interrupttype:
 
 2:
 	# Syscall (8)
-	li a0, 0x04
+	li a0, 0x01
 	ret
 
 1:
@@ -119,17 +119,17 @@ interrupttype:
 
 2:
 	# Software
-	li a0, 0x02
+	li a0, 0x03
 	ret
 
 3:
 	# Timer
-	li a0, 0x03
+	li a0, 0x04
 	ret
 
 4:
 	# Hardware
-	li a0, 0x01
+	li a0, 0x02
 	ret
 
 .section .data
