@@ -21,7 +21,8 @@ LIB = lib/log.o \
       lib/process.o \
       lib/spinlock.o
 
-INTERRUPT = interrupt/interrupt.o
+INTERRUPT = interrupt/interrupt.o \
+            interrupt/syscall.o
 
 KERNEL = kernel/kernel.o \
          kernel/mem.o

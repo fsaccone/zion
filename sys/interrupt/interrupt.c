@@ -1,9 +1,13 @@
 #include <interrupt.h>
 #include <log.h>
 
+#include "syscall.h"
+
 void
 interrupt(void)
 {
+	un *args = interruptargs();
+
 	switch (interrupttype()) {
 	case INTERRUPT_TYPE_EXCEPTION:
 		setpanicmsg("Exception.");
@@ -18,8 +22,8 @@ interrupt(void)
 		setpanicmsg("Timer.");
 		break;
 	case INTERRUPT_TYPE_SYSCALL:
-		setpanicmsg("Syscall.");
-		break;
+		syscall((u8)args[0], &args[1]);
+		return;
 	default:
 		setpanicmsg("Unknown.");
 	}
