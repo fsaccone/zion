@@ -12,6 +12,9 @@ syscall(u16 type, un args[SYSCALL_ARGS])
 	case SYSCALL_SHUTDOWN:
 		DO_SYS_SHUTDOWN;
 		break;
+	case SYSCALL_REBOOT:
+		DO_SYS_REBOOT;
+		break;
 	default:
 		setpanicmsg("Non-existent system call.");
 		tracepanicmsg("syscall");

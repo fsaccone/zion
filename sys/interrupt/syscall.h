@@ -9,6 +9,7 @@
 
 /* System calls */
 #define SYSCALL_SHUTDOWN 0x0000
+#define SYSCALL_REBOOT   0x0001
 
 /* Handles system call of type type having arguments args. Returns 0 normally
    and -1 in case of error. */
