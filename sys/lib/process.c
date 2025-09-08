@@ -1,10 +1,10 @@
 #include <process.h>
-#include <log.h>
 #include <pagetable.h>
 #include <pmem.h>
 
-/* Enqueues process p to queue at address q */
-static void enqueue(struct process *p, struct processlist **q);
+/* Enqueues process p to queue at address q, Returns 0 normally and -1 in case
+   of error. */
+static int enqueue(struct process *p, struct processlist **q);
 
 /* Returns the first unused PID from pidbitmap and sets it to used. Returns 0
    if pidbitmap is full */
@@ -14,26 +14,28 @@ static struct process      init                   = { 0 };
 static u8                  pidbitmap[PID_MAX / 8] = { 0 };
 static struct processlist *createdqueue           = NULL;
 
-void
+int
 enqueue(struct process *p, struct processlist **q)
 {
 	struct processlist *new, *tail;
 
 	if (!(new = palloc(sizeof(struct processlist))))
-		panic("palloc");
+		return -1;
 
 	new->p = p;
 	new->n = NULL;
 
 	if (!*q) {
 		*q = new;
-		return;
+		return 0;
 	}
 
 	/* Find tail of q */
 	for (tail = *q; tail->n; tail = tail->n);
 
 	tail->n = new;
+
+	return 0;
 }
 
 u16
@@ -58,10 +60,10 @@ createprocess(struct process *parent)
 	struct processlist *child;
 
 	if (!(p = palloc(sizeof(struct process))))
-		panic("palloc");
+		return NULL;
 
 	if (!(child = palloc(sizeof(struct processlist))))
-		panic("palloc");
+		return NULL;
 
 	if (!(p->pid = unusedpid()))
 		return NULL;
@@ -75,7 +77,8 @@ createprocess(struct process *parent)
 	child->n = parent->children;
 	parent->children = child;
 
-	enqueue(p, &createdqueue);
+	if (enqueue(p, &createdqueue))
+		return NULL;
 
 	return p;
 }
@@ -91,7 +94,8 @@ initprocess(void)
 	init.pagetable = allocpagetable();
 	init.children = NULL;
 
-	enqueue(&init, &createdqueue);
+	if (enqueue(&init, &createdqueue))
+		return NULL;
 
 	return &init;
 }

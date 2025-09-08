@@ -36,11 +36,12 @@ struct process {
 	struct processlist *children;
 };
 
-/* Creates a child process of process parent and returns its pointer. If the
-   process could not be created, NULL is returned. */
+/* Creates a child process of process parent and returns its pointer. Returns
+   NULL in case of error. */
 struct process *createprocess(struct process *parent);
 
-/* Initializes first process and returns its pointer. */
+/* Initializes first process and returns its pointer. Returns NULL in case of
+   error. */
 struct process *initprocess(void);
 
 #endif

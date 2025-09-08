@@ -225,7 +225,7 @@ allocpage(pageentry *pt[PAGE_TABLE_ENTRIES], struct pageoptions opts)
 	pte = invalidentry(lastpt);
 
 	if (!(f = palloc(PAGE_SIZE)))
-		panic("palloc");
+		return NULL;
 
 	*pte = PAGE_ENTRY_SET_PPN(*pte, (pageentry)f);
 	*pte = PAGE_ENTRY_ADD_VALID(*pte);
@@ -251,7 +251,7 @@ allocpagetable(void)
 	pageentry **pt;
 
 	if (!(pt = palloc(PAGE_TABLE_ENTRIES * sizeof(pageentry *))))
-		panic("palloc");
+		return NULL;
 
 	return pt;
 }

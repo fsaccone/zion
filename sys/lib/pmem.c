@@ -126,7 +126,7 @@ pfreerange(void *s, void *e)
 	     (un)p + PAGE_SIZE <= (un)e;
 	     p = (void *)((un)p + PAGE_SIZE)) {
 		if (pfree(p, PAGE_SIZE))
-			panic("pfree");
+			return -1;
 	}
 
 	return 0;
