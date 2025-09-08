@@ -4,7 +4,7 @@
 #include "mem.h"
 
 void
-kmain(void)
+kernel(void)
 {
 	debug("Kernel start.\n");
 
@@ -13,5 +13,5 @@ kmain(void)
 	freeallmem();
 
 	setpanicmsg("Reached end of kernel execution.");
-	panic("kmain");
+	panic("kernel");
 }

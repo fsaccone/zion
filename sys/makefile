@@ -21,7 +21,7 @@ LIB = lib/log.o \
       lib/process.o \
       lib/spinlock.o
 
-SRC = src/kmain.o \
+SRC = src/kernel.o \
       src/interrupt.o \
       src/mem.o
 

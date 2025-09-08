@@ -171,7 +171,7 @@ trapvec:
 	sret
 
 supervisor:
-	la   t0,   callkmain
+	la   t0,   callkernel
 	csrw mepc, t0
 
 	# Kernel PMP address range (all addresses)
@@ -197,8 +197,8 @@ supervisor:
 
 	mret
 
-callkmain:
-	j kmain
+callkernel:
+	j kernel
 
 .section .data
 
