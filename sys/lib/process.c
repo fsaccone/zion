@@ -1,3 +1,4 @@
+#include <log.h>
 #include <process.h>
 #include <pagetable.h>
 #include <pmem.h>
@@ -59,14 +60,21 @@ createprocess(struct process *parent)
 	struct process *p;
 	struct processlist *child;
 
-	if (!(p = palloc(sizeof(struct process))))
+	if (!(p = palloc(sizeof(struct process)))) {
+		tracepanicmsg("createprocess");
 		return NULL;
+	}
 
-	if (!(child = palloc(sizeof(struct processlist))))
+	if (!(child = palloc(sizeof(struct processlist)))) {
+		tracepanicmsg("createprocess");
 		return NULL;
+	}
 
-	if (!(p->pid = unusedpid()))
+	if (!(p->pid = unusedpid())) {
+		setpanicmsg("PID_MAX exceeded.");
+		tracepanicmsg("createprocess");
 		return NULL;
+	}
 
 	p->state = CREATED;
 	p->pagetable = allocpagetable();
@@ -77,8 +85,10 @@ createprocess(struct process *parent)
 	child->n = parent->children;
 	parent->children = child;
 
-	if (enqueue(p, &createdqueue))
+	if (enqueue(p, &createdqueue)) {
+		tracepanicmsg("createprocess");
 		return NULL;
+	}
 
 	return p;
 }
@@ -94,8 +104,10 @@ initprocess(void)
 	init.pagetable = allocpagetable();
 	init.children = NULL;
 
-	if (enqueue(&init, &createdqueue))
+	if (enqueue(&init, &createdqueue)) {
+		tracepanicmsg("initprocess");
 		return NULL;
+	}
 
 	return &init;
 }

@@ -76,6 +76,7 @@ levelpagetable(pageentry *pt[PAGE_TABLE_ENTRIES], u8 l)
 
 	if (l < 1 && l > PAGE_TABLE_LEVELS) {
 		setpanicmsg("Passed non-existent level.");
+		tracepanicmsg("levelpagetable");
 		return NULL;
 	}
 
@@ -210,22 +211,28 @@ allocpage(pageentry *pt[PAGE_TABLE_ENTRIES], struct pageoptions opts)
 
 	if (!opts.r && !opts.w && !opts.x) {
 		setpanicmsg("No permissions passed.");
+		tracepanicmsg("allocpage");
 		return NULL;
 	}
 
 	if (opts.x && !opts.r) {
 		setpanicmsg("Execute permission passed without read one.");
+		tracepanicmsg("allocpage");
 		return NULL;
 	}
 
-	if (!(lastpt = levelpagetable(pt, PAGE_TABLE_LEVELS)))
+	if (!(lastpt = levelpagetable(pt, PAGE_TABLE_LEVELS))) {
+		tracepanicmsg("allocpage");
 		return NULL;
+	}
 
 	/* lastpt is non-full, so it is assured that an invalid pte is found */
 	pte = invalidentry(lastpt);
 
-	if (!(f = palloc(PAGE_SIZE)))
+	if (!(f = palloc(PAGE_SIZE))) {
+		tracepanicmsg("allocpage");
 		return NULL;
+	}
 
 	*pte = PAGE_ENTRY_SET_PPN(*pte, (pageentry)f);
 	*pte = PAGE_ENTRY_ADD_VALID(*pte);
@@ -250,8 +257,10 @@ allocpagetable(void)
 {
 	pageentry **pt;
 
-	if (!(pt = palloc(PAGE_TABLE_ENTRIES * sizeof(pageentry *))))
+	if (!(pt = palloc(PAGE_TABLE_ENTRIES * sizeof(pageentry *)))) {
+		tracepanicmsg("allocpagetable");
 		return NULL;
+	}
 
 	return pt;
 }

@@ -9,6 +9,7 @@ acquirelock(struct lock *l)
 {
 	if (l->locked) {
 		setpanicmsg("Lock already acquired.");
+		tracepanicmsg("acquirelock");
 		return -1;
 	}
 
@@ -28,6 +29,7 @@ releaselock(struct lock *l)
 {
 	if (!l->locked) {
 		setpanicmsg("Lock already released.");
+		tracepanicmsg("releaselock");
 		return -1;
 	}
 

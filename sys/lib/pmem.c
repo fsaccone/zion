@@ -61,6 +61,7 @@ palloc(un s)
 
 	if (!s || s > MAX_PALLOC) {
 		setpanicmsg("Invalid size.");
+		tracepanicmsg("palloc");
 		return NULL;
 	}
 
@@ -68,6 +69,7 @@ palloc(un s)
 nextfirst:
 	if (!first) {
 		setpanicmsg("Memory full.");
+		tracepanicmsg("palloc");
 		return NULL;
 	}
 
@@ -99,6 +101,7 @@ pfree(void *f, un s)
 
 	if ((un)f % PAGE_SIZE) {
 		setpanicmsg("Misaligned page.");
+		tracepanicmsg("pfree");
 		return -1;
 	}
 
@@ -119,14 +122,17 @@ pfreerange(void *s, void *e)
 
 	if (CEIL((un)s, PAGE_SIZE) >= (un)e) {
 		setpanicmsg("No pages in range.");
+		tracepanicmsg("pfreerange");
 		return -1;
 	}
 
 	for (p = (void *)CEIL((un)s, PAGE_SIZE);
 	     (un)p + PAGE_SIZE <= (un)e;
 	     p = (void *)((un)p + PAGE_SIZE)) {
-		if (pfree(p, PAGE_SIZE))
+		if (pfree(p, PAGE_SIZE)) {
+			tracepanicmsg("pfreerange");
 			return -1;
+		}
 	}
 
 	return 0;
