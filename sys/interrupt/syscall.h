@@ -10,7 +10,8 @@
 /* System calls */
 #define SYSCALL_SHUTDOWN 0x0000
 
-/* Handles system call of type type having arguments args. */
-void syscall(u16 type, un args[SYSCALL_ARGS]);
+/* Handles system call of type type having arguments args. Returns 0 normally
+   and -1 in case of error. */
+int syscall(u16 type, un args[SYSCALL_ARGS]);
 
 #endif

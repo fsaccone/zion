@@ -3,7 +3,7 @@
 #include <log.h>
 #include <machine/sys.h>
 
-void
+int
 syscall(u16 type, un args[SYSCALL_ARGS])
 {
 	(void)args;
@@ -11,9 +11,12 @@ syscall(u16 type, un args[SYSCALL_ARGS])
 	switch (type) {
 	case SYSCALL_SHUTDOWN:
 		DO_SYS_SHUTDOWN;
-		return;
+		break;
+	default:
+		setpanicmsg("Non-existent system call.");
+		tracepanicmsg("syscall");
+		return -1;
 	};
 
-	setpanicmsg("Unimplemented.");
-	panic("syscall");
+	return 0;
 }
