@@ -1,6 +1,7 @@
 #include <log.h>
 
 #include <arch/bits.h>
+#include <arch/types.h>
 #include <config.h>
 #include <interrupt.h>
 #include <machine/mem.h>
@@ -157,4 +158,27 @@ void
 setpanicmsg(char *m)
 {
 	panicmsg = m;
+}
+
+void
+tracepanicmsg(char *m)
+{
+	char *new = panicmsg;
+
+	/* Get to the end of panicmsg */
+	while (*new)
+		new++;
+
+	/* " (<- " */
+	*new++ = ' ';
+	*new++ = '(';
+	*new++ = '<';
+	*new++ = '-';
+	*new++ = ' ';
+
+	while (*m)
+		*new++ = *m++;
+
+	*new++ = ')';
+	*new++ = '\0';
 }
