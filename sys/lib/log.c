@@ -147,6 +147,8 @@ panic(char *m)
 		sprint(panicmsg);
 	}
 
+	sprint("\n");
+
 loop:
 	goto loop;
 }
