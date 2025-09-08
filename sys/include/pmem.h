@@ -13,6 +13,9 @@
    and return the pointer to the first one. Returns NULL in case of error. */
 void *palloc(un s);
 
+/* Allocates all free memory pages, thus filling all used memory with zeros. */
+void pcleanup(void);
+
 /* Free enough frames from p to fit size s. Returns -1 in case of error and 0
    otherwise. */
 int pfree(void *f, un s);

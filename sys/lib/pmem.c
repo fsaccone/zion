@@ -94,6 +94,12 @@ nextfirst:
 	return first;
 }
 
+void
+pcleanup(void)
+{
+	while (!palloc(PAGE_SIZE));
+}
+
 int
 pfree(void *f, un s)
 {
