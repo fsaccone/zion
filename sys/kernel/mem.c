@@ -6,7 +6,7 @@
 #include <pmem.h>
 #include <vmem.h>
 
-void
+int
 freeallmem(void)
 {
 	int i;
@@ -22,8 +22,13 @@ freeallmem(void)
 		debugintbase16((start + size));
 		debug(".\n");
 
-		pfreerange((void *)start, (void *)(start + size));
+		if (pfreerange((void *)start, (void *)(start + size))) {
+			tracepanicmsg("freeallmem");
+			return -1;
+		}
 	}
+
+	return 0;
 }
 
 void

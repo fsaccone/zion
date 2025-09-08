@@ -10,7 +10,8 @@ kernel(void)
 
 	physicalmem();
 
-	freeallmem();
+	if (freeallmem())
+		panic("kernel");
 
 	setpanicmsg("Reached end of kernel execution.");
 	panic("kernel");
