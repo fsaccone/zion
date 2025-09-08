@@ -17,7 +17,4 @@ void enableinterrupts(void);
 /* Returns 1 if interrupts are enabled and 0 otherwise. */
 int interruptsenabled(void);
 
-/* Sets handle as the interrupt handler */
-void setinterrupthandler(void (*handle)(void));
-
 #endif
