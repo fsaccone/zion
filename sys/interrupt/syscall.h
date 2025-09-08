@@ -7,6 +7,9 @@
 /* The first interrupt argument is used to identify the type of the syscall. */
 #define SYSCALL_ARGS (INTERRUPT_ARGS - 1)
 
+/* System calls */
+#define SYSCALL_SHUTDOWN 0x0000
+
 /* Handles system call of type type having arguments args. */
 void syscall(u16 type, un args[SYSCALL_ARGS]);
 
