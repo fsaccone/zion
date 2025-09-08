@@ -1,6 +1,7 @@
 .section .text
 .global disableinterrupts
 .global enableinterrupts
+.global interruptargs
 .global interruptsenabled
 .global interrupttype
 
@@ -18,6 +19,21 @@ enableinterrupts:
 	li   t1,      1 << 1
 	or   t0,      t0, t1
 	csrw sstatus, t0
+
+	ret
+
+interruptargs:
+	la t0, args
+	li t1, 0
+
+	sd a0, (0 * 8)(t0)
+	sd a1, (1 * 8)(t0)
+	sd a2, (2 * 8)(t0)
+	sd a3, (3 * 8)(t0)
+	sd a4, (4 * 8)(t0)
+	sd t1, (5 * 8)(t0)
+
+	mv a0, t0
 
 	ret
 
@@ -120,3 +136,8 @@ interrupttype:
 	# Hardware
 	li a0, 0x04
 	ret
+
+.section .data
+
+# (5 interrupt arguments + 1 NULL) * 8 bytes
+args: .space ((5 + 1) * 8)
