@@ -46,13 +46,12 @@ interruptsenabled:
 	ret
 
 interrupttype:
-	# code:
-	# 0x00 - Unknown
-	# 0x01 - Exception
-	# 0x02 - Hardware
-	# 0x03 - Software
-	# 0x04 - Timer
-	# 0x05 - Syscall
+	# type code:
+	# 0x00 - Exception
+	# 0x01 - Hardware
+	# 0x02 - Software
+	# 0x03 - Timer
+	# 0x04 - Syscall
 
 	csrr t0, scause
 
@@ -72,12 +71,12 @@ interrupttype:
 	beq t0, t2, 2f
 
 	# Exception (not 8)
-	li a0, 0x01
+	li a0, 0x00
 	ret
 
 2:
 	# Syscall (8)
-	li a0, 0x05
+	li a0, 0x04
 	ret
 
 1:
@@ -114,23 +113,23 @@ interrupttype:
 	li  t2, 11
 	beq t0, t2, 4f
 
-	# Default (0x00 - Unknown)
+	# Default (0x00 - Exception)
 	li a0, 0x00
 	ret
 
 2:
 	# Software
-	li a0, 0x03
+	li a0, 0x02
 	ret
 
 3:
 	# Timer
-	li a0, 0x04
+	li a0, 0x03
 	ret
 
 4:
 	# Hardware
-	li a0, 0x04
+	li a0, 0x01
 	ret
 
 .section .data

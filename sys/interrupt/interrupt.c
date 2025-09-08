@@ -20,7 +20,6 @@ interrupt(void)
 	case INTERRUPT_TYPE_SYSCALL:
 		setpanicmsg("Syscall.");
 		break;
-	case INTERRUPT_TYPE_UNKNOWN:
 	default:
 		setpanicmsg("Unknown.");
 	}
