@@ -5,48 +5,48 @@
 #include <log.h>
 #include <math.h>
 
-struct page {
-	struct page *n;
+struct frame {
+	struct frame *n;
 };
 
-/* Removes p from freepages */
-static void allocpage(struct page *p);
+/* Removes p from freeframes */
+static void allocframe(struct frame *f);
 
-/* Finds p in freepages and returns it as a struct page * */
-static struct page *freepage(void *p);
+/* Finds p in freeframes and returns it as a struct frame * */
+static struct frame *freeframe(void *f);
 
-static struct page *freepages = NULL;
+static struct frame *freeframes = NULL;
 
 void
-allocpage(struct page *p)
+allocframe(struct frame *f)
 {
-	struct page *prev;
+	struct frame *prev;
 
-	if (!p)
+	if (!f)
 		return;
 
-	if (freepages == p) {
-		freepages = freepages->n;
+	if (freeframes == f) {
+		freeframes = freeframes->n;
 		return;
 	}
 
-	/* Find prev freepages element which points to p */
-	for (prev = freepages; prev->n != p; prev = prev->n) {
+	/* Find prev freeframes element which points to f */
+	for (prev = freeframes; prev->n != f; prev = prev->n) {
 		if (!prev)
 			return;
 	}
 
-	prev->n = p->n;
+	prev->n = f->n;
 }
 
-struct page *
-freepage(void *p)
+struct frame *
+freeframe(void *f)
 {
-	struct page *q;
+	struct frame *ff;
 
-	for (q = freepages; q; q = q->n) {
-		if ((un)p == (un)q)
-			return p;
+	for (ff = freeframes; ff; ff = ff->n) {
+		if ((un)f == (un)ff)
+			return ff;
 	}
 
 	return NULL;
@@ -55,9 +55,9 @@ freepage(void *p)
 void *
 palloc(un s)
 {
-	struct page *first;
-	struct page *pages[MAX_PALLOC_FRAMES];
-	un i, npages = CEIL(s, PAGE_SIZE) / PAGE_SIZE;
+	struct frame *first;
+	struct frame *frames[MAX_PALLOC_FRAMES];
+	un i, nframes = CEIL(s, PAGE_SIZE) / PAGE_SIZE;
 
 	if (!s || s > MAX_PALLOC) {
 		setpanicmsg("Invalid size.");
@@ -65,7 +65,7 @@ palloc(un s)
 		return NULL;
 	}
 
-	first = freepages;
+	first = freeframes;
 nextfirst:
 	if (!first) {
 		setpanicmsg("Memory full.");
@@ -73,22 +73,22 @@ nextfirst:
 		return NULL;
 	}
 
-	for (i = 0; i < npages; i++) {
-		pages[i] = freepage((void *)((un)first - i * PAGE_SIZE));
+	for (i = 0; i < nframes; i++) {
+		frames[i] = freeframe((void *)((un)first - i * PAGE_SIZE));
 
-		if (!pages[i]) {
+		if (!frames[i]) {
 			first = first->n;
 			goto nextfirst;
 		}
 	}
 
 	/* Since the search happens from the highest to the lowest address,
-	   first is needed to be set to the last element of pages */
-	first = pages[npages - 1];
+	   first is needed to be set to the last element of frames */
+	first = frames[nframes - 1];
 
-	for (i = 0; i < npages; i++) {
-		allocpage(pages[i]);
-		pmemset(pages[i], 0, PAGE_SIZE);
+	for (i = 0; i < nframes; i++) {
+		allocframe(frames[i]);
+		pmemset(frames[i], 0, PAGE_SIZE);
 	}
 
 	return first;
@@ -100,16 +100,16 @@ pfree(void *f, un s)
 	un i;
 
 	if ((un)f % PAGE_SIZE) {
-		setpanicmsg("Misaligned page.");
+		setpanicmsg("Misaligned frame.");
 		tracepanicmsg("pfree");
 		return -1;
 	}
 
 	for (i = 0; i < CEIL(s, PAGE_SIZE) / PAGE_SIZE; i++) {
-		struct page *q = (struct page *)((un)f + i * PAGE_SIZE);
+		struct frame *q = (struct frame *)((un)f + i * PAGE_SIZE);
 
-		q->n = freepages;
-		freepages = q;
+		q->n = freeframes;
+		freeframes = q;
 	}
 
 	return 0;
@@ -121,7 +121,7 @@ pfreerange(void *s, void *e)
 	void *p;
 
 	if (CEIL((un)s, PAGE_SIZE) >= (un)e) {
-		setpanicmsg("No pages in range.");
+		setpanicmsg("No frames in range.");
 		tracepanicmsg("pfreerange");
 		return -1;
 	}
