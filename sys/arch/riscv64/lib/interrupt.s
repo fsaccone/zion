@@ -64,23 +64,19 @@ interrupttype:
 	bnez t2, 1f
 
 	# Exception or Syscall
-	# 8 || 9 -> Syscall
-	# *      -> Exception
+	# 8 -> Syscall
+	# * -> Exception
 
 	# If 8 jump to 2f
 	li  t2, 8
 	beq t0, t2, 2f
 
-	# If 9 jump to 2f
-	li  t2, 9
-	beq t0, t2, 2f
-
-	# Exception (not 8 and not 9)
+	# Exception (not 8)
 	li a0, 0x01
 	ret
 
 2:
-	# Syscall (8 or 9)
+	# Syscall (8)
 	li a0, 0x05
 	ret
 
