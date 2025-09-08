@@ -21,9 +21,10 @@ LIB = lib/log.o \
       lib/process.o \
       lib/spinlock.o
 
-SRC = src/kernel.o \
-      src/interrupt.o \
-      src/mem.o
+INTERRUPT = interrupt/interrupt.o
+
+KERNEL = kernel/kernel.o \
+         kernel/mem.o
 
 CHECKMACHINE = [ $$(readlink machine/$(MACHINE)/arch) = ../../arch/$(ARCH) ]
 
@@ -36,12 +37,13 @@ NEWCFLAGS = $(CFLAGS) -Imachine/$(MACHINE)/include \
 all: $(OUT)
 
 clean:
-	rm -f $(OUT) $(CONFIGH) $(START) $(ASTART) $(ARCHLIB) $(LIB) $(SRC)
+	rm -f $(OUT) $(CONFIGH) $(START) $(ASTART) $(ARCHLIB) $(LIB) \
+	      $(INTERRUPT) $(KERNEL)
 
 test: $(OUT)
 	$(QEMU) $(QEMUFLAGS) -machine virt -bios none -kernel $^
 
-$(OUT): $(CONFIGH) $(START) $(ASTART) $(ARCHLIB) $(LIB) $(SRC)
+$(OUT): $(CONFIGH) $(START) $(ASTART) $(ARCHLIB) $(LIB) $(INTERRUPT) $(KERNEL)
 	$(CHECKMACHINE)
 	$(LD) $(LDFLAGS) -e start -o $@ $^
 	$(STRIP) $@
@@ -60,5 +62,5 @@ $(ARCHLIB):
 	elif [ -f $(@:.o=.s) ]; then $(AS) $(ASFLAGS) -o $@ $(@:.o=.s); \
 	else echo "No $(@:.o=.c) or $(@:.o=.s) file was found." && exit; fi
 
-$(LIB) $(SRC):
+$(LIB) $(INTERRUPT) $(KERNEL):
 	$(CC) $(NEWCFLAGS) -c -o $@ $(@:.o=.c)
