@@ -15,15 +15,15 @@ ARCHLIB = arch/$(ARCH)/lib/atomic.o \
           arch/$(ARCH)/lib/user.o \
           arch/$(ARCH)/lib/vmem.o
 
-LIB     = lib/log.o \
-          lib/pagetable.o \
-          lib/pmem.o \
-          lib/process.o \
-          lib/spinlock.o
+LIB = lib/log.o \
+      lib/pagetable.o \
+      lib/pmem.o \
+      lib/process.o \
+      lib/spinlock.o
 
-SRC     = src/kmain.o \
-          src/interrupt.o \
-          src/mem.o
+SRC = src/kmain.o \
+      src/interrupt.o \
+      src/mem.o
 
 CHECKMACHINE = [ $$(readlink machine/$(MACHINE)/arch) = ../../arch/$(ARCH) ]
 
