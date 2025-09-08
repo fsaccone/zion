@@ -9,6 +9,9 @@ interrupt(void)
 	un *args = interruptargs();
 
 	switch (interrupttype()) {
+	case INTERRUPT_TYPE_SYSCALL:
+		syscall((u8)args[0], &args[1]);
+		return;
 	case INTERRUPT_TYPE_EXCEPTION:
 		setpanicmsg("Exception.");
 		break;
@@ -21,9 +24,6 @@ interrupt(void)
 	case INTERRUPT_TYPE_TIMER:
 		setpanicmsg("Timer.");
 		break;
-	case INTERRUPT_TYPE_SYSCALL:
-		syscall((u8)args[0], &args[1]);
-		return;
 	default:
 		setpanicmsg("Unknown.");
 	}
