@@ -1,4 +1,6 @@
 #include <driver.h>
+
+#include <arch/types.h>
 #include <machine/mem.h>
 
 /* Interrupt enable register */
@@ -11,18 +13,28 @@
 #define LCR_8BITSWORD (0b11 << 0)
 #define LCR_SETBAUD   (0b1 << 7)
 
+/* Line status register */
+#define LSR          (UART0 + 0x05)
+#define LSR_RX_READY (0b1 << 0)
+#define LSR_TX_IDLE  (0b1 << 5)
+
 /* FIFO control register */
 #define FCR        (UART0 + 2)
 #define FCR_CLEAR  (0b11 << 1)
 #define FCR_ENABLE (0b1 << 0)
 
+/* Transmit holding register */
+#define THR (UART0 + 0x00)
+
 static void init(void);
+static void write(u8 *c, u32 n);
 
 struct driver
 driver_uart(void)
 {
 	struct driver d = {
-		.init = init,
+		.init  = init,
+		.write = write,
 	};
 
 	return d;
@@ -51,4 +63,13 @@ init(void)
 
 	/* Enable transmit and receive interrupts */
 	*IER = IER_RX_ENABLE | IER_TX_ENABLE;
+}
+
+void
+write(u8 *c, u32 n)
+{
+	u16 i;
+
+	for (i = 0; i < n; i++)
+		*THR = c[i];
 }
