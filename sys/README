@@ -6,8 +6,8 @@ Kernel.
 Structure
 ---------
 
-The machine/MACHINE/start.s source file defines the start symbol, which is the
-entry point of the kernel binary.
+The arch/ARCH/machine/MACHINE/start.s source file defines the start symbol,
+which is the entry point of the kernel binary.
 
 The arch/ARCH/astart.s source file defines the astart symbol, which is the
 function start eventually jumps to.
@@ -20,12 +20,10 @@ eventually jumps to.
 
 The lib/ and arch/ARCH/lib/ source files implement the include/ header files.
 
-The arch/ARCH/include/arch/ and machine/MACHINE/include/machine/ header files
-define architecture-specific and machine-specific APIs in a non-implementation
-manner. The APIs are consistent across different architectures and machines.
-
-The file machine/MACHINE/arch is a symlink to the directory of the machine
-architecture.
+The arch/ARCH/include/arch/ and arch/ARCH/machine/MACHINE/include/machine/
+header files define architecture-specific and machine-specific APIs in a
+non-implementation manner. The APIs are consistent across different
+architectures and machines.
 
 The config.def.h file is used to configure the kernel and is copied to
 include/config.h at build time.
