@@ -40,7 +40,7 @@ clean:
 	      $(INTERRUPT) $(KERNEL)
 
 test: $(OUT)
-	$(QEMU) $(QEMUFLAGS) -machine virt -bios none -kernel $^
+	$(QEMU) $(QEMUFLAGS) -bios none -kernel $^
 
 $(OUT): $(CONFIGH) $(START) $(ASTART) $(ARCHLIB) $(LIB) $(INTERRUPT) $(KERNEL)
 	$(LD) $(LDFLAGS) -e start -o $@ $^
