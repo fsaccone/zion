@@ -3,21 +3,15 @@
 #include <arch/bits.h>
 #include <arch/types.h>
 #include <config.h>
+#include <driver.h>
 #include <interrupt.h>
 #include <machine/mem.h>
 #include <pmem.h>
-
-#define UART_THR            (UART0 + 0x00)
-#define UART_LSR            (UART0 + 0x05)
-#define UART_LSR_EMPTY_MASK (0x40)
 
 /* Writes a NULL-terminated string to str which contains the number n written
    in base base. If sign is not 0, it treats n as signed and prefixes str with
    the - character if n is negative */
 static void inttostr(char *str, u64 n, u8 base, u8 sign);
-
-/* Writes NULL-terminated string str to UART */
-static void sprint(char *str);
 
 static char *panicmsg = NULL;
 
@@ -61,25 +55,11 @@ inttostr(char *str, u64 n, u8 base, u8 sign)
 }
 
 void
-sprint(char *str)
-{
-	u16 i;
-
-	for (i = 0; i < LOG_MAX; i++) {
-		if (!str[i])
-			break;
-
-		while(!(*UART_LSR & UART_LSR_EMPTY_MASK));
-
-		*UART_THR = str[i];
-	}
-}
-
-void
 debug(char *m)
 {
 #ifdef CONFIG_DEBUG
-	sprint(m);
+	for (; *m; m++)
+		driver_uart().write((u8 *)m, 1);
 #else
 	(void)m;
 #endif
@@ -140,15 +120,21 @@ panic(char *m)
 {
 	disableinterrupts();
 
-	sprint("[PANIC] ");
-	sprint(m);
+	driver_uart().write((u8 *)"[PANIC] ", 8);
+
+	for (; *m; m++)
+		driver_uart().write((u8 *)m, 1);
 
 	if (panicmsg) {
-		sprint(": ");
-		sprint(panicmsg);
+		char *c;
+
+		driver_uart().write((u8 *)": ", 2);
+
+		for (c = panicmsg; *c; c++)
+			driver_uart().write((u8 *)c, 1);
 	}
 
-	sprint("\n");
+	driver_uart().write((u8 *)"\n", 1);
 
 loop:
 	goto loop;
