@@ -15,11 +15,14 @@ ARCHLIB = arch/$(ARCH)/lib/atomic.o \
           arch/$(ARCH)/lib/user.o \
           arch/$(ARCH)/lib/vmem.o
 
+LIBDRIVER = lib/driver/uart.o
+
 LIB = lib/log.o \
       lib/pagetable.o \
       lib/pmem.o \
       lib/process.o \
-      lib/spinlock.o
+      lib/spinlock.o \
+      $(LIBDRIVER)
 
 INTERRUPT = interrupt/interrupt.o \
             interrupt/syscall.o
