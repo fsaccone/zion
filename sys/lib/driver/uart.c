@@ -1,3 +1,7 @@
+#include <config.h>
+
+#ifdef CONFIG_DRIVER_UART
+
 #include <driver.h>
 
 #include <arch/types.h>
@@ -73,3 +77,5 @@ write(u8 *c, u32 n)
 	for (i = 0; i < n; i++)
 		*THR = c[i];
 }
+
+#endif
