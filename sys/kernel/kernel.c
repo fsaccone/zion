@@ -3,6 +3,7 @@
 #include <interrupt.h>
 #include <log.h>
 
+#include "drivers.h"
 #include "mem.h"
 
 void
@@ -12,9 +13,7 @@ kernel(void)
 
 	physicalmem();
 
-#ifdef CONFIG_DRIVER_UART
-	driver_uart().init();
-#endif
+	initdrivers();
 
 	if (freeallmem())
 		panic("kernel");

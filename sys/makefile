@@ -28,7 +28,8 @@ INTERRUPT = interrupt/interrupt.o \
             interrupt/syscall.o
 
 KERNEL = kernel/kernel.o \
-         kernel/mem.o
+         kernel/drivers.o \
+         kernel/mem.o \
 
 NEWCFLAGS = $(CFLAGS) -Iarch/$(ARCH)/machine/$(MACHINE)/include \
                       -Iarch/$(ARCH)/include \
