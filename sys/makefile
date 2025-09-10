@@ -1,5 +1,4 @@
 include ../config.mk
-
 OUT = sys.bin
 
 CONFIGH = include/config.h
@@ -40,8 +39,8 @@ NEWCFLAGS = $(CFLAGS) -Iarch/$(ARCH)/machine/$(MACHINE)/include \
 all: $(OUT)
 
 clean:
-	rm -f $(OUT) $(CONFIGH) $(START) $(ASTART) $(ARCHLIB) $(LIB) \
-	      $(INTERRUPT) $(KERNEL)
+	rm -f $(OUT) $(CONFIGH) $(START) $(ASTART) $(ARCHLIB) \
+	      $(ARCHLIB:.o=.c.o) $(ARCHLIB:.o=.s.o) $(LIB) $(INTERRUPT) $(KERNEL)
 
 test: $(OUT)
 	$(QEMU) $(QEMUFLAGS) -bios none -kernel $^
@@ -58,9 +57,17 @@ $(START) $(ASTART):
 	$(AS) $(ASFLAGS) -o $@ $(@:.o=.s)
 
 $(ARCHLIB):
-	if   [ -f $(@:.o=.c) ]; then $(CC) $(NEWCFLAGS) -c -o $@ $(@:.o=.c); \
-	elif [ -f $(@:.o=.s) ]; then $(AS) $(ASFLAGS) -o $@ $(@:.o=.s); \
-	else echo "No $(@:.o=.c) or $(@:.o=.s) file was found." && exit; fi
+	if [ -f $(@:.o=.c) ]; then \
+		$(CC) $(NEWCFLAGS) -c -o $(@:.o=.c.o) $(@:.o=.c); \
+	fi
+
+	if [ -f $(@:.o=.s) ]; then \
+		$(AS) $(ASFLAGS) -o $(@:.o=.s.o) $(@:.o=.s); \
+	fi
+
+	$(LD) $(LDFLAGS) -r -o $@ \
+	                 $$([ -f $(@:.o=.c.o) ] && printf "$(@:.o=.c.o) ") \
+	                 $$([ -f $(@:.o=.s.o) ] && printf "$(@:.o=.s.o) ")
 
 $(LIB) $(INTERRUPT) $(KERNEL):
 	$(CC) $(NEWCFLAGS) -c -o $@ $(@:.o=.c)
