@@ -1,3 +1,4 @@
+#include <driver.h>
 #include <interrupt.h>
 #include <log.h>
 
@@ -9,6 +10,7 @@ kernel(void)
 	debug("Kernel start.\n");
 
 	physicalmem();
+	driver_uart().init();
 
 	if (freeallmem())
 		panic("kernel");
