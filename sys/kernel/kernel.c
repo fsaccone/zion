@@ -9,6 +9,10 @@
 void
 kernel(void)
 {
+#ifdef CONFIG_DRIVER_UART
+	driver_uart().init();
+#endif
+
 	debug("Kernel start.\n");
 
 	physicalmem();
