@@ -9,8 +9,8 @@ Structure
 The arch/ARCH/machine/MACHINE/start.s source file defines the start symbol,
 which is the entry point of the kernel binary.
 
-The arch/ARCH/astart.s source file defines the astart symbol, which is the
-function start eventually jumps to.
+The arch/ARCH/astart.s and arch/ARCH/astart.c source files defines the astart
+symbol, which is the function start eventually jumps to.
 
 The interrupt/ source files define the interrupt symbol, which is the function
 set as the interrupt handler by astart.

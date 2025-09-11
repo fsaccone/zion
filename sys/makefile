@@ -40,8 +40,10 @@ NEWCFLAGS = $(CFLAGS) -Iarch/$(ARCH)/machine/$(MACHINE)/include \
 all: $(OUT)
 
 clean:
-	rm -f $(OUT) $(CONFIGH) $(START) $(ASTART) $(ARCHLIB) \
-	      $(ARCHLIB:.o=.c.o) $(ARCHLIB:.o=.s.o) $(LIB) $(INTERRUPT) $(KERNEL)
+	rm -f $(OUT) $(CONFIGH) $(START) \
+	      $(ASTART) $(ASTART:.o=.c.o) $(ASTART:.o=.s.o) \
+	      $(ARCHLIB) $(ARCHLIB:.o=.c.o) $(ARCHLIB:.o=.s.o) \
+	      $(LIB) $(INTERRUPT) $(KERNEL)
 
 test: $(OUT)
 	$(QEMU) $(QEMUFLAGS) -bios none -kernel $^
@@ -54,10 +56,7 @@ $(OUT): $(CONFIGH) $(START) $(ASTART) $(ARCHLIB) $(LIB) $(INTERRUPT) $(KERNEL)
 $(CONFIGH):
 	cp config.def.h include/config.h
 
-$(START) $(ASTART):
-	$(AS) $(ASFLAGS) -o $@ $(@:.o=.s)
-
-$(ARCHLIB):
+$(START) $(ASTART) $(ARCHLIB):
 	if [ -f $(@:.o=.c) ]; then \
 		$(CC) $(NEWCFLAGS) -c -o $(@:.o=.c.o) $(@:.o=.c); \
 	fi
