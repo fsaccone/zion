@@ -4,7 +4,7 @@
 #include <arch/types.h>
 
 struct lock {
-	un locked;
+	u8 locked;
 };
 
 /* Acquires lock l after waiting for it to be released. Returns -1 in case of
