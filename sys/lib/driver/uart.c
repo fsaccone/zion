@@ -8,27 +8,27 @@
 #include <machine/mem.h>
 
 /* Interrupt enable register */
-#define IER           (UART0 + 0x01)
+#define IER           (u8 *)(UART0 + 0x01)
 #define IER_RX_ENABLE (0b1 << 0)
 #define IER_TX_ENABLE (0b1 << 1)
 
 /* Line control register */
-#define LCR           (UART0 + 0x03)
+#define LCR           (u8 *)(UART0 + 0x03)
 #define LCR_8BITSWORD (0b11 << 0)
 #define LCR_SETBAUD   (0b1 << 7)
 
 /* Line status register */
-#define LSR          (UART0 + 0x05)
+#define LSR          (u8 *)(UART0 + 0x05)
 #define LSR_RX_READY (0b1 << 0)
 #define LSR_TX_IDLE  (0b1 << 5)
 
 /* FIFO control register */
-#define FCR        (UART0 + 2)
+#define FCR        (u8 *)(UART0 + 2)
 #define FCR_CLEAR  (0b11 << 1)
 #define FCR_ENABLE (0b1 << 0)
 
 /* Transmit holding register */
-#define THR (UART0 + 0x00)
+#define THR ((u8 *)UART0 + 0x00)
 
 static void init(void);
 static void write(u8 *c, u32 n);
@@ -54,10 +54,10 @@ init(void)
 	*LCR = LCR_SETBAUD;
 
 	/* LSB for baud rate of 38.4K */
-	*(UART0 + 0x0) = 0x03;
+	*(u8 *)(UART0 + 0x0) = 0x03;
 
 	/* MSB for baud rate of 38.4K */
-	*(UART0 + 0x1) = 0x00;
+	*(u8 *)(UART0 + 0x1) = 0x00;
 
 	/* Switch to normal mode and set word length to 8 bits */
 	*LCR = LCR_8BITSWORD;
