@@ -44,6 +44,12 @@ initmisa:
 	li  t1, 1 << 20
 	add t0, t0, t1
 
+	# Enable the sstc extension
+	csrr t0,      menvcfg
+	li   t1,      (1 << 63)
+	or   t0,      t0, t1
+	csrw menvcfg, t0
+
 	csrw misa, t0
 
 	ret
@@ -173,6 +179,12 @@ trapvec:
 supervisor:
 	la   t0,   callkernel
 	csrw mepc, t0
+
+	# Allow supervisor to use stimecmp and time
+	csrr t0,         mcounteren
+	li   t1,         (1 << 1)
+	or   t0,         t0, t1
+	csrw mcounteren, t0
 
 	# Kernel PMP address range (all addresses)
 	li   t0,       0x0
