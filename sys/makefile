@@ -31,6 +31,9 @@ KERNEL = kernel/kernel.o \
          kernel/drivers.o \
          kernel/mem.o \
 
+OBJS = $(OUT) $(CONFIGH) $(START) $(ASTART) $(ARCHLIB) $(LIB) $(INTERRUPT) \
+       $(KERNEL)
+
 NEWCFLAGS = $(CFLAGS) -Iarch/$(ARCH)/machine/$(MACHINE)/include \
                       -Iarch/$(ARCH)/include \
                       -Iinclude
@@ -40,10 +43,7 @@ NEWCFLAGS = $(CFLAGS) -Iarch/$(ARCH)/machine/$(MACHINE)/include \
 all: $(OUT)
 
 clean:
-	rm -f $(OUT) $(CONFIGH) $(START) \
-	      $(ASTART) $(ASTART:.o=.c.o) $(ASTART:.o=.s.o) \
-	      $(ARCHLIB) $(ARCHLIB:.o=.c.o) $(ARCHLIB:.o=.s.o) \
-	      $(LIB) $(INTERRUPT) $(KERNEL)
+	rm -f $(OBJS) $(OBJS:.o=.c.o) $(OBJS:.o=.s.o)
 
 test: $(OUT)
 	$(QEMU) $(QEMUFLAGS) -bios none -kernel $^
@@ -56,7 +56,7 @@ $(OUT): $(CONFIGH) $(START) $(ASTART) $(ARCHLIB) $(LIB) $(INTERRUPT) $(KERNEL)
 $(CONFIGH):
 	cp config.def.h include/config.h
 
-$(START) $(ASTART) $(ARCHLIB):
+$(START) $(ASTART) $(ARCHLIB) $(LIB) $(INTERRUPT) $(KERNEL):
 	if [ -f $(@:.o=.c) ]; then \
 		$(CC) $(NEWCFLAGS) -c -o $(@:.o=.c.o) $(@:.o=.c); \
 	fi
@@ -68,6 +68,3 @@ $(START) $(ASTART) $(ARCHLIB):
 	$(LD) $(LDFLAGS) -r -o $@ \
 	                 $$([ -f $(@:.o=.c.o) ] && printf "$(@:.o=.c.o) ") \
 	                 $$([ -f $(@:.o=.s.o) ] && printf "$(@:.o=.s.o) ")
-
-$(LIB) $(INTERRUPT) $(KERNEL):
-	$(CC) $(NEWCFLAGS) -c -o $@ $(@:.o=.c)
