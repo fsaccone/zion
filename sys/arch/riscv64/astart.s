@@ -23,8 +23,6 @@ astart:
 	mul  t0, t0, t1
 	add  sp, sp, t0
 
-	call spinharts
-
 	la   t0,   kernel
 	csrw mepc, t0
 
@@ -154,14 +152,6 @@ initstime:
 	csrw mcounteren, t0
 
 	ret
-
-spinharts:
-	li   t0, 0
-	bne  t0, tp, 1f
-	ret
-1:
-	wfi
-	j 1b
 
 trapvec:
 	# ((7 t-regs + 12 s-regs + 8 a-regs + 1 ra + 1 gp) * 8 bytes)

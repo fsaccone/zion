@@ -1,4 +1,5 @@
 #include <config.h>
+#include <core.h>
 #include <driver.h>
 #include <interrupt.h>
 #include <log.h>
@@ -9,6 +10,11 @@
 void
 kernel(void)
 {
+	/* For every core except 0 (main core). */
+	if (core()) {
+		for (;;);
+	}
+
 #ifdef CONFIG_DRIVER_UART
 	driver_uart().init();
 #endif
