@@ -48,6 +48,10 @@ initmisa:
 	li  t1, 1 << 8
 	add t0, t0, t1
 
+	# Integer Multiply/Divide extension
+	li  t1, 1 << 12
+	add t0, t0, t1
+
 	# Supervisor mode implemented
 	li  t1, 1 << 18
 	add t0, t0, t1
