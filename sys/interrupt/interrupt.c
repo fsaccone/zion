@@ -14,20 +14,18 @@ interrupt(void)
 			panic("interrupt");
 		return;
 	case INTERRUPT_TYPE_EXCEPTION:
-		setpanicmsg("Exception.");
+		debug("interrupt: Exception.\n");
 		break;
 	case INTERRUPT_TYPE_HARDWARE:
-		setpanicmsg("Hardware.");
+		debug("interrupt: Hardware.\n");
 		break;
 	case INTERRUPT_TYPE_SOFTWARE:
-		setpanicmsg("Software.");
+		debug("interrupt: Software.\n");
 		break;
 	case INTERRUPT_TYPE_TIMER:
-		setpanicmsg("Timer.");
+		debug("interrupt: Timer.\n");
 		break;
 	default:
-		setpanicmsg("Unknown.");
+		debug("interrupt: Unknown.\n");
 	}
-
-	panic("interrupt");
 }
