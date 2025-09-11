@@ -8,8 +8,10 @@ astart:
 	call delegate
 	call spinharts
 
+	call initpmp
 	call initmstatus
 	call initsstatus
+	call initstime
 
 	la   t0,    trapvec
 	csrw stvec, t0
@@ -104,6 +106,39 @@ initsstatus:
 
 	ret
 
+initpmp:
+	# Kernel PMP address range (all addresses)
+	li   t0,       0x0
+	li   t1,       0xffffffffffffffff
+	csrw pmpaddr0, t0
+	csrw pmpaddr1, t1
+
+	# Kernel PMP configuration
+	li   t0,      0
+	li   t1,      1 << 0 # Read permission
+	or   t0,      t0, t1
+	li   t1,      1 << 1 # Write permission
+	or   t0,      t0, t1
+	li   t1,      1 << 2 # Execute permission
+	or   t0,      t0, t1
+	li   t1,      1 << 3 # TOR address-matching mode
+	or   t0,      t0, t1
+	li   t1,      1 << 7 # Lock
+	or   t0,      t0, t1
+	slli t0,      t0, 8  # Write to pmp1cfg
+	csrw pmpcfg0, t0
+
+	ret
+
+initstime:
+	# Allow supervisor to use stimecmp and time
+	csrr t0,         mcounteren
+	li   t1,         (1 << 1)
+	or   t0,         t0, t1
+	csrw mcounteren, t0
+
+	ret
+
 spinharts:
 	li   t0, 0
 	csrr tp, mhartid
@@ -185,33 +220,6 @@ trapvec:
 supervisor:
 	la   t0,   callkernel
 	csrw mepc, t0
-
-	# Allow supervisor to use stimecmp and time
-	csrr t0,         mcounteren
-	li   t1,         (1 << 1)
-	or   t0,         t0, t1
-	csrw mcounteren, t0
-
-	# Kernel PMP address range (all addresses)
-	li   t0,       0x0
-	li   t1,       0xffffffffffffffff
-	csrw pmpaddr0, t0
-	csrw pmpaddr1, t1
-
-	# Kernel PMP configuration
-	li   t0,      0
-	li   t1,      1 << 0 # Read permission
-	or   t0,      t0, t1
-	li   t1,      1 << 1 # Write permission
-	or   t0,      t0, t1
-	li   t1,      1 << 2 # Execute permission
-	or   t0,      t0, t1
-	li   t1,      1 << 3 # TOR address-matching mode
-	or   t0,      t0, t1
-	li   t1,      1 << 7 # Lock
-	or   t0,      t0, t1
-	slli t0,      t0, 8  # Write to pmp1cfg
-	csrw pmpcfg0, t0
 
 	mret
 
