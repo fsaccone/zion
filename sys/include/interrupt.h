@@ -2,6 +2,7 @@
 #define _INTERRUPT_H
 
 #include <arch/types.h>
+#include <driver.h>
 
 #define INTERRUPT_ARGS 5
 
@@ -23,6 +24,10 @@ void enableinterrupts(void);
    from the caller context, this function has to be called first inside the
    interrupt handler. */
 un *interruptargs(void);
+
+/* Returns the driver of the device which caused the interrupt { 0 } if the
+   interrupt type is not HARDWARE. */
+struct driver interruptdriver(void);
 
 /* Returns 1 if interrupts are enabled and 0 otherwise. */
 int interruptsenabled(void);

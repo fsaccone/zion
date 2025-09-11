@@ -20,4 +20,7 @@
 
 #define PLIC      0xc000000
 
+/* Device IRQs */
+#define UART0_IRQ 10
+
 #endif
