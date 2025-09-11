@@ -14,7 +14,8 @@ interrupt(void)
 			panic("interrupt");
 		return;
 	case INTERRUPT_TYPE_EXCEPTION:
-		debug("interrupt: Exception.\n");
+		setpanicmsg("Exception.");
+		panic("interrupt");
 		break;
 	case INTERRUPT_TYPE_HARDWARE:
 		debug("interrupt: Hardware.\n");
