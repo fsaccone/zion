@@ -2,8 +2,6 @@
 .global astart
 
 astart:
-	la sp, stackend
-
 	call initmisa
 	call delegate
 
@@ -16,6 +14,8 @@ astart:
 	csrw stvec, t0
 
 	call spinharts
+
+	la sp, stackend
 
 	la   t0,   kernel
 	csrw mepc, t0
