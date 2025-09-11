@@ -25,9 +25,10 @@ void enableinterrupts(void);
    interrupt handler. */
 un *interruptargs(void);
 
-/* Returns the driver of the device which caused the interrupt { 0 } if the
-   interrupt type is not HARDWARE. */
-struct driver interruptdriver(void);
+/* Sets drv to the driver of the device which caused the interrupt and returns
+   0 normally and returns -1 if the interrupt type is not HARDWARE or the
+   device is unknown. */
+int interruptdriver(struct driver *drv);
 
 /* Returns 1 if interrupts are enabled and 0 otherwise. */
 int interruptsenabled(void);

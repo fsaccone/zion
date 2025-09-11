@@ -3,18 +3,18 @@
 #include <interrupt.h>
 #include <machine/mem.h>
 
-struct driver
-interruptdriver(void)
+int
+interruptdriver(struct driver *drv)
 {
-	struct driver null = { 0 };
-
 	if (interrupttype() != INTERRUPT_TYPE_HARDWARE)
-		return null;
+		return -1;
 
 	switch (*(u32 *)((un)PLIC + 0x2004 + core() * 0x2000)) {
 	case UART0_IRQ:
-		return driver_uart();
+		*drv = driver_uart();
+		return 0;
+	default:
 	}
 
-	return null;
+	return -1;
 }
