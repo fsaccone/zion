@@ -15,5 +15,5 @@ acquirelock(struct lock *l)
 void
 releaselock(struct lock *l)
 {
-	atomicswap(&l->locked, 0);
+	l->locked = 0;
 }
