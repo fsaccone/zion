@@ -30,4 +30,4 @@ QEMURAM     = 4G
 QEMUFLAGS   = $(EXTRAQEMUFLAGS) -machine $(QEMUMACHINE) \
                                 -smp $(QEMUCPUS) \
                                 -m $(QEMURAM) \
-                                -serial stdio
+                                -nographic
