@@ -34,7 +34,7 @@ kernel(void)
 	driver_uart().init();
 #endif
 
-	debug("Kernel start.\n");
+	debug("Core 0 started.\n");
 
 	physicalmem();
 
