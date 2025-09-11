@@ -1,5 +1,6 @@
 #include <interrupt.h>
 #include <log.h>
+#include <timer.h>
 
 #include "syscall.h"
 
@@ -24,6 +25,7 @@ interrupt(void)
 		debug("interrupt: Software.\n");
 		break;
 	case INTERRUPT_TYPE_TIMER:
+		setupnexttimer();
 		debug("interrupt: Timer.\n");
 		break;
 	default:
