@@ -6,7 +6,6 @@ astart:
 
 	call initmisa
 	call delegate
-	call spinharts
 
 	call initpmp
 	call initmstatus
@@ -15,6 +14,8 @@ astart:
 
 	la   t0,    trapvec
 	csrw stvec, t0
+
+	call spinharts
 
 	la   t0,   kernel
 	csrw mepc, t0
