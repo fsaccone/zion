@@ -13,11 +13,6 @@ acquirelock(struct lock *l)
 		return -1;
 	}
 
-	l->intenabled = interruptsenabled();
-
-	if (l->intenabled)
-		disableinterrupts();
-
 	/* Wait for lock to be unlocked */
 	while (atomicswap(&l->locked, 1));
 
@@ -34,9 +29,6 @@ releaselock(struct lock *l)
 	}
 
 	atomicswap(&l->locked, 0);
-
-	if (l->intenabled)
-		enableinterrupts();
 
 	return 0;
 }

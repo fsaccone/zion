@@ -5,7 +5,6 @@
 
 struct lock {
 	un locked;
-	u8 intenabled;
 };
 
 /* Acquires lock l after waiting for it to be released. Returns -1 in case of
