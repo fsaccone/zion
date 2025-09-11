@@ -6,7 +6,10 @@ void
 acquirelock(struct lock *l)
 {
 	/* Wait for lock to be unlocked */
-	while (atomicswap(&l->locked, 1));
+	for (;;) {
+		if (!atomicswap(&l->locked, 1))
+			break;
+	}
 }
 
 void
