@@ -1,6 +1,5 @@
 #include <log.h>
 
-#include <arch/bits.h>
 #include <arch/types.h>
 #include <config.h>
 #include <driver.h>
