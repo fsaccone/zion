@@ -5,22 +5,22 @@
 
 #define LOG_MAX 4096
 
-/* Prints a message. */
+/* Prints a message to serial console. */
 void debug(char *m);
 
-/* Prints an integer in binary form. */
+/* Prints an integer to serial console in binary form. */
 void debugintbase2(u64 n);
 
-/* Prints an integer in signed decimal form. */
+/* Prints an integer to serial console in signed decimal form. */
 void debugintbase10s(s64 n);
 
-/* Prints an integer in unsigned decimal form. */
+/* Prints an integer to serial console in unsigned decimal form. */
 void debugintbase10u(u64 n);
 
-/* Prints an integer in hexadecimal form. */
+/* Prints an integer to serial console in hexadecimal form. */
 void debugintbase16(u64 n);
 
-/* Prints an error message and panics. */
+/* Prints an error message to serial console and panics. */
 void panic(char *m);
 
 /* Sets the additional message the next panic call will print to m. */
