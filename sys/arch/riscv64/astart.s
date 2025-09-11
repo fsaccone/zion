@@ -6,7 +6,7 @@ astart:
 
 	call initmisa
 	call delegate
-	call lockharts
+	call spinharts
 
 	call initmstatus
 	call initsstatus
@@ -104,7 +104,7 @@ initsstatus:
 
 	ret
 
-lockharts:
+spinharts:
 	li   t0, 0
 	csrr tp, mhartid
 	bne  t0, tp, 1f
