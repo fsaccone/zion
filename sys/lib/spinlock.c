@@ -1,8 +1,6 @@
 #include <spinlock.h>
 
 #include <atomic.h>
-#include <interrupt.h>
-#include <log.h>
 
 void
 acquirelock(struct lock *l)
