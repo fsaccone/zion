@@ -13,6 +13,8 @@ astart:
 	la   t0,    trapvec
 	csrw stvec, t0
 
+	csrr tp, mhartid
+
 	call spinharts
 
 	la sp, stackend
@@ -149,7 +151,6 @@ initstime:
 
 spinharts:
 	li   t0, 0
-	csrr tp, mhartid
 	bne  t0, tp, 1f
 	ret
 1:
