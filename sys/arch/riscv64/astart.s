@@ -15,9 +15,15 @@ astart:
 
 	csrr tp, mhartid
 
-	call spinharts
+	# sp = kernelstacks[(tp + 1) * 4096]
+	la   sp, kernelstacks
+	mv   t0, tp
+	addi t0, t0, 1
+	li   t1, 4096
+	mul  t0, t0, t1
+	add  sp, sp, t0
 
-	la sp, stackend
+	call spinharts
 
 	la   t0,   kernel
 	csrw mepc, t0
@@ -225,7 +231,3 @@ trapvec:
 	addi sp,  sp, ((7 + 12 + 8 + 1 + 1) * 8)
 
 	sret
-
-.section .data
-
-stackend: .space 4096
