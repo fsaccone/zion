@@ -18,4 +18,6 @@
 
 #define CLINT (u8 *)(0x02000000)
 
+#define PLIC (u8 *)(0xc000000)
+
 #endif
