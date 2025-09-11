@@ -16,7 +16,10 @@ astart:
 	la   t0,    trapvec
 	csrw stvec, t0
 
-	j supervisor
+	la   t0,   kernel
+	csrw mepc, t0
+
+	mret
 
 delegate:
 	li   t0,      0xffff
@@ -216,15 +219,6 @@ trapvec:
 	addi sp,  sp, ((7 + 12 + 8 + 1 + 1) * 8)
 
 	sret
-
-supervisor:
-	la   t0,   callkernel
-	csrw mepc, t0
-
-	mret
-
-callkernel:
-	j kernel
 
 .section .data
 
