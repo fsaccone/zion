@@ -21,6 +21,12 @@ delegate:
 	csrw medeleg, t0
 	csrw mideleg, t0
 
+	# Set mie.STIE to 1
+	csrr t0,  mie
+	li   t1,  (1 << 5)
+	or   t0,  t0, t1
+	csrw mie, t0
+
 	# Set sie.STIE and sie.SEIE both to 1
 	csrr t0,  sie
 	li   t1,  (1 << 5) | (1 << 9)

@@ -2,7 +2,6 @@
 #include <driver.h>
 #include <interrupt.h>
 #include <log.h>
-#include <timer.h>
 
 #include "drivers.h"
 #include "mem.h"
@@ -13,7 +12,6 @@ kernel(void)
 	debug("Kernel start.\n");
 
 	physicalmem();
-	inittimer();
 
 	initdrivers();
 
