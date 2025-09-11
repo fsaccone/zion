@@ -2,6 +2,7 @@
 #define _DRIVER_H
 
 #include <arch/types.h>
+#include <config.h>
 
 struct driver {
 	/* Initializes the driver. */
