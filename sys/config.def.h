@@ -3,9 +3,6 @@
 
 /* Defined CONFIG_* macros are considered enabled. */
 
-/* Number of CPU cores */
-#define CONFIG_NCPU 4
-
 /* Enable debug messages. */
 #define CONFIG_DEBUG
 
