@@ -37,9 +37,6 @@ interrupt(void)
 		break;
 	case INTERRUPT_TYPE_TIMER:
 		setupnexttimer();
-		acquirelock(&l);
-		debug("interrupt: Timer.\n");
-		releaselock(&l);
 		break;
 	default:
 		acquirelock(&l);
