@@ -5,7 +5,7 @@
    in case of error. */
 int freeallmem(void);
 
-/* Disables virtual memory to use physical instead */
+/* Disables virtual memory to use physical instead. */
 void physicalmem(void);
 
 #endif

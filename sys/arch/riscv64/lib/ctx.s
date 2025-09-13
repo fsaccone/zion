@@ -2,13 +2,13 @@
 .global switchctx
 
 switchctx:
-	# If old is NULL, just load new
+	# If old is NULL, just load new.
 	beqz a0, 1f
 
 	# Since ra is already set to the address that called switchctx, we do
-	# not need to store the pc manually
+	# not need to store the pc manually.
 
-	# Save all registers to old
+	# Save all registers to old.
 	sd x1,  (0  * 8)(a0)
 	sd x2,  (1  * 8)(a0)
 	sd x3,  (2  * 8)(a0)
@@ -42,7 +42,7 @@ switchctx:
 	sd x31, (30 * 8)(a0)
 
 1:
-	# Load all registers from new
+	# Load all registers from new.
 	ld x1,  (0  * 8)(a1)
 	ld x2,  (1  * 8)(a1)
 	ld x3,  (2  * 8)(a1)
@@ -75,5 +75,5 @@ switchctx:
 	ld x30, (29 * 8)(a1)
 	ld x31, (30 * 8)(a1)
 
-	# Jump to ra of new
+	# Jump to ra of new.
 	ret

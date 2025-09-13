@@ -33,13 +33,13 @@ delegate:
 	csrw medeleg, t0
 	csrw mideleg, t0
 
-	# Set mie.STIE to 1
+	# Set mie.STIE to 1.
 	csrr t0,  mie
 	li   t1,  (1 << 5)
 	or   t0,  t0, t1
 	csrw mie, t0
 
-	# Set sie.STIE and sie.SEIE both to 1
+	# Set sie.STIE and sie.SEIE both to 1.
 	csrr t0,  sie
 	li   t1,  (1 << 5) | (1 << 9)
 	or   t0,  t0, t1
@@ -50,19 +50,19 @@ delegate:
 initmisa:
 	li   t0, 0
 
-	# RV32I/64I base ISA
+	# RV32I/64I base ISA.
 	li  t1, 1 << 8
 	add t0, t0, t1
 
-	# Integer Multiply/Divide extension
+	# Integer Multiply/Divide extension.
 	li  t1, 1 << 12
 	add t0, t0, t1
 
-	# Supervisor mode implemented
+	# Supervisor mode implemented.
 	li  t1, 1 << 18
 	add t0, t0, t1
 
-	# User mode implemented
+	# User mode implemented.
 	li  t1, 1 << 20
 	add t0, t0, t1
 
@@ -73,24 +73,24 @@ initmisa:
 initmstatus:
 	csrr t0, mstatus
 
-	# Set SIE to 1
+	# Set SIE to 1.
 	li t1, 1 << 1
 	or t0, t0, t1
 
-	# Set MIE to 1
+	# Set MIE to 1.
 	li t1, 1 << 3
 	or t0, t0, t1
 
-	# Set MPP[0] to 1
+	# Set MPP[0] to 1.
 	li t1, 1 << 11
 	or t0, t0, t1
 
-	# Set MPP[1] to 0 (MPP = 0b01)
+	# Set MPP[1] to 0 (MPP = 0b01).
 	li  t1, 1 << 12
 	not t1, t1
 	and t0, t0, t1
 
-	# Set MPIE to 0
+	# Set MPIE to 0.
 	li  t1, 1 << 7
 	not t1, t1
 	and t0, t0, t1
@@ -102,11 +102,11 @@ initmstatus:
 initsstatus:
 	csrr t0, sstatus
 
-	# Set SUM to 1
+	# Set SUM to 1.
 	li t1, 1 << 18
 	or t0, t0, t1
 
-	# Set MXR to 1
+	# Set MXR to 1.
 	li t1, 1 << 19
 	or t0, t0, t1
 
@@ -115,37 +115,37 @@ initsstatus:
 	ret
 
 initpmp:
-	# Kernel PMP address range (all addresses)
+	# Kernel PMP address range (all addresses).
 	li   t0,       0x0
 	li   t1,       0xffffffffffffffff
 	csrw pmpaddr0, t0
 	csrw pmpaddr1, t1
 
-	# Kernel PMP configuration
+	# Kernel PMP configuration.
 	li   t0,      0
-	li   t1,      1 << 0 # Read permission
+	li   t1,      1 << 0 # Read permission.
 	or   t0,      t0, t1
-	li   t1,      1 << 1 # Write permission
+	li   t1,      1 << 1 # Write permission.
 	or   t0,      t0, t1
-	li   t1,      1 << 2 # Execute permission
+	li   t1,      1 << 2 # Execute permission.
 	or   t0,      t0, t1
-	li   t1,      1 << 3 # TOR address-matching mode
+	li   t1,      1 << 3 # TOR address-matching mode.
 	or   t0,      t0, t1
-	li   t1,      1 << 7 # Lock
+	li   t1,      1 << 7 # Lock.
 	or   t0,      t0, t1
-	slli t0,      t0, 8  # Write to pmp1cfg
+	slli t0,      t0, 8  # Write to pmp1cfg.
 	csrw pmpcfg0, t0
 
 	ret
 
 initstime:
-	# Enable the sstc extension
+	# Enable the sstc extension.
 	csrr t0,      menvcfg
 	li   t1,      (1 << 63)
 	or   t0,      t0, t1
 	csrw menvcfg, t0
 
-	# Allow supervisor to use stimecmp and time
+	# Allow supervisor to use stimecmp and time.
 	csrr t0,         mcounteren
 	li   t1,         (1 << 1)
 	or   t0,         t0, t1
@@ -188,7 +188,7 @@ trapvec:
 
 	call interrupt
 
-	# See top of function
+	# See top of function.
 	ld   t0,  (0 * 8 )(sp)
 	ld   t1,  (1 * 8 )(sp)
 	ld   t2,  (2 * 8 )(sp)

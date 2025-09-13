@@ -10,7 +10,7 @@
 
 /* Writes a NULL-terminated string to str which contains the number n written
    in base base. If sign is not 0, it treats n as signed and prefixes str with
-   the - character if n is negative */
+   the - character if n is negative. */
 static void inttostr(char *str, u64 n, u8 base, u8 sign);
 
 static char *panicmsg = NULL;
@@ -43,7 +43,7 @@ inttostr(char *str, u64 n, u8 base, u8 sign)
 
 	l = i;
 
-	/* Reverse the string */
+	/* Reverse the string. */
 	for (j = 0; j < l / 2;j++) {
 		char tmp = str[j];
 
@@ -72,7 +72,7 @@ debug(char *m)
 void
 debugintbase2(u64 n)
 {
-	/* 0b + 64 digits + \0  = 67 */
+	/* (0b + 64 digits + \0  = 67) */
 	char str[67];
 
 	str[0] = '0';
@@ -86,7 +86,7 @@ debugintbase2(u64 n)
 void
 debugintbase10s(s64 n)
 {
-	/* 20 digits + \0  = 21 */
+	/* (20 digits + \0  = 21) */
 	char str[21];
 
 	inttostr(str, n, 10, 1);
@@ -97,7 +97,7 @@ debugintbase10s(s64 n)
 void
 debugintbase10u(u64 n)
 {
-	/* 20 digits + \0  = 21 */
+	/* (20 digits + \0  = 21) */
 	char str[21];
 
 	inttostr(str, n, 10, 0);
@@ -108,7 +108,7 @@ debugintbase10u(u64 n)
 void
 debugintbase16(u64 n)
 {
-	/* 0x + 16 digits + \0 = 19 */
+	/* (0x + 16 digits + \0 = 19) */
 	char str[19];
 
 	str[0] = '0';
@@ -159,11 +159,11 @@ tracepanicmsg(char *m)
 {
 	char *new = panicmsg;
 
-	/* Get to the end of panicmsg */
+	/* Get to the end of panicmsg. */
 	while (*new)
 		new++;
 
-	/* " (<- " */
+	/* (" (<- ") */
 	*new++ = ' ';
 	*new++ = '(';
 	*new++ = '<';

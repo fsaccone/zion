@@ -6,7 +6,7 @@
 #define RAM_SIZE (4L * 1024L * 1024L * 1024L)
 
 #define KERNEL_START 0x80000000
-/* This is hardcoded to guess the size of this codebase's binary */
+/* This is hardcoded to guess the size of this codebase's binary. */
 #define KERNEL_SIZE  (256 * 1024)
 
 #define FREE_MEMORY_REGIONS_LEN 1
@@ -21,7 +21,7 @@
 #define UART0   0x10000000
 #define VIRTIO0 0x10001000
 
-/* Device IRQs */
+/* Device IRQs. */
 #define UART0_IRQ   10
 #define VIRTIO0_IEQ 1
 

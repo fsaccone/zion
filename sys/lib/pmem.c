@@ -9,10 +9,10 @@ struct frame {
 	struct frame *n;
 };
 
-/* Removes p from freeframes */
+/* Removes p from freeframes. */
 static void allocframe(struct frame *f);
 
-/* Finds p in freeframes and returns it as a struct frame * */
+/* Finds p in freeframes and returns it as a struct frame *. */
 static struct frame *freeframe(void *f);
 
 static struct frame *freeframes = NULL;
@@ -30,7 +30,7 @@ allocframe(struct frame *f)
 		return;
 	}
 
-	/* Find prev freeframes element which points to f */
+	/* Find prev freeframes element which points to f. */
 	for (prev = freeframes; prev->n != f; prev = prev->n) {
 		if (!prev)
 			return;
@@ -83,7 +83,7 @@ nextfirst:
 	}
 
 	/* Since the search happens from the highest to the lowest address,
-	   first is needed to be set to the last element of frames */
+	   first is needed to be set to the last element of frames. */
 	first = frames[nframes - 1];
 
 	for (i = 0; i < nframes; i++) {

@@ -7,7 +7,7 @@
 /* The first interrupt argument is used to identify the type of the syscall. */
 #define SYSCALL_ARGS (INTERRUPT_ARGS - 1)
 
-/* System calls */
+/* System calls. */
 #define SYSCALL_SHUTDOWN 0x0000
 #define SYSCALL_REBOOT   0x0001
 

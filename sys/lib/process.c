@@ -8,7 +8,7 @@
 static int enqueue(struct process *p, struct processlist **q);
 
 /* Returns the first unused PID from pidbitmap and sets it to used. Returns 0
-   if pidbitmap is full */
+   if pidbitmap is full. */
 static u16 unusedpid(void);
 
 static struct process      init                   = { 0 };
@@ -31,7 +31,7 @@ enqueue(struct process *p, struct processlist **q)
 		return 0;
 	}
 
-	/* Find tail of q */
+	/* Find tail of q. */
 	for (tail = *q; tail->n; tail = tail->n);
 
 	tail->n = new;
@@ -96,7 +96,7 @@ createprocess(struct process *parent)
 struct process *
 initprocess(void)
 {
-	/* Set bit 0 to used */
+	/* Set bit 0 to used. */
 	pidbitmap[0] |= 1;
 
 	init.pid = 0;
