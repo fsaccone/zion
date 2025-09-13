@@ -27,9 +27,9 @@ LIB = lib/log.o \
 INTERRUPT = interrupt/interrupt.o \
             interrupt/syscall.o
 
-KERNEL = kernel/kernel.o \
-         kernel/drivers.o \
-         kernel/mem.o \
+KERNEL = kernel/drivers.o \
+         kernel/kernel.o \
+         kernel/mem.o
 
 OBJS = $(OUT) $(CONFIGH) $(START) $(ASTART) $(ARCHLIB) $(LIB) $(INTERRUPT) \
        $(KERNEL)
