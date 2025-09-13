@@ -12,8 +12,8 @@
 /* The main function of every CPU core with core ID c. */
 static void coremain(u16 c);
 
-static u8 initdone = 0;
-static struct lock l = { 0 };
+static u8          initdone = 0;
+static struct lock l        = { 0 };
 
 void
 coremain(u16 c)
