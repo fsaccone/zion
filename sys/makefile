@@ -48,8 +48,11 @@ all: $(OUT)
 clean:
 	rm -f $(OBJS) $(OBJS:.o=.c.o) $(OBJS:.o=.s.o) $(DISK)
 
-test: $(OUT)
-	$(QEMU) $(QEMUFLAGS) -bios none -kernel $^
+test: $(OUT) $(DISK)
+	$(QEMU) $(QEMUFLAGS) -bios none \
+	                     -kernel $(OUT) \
+	                     -drive id=disk,format=raw,file=$(DISK),if=none \
+	                     -device virtio-blk-device,drive=disk,bus=virtio-mmio-bus.0
 
 $(OUT): $(CONFIGH) $(START) $(ASTART) $(ARCHLIB) $(LIB) $(INTERRUPT) $(KERNEL)
 	$(LD) $(LDFLAGS) -e start -o $@ $^
