@@ -60,7 +60,7 @@ $(OUT): $(CONFIGH) $(START) $(ASTART) $(ARCHLIB) $(LIB) $(INTERRUPT) $(KERNEL)
 	$(OBJCOPY) -O binary $@
 
 $(DISK):
-	dd if=/dev/zero of=$@ bs=1M count=100
+	dd status=none if=/dev/zero of=$@ bs=1M count=100
 
 $(CONFIGH):
 	cp config.def.h include/config.h
