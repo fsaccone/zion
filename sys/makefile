@@ -1,4 +1,5 @@
 include ../config.mk
+
 OUT = sys.bin
 
 CONFIGH = include/config.h
