@@ -4,6 +4,7 @@
 #include <config.h>
 #include <driver.h>
 #include <interrupt.h>
+#include <machine/drivers.h>
 #include <machine/mem.h>
 #include <pmem.h>
 
@@ -57,7 +58,7 @@ void
 debug(char *m)
 {
 #ifdef CONFIG_DEBUG
-# ifdef CONFIG_DRIVER_UART
+# ifdef DRIVER_UART
 	for (; *m; m++)
 		driver_uart().write((u8 *)m, 1);
 # else
@@ -123,7 +124,7 @@ panic(char *m)
 {
 	disableinterrupts();
 
-#ifdef CONFIG_DRIVER_UART
+#ifdef DRIVER_UART
 	driver_uart().write((u8 *)"[PANIC] ", 8);
 
 	for (; *m; m++)

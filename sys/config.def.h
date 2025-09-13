@@ -9,7 +9,4 @@
 /* Enable debug messages. */
 #define CONFIG_DEBUG
 
-/* Drivers. */
-#define CONFIG_DRIVER_UART
-
 #endif

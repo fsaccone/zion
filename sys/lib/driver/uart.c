@@ -1,6 +1,6 @@
-#include <config.h>
+#include <machine/drivers.h>
 
-#ifdef CONFIG_DRIVER_UART
+#ifdef DRIVER_UART
 
 #include <driver.h>
 

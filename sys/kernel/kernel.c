@@ -1,9 +1,9 @@
 #include <arch/types.h>
-#include <config.h>
 #include <core.h>
 #include <driver.h>
 #include <interrupt.h>
 #include <log.h>
+#include <machine/drivers.h>
 #include <spinlock.h>
 
 #include "drivers.h"
@@ -30,7 +30,7 @@ kernel(void)
 		for (;;);
 	}
 
-#ifdef CONFIG_DRIVER_UART
+#ifdef DRIVER_UART
 	driver_uart().init();
 #endif
 

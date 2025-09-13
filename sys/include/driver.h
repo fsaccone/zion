@@ -2,7 +2,7 @@
 #define _DRIVER_H
 
 #include <arch/types.h>
-#include <config.h>
+#include <machine/drivers.h>
 
 struct driver {
 	/* Initializes the driver. */
@@ -15,7 +15,7 @@ struct driver {
 /* A list of drivers follows: each is a driver_NAME function with no parameters
    which returns the corresponding struct driver. */
 
-#ifdef CONFIG_DRIVER_UART
+#ifdef DRIVER_UART
 struct driver driver_uart(void);
 #endif
 
