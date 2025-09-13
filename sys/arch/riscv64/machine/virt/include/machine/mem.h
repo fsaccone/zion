@@ -14,12 +14,12 @@
 	/* start                       size                                   */ \
 	{  KERNEL_START + KERNEL_SIZE, RAM_SIZE - (KERNEL_START + KERNEL_SIZE) },
 
+#define CLINT 0x02000000
+#define PLIC  0xc000000
+
+/* Device base addresses. */
 #define UART0   0x10000000
 #define VIRTIO0 0x10001000
-
-#define CLINT 0x02000000
-
-#define PLIC      0xc000000
 
 /* Device IRQs */
 #define UART0_IRQ   10
