@@ -9,8 +9,23 @@
 #include "drivers.h"
 #include "mem.h"
 
+/* The main function of every CPU core with core ID c. */
+static void coremain(u16 c);
+
 static u8 initdone = 0;
 static struct lock l = { 0 };
+
+void
+coremain(u16 c)
+{
+	acquirelock(&l);
+	debug("Core ");
+	debugintbase10u(c);
+	debug(" started.\n");
+	releaselock(&l);
+
+	for (;;);
+}
 
 void
 kernel(void)
@@ -20,14 +35,7 @@ kernel(void)
 	/* For every core except 0 (main core). */
 	if (c) {
 		while (!initdone);
-
-		acquirelock(&l);
-		debug("Core ");
-		debugintbase10u(c);
-		debug(" started.\n");
-		releaselock(&l);
-
-		for (;;);
+		coremain(c);
 	}
 
 #ifdef DRIVER_UART
