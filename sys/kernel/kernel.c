@@ -5,6 +5,7 @@
 #include <log.h>
 #include <machine/drivers.h>
 #include <spinlock.h>
+#include <timer.h>
 
 #include "drivers.h"
 #include "mem.h"
@@ -23,6 +24,8 @@ coremain(u16 c)
 	debugintbase10u(c);
 	debug(" start.\n");
 	releaselock(&l);
+
+	setupnexttimer();
 
 	for (;;);
 }
