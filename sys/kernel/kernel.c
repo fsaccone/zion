@@ -21,7 +21,7 @@ coremain(u16 c)
 	acquirelock(&l);
 	debug("Core ");
 	debugintbase10u(c);
-	debug(" started.\n");
+	debug(" start.\n");
 	releaselock(&l);
 
 	for (;;);
