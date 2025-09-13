@@ -2,6 +2,8 @@ include ../config.mk
 
 OUT = sys.bin
 
+DISK = disk.img
+
 CONFIGH = include/config.h
 
 START  = arch/$(ARCH)/machine/$(MACHINE)/start.o
@@ -44,7 +46,7 @@ NEWCFLAGS = $(CFLAGS) -Iarch/$(ARCH)/machine/$(MACHINE)/include \
 all: $(OUT)
 
 clean:
-	rm -f $(OBJS) $(OBJS:.o=.c.o) $(OBJS:.o=.s.o)
+	rm -f $(OBJS) $(OBJS:.o=.c.o) $(OBJS:.o=.s.o) $(DISK)
 
 test: $(OUT)
 	$(QEMU) $(QEMUFLAGS) -bios none -kernel $^
@@ -53,6 +55,9 @@ $(OUT): $(CONFIGH) $(START) $(ASTART) $(ARCHLIB) $(LIB) $(INTERRUPT) $(KERNEL)
 	$(LD) $(LDFLAGS) -e start -o $@ $^
 	$(STRIP) $@
 	$(OBJCOPY) -O binary $@
+
+$(DISK):
+	dd if=/dev/zero of=$@ bs=1M count=100
 
 $(CONFIGH):
 	cp config.def.h include/config.h
