@@ -53,5 +53,5 @@ kernel(void)
 
 	initdone = 1;
 
-	for (;;);
+	coremain(0);
 }
