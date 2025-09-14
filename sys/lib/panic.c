@@ -7,23 +7,16 @@
 static char *panicmsg = NULL;
 
 void
-panic(char *m)
+panic(void)
 {
+	char *c;
+
 	disableinterrupts();
 
 	consolewrite("[PANIC] ");
 
-	for (; *m; m++)
-		consolewrite(m);
-
-	if (panicmsg) {
-		char *c;
-
-		consolewrite(": ");
-
-		for (c = panicmsg; *c; c++)
-			consolewrite(c);
-	}
+	for (c = panicmsg; *c; c++)
+		consolewrite(c);
 
 	consolewrite("\n");
 
@@ -38,7 +31,7 @@ setpanicmsg(char *m)
 }
 
 void
-tracepanicmsg(char *m)
+tracepanicmsg(char *t)
 {
 	char *new = panicmsg;
 
@@ -53,8 +46,8 @@ tracepanicmsg(char *m)
 	*new++ = '-';
 	*new++ = ' ';
 
-	while (*m)
-		*new++ = *m++;
+	while (*t)
+		*new++ = *t++;
 
 	*new++ = ')';
 	*new++ = '\0';
