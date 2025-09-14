@@ -15,13 +15,13 @@ astart:
 
 	csrr tp, mhartid
 
-	# sp = kernelstacks[(tp + 1) * 4096]
+	# (sp = kernelstacks[(tp + 1) * 4096])
 	la   sp, kernelstacks
 	mv   t0, tp
-	addi t0, t0, 1
-	li   t1, 4096
-	mul  t0, t0, t1
-	add  sp, sp, t0
+	addi a0, t0, 1
+	li   a1, 4096
+	call multiply
+	add  sp, sp, a0
 
 	la   t0,   kernel
 	csrw mepc, t0
@@ -62,10 +62,6 @@ initmisa:
 
 	# RV32I/64I base ISA.
 	li  t1, 1 << 8
-	add t0, t0, t1
-
-	# Integer Multiply/Divide extension.
-	li  t1, 1 << 12
 	add t0, t0, t1
 
 	# Supervisor mode implemented.
@@ -152,6 +148,28 @@ initstime:
 	or   t0,         t0, t1
 	csrw mcounteren, t0
 
+	ret
+
+# (a0 = a0 * a1)
+# Only works with unsigned values.
+multiply:
+	li t0, 0
+
+1:
+	# If (a1 <= 0) then return.
+	blez a1, 2f
+
+	# (t0 += a0)
+	add t0, t0, a0
+
+	# (a1--)
+	addi a1, a1, -1
+
+	# Loop back.
+	j 1b
+
+2:
+	mv a0, t0
 	ret
 
 trapvec:
