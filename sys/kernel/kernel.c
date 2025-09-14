@@ -42,7 +42,7 @@ kernel(void)
 	driver_uart().init();
 #endif
 
-	(void)consolewrite(CPU_LOAD_LOG_PRE);
+	(void)consolewrite(CPU_LOG_PRE);
 	(void)consolewriteintb10u(NCPU);
 	(void)consolewrite(" core(s).\n");
 
