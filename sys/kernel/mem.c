@@ -16,11 +16,11 @@ freeallmem(void)
 		un start = freemem[i][0],
 		   size  = freemem[i][1];
 
-		debug("Freeing user memory going from ");
-		debugintbase16(start);
-		debug(" to ");
-		debugintbase16((start + size));
-		debug(".\n");
+		consolewrite("Freeing user memory going from ");
+		consolewriteintb16(start);
+		consolewrite(" to ");
+		consolewriteintb16((start + size));
+		consolewrite(".\n");
 
 		if (pfreerange((void *)start, (void *)(start + size))) {
 			tracepanicmsg("freeallmem");

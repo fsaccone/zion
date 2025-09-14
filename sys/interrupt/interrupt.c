@@ -27,12 +27,12 @@ interrupt(void)
 		break;
 	case INTERRUPT_TYPE_HARDWARE:
 		acquirelock(&l);
-		debug("interrupt: Hardware.\n");
+		consolewrite("interrupt: Hardware.\n");
 		releaselock(&l);
 		break;
 	case INTERRUPT_TYPE_SOFTWARE:
 		acquirelock(&l);
-		debug("interrupt: Software.\n");
+		consolewrite("interrupt: Software.\n");
 		releaselock(&l);
 		break;
 	case INTERRUPT_TYPE_TIMER:
@@ -40,7 +40,7 @@ interrupt(void)
 		break;
 	default:
 		acquirelock(&l);
-		debug("interrupt: Unknown.\n");
+		consolewrite("interrupt: Unknown.\n");
 		releaselock(&l);
 	}
 }
