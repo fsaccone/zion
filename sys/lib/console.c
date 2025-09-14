@@ -4,11 +4,14 @@
 #include <config.h>
 #include <driver.h>
 #include <machine/drivers.h>
+#include <spinlock.h>
 
 /* Writes a NULL-terminated string to str which contains the number n written
    in base base. If sign is not 0, it treats n as signed and prefixes str with
    the - character if n is negative. */
 static void inttostr(char *str, u64 n, u8 base, u8 sign);
+
+static struct lock l = { 0 };
 
 void
 inttostr(char *str, u64 n, u8 base, u8 sign)
@@ -56,8 +59,12 @@ consolewrite(char *m)
 # ifdef DRIVER_UART
 	int i;
 
+	acquirelock(&l);
+
 	for (i = 0; *m && i < CONSOLE_WRITE_MAX; m++, i++)
 		driver_uart().write((u8 *)m, 1);
+
+	releaselock(&l);
 # else
 	(void)m;
 # endif
