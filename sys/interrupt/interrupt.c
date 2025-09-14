@@ -43,12 +43,12 @@ interrupt(void)
 
 		break;
 	case INTERRUPT_TYPE_SOFTWARE:
-		consolewrite("interrupt: Software.\n");
+		(void)consolewrite("interrupt: Software.\n");
 		break;
 	case INTERRUPT_TYPE_TIMER:
 		setupnexttimer();
 		break;
 	default:
-		consolewrite("interrupt: Unknown.\n");
+		(void)consolewrite("interrupt: Unknown.\n");
 	}
 }

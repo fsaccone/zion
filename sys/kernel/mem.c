@@ -36,26 +36,27 @@ freeallmem(void)
 			   freeing a lot slower because it has to go through
 			   the serial console a lot of times. */
 			if (!((done += PAGE_SIZE) % (1024 * 1024))) {
-				consolewrite("\r");
-				consolewrite(MEM_LOAD_LOG_PRE);
-				consolewriteintb10u(done / (1024 * 1024));
-				consolewrite("M");
+				(void)consolewrite("\r");
+				(void)consolewrite(MEM_LOAD_LOG_PRE);
+				(void)consolewriteintb10u(done
+				                          / (1024 * 1024));
+				(void)consolewrite("M");
 			}
 		}
 
 		/* Once done, print MiB with 2 decimal places to give more
 		   preciseness and print start and end addresses. */
-		consolewrite("\r");
-		consolewrite(MEM_LOAD_LOG_PRE);
-		consolewriteintb10u(done / (1024 * 1024));
-		consolewrite(".");
-		consolewriteintb10u((done % (1024 * 1024))
+		(void)consolewrite("\r");
+		(void)consolewrite(MEM_LOAD_LOG_PRE);
+		(void)consolewriteintb10u(done / (1024 * 1024));
+		(void)consolewrite(".");
+		(void)consolewriteintb10u((done % (1024 * 1024))
 		                    * 100 / (1024 * 1024));
-		consolewrite("M (");
-		consolewriteintb16(start);
-		consolewrite("-");
-		consolewriteintb16(start + size);
-		consolewrite(")  OK\n");
+		(void)consolewrite("M (");
+		(void)consolewriteintb16(start);
+		(void)consolewrite("-");
+		(void)consolewriteintb16(start + size);
+		(void)consolewrite(")  OK\n");
 	}
 
 	return 0;

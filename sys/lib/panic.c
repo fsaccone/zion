@@ -16,11 +16,11 @@ panic(void)
 	   and that means it is not needed to do it manually. */
 	acquirelock(&l);
 
-	consolewrite("[PANIC] ");
+	(void)consolewrite("[PANIC] ");
 
-	consolewrite(panicmsg[core()]);
+	(void)consolewrite(panicmsg[core()]);
 
-	consolewrite("\n");
+	(void)consolewrite("\n");
 
 loop:
 	goto loop;

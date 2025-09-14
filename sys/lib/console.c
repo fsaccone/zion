@@ -52,7 +52,7 @@ inttostr(char *str, u64 n, u8 base, u8 sign)
 	str[l] = '\0';
 }
 
-void
+unsigned int
 consolewrite(char *m)
 {
 #ifdef CONFIG_SERIAL_CONSOLE
@@ -65,15 +65,21 @@ consolewrite(char *m)
 		driver_uart().write((u8 *)m, 1);
 
 	releaselock(&l);
+
+	return i;
 # else
 	(void)m;
+
+	return 0;
 # endif
 #else
 	(void)m;
+
+	return 0;
 #endif
 }
 
-void
+unsigned int
 consolewriteintb2(u64 n)
 {
 	/* (0b + 64 digits + \0  = 67) */
@@ -84,10 +90,10 @@ consolewriteintb2(u64 n)
 
 	inttostr(&str[2], n, 2, 0);
 
-	consolewrite(str);
+	return consolewrite(str);
 }
 
-void
+unsigned int
 consolewriteintb10s(s64 n)
 {
 	/* (20 digits + \0  = 21) */
@@ -95,10 +101,10 @@ consolewriteintb10s(s64 n)
 
 	inttostr(str, n, 10, 1);
 
-	consolewrite(str);
+	return consolewrite(str);
 }
 
-void
+unsigned int
 consolewriteintb10u(u64 n)
 {
 	/* (20 digits + \0  = 21) */
@@ -106,10 +112,10 @@ consolewriteintb10u(u64 n)
 
 	inttostr(str, n, 10, 0);
 
-	consolewrite(str);
+	return consolewrite(str);
 }
 
-void
+unsigned int
 consolewriteintb16(u64 n)
 {
 	/* (0x + 16 digits + \0 = 19) */
@@ -120,5 +126,5 @@ consolewriteintb16(u64 n)
 
 	inttostr(&str[2], n, 16, 0);
 
-	consolewrite(str);
+	return consolewrite(str);
 }
