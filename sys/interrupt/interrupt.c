@@ -39,7 +39,8 @@ interrupt(void)
 			panic();
 		}
 
-		drv.interrupt();
+		if (drv.interrupt)
+			drv.interrupt();
 
 		break;
 	case INTERRUPT_TYPE_SOFTWARE:
