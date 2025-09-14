@@ -3,12 +3,19 @@
 #include <interrupt.h>
 #include <panic.h>
 
+#include "syscall.h"
+
 void
 userinterrupt(un args[INTERRUPT_ARGS])
 {
-	(void)args;
+	switch (interrupttype()) {
+	case INTERRUPT_TYPE_SYSCALL:
+		if (syscall((u16)args[0], &args[1])) {
+			tracepanicmsg("userinterrupt");
+			panic();
+		}
 
-	setpanicmsg("Interrupt caused by user mode code.");
-	tracepanicmsg("userinterruptmsg");
-	panic();
+		break;
+	default:
+	}
 }
