@@ -7,6 +7,8 @@
 #include <pmem.h>
 #include <vmem.h>
 
+#include "logs.h"
+
 int
 freeallmem(void)
 {
@@ -17,7 +19,8 @@ freeallmem(void)
 		un start = freemem[i][0],
 		   size  = freemem[i][1];
 
-		consolewrite("Memory loading : From ");
+		consolewrite(MEM_LOAD_LOG_PRE);
+		consolewrite("From ");
 		consolewriteintb16(start);
 		consolewrite(" to ");
 		consolewriteintb16((start + size));
