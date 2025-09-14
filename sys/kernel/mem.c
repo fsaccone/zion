@@ -42,6 +42,16 @@ freeallmem(void)
 				consolewrite("M");
 			}
 		}
+
+		/* Once done, print MiB with 2 decimal places to give more
+		   preciseness. */
+		consolewrite("\r");
+		consolewrite(MEM_LOAD_LOG_PRE);
+		consolewriteintb10u(done / (1024 * 1024));
+		consolewrite(".");
+		consolewriteintb10u((done % (1024 * 1024))
+		                    * 100 / (1024 * 1024));
+		consolewrite("M");
 	}
 
 	if (i)
