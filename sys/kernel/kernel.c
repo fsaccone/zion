@@ -52,8 +52,10 @@ kernel(void)
 
 	initdrivers();
 
-	if (freeallmem())
-		panic("kernel");
+	if (freeallmem()) {
+		tracepanicmsg("kernel");
+		panic();
+	}
 
 	initdone = 1;
 
