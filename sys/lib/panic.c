@@ -3,8 +3,11 @@
 #include <console.h>
 #include <interrupt.h>
 #include <pmem.h>
+#include <spinlock.h>
 
 static char *panicmsg = NULL;
+
+static struct lock l = { 0 };
 
 void
 panic(void)
@@ -12,6 +15,9 @@ panic(void)
 	char *c;
 
 	disableinterrupts();
+
+	/* This lock will never be freed. */
+	acquirelock(&l);
 
 	consolewrite("[PANIC] ");
 
