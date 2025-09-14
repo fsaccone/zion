@@ -3,7 +3,7 @@
 
 /* Defined CONFIG_* macros are considered enabled. */
 
-/* Enable debug messages. */
-#define CONFIG_DEBUG
+/* Enable serial console. */
+#define CONFIG_SERIAL_CONSOLE
 
 #endif

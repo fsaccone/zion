@@ -57,7 +57,7 @@ inttostr(char *str, u64 n, u8 base, u8 sign)
 void
 consolewrite(char *m)
 {
-#ifdef CONFIG_DEBUG
+#ifdef CONFIG_SERIAL_CONSOLE
 # ifdef DRIVER_UART
 	for (; *m; m++)
 		driver_uart().write((u8 *)m, 1);
