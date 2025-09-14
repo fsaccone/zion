@@ -2,7 +2,7 @@
 
 #include <arch/page.h>
 #include <arch/types.h>
-#include <log.h>
+#include <console.h>
 #include <math.h>
 
 struct frame {

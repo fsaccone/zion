@@ -1,8 +1,8 @@
 #include <arch/types.h>
+#include <console.h>
 #include <core.h>
 #include <driver.h>
 #include <interrupt.h>
-#include <log.h>
 #include <machine/drivers.h>
 #include <spinlock.h>
 #include <timer.h>

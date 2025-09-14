@@ -1,7 +1,7 @@
 #include "mem.h"
 
 #include <arch/types.h>
-#include <log.h>
+#include <console.h>
 #include <machine/mem.h>
 #include <pmem.h>
 #include <vmem.h>

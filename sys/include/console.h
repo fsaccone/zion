@@ -1,5 +1,5 @@
-#ifndef _LOG_H
-#define _LOG_H
+#ifndef _CONSOLE_H
+#define _CONSOLE_H
 
 #include <arch/types.h>
 
