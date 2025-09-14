@@ -55,7 +55,7 @@ inttostr(char *str, u64 n, u8 base, u8 sign)
 }
 
 void
-debug(char *m)
+consolewrite(char *m)
 {
 #ifdef CONFIG_DEBUG
 # ifdef DRIVER_UART
@@ -70,7 +70,7 @@ debug(char *m)
 }
 
 void
-debugintbase2(u64 n)
+consolewriteintb2(u64 n)
 {
 	/* (0b + 64 digits + \0  = 67) */
 	char str[67];
@@ -80,33 +80,33 @@ debugintbase2(u64 n)
 
 	inttostr(&str[2], n, 2, 0);
 
-	debug(str);
+	consolewrite(str);
 }
 
 void
-debugintbase10s(s64 n)
+consolewriteintb10s(s64 n)
 {
 	/* (20 digits + \0  = 21) */
 	char str[21];
 
 	inttostr(str, n, 10, 1);
 
-	debug(str);
+	consolewrite(str);
 }
 
 void
-debugintbase10u(u64 n)
+consolewriteintb10u(u64 n)
 {
 	/* (20 digits + \0  = 21) */
 	char str[21];
 
 	inttostr(str, n, 10, 0);
 
-	debug(str);
+	consolewrite(str);
 }
 
 void
-debugintbase16(u64 n)
+consolewriteintb16(u64 n)
 {
 	/* (0x + 16 digits + \0 = 19) */
 	char str[19];
@@ -116,7 +116,7 @@ debugintbase16(u64 n)
 
 	inttostr(&str[2], n, 16, 0);
 
-	debug(str);
+	consolewrite(str);
 }
 
 void

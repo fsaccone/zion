@@ -6,19 +6,19 @@
 #define LOG_MAX 4096
 
 /* Prints a message to serial console. */
-void debug(char *m);
+void consolewrite(char *m);
 
 /* Prints an integer to serial console in binary form. */
-void debugintbase2(u64 n);
+void consolewriteintb2(u64 n);
 
 /* Prints an integer to serial console in signed decimal form. */
-void debugintbase10s(s64 n);
+void consolewriteintbase10s(s64 n);
 
 /* Prints an integer to serial console in unsigned decimal form. */
-void debugintbase10u(u64 n);
+void consolewriteintb10u(u64 n);
 
 /* Prints an integer to serial console in hexadecimal form. */
-void debugintbase16(u64 n);
+void consolewriteintb16(u64 n);
 
 /* Prints an error message to serial console and panics. */
 void panic(char *m);

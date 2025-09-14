@@ -20,9 +20,9 @@ void
 coremain(u16 c)
 {
 	acquirelock(&l);
-	debug("Core ");
-	debugintbase10u(c);
-	debug(" start.\n");
+	consolewrite("Core ");
+	consolewriteintb10u(c);
+	consolewrite(" start.\n");
 	releaselock(&l);
 
 	setupnexttimer();
@@ -45,7 +45,7 @@ kernel(void)
 	driver_uart().init();
 #endif
 
-	debug("Kernel start.\n");
+	consolewrite("Kernel start.\n");
 
 	physicalmem();
 
