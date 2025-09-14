@@ -3,7 +3,7 @@
 
 #include <arch/types.h>
 
-#define LOG_MAX 4096
+#define CONSOLE_WRITE_MAX 4096
 
 /* Prints a message to serial console. */
 void consolewrite(char *m);
