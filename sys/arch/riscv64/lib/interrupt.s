@@ -5,6 +5,7 @@
 .global interruptisuser
 .global interruptsenabled
 .global interrupttype
+.global setinterruptreturn
 
 disableinterrupts:
 	csrr t0,      sstatus
@@ -162,6 +163,19 @@ interrupttype:
 4:
 	# Hardware.
 	li a0, 0x02
+	ret
+
+setinterruptreturn:
+	# The sscratch is set to -1 at the start of the trap vector and is
+	# checked at its end. Since the argument of this function is u8, we
+	# can use the remaining bits to make the vector know when it needs to
+	# overwrite the original a0: if sscratch is found to be negative (that
+	# is when this function is not called), a0 retains its value; otherwise
+	# we use the value of sscratch as the new a0 of the caller context.
+
+	# The argument is already unsigned, so we just copy it.
+	csrw sscratch, a0
+
 	ret
 
 .section .data
