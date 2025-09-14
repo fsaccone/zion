@@ -53,7 +53,7 @@ freeallmem(void)
 		loglen += consolewrite(".");
 		loglen += consolewriteintb10u((done % (1024 * 1024))
 		                    * 100 / (1024 * 1024));
-		loglen += consolewrite("M (");
+		loglen += consolewrite("M  (");
 		loglen += consolewriteintb16(start);
 		loglen += consolewrite("-");
 		loglen += consolewriteintb16(end);
