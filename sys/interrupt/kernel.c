@@ -2,12 +2,9 @@
 #include <driver.h>
 #include <interrupt.h>
 #include <panic.h>
-#include <spinlock.h>
 #include <timer.h>
 
 #include "syscall.h"
-
-static struct lock l = { 0 };
 
 void
 kernelinterrupt(void)
@@ -22,13 +19,10 @@ kernelinterrupt(void)
 
 		break;
 	case INTERRUPT_TYPE_EXCEPTION:
-		acquirelock(&l);
-
 		setpanicmsg("Exception.");
 		tracepanicmsg("interrupt");
 		panic();
 
-		releaselock(&l);
 		break;
 	case INTERRUPT_TYPE_HARDWARE:
 		if (interruptdriver(&drv)) {
