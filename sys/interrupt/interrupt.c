@@ -31,21 +31,15 @@ interrupt(void)
 		releaselock(&l);
 		break;
 	case INTERRUPT_TYPE_HARDWARE:
-		acquirelock(&l);
 		consolewrite("interrupt: Hardware.\n");
-		releaselock(&l);
 		break;
 	case INTERRUPT_TYPE_SOFTWARE:
-		acquirelock(&l);
 		consolewrite("interrupt: Software.\n");
-		releaselock(&l);
 		break;
 	case INTERRUPT_TYPE_TIMER:
 		setupnexttimer();
 		break;
 	default:
-		acquirelock(&l);
 		consolewrite("interrupt: Unknown.\n");
-		releaselock(&l);
 	}
 }
