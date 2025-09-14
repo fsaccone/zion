@@ -6,7 +6,6 @@
 #include <machine/cpu.h>
 #include <machine/drivers.h>
 #include <panic.h>
-#include <spinlock.h>
 #include <timer.h>
 
 #include "drivers.h"
@@ -15,17 +14,12 @@
 /* The main function of every CPU core with core ID c. */
 static void coremain(u16 c);
 
-static u8          initdone = 0;
-static struct lock l        = { 0 };
+static u8 initdone = 0;
 
 void
 coremain(u16 c)
 {
-	acquirelock(&l);
-	consolewrite("Core ");
-	consolewriteintb10u(c);
-	consolewrite(" start.\n");
-	releaselock(&l);
+	(void)c;
 
 	setupnexttimer();
 
