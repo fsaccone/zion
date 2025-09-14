@@ -11,8 +11,8 @@
 
 #include "logs.h"
 
-/* (1M) */
-#define LOG_SIZE (1024 * 1024)
+/* (10M) */
+#define LOG_SIZE (10 * 1024 * 1024)
 
 int
 freeallmem(void)
