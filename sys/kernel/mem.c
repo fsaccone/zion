@@ -14,7 +14,7 @@
 int
 freeallmem(void)
 {
-	int i;
+	int i, maxloglen = 0;
 	un freemem[FREE_MEMORY_REGIONS_LEN][2] = { FREE_MEMORY_REGIONS };
 
 	for (i = 0; i < FREE_MEMORY_REGIONS_LEN; i++) {
@@ -22,6 +22,7 @@ freeallmem(void)
 		   size  = freemem[i][1],
 		   done  = 0;
 		void *f;
+		int loglen = 0;
 
 		for (f = (void *)CEIL(start, PAGE_SIZE);
 		     (un)f + PAGE_SIZE <= start + size;
@@ -46,17 +47,28 @@ freeallmem(void)
 
 		/* Once done, print MiB with 2 decimal places to give more
 		   preciseness and print start and end addresses. */
-		(void)consolewrite("\r");
-		(void)consolewrite(MEM_LOAD_LOG_PRE);
-		(void)consolewriteintb10u(done / (1024 * 1024));
-		(void)consolewrite(".");
-		(void)consolewriteintb10u((done % (1024 * 1024))
+		loglen += consolewrite("\r");
+		loglen += consolewrite(MEM_LOAD_LOG_PRE);
+		loglen += consolewriteintb10u(done / (1024 * 1024));
+		loglen += consolewrite(".");
+		loglen += consolewriteintb10u((done % (1024 * 1024))
 		                    * 100 / (1024 * 1024));
-		(void)consolewrite("M (");
-		(void)consolewriteintb16(start);
-		(void)consolewrite("-");
-		(void)consolewriteintb16(start + size);
-		(void)consolewrite(")  OK\n");
+		loglen += consolewrite("M (");
+		loglen += consolewriteintb16(start);
+		loglen += consolewrite("-");
+		loglen += consolewriteintb16(start + size);
+		loglen += consolewrite(")");
+
+		if (loglen > maxloglen) {
+			maxloglen = loglen;
+		} else {
+			int j;
+
+			for (j = 0; j < maxloglen - loglen; j++)
+				consolewrite(" ");
+		}
+
+		consolewrite("  OK\n");
 	}
 
 	return 0;
