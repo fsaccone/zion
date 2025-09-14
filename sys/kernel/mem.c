@@ -68,7 +68,7 @@ freeallmem(void)
 		consolewriteintb16(start);
 		consolewrite(" - ");
 		consolewriteintb16(end);
-		consolewrite("]  OK\n");
+		consolewrite("]\n");
 	}
 
 	return 0;
