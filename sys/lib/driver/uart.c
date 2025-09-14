@@ -31,7 +31,6 @@
 #define THR ((u8 *)UART0 + 0x00)
 
 static void init(void);
-static void interrupt(void);
 static void write(u8 *c, u32 n);
 
 struct driver
@@ -39,7 +38,6 @@ driver_uart(void)
 {
 	struct driver d = {
 		.init       = init,
-		.interrupt  = interrupt,
 		.write      = write,
 	};
 
@@ -69,12 +67,6 @@ init(void)
 
 	/* Enable transmit and receive interrupts. */
 	*IER = IER_RX_ENABLE | IER_TX_ENABLE;
-}
-
-void
-interrupt(void)
-{
-	write((u8 *)"Got interrupt from UART.\n", 25);
 }
 
 void
