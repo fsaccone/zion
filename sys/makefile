@@ -22,6 +22,7 @@ LIBDRIVER = lib/driver/uart.o
 
 LIB = lib/console.o \
       lib/pagetable.o \
+      lib/panic.o \
       lib/pmem.o \
       lib/process.o \
       lib/spinlock.o \

@@ -3,17 +3,12 @@
 #include <arch/types.h>
 #include <config.h>
 #include <driver.h>
-#include <interrupt.h>
 #include <machine/drivers.h>
-#include <machine/mem.h>
-#include <pmem.h>
 
 /* Writes a NULL-terminated string to str which contains the number n written
    in base base. If sign is not 0, it treats n as signed and prefixes str with
    the - character if n is negative. */
 static void inttostr(char *str, u64 n, u8 base, u8 sign);
-
-static char *panicmsg = NULL;
 
 void
 inttostr(char *str, u64 n, u8 base, u8 sign)
@@ -119,58 +114,4 @@ consolewriteintb16(u64 n)
 	inttostr(&str[2], n, 16, 0);
 
 	consolewrite(str);
-}
-
-void
-panic(char *m)
-{
-	disableinterrupts();
-
-	consolewrite("[PANIC] ");
-
-	for (; *m; m++)
-		consolewrite(m);
-
-	if (panicmsg) {
-		char *c;
-
-		consolewrite(": ");
-
-		for (c = panicmsg; *c; c++)
-			consolewrite(c);
-	}
-
-	consolewrite("\n");
-
-loop:
-	goto loop;
-}
-
-void
-setpanicmsg(char *m)
-{
-	panicmsg = m;
-}
-
-void
-tracepanicmsg(char *m)
-{
-	char *new = panicmsg;
-
-	/* Get to the end of panicmsg. */
-	while (*new)
-		new++;
-
-	/* (" (<- ") */
-	*new++ = ' ';
-	*new++ = '(';
-	*new++ = '<';
-	*new++ = '-';
-	*new++ = ' ';
-
-	while (*m)
-		*new++ = *m++;
-
-	*new++ = ')';
-	*new++ = '\0';
 }
