@@ -9,6 +9,7 @@
 #include <timer.h>
 
 #include "drivers.h"
+#include "logs.h"
 #include "mem.h"
 
 /* The main function of every CPU core with core ID c. */
@@ -41,7 +42,7 @@ kernel(void)
 	driver_uart().init();
 #endif
 
-	consolewrite("CPU loaded : ");
+	consolewrite(CPU_LOAD_LOG_PRE);
 	consolewriteintb10u(NCPU);
 	consolewrite(" core(s).\n");
 
