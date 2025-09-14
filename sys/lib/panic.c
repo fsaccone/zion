@@ -12,7 +12,7 @@ static struct lock l                                 = { 0 };
 void
 panic(void)
 {
-	/* This lock will never be freed. It also already disables interrupt
+	/* This lock will never be released. It also already disables interrupt
 	   and that means it is not needed to do it manually. */
 	acquirelock(&l);
 
