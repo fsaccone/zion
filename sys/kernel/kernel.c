@@ -42,9 +42,9 @@ kernel(void)
 	driver_uart().init();
 #endif
 
-	consolewrite(CPU_LOAD_LOG_PRE);
-	consolewriteintb10u(NCPU);
-	consolewrite(" core(s).\n");
+	(void)consolewrite(CPU_LOAD_LOG_PRE);
+	(void)consolewriteintb10u(NCPU);
+	(void)consolewrite(" core(s).\n");
 
 	physicalmem();
 
