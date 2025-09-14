@@ -44,18 +44,19 @@ freeallmem(void)
 		}
 
 		/* Once done, print MiB with 2 decimal places to give more
-		   preciseness. */
+		   preciseness and print start and end addresses. */
 		consolewrite("\r");
 		consolewrite(MEM_LOAD_LOG_PRE);
 		consolewriteintb10u(done / (1024 * 1024));
 		consolewrite(".");
 		consolewriteintb10u((done % (1024 * 1024))
 		                    * 100 / (1024 * 1024));
-		consolewrite("M");
+		consolewrite("M (");
+		consolewriteintb16(start);
+		consolewrite("-");
+		consolewriteintb16(start + size);
+		consolewrite(")  OK\n");
 	}
-
-	if (i)
-		consolewrite("  OK\n");
 
 	return 0;
 }
