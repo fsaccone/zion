@@ -1,8 +1,10 @@
 #include "mem.h"
 
+#include <arch/page.h>
 #include <arch/types.h>
 #include <console.h>
 #include <machine/mem.h>
+#include <math.h>
 #include <panic.h>
 #include <pmem.h>
 #include <vmem.h>
@@ -18,6 +20,7 @@ freeallmem(void)
 	for (i = 0; i < FREE_MEMORY_REGIONS_LEN; i++) {
 		un start = freemem[i][0],
 		   size  = freemem[i][1];
+		void *f;
 
 		consolewrite(MEM_LOAD_LOG_PRE);
 		consolewrite("From ");
@@ -26,9 +29,13 @@ freeallmem(void)
 		consolewriteintb16((start + size));
 		consolewrite(".\n");
 
-		if (pfreerange((void *)start, (void *)(start + size))) {
-			tracepanicmsg("freeallmem");
-			return -1;
+		for (f = (void *)CEIL(start, PAGE_SIZE);
+		     (un)f + PAGE_SIZE <= start + size;
+		     f = (void *)((un)f + PAGE_SIZE)) {
+			if (pfree(f, PAGE_SIZE)) {
+				tracepanicmsg("freeallmem");
+				panic();
+			}
 		}
 	}
 

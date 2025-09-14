@@ -121,29 +121,6 @@ pfree(void *f, un s)
 	return 0;
 }
 
-int
-pfreerange(void *s, void *e)
-{
-	void *p;
-
-	if (CEIL((un)s, PAGE_SIZE) >= (un)e) {
-		setpanicmsg("No frames in range.");
-		tracepanicmsg("pfreerange");
-		return -1;
-	}
-
-	for (p = (void *)CEIL((un)s, PAGE_SIZE);
-	     (un)p + PAGE_SIZE <= (un)e;
-	     p = (void *)((un)p + PAGE_SIZE)) {
-		if (pfree(p, PAGE_SIZE)) {
-			tracepanicmsg("pfreerange");
-			return -1;
-		}
-	}
-
-	return 0;
-}
-
 void
 pmemset(void *s, u8 c, un n)
 {
