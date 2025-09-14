@@ -205,6 +205,11 @@ trapvec:
 	sd   ra,  (27 * 8)(sp)
 	sd   gp,  (28 * 8)(sp)
 
+	# If at the end of this function sscratch is not negative, we overwrite
+	# the original a0 register with the value in sscratch.
+	li   t0,       -1
+	csrw sscratch, t0
+
 	call interrupt
 
 	# See top of function.
@@ -227,7 +232,12 @@ trapvec:
 	ld   s9,  (16 * 8)(sp)
 	ld   s10, (17 * 8)(sp)
 	ld   s11, (18 * 8)(sp)
+	# If (sscratch >= 0), use it as the new value of a0 (i.e. skip the
+	# restoration of a0).
+	csrr a0, sscratch
+	bgez a0, 1f
 	ld   a0,  (19 * 8)(sp)
+1:
 	ld   a1,  (20 * 8)(sp)
 	ld   a2,  (21 * 8)(sp)
 	ld   a3,  (22 * 8)(sp)

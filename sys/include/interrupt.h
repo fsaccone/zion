@@ -39,4 +39,8 @@ u8 interruptsenabled(void);
 /* Returns the interrupt type code. */
 u8 interrupttype(void);
 
+/* Sets the first architecture-specific argument register of the caller context
+   to r. If it is not called, the register retains its original value. */
+void setinterruptreturn(u8 r);
+
 #endif
