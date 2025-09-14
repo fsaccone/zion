@@ -1,4 +1,5 @@
 #include <console.h>
+#include <driver.h>
 #include <interrupt.h>
 #include <panic.h>
 #include <spinlock.h>
@@ -12,6 +13,7 @@ void
 interrupt(void)
 {
 	un *args = interruptargs();
+	struct driver drv;
 
 	switch (interrupttype()) {
 	case INTERRUPT_TYPE_SYSCALL:
@@ -31,7 +33,14 @@ interrupt(void)
 		releaselock(&l);
 		break;
 	case INTERRUPT_TYPE_HARDWARE:
-		consolewrite("interrupt: Hardware.\n");
+		if (interruptdriver(&drv)) {
+			setpanicmsg("Unkown hardware interrupt.");
+			tracepanicmsg("interrupt");
+			panic();
+		}
+
+		drv.interrupt();
+
 		break;
 	case INTERRUPT_TYPE_SOFTWARE:
 		consolewrite("interrupt: Software.\n");
