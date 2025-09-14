@@ -124,25 +124,21 @@ panic(char *m)
 {
 	disableinterrupts();
 
-#ifdef DRIVER_UART
-	driver_uart().write((u8 *)"[PANIC] ", 8);
+	consolewrite("[PANIC] ");
 
 	for (; *m; m++)
-		driver_uart().write((u8 *)m, 1);
+		consolewrite(m);
 
 	if (panicmsg) {
 		char *c;
 
-		driver_uart().write((u8 *)": ", 2);
+		consolewrite(": ");
 
 		for (c = panicmsg; *c; c++)
-			driver_uart().write((u8 *)c, 1);
+			consolewrite(c);
 	}
 
-	driver_uart().write((u8 *)"\n", 1);
-#else
-	(void)m;
-#endif
+	consolewrite("\n");
 
 loop:
 	goto loop;
