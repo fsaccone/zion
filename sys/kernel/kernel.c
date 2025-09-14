@@ -44,7 +44,7 @@ kernel(void)
 
 	(void)consolewrite(CPU_LOG_PRE);
 	(void)consolewriteintb10u(NCPU);
-	(void)consolewrite(" core(s).\n");
+	(void)consolewrite(" core(s)\n");
 
 	physicalmem();
 
