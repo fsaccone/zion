@@ -18,11 +18,10 @@ void disableinterrupts(void);
 /* Enables interrupts. */
 void enableinterrupts(void);
 
-/* Returns a NULL terminated array of length INTERRUPT_ARGS containing the
-   values of the architecture-specific argument registers used to hold the
-   arguments for things like system calls. To get a right copy of the registers
-   from the caller context, this function has to be called first inside the
-   interrupt handler. */
+/* Returns an array of size INTERRUPT_ARGS containing the values of the first
+   INTERRUPT_ARGS architecture-specific argument registers of the caller
+   context. This function has to be called first inside the interrupt handler,
+   because having code before it may alter the values of the registers. */
 un *interruptargs(void);
 
 /* Sets drv to the driver of the device which caused the interrupt and returns
