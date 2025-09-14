@@ -38,7 +38,7 @@ freeallmem(void)
 			   the serial console a lot of times. */
 			if (!((done += PAGE_SIZE) % (1024 * 1024))) {
 				(void)consolewrite("\r");
-				(void)consolewrite(MEM_LOAD_LOG_PRE);
+				(void)consolewrite(MEM_LOG_PRE);
 				(void)consolewriteintb10u(done
 				                          / (1024 * 1024));
 				(void)consolewrite("M");
@@ -48,7 +48,7 @@ freeallmem(void)
 		/* Once done, print MiB with 2 decimal places to give more
 		   preciseness and print start and end addresses. */
 		loglen += consolewrite("\r");
-		loglen += consolewrite(MEM_LOAD_LOG_PRE);
+		loglen += consolewrite(MEM_LOG_PRE);
 		loglen += consolewriteintb10u(done / (1024 * 1024));
 		loglen += consolewrite(".");
 		loglen += consolewriteintb10u((done % (1024 * 1024))
