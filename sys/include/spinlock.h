@@ -5,7 +5,7 @@
 
 struct lock {
 	/* If 0, lock is not acquired; otherwise, it is. */
-	u8 locked;
+	un locked;
 
 	/* The difference of acquirelock and releaselock calls on this lock. */
 	u8 depth;
