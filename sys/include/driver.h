@@ -9,7 +9,7 @@ struct driver {
 	void (*init)(void);
 
 	/* Called by the interrupt handler in case of a driver interrupt from
-	   this device. */
+	   this device. May be undefined. */
 	void (*interrupt)(void);
 
 	/* Writes n bytes of content c to the driver. May be undefined. */
