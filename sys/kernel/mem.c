@@ -19,13 +19,13 @@ freeallmem(void)
 
 	for (i = 0; i < FREE_MEMORY_REGIONS_LEN; i++) {
 		un start = freemem[i][0],
-		   size  = freemem[i][1],
+		   end   = freemem[i][1],
 		   done  = 0;
 		void *f;
 		int loglen = 0;
 
 		for (f = (void *)CEIL(start, PAGE_SIZE);
-		     (un)f + PAGE_SIZE <= start + size;
+		     (un)f + PAGE_SIZE <= end;
 		     f = (void *)((un)f + PAGE_SIZE)) {
 			if (pfree(f, PAGE_SIZE)) {
 				tracepanicmsg("freeallmem");
@@ -56,7 +56,7 @@ freeallmem(void)
 		loglen += consolewrite("M (");
 		loglen += consolewriteintb16(start);
 		loglen += consolewrite("-");
-		loglen += consolewriteintb16(start + size);
+		loglen += consolewriteintb16(end);
 		loglen += consolewrite(")");
 
 		if (loglen > maxloglen) {
