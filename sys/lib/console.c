@@ -59,7 +59,9 @@ consolewrite(char *m)
 {
 #ifdef CONFIG_SERIAL_CONSOLE
 # ifdef DRIVER_UART
-	for (; *m; m++)
+	int i;
+
+	for (i = 0; *m && i < CONSOLE_WRITE_MAX; m++, i++)
 		driver_uart().write((u8 *)m, 1);
 # else
 	(void)m;
