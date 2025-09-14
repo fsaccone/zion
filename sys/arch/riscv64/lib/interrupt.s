@@ -2,6 +2,7 @@
 .global disableinterrupts
 .global enableinterrupts
 .global interruptargs
+.global interruptisuser
 .global interruptsenabled
 .global interrupttype
 
@@ -35,6 +36,26 @@ interruptargs:
 
 	mv a0, t0
 
+	ret
+
+interruptisuser:
+	# (t0 = sstatus.SPP)
+	csrr t0, sstatus
+	srli t0, t0, 8
+	li   t1, 1
+	and  t0, t0, t1
+
+	# If t0 is 0, then interrupt was caused by user mode; otherwise, it was
+	# caused by supervisor mode.
+	beqz t0, 1f
+
+	# Kernel mode.
+	li a0, 1
+	ret
+
+1:
+	# User mode.
+	li a0, 0
 	ret
 
 interruptsenabled:
