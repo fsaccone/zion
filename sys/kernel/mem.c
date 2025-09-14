@@ -17,7 +17,7 @@ freeallmem(void)
 		un start = freemem[i][0],
 		   size  = freemem[i][1];
 
-		consolewrite("Freeing user memory going from ");
+		consolewrite("Memory loading : From ");
 		consolewriteintb16(start);
 		consolewrite(" to ");
 		consolewriteintb16((start + size));
