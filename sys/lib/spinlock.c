@@ -1,10 +1,21 @@
 #include <spinlock.h>
 
 #include <atomic.h>
+#include <interrupt.h>
 
 void
 acquirelock(struct lock *l)
 {
+	int ie = interruptsenabled();
+
+	disableinterrupts();
+
+	/* If first call, set interruptsenabled. */
+	if (!l->depth)
+		l->interruptsenabled = ie;
+
+	l->depth++;
+
 	/* Wait for lock to be unlocked. */
 	for (;;) {
 		if (!atomicswap(&l->locked, 1))
@@ -16,4 +27,9 @@ void
 releaselock(struct lock *l)
 {
 	l->locked = 0;
+
+	l->depth--;
+
+	if (!l->depth && l->interruptsenabled)
+		enableinterrupts();
 }
