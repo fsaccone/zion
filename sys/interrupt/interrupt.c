@@ -34,7 +34,7 @@ interrupt(void)
 		break;
 	case INTERRUPT_TYPE_HARDWARE:
 		if (interruptdriver(&drv)) {
-			setpanicmsg("Unkown hardware interrupt.");
+			setpanicmsg("Unknown hardware interrupt.");
 			tracepanicmsg("interrupt");
 			panic();
 		}
