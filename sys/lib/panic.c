@@ -2,7 +2,6 @@
 
 #include <console.h>
 #include <core.h>
-#include <interrupt.h>
 #include <machine/cpu.h>
 #include <pmem.h>
 #include <spinlock.h>
@@ -13,9 +12,8 @@ static struct lock l                                 = { 0 };
 void
 panic(void)
 {
-	disableinterrupts();
-
-	/* This lock will never be freed. */
+	/* This lock will never be freed. It also already disables interrupt
+	   and that means it is not needed to do it manually. */
 	acquirelock(&l);
 
 	consolewrite("[PANIC] ");
