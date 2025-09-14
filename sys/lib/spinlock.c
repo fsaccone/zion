@@ -1,12 +1,13 @@
 #include <spinlock.h>
 
+#include <arch/types.h>
 #include <atomic.h>
 #include <interrupt.h>
 
 void
 acquirelock(struct lock *l)
 {
-	int ie = interruptsenabled();
+	u8 ie = interruptsenabled();
 
 	disableinterrupts();
 

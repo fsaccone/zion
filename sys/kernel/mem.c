@@ -14,10 +14,10 @@
 /* (10M) */
 #define LOG_SIZE (10 * 1024 * 1024)
 
-int
+u8
 freeallmem(void)
 {
-	int i;
+	u8 i;
 	un freemem[FREE_MEMORY_REGIONS_LEN][2] = { FREE_MEMORY_REGIONS };
 
 	for (i = 0; i < FREE_MEMORY_REGIONS_LEN; i++) {
@@ -25,7 +25,7 @@ freeallmem(void)
 		   end   = freemem[i][1],
 		   done  = 0;
 		void *f;
-		int decpart;
+		u8 decpart;
 
 		for (f = (void *)CEIL(start, PAGE_SIZE);
 		     (un)f + PAGE_SIZE <= end;

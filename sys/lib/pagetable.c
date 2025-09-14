@@ -31,7 +31,7 @@ pageentry *
 findpointerentry(pageentry *pt[PAGE_TABLE_ENTRIES], void *ptr)
 {
 	pageentry **curpt = pt;
-	int i;
+	u16 i;
 
 redowalk:
 	for (i = 0; i < PAGE_TABLE_ENTRIES; i++) {
@@ -56,7 +56,7 @@ redowalk:
 pageentry *
 invalidentry(pageentry *pt[PAGE_TABLE_ENTRIES])
 {
-	int i;
+	u16 i;
 
 	for (i = 0; i < PAGE_TABLE_ENTRIES; i++) {
 		pageentry *pte = (void *)((un)pt + i * sizeof(pageentry *));
@@ -71,7 +71,7 @@ invalidentry(pageentry *pt[PAGE_TABLE_ENTRIES])
 pageentry **
 levelpagetable(pageentry *pt[PAGE_TABLE_ENTRIES], u8 l)
 {
-	int i, lvlidx[PAGE_TABLE_LEVELS] = { 0 };
+	u16 i, lvlidx[PAGE_TABLE_LEVELS] = { 0 };
 	pageentry **lastpt;
 
 	if (l < 1 && l > PAGE_TABLE_LEVELS) {
@@ -143,7 +143,7 @@ parenttables(pageentry **tables[PAGE_TABLE_LEVELS + 1],
              pageentry *pt[PAGE_TABLE_ENTRIES],
              pageentry *pte)
 {
-	int i, lvlidx[PAGE_TABLE_LEVELS] = { 0 };
+	u16 i, lvlidx[PAGE_TABLE_LEVELS] = { 0 };
 
 	/* Walk the whole tree saving each level to tables until pte is
 	   found. */
@@ -191,7 +191,7 @@ nextlevel:
 pageentry *
 validentry(pageentry *pt[PAGE_TABLE_ENTRIES])
 {
-	int i;
+	u16 i;
 
 	for (i = 0; i < PAGE_TABLE_ENTRIES; i++) {
 		pageentry *pte = (void *)((un)pt + i * sizeof(pageentry *));
@@ -270,7 +270,7 @@ void
 freepage(pageentry *pte, pageentry *pt[PAGE_TABLE_ENTRIES])
 {
 	pageentry f, **parents[PAGE_TABLE_LEVELS + 1];
-	int i;
+	u16 i;
 
 	parenttables(parents, pt, pte);
 
