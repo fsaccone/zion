@@ -16,7 +16,8 @@ static struct lock l = { 0 };
 void
 inttostr(char *str, u64 n, u8 base, u8 sign)
 {
-	int i = 0, j, l, neg = 0;
+	u16 i = 0, j, l;
+	u8 neg = 0;
 	char digits[36] = "0123456789abcdefghijklmnopqrstuvwxyz";
 
 	if (!n) {
@@ -31,7 +32,7 @@ inttostr(char *str, u64 n, u8 base, u8 sign)
 	}
 
 	for (; n; n /= base, i++) {
-		int r = n % base;
+		u8 r = n % base;
 
 		str[i] = digits[r % sizeof(digits)];
 	}
@@ -52,12 +53,12 @@ inttostr(char *str, u64 n, u8 base, u8 sign)
 	str[l] = '\0';
 }
 
-unsigned int
+u16
 consolewrite(char *m)
 {
 #ifdef CONFIG_SERIAL_CONSOLE
 # ifdef DRIVER_UART
-	int i;
+	u16 i;
 
 	acquirelock(&l);
 
@@ -79,7 +80,7 @@ consolewrite(char *m)
 #endif
 }
 
-unsigned int
+u16
 consolewriteintb2(u64 n)
 {
 	/* (0b + 64 digits + \0  = 67) */
@@ -93,7 +94,7 @@ consolewriteintb2(u64 n)
 	return consolewrite(str);
 }
 
-unsigned int
+u16
 consolewriteintb10s(s64 n)
 {
 	/* (20 digits + \0  = 21) */
@@ -104,7 +105,7 @@ consolewriteintb10s(s64 n)
 	return consolewrite(str);
 }
 
-unsigned int
+u16
 consolewriteintb10u(u64 n)
 {
 	/* (20 digits + \0  = 21) */
@@ -115,7 +116,7 @@ consolewriteintb10u(u64 n)
 	return consolewrite(str);
 }
 
-unsigned int
+u16
 consolewriteintb16(u64 n)
 {
 	/* (0x + 16 digits + \0 = 19) */

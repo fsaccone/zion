@@ -3,7 +3,7 @@
 #include <interrupt.h>
 #include <machine/mem.h>
 
-int
+u8
 interruptdriver(struct driver *drv)
 {
 	if (interrupttype() != INTERRUPT_TYPE_HARDWARE)

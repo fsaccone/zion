@@ -18,7 +18,7 @@ void pcleanup(void);
 
 /* Free enough frames from p to fit size s. Returns -1 in case of error and 0
    otherwise. */
-int pfree(void *f, un s);
+u8 pfree(void *f, un s);
 
 /* Sets all n bytes starting from s to c. */
 void pmemset(void *s, u8 c, un n);
