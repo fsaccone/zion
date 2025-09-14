@@ -1,12 +1,14 @@
 #include <panic.h>
 
 #include <console.h>
+#include <core.h>
 #include <interrupt.h>
+#include <machine/cpu.h>
 #include <pmem.h>
 #include <spinlock.h>
 
-static char        panicmsg[CONSOLE_WRITE_MAX] = { 0 };
-static struct lock l                           = { 0 };
+static char        panicmsg[NCPU][CONSOLE_WRITE_MAX] = { 0 };
+static struct lock l                                 = { 0 };
 
 void
 panic(void)
@@ -18,7 +20,7 @@ panic(void)
 
 	consolewrite("[PANIC] ");
 
-	consolewrite(panicmsg);
+	consolewrite(panicmsg[core()]);
 
 	consolewrite("\n");
 
@@ -32,7 +34,7 @@ setpanicmsg(char *m)
 	u32 i;
 
 	for (i = 0; m[i] && i < CONSOLE_WRITE_MAX; i++)
-		panicmsg[i] = m[i];
+		panicmsg[core()][i] = m[i];
 }
 
 void
@@ -43,17 +45,17 @@ tracepanicmsg(char *t)
 	     post[1] = ")";
 
 	/* Get to the end of panicmsg. */
-	for (i = 0; panicmsg[i] && i < CONSOLE_WRITE_MAX; i++);
+	for (i = 0; panicmsg[core()][i] && i < CONSOLE_WRITE_MAX; i++);
 
 	/* Write pre. */
 	for (j = 0; j < sizeof(pre) && i < CONSOLE_WRITE_MAX; j++, i++)
-		panicmsg[i] = pre[j];
+		panicmsg[core()][i] = pre[j];
 
 	/* Write t. */
 	for (j = 0; t[j] && i < CONSOLE_WRITE_MAX; j++, i++)
-		panicmsg[i] = t[j];
+		panicmsg[core()][i] = t[j];
 
 	/* Write post. */
 	for (j = 0; j < sizeof(post) && i < CONSOLE_WRITE_MAX; j++, i++)
-		panicmsg[i] = post[j];
+		panicmsg[core()][i] = post[j];
 }
