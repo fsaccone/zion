@@ -50,12 +50,12 @@ interruptisuser:
 	beqz t0, 1f
 
 	# Kernel mode.
-	li a0, 1
+	li a0, 0
 	ret
 
 1:
 	# User mode.
-	li a0, 0
+	li a0, 1
 	ret
 
 interruptsenabled:
