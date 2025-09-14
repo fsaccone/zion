@@ -100,7 +100,15 @@ interrupttype:
 
 2:
 	# Syscall (8).
-	li a0, 0x01
+	# Since the cause was a ecall instruction, we need to set sepc to the
+	# instruction after it. Doing it from this function is ugly because it
+	# should be a function with no side effects, but the kernel needs to
+	# call this function anyway to handle system calls, so doing it here
+	# just works.
+	csrr t0,   sepc
+	addi t0,   t0, 4
+	csrw sepc, t0
+	li   a0,   0x01
 	ret
 
 1:
