@@ -30,6 +30,10 @@ un *interruptargs(void);
    device is unknown. */
 u8 interruptdriver(struct driver *drv);
 
+/* Returns 1 if the interrupt comes from user mode or 0 if it comes from kernel
+   mode. */
+u8 interruptisuser(void);
+
 /* Returns 1 if interrupts are enabled and 0 otherwise. */
 u8 interruptsenabled(void);
 
