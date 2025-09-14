@@ -2,30 +2,16 @@
 #include <console.h>
 #include <core.h>
 #include <driver.h>
-#include <interrupt.h>
 #include <machine/cpu.h>
 #include <machine/drivers.h>
 #include <panic.h>
-#include <timer.h>
 
+#include "core.h"
 #include "drivers.h"
 #include "logs.h"
 #include "mem.h"
 
-/* The main function of every CPU core with core ID c. */
-static void coremain(u16 c);
-
 static u8 initdone = 0;
-
-void
-coremain(u16 c)
-{
-	(void)c;
-
-	setupnexttimer();
-
-	for (;;);
-}
 
 void
 kernel(void)

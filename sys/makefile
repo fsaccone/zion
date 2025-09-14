@@ -31,7 +31,8 @@ LIB = lib/console.o \
 INTERRUPT = interrupt/interrupt.o \
             interrupt/syscall.o
 
-KERNEL = kernel/drivers.o \
+KERNEL = kernel/core.o \
+         kernel/drivers.o \
          kernel/kernel.o \
          kernel/mem.o
 
