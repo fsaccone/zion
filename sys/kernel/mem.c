@@ -19,15 +19,9 @@ freeallmem(void)
 
 	for (i = 0; i < FREE_MEMORY_REGIONS_LEN; i++) {
 		un start = freemem[i][0],
-		   size  = freemem[i][1];
+		   size  = freemem[i][1],
+		   done  = 0;
 		void *f;
-
-		consolewrite(MEM_LOAD_LOG_PRE);
-		consolewrite("From ");
-		consolewriteintb16(start);
-		consolewrite(" to ");
-		consolewriteintb16((start + size));
-		consolewrite(".\n");
 
 		for (f = (void *)CEIL(start, PAGE_SIZE);
 		     (un)f + PAGE_SIZE <= start + size;
@@ -36,8 +30,22 @@ freeallmem(void)
 				tracepanicmsg("freeallmem");
 				panic();
 			}
+
+			/* Log how many MiB have been loaded. Logging more
+			   frequently, for example using KiB, makes the overall
+			   freeing a lot slower because it has to go through
+			   the serial console a lot of times. */
+			if (!((done += PAGE_SIZE) % (1024 * 1024))) {
+				consolewrite("\r");
+				consolewrite(MEM_LOAD_LOG_PRE);
+				consolewriteintb10u(done / (1024 * 1024));
+				consolewrite("M");
+			}
 		}
 	}
+
+	if (i)
+		consolewrite("  OK\n");
 
 	return 0;
 }
