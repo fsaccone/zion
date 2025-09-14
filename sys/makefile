@@ -20,7 +20,7 @@ ARCHLIB = arch/$(ARCH)/lib/atomic.o \
 
 LIBDRIVER = lib/driver/uart.o
 
-LIB = lib/log.o \
+LIB = lib/console.o \
       lib/pagetable.o \
       lib/pmem.o \
       lib/process.o \

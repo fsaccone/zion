@@ -1,4 +1,4 @@
-#include <log.h>
+#include <console.h>
 #include <process.h>
 #include <pagetable.h>
 #include <pmem.h>

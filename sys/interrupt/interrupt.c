@@ -1,5 +1,5 @@
+#include <console.h>
 #include <interrupt.h>
-#include <log.h>
 #include <spinlock.h>
 #include <timer.h>
 

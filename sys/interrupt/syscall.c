@@ -1,6 +1,6 @@
 #include "syscall.h"
 
-#include <log.h>
+#include <console.h>
 #include <machine/sys.h>
 #include <pmem.h>
 
