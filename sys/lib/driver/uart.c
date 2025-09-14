@@ -6,6 +6,7 @@
 
 #include <arch/types.h>
 #include <machine/mem.h>
+#include <pmem.h>
 
 /* Interrupt enable register. */
 #define IER           (u8 *)(UART0 + 0x01)
@@ -38,6 +39,7 @@ driver_uart(void)
 {
 	struct driver d = {
 		.init       = init,
+		.interrupt  = NULL,
 		.write      = write,
 	};
 
