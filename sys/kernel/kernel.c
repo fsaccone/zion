@@ -3,6 +3,7 @@
 #include <core.h>
 #include <driver.h>
 #include <interrupt.h>
+#include <machine/cpu.h>
 #include <machine/drivers.h>
 #include <panic.h>
 #include <spinlock.h>
@@ -46,7 +47,9 @@ kernel(void)
 	driver_uart().init();
 #endif
 
-	consolewrite("Kernel start.\n");
+	consolewrite("CPU loaded : ");
+	consolewriteintb10u(NCPU);
+	consolewrite(" core(s).\n");
 
 	physicalmem();
 
