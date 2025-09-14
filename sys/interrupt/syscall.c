@@ -1,7 +1,7 @@
 #include "syscall.h"
 
-#include <console.h>
 #include <machine/sys.h>
+#include <panic.h>
 #include <pmem.h>
 
 int

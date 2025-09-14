@@ -4,6 +4,7 @@
 #include <driver.h>
 #include <interrupt.h>
 #include <machine/drivers.h>
+#include <panic.h>
 #include <spinlock.h>
 #include <timer.h>
 

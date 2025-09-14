@@ -2,8 +2,8 @@
 
 #include <arch/page.h>
 #include <arch/types.h>
-#include <console.h>
 #include <math.h>
+#include <panic.h>
 
 struct frame {
 	struct frame *n;

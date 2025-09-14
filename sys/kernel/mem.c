@@ -3,6 +3,7 @@
 #include <arch/types.h>
 #include <console.h>
 #include <machine/mem.h>
+#include <panic.h>
 #include <pmem.h>
 #include <vmem.h>
 

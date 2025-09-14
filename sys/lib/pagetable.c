@@ -2,7 +2,7 @@
 
 #include <arch/page.h>
 #include <arch/types.h>
-#include <console.h>
+#include <panic.h>
 #include <pmem.h>
 
 /* Returns the first valid entry in page tree pt which points to address ptr,
