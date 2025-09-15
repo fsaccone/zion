@@ -7,10 +7,7 @@ DIRS = sbin sys
 all: root
 
 clean:
-	for d in $(DIRS); do \
-		(cd $$d && $(MAKE) clean); \
-		rm -rf $(ROOTPART)/$$d; \
-	done
+	for d in $(DIRS); do (cd $$d && $(MAKE) clean); done
 
 root: $(DIRS)
 	mkdir -p $(ROOTPART)/sbin
