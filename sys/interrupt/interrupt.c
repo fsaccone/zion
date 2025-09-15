@@ -4,9 +4,7 @@
 #include <panic.h>
 #include <timer.h>
 
-#include "kernel.h"
 #include "syscall.h"
-#include "user.h"
 
 void
 interrupt(void)
