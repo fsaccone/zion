@@ -12,8 +12,8 @@ struct driver {
 	   this device. May be NULL. */
 	void (*interrupt)(void);
 
-	/* Writes n bytes of content c to the driver. May be NULL. */
-	void (*write)(u8 *c, u32 n);
+	/* Writes byte c to the driver. May be NULL. */
+	void (*write)(u8 c);
 };
 
 /* A list of drivers follows: each is a driver_NAME function with no parameters

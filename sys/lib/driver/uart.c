@@ -32,7 +32,7 @@
 #define THR ((u8 *)UART0 + 0x00)
 
 static void init(void);
-static void write(u8 *c, u32 n);
+static void write(u8 c);
 
 struct driver
 driver_uart(void)
@@ -72,12 +72,9 @@ init(void)
 }
 
 void
-write(u8 *c, u32 n)
+write(u8 c)
 {
-	u16 i;
-
-	for (i = 0; i < n; i++)
-		*THR = c[i];
+	*THR = c;
 }
 
 #endif
