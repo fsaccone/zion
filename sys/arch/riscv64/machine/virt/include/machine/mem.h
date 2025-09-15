@@ -14,7 +14,8 @@
 	/* start                       end     */ \
 	{  KERNEL_START + KERNEL_SIZE, RAM_SIZE },
 
-#define PLIC 0xc000000
+#define PLIC          0xc000000
+#define PLIC_PRIORITY 1
 
 /* Device base addresses. */
 #define UART0   0x10000000
