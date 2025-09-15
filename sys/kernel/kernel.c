@@ -2,6 +2,7 @@
 #include <console.h>
 #include <core.h>
 #include <driver.h>
+#include <interrupt.h>
 #include <machine/cpu.h>
 #include <machine/drivers.h>
 #include <panic.h>
@@ -52,6 +53,7 @@ kernel(void)
 	physicalmem();
 	initdrivers();
 	freeallmem();
+	initinterrupts();
 
 	initdone = 1;
 	coremain(0);
