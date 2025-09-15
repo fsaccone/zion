@@ -9,14 +9,14 @@ OBJS_START = arch/$(ARCH)/machine/$(MACHINE)/start.o
 OBJS_INTERRUPT = interrupt/interrupt.o \
                  interrupt/syscall.o \
                  interrupt/syscall/reboot.o \
-                 interrupt/syscall/shutdown.o
+                 interrupt/syscall/shutdown.o \
 
 # Object files from kernel/ with the addition of arch/ARCH/astart.o.
 OBJS_KERNEL = arch/$(ARCH)/astart.o \
               kernel/core.o \
               kernel/drivers.o \
               kernel/kernel.o \
-              kernel/mem.o
+              kernel/mem.o \
 
 # Object files from arch/ARCH/lib/ and lib/.
 OBJS_LIB = arch/$(ARCH)/lib/atomic.o \
@@ -32,7 +32,7 @@ OBJS_LIB = arch/$(ARCH)/lib/atomic.o \
            lib/panic.o \
            lib/pmem.o \
            lib/process.o \
-           lib/spinlock.o
+           lib/spinlock.o \
 
 # All object files.
 OBJS = $(OBJS_START) $(OBJS_INTERRUPT) $(OBJS_KERNEL) $(OBJS_LIB)
