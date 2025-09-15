@@ -33,9 +33,6 @@ syscall(u16 type, ureg args[SYSCALL_ARGS])
 
 		break;
 	default:
-		setpanicmsg("Non-existent system call.");
-		tracepanicmsg("syscall");
-		return -1;
 	};
 
 	return 0;
