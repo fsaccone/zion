@@ -51,11 +51,7 @@ kernel(void)
 	logcpu();
 	physicalmem();
 	initdrivers();
-
-	if (freeallmem()) {
-		tracepanicmsg("kernel");
-		panic();
-	}
+	freeallmem();
 
 	initdone = 1;
 	coremain(0);

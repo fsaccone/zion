@@ -14,7 +14,7 @@
 /* (10M) */
 #define LOG_SIZE (10 * 1024 * 1024)
 
-u8
+void
 freeallmem(void)
 {
 	u8 i;
@@ -57,8 +57,6 @@ freeallmem(void)
 		(void)consolewriteb16(end);
 		(void)consolewrite("]\n");
 	}
-
-	return 0;
 }
 
 void
