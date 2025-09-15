@@ -52,8 +52,5 @@ interrupt(void)
 
 		break;
 	default:
-		setpanicmsg("Unknown interrupt.");
-		tracepanicmsg("interrupt");
-		panic();
 	}
 }
