@@ -5,10 +5,6 @@ OUT = sys.bin
 
 CONFIGH = include/config.h
 
-NEWCFLAGS = $(CFLAGS) -Iarch/$(ARCH)/machine/$(MACHINE)/include \
-                      -Iarch/$(ARCH)/include \
-                      -Iinclude
-
 .PHONY: all clean test
 
 all: $(OUT)
@@ -30,7 +26,12 @@ $(CONFIGH):
 
 $(OBJS):
 	if [ -f $(@:.o=.c) ]; then \
-		$(CC) $(NEWCFLAGS) -c -o $(@:.o=.c.o) $(@:.o=.c); \
+		$(CC) $(CFLAGS) -Iarch/$(ARCH)/machine/$(MACHINE)/include \
+		                -Iarch/$(ARCH)/include \
+		                -Iinclude \
+		                -c \
+		                -o $(@:.o=.c.o) \
+		                $(@:.o=.c); \
 	fi
 
 	if [ -f $(@:.o=.s) ]; then \
