@@ -16,12 +16,10 @@ initinterrupts(void)
 
 	u16 c = core();
 
-	*(u32 *)PLIC_MEM_PRIORITY(UART0_IRQ)   = UART0_PRIORITY;
-	*(u32 *)PLIC_MEM_PRIORITY(VIRTIO0_IRQ) = VIRTIO0_PRIORITY;
+	*(u32 *)PLIC_MEM_PRIORITY(UART0_IRQ) = UART0_PRIORITY;
 
 	/* Enable devices. */
-	*(u32 *)PLIC_MEM_ENABLE(c) = (1 << UART0_IRQ)
-	                           | (1 << VIRTIO0_IRQ);
+	*(u32 *)PLIC_MEM_ENABLE(c) = (1 << UART0_IRQ);
 
 	*(u32 *)PLIC_MEM_THRESHOLD(c) = 0;
 }
