@@ -8,7 +8,7 @@
 
 static struct lock l = { 0 };
 
-u8
+void
 syscall(u16 type, ureg args[SYSCALL_ARGS])
 {
 	(void)args;
@@ -34,6 +34,4 @@ syscall(u16 type, ureg args[SYSCALL_ARGS])
 		break;
 	default:
 	};
-
-	return 0;
 }
