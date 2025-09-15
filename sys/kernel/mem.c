@@ -36,7 +36,7 @@ freeallmem(void)
 			}
 
 			/* Log how many MiB have been loaded every LOG_SIZE
-			   MiB. Logging more frequently makes the overall
+			   bytes. Logging more frequently makes the overall
 			   freeing a lot slower because it has to go through
 			   the serial console a lot of times. */
 			if (!((done += PAGE_SIZE) % LOG_SIZE)) {
