@@ -173,8 +173,8 @@ multiply:
 	ret
 
 trapvec:
-	# ((7 t-regs + 12 s-regs + 8 a-regs + 1 ra + 1 gp) * 8 bytes)
-	addi sp,  sp, -((7 + 12 + 8 + 1 + 1) * 8)
+	# ((7 t-regs + 12 s-regs + 7 a-regs + 1 ra + 1 gp) * 8 bytes)
+	addi sp,  sp, -((7 + 12 + 7 + 1 + 1) * 8)
 	sd   t0,  (0 * 8 )(sp)
 	sd   t1,  (1 * 8 )(sp)
 	sd   t2,  (2 * 8 )(sp)
@@ -194,21 +194,20 @@ trapvec:
 	sd   s9,  (16 * 8)(sp)
 	sd   s10, (17 * 8)(sp)
 	sd   s11, (18 * 8)(sp)
-	sd   a0,  (19 * 8)(sp)
-	sd   a1,  (20 * 8)(sp)
-	sd   a2,  (21 * 8)(sp)
-	sd   a3,  (22 * 8)(sp)
-	sd   a4,  (23 * 8)(sp)
-	sd   a5,  (24 * 8)(sp)
-	sd   a6,  (25 * 8)(sp)
-	sd   a7,  (26 * 8)(sp)
-	sd   ra,  (27 * 8)(sp)
-	sd   gp,  (28 * 8)(sp)
+	sd   a1,  (19 * 8)(sp)
+	sd   a2,  (20 * 8)(sp)
+	sd   a3,  (21 * 8)(sp)
+	sd   a4,  (22 * 8)(sp)
+	sd   a5,  (23 * 8)(sp)
+	sd   a6,  (24 * 8)(sp)
+	sd   a7,  (25 * 8)(sp)
+	sd   ra,  (26 * 8)(sp)
+	sd   gp,  (27 * 8)(sp)
 
-	# If at the end of this function sscratch is not negative, we overwrite
-	# the original a0 register with the value in sscratch.
-	li   t0,       -1
-	csrw sscratch, t0
+	# The a0 register is held by sscratch instead of the stack so that we
+	# can choose to change its value when switching back to the caller
+	# context.
+	csrw sscratch, a0
 
 	call interrupt
 
@@ -232,21 +231,19 @@ trapvec:
 	ld   s9,  (16 * 8)(sp)
 	ld   s10, (17 * 8)(sp)
 	ld   s11, (18 * 8)(sp)
-	# If (sscratch >= 0), use it as the new value of a0 (i.e. skip the
-	# restoration of a0).
+	ld   a1,  (19 * 8)(sp)
+	ld   a2,  (20 * 8)(sp)
+	ld   a3,  (21 * 8)(sp)
+	ld   a4,  (22 * 8)(sp)
+	ld   a5,  (23 * 8)(sp)
+	ld   a6,  (24 * 8)(sp)
+	ld   a7,  (25 * 8)(sp)
+	ld   ra,  (26 * 8)(sp)
+	ld   gp,  (27 * 8)(sp)
+	addi sp,  sp, ((7 + 12 + 7 + 1 + 1) * 8)
+
+	# The sscratch register may hold the original value of a0 or a new one.
+	# See above.
 	csrr a0, sscratch
-	bgez a0, 1f
-	ld   a0,  (19 * 8)(sp)
-1:
-	ld   a1,  (20 * 8)(sp)
-	ld   a2,  (21 * 8)(sp)
-	ld   a3,  (22 * 8)(sp)
-	ld   a4,  (23 * 8)(sp)
-	ld   a5,  (24 * 8)(sp)
-	ld   a6,  (25 * 8)(sp)
-	ld   a7,  (26 * 8)(sp)
-	ld   ra,  (27 * 8)(sp)
-	ld   gp,  (28 * 8)(sp)
-	addi sp,  sp, ((7 + 12 + 8 + 1 + 1) * 8)
 
 	sret

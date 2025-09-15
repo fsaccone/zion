@@ -166,14 +166,8 @@ interrupttype:
 	ret
 
 setinterruptreturn:
-	# The sscratch is set to -1 at the start of the trap vector and is
-	# checked at its end. Since the argument of this function is u8, we
-	# can use the remaining bits to make the vector know when it needs to
-	# overwrite the original a0: if sscratch is found to be negative (that
-	# is when this function is not called), a0 retains its value; otherwise
-	# we use the value of sscratch as the new a0 of the caller context.
-
-	# The argument is already unsigned, so we just copy it.
+	# The sscratch is used to hold the new value of a0 and is set to the
+	# original a0 at the start of the trap vector.
 	csrw sscratch, a0
 
 	ret
