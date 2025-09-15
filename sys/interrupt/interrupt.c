@@ -33,6 +33,7 @@ interrupt(void)
 
 		break;
 	case INTERRUPT_TYPE_SOFTWARE:
+		/* Unimplemented. */
 		setpanicmsg("Software interrupt.");
 		tracepanicmsg("interrupt");
 		panic();
