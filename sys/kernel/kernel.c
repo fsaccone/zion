@@ -40,11 +40,12 @@ kernel(void)
 {
 	u16 c = core();
 
-	/* For every core except 0 (main core). */
 	if (c) {
 		while (!initdone);
 		coremain(c);
 	}
+
+	/* Only core 0 reaches this. */
 
 	initserialdriver();
 	logcpu();
