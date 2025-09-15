@@ -5,12 +5,17 @@ ROOTDIRS = sbin
 
 DIRS = $(ROOTDIRS) sys
 
-.PHONY: all clean root $(DIRS)
+.PHONY: all clean help root $(DIRS)
 
 all: root
 
 clean:
 	for d in $(DIRS); do (cd $$d && $(MAKE) clean); done
+
+help:
+	@printf "Usage:\n"
+	@printf "\t$(MAKE) clean - Clean the whole codebase.\n"
+	@printf "\t$(MAKE) root  - Install the root file system to ROOTPART.\n"
 
 root: $(ROOTDIRS)
 	mkdir -p $(ROOTPART)/sbin
