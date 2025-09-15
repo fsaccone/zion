@@ -1,3 +1,6 @@
+# Installation.
+ROOTPART = ./root
+
 # Target.
 ARCH    = riscv64
 MACHINE = virt
