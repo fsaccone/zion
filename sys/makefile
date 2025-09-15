@@ -28,8 +28,12 @@ LIB = lib/console.o \
       lib/spinlock.o \
       $(LIBDRIVER)
 
+INTERRUPTSYSCALLS = interrupt/syscall/shutdown.o \
+                    interrupt/syscall/reboot.o
+
 INTERRUPT = interrupt/interrupt.o \
-            interrupt/syscall.o
+            interrupt/syscall.o \
+            $(INTERRUPTSYSCALLS)
 
 KERNEL = kernel/core.o \
          kernel/drivers.o \
