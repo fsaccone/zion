@@ -38,9 +38,9 @@ struct driver
 driver_uart(void)
 {
 	struct driver d = {
-		.init       = init,
-		.interrupt  = NULL,
-		.write      = write,
+		.init            = init,
+		.interrupt       = NULL,
+		.write.character = write,
 	};
 
 	return d;

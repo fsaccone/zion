@@ -61,7 +61,7 @@ consolewrite(char *m)
 	lock(&l);
 
 	for (i = 0; *m && i < CONSOLE_WRITE_MAX; m++, i++)
-		driver_uart().write(*m);
+		driver_uart().write.character(*m);
 
 	unlock(&l);
 
