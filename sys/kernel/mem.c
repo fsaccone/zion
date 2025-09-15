@@ -35,15 +35,15 @@ freeallmem(void)
 				panic();
 			}
 
-			/* Log how many MiB have been loaded every LOG_SIZE
+			/* Log how many KiB have been loaded every LOG_SIZE
 			   bytes. Logging more frequently makes the overall
 			   freeing a lot slower because it has to go through
 			   the serial console a lot of times. */
 			if (!((done += PAGE_SIZE) % LOG_SIZE)) {
 				(void)consolewrite("\r");
 				(void)consolewrite(MEM_LOG_PRE);
-				(void)consolewriteb10u(done / (1024 * 1024));
-				(void)consolewrite("M");
+				(void)consolewriteb10u(done / 1024);
+				(void)consolewrite("K");
 			}
 		}
 
@@ -51,13 +51,13 @@ freeallmem(void)
 		   preciseness and print start and end addresses. */
 		(void)consolewrite("\r");
 		(void)consolewrite(MEM_LOG_PRE);
-		(void)consolewriteb10u(done / (1024 * 1024));
+		(void)consolewriteb10u(done / 1024);
 		(void)consolewrite(".");
-		decpart = ((done % (1024 * 1024)) * 100) / (1024 * 1024);
+		decpart = ((done % 1024) * 100) / 1024;
 		if (decpart < 10)
 			(void)consolewrite("0");
 		(void)consolewriteb10u(decpart);
-		(void)consolewrite("M  [");
+		(void)consolewrite("K  [");
 		(void)consolewriteb16(start);
 		(void)consolewrite(" - ");
 		(void)consolewriteb16(end);
