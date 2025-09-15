@@ -11,8 +11,7 @@
 #define SYSCALL_SHUTDOWN 0x0000
 #define SYSCALL_REBOOT   0x0001
 
-/* Handles system call of type type having arguments args. Returns 0 normally
-   and -1 in case of error. */
-u8 syscall(u16 type, ureg args[SYSCALL_ARGS]);
+/* Handles system call of type type having arguments args. */
+void syscall(u16 type, ureg args[SYSCALL_ARGS]);
 
 #endif

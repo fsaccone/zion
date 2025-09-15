@@ -15,10 +15,7 @@ interrupt(void)
 
 	switch (type) {
 	case INTERRUPT_TYPE_SYSCALL:
-		if (syscall((u16)args[0], &args[1])) {
-			tracepanicmsg("interrupt");
-			panic();
-		}
+		syscall((u16)args[0], &args[1]);
 
 		break;
 	case INTERRUPT_TYPE_EXCEPTION:
