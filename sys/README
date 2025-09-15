@@ -27,6 +27,3 @@ The arch/ARCH/include/arch/ and arch/ARCH/machine/MACHINE/include/machine/
 header files define architecture-specific and machine-specific APIs in a
 non-implementation manner. The APIs are consistent across different
 architectures and machines.
-
-The config.def.h file is used to configure the kernel and is copied to
-include/config.h at build time.
