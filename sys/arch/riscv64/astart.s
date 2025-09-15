@@ -209,6 +209,26 @@ trapvec:
 	# context.
 	csrw sscratch, a0
 
+	# If type is 8, 9 or 11 then the trap is an ecall exception: sepc needs
+	# to increment by 4, the size of the ecall instruction, before
+	# returning to avoid looping back to the same ecall instruction
+	# address.
+	csrr t0, scause
+	li   t1, 8
+	beq  t0, t1, 1f
+	li   t1, 9
+	beq  t0, t1, 1f
+	li   t1, 11
+	beq  t0, t1, 1f
+	j    2f
+
+1:
+	# Only reached if cause is ecall.
+	csrr t0,   sepc
+	addi t0,   t0, 4
+	csrw sepc, t0
+
+2:
 	call interrupt
 
 	# See top of function.
