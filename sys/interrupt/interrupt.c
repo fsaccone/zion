@@ -49,6 +49,7 @@ interrupt(void)
 		break;
 	case INTERRUPT_TYPE_TIMER:
 		setupnexttimer();
+
 		break;
 	default:
 		setpanicmsg("Unknown interrupt.");
