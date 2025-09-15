@@ -6,5 +6,5 @@ Operating system.
 Structure
 ---------
 
-* /sbin/ - System binaries
-* /sys/  - Kernel
+* /sbin/ - System binaries.
+* /sys/  - Kernel.
