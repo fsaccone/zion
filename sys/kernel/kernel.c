@@ -51,8 +51,8 @@ kernel(void)
 	initserialdriver();
 	logcpu();
 	physicalmem();
-	initdrivers();
 	freeallmem();
+	initdrivers();
 	initinterrupts();
 
 	initdone = 1;
