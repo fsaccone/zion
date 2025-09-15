@@ -18,6 +18,9 @@ void disableinterrupts(void);
 /* Enables interrupts. */
 void enableinterrupts(void);
 
+/* Initializes interrupts. */
+void initinterrupts(void);
+
 /* Returns an array of size INTERRUPT_ARGS containing the values of the first
    INTERRUPT_ARGS architecture-specific argument registers of the caller
    context. This function has to be called first inside the interrupt handler,
