@@ -5,6 +5,7 @@
 #include <panic.h>
 #include <pmem.h>
 #include <spinlock.h>
+#include <syscall.h>
 
 static struct lock l = { 0 };
 
