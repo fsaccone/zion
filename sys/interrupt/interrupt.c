@@ -1,4 +1,3 @@
-#include <console.h>
 #include <driver.h>
 #include <interrupt.h>
 #include <panic.h>
@@ -43,12 +42,17 @@ interrupt(void)
 
 		break;
 	case INTERRUPT_TYPE_SOFTWARE:
-		(void)consolewrite("interrupt: Software.\n");
+		setpanicmsg("Software interrupt.");
+		tracepanicmsg("interrupt");
+		panic();
+
 		break;
 	case INTERRUPT_TYPE_TIMER:
 		setupnexttimer();
 		break;
 	default:
-		(void)consolewrite("interrupt: Unknown.\n");
+		setpanicmsg("Unknown interrupt.");
+		tracepanicmsg("interrupt");
+		panic();
 	}
 }
