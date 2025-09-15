@@ -12,18 +12,7 @@
 #include "logs.h"
 #include "mem.h"
 
-/* Logs CPU initialization message. */
-static void logcpu(void);
-
 static u8 initdone = 0;
-
-void
-logcpu(void)
-{
-	(void)consolewrite(CPU_LOG_PRE);
-	(void)consolewriteb10u(NCPU);
-	(void)consolewrite(" core(s)\n");
-}
 
 void
 kernel(void)
@@ -38,7 +27,11 @@ kernel(void)
 	/* Only core 0 reaches this. */
 
 	initconsole();
-	logcpu();
+
+	(void)consolewrite(CPU_LOG_PRE);
+	(void)consolewriteb10u(NCPU);
+	(void)consolewrite(" core(s)\n");
+
 	physicalmem();
 	freeallmem();
 	initdrivers();
