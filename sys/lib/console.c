@@ -122,3 +122,11 @@ consolewriteb16(u64 n)
 
 	return consolewrite(str);
 }
+
+void
+initconsole(void)
+{
+#ifdef DRIVER_UART
+	driver_uart().init();
+#endif
+}
