@@ -3,8 +3,6 @@ include objs.mk
 
 OUT = sys.bin
 
-DISK = disk.img
-
 CONFIGH = include/config.h
 
 NEWCFLAGS = $(CFLAGS) -Iarch/$(ARCH)/machine/$(MACHINE)/include \
@@ -16,21 +14,16 @@ NEWCFLAGS = $(CFLAGS) -Iarch/$(ARCH)/machine/$(MACHINE)/include \
 all: $(OUT)
 
 clean:
-	rm -f $(OUT) $(CONFIGH) $(OBJS) $(OBJS:.o=.c.o) $(OBJS:.o=.s.o) $(DISK)
+	rm -f $(OUT) $(CONFIGH) $(OBJS) $(OBJS:.o=.c.o) $(OBJS:.o=.s.o)
 
-test: $(OUT) $(DISK)
+test: $(OUT)
 	$(QEMU) $(QEMUFLAGS) -bios none \
-	                     -kernel $(OUT) \
-	                     -drive id=disk,format=raw,file=$(DISK),if=none \
-	                     -device virtio-blk-device,drive=disk,bus=virtio-mmio-bus.0
+	                     -kernel $(OUT)
 
 $(OUT): $(CONFIGH) $(OBJS)
 	$(LD) $(LDFLAGS) -e start -o $@ $^
 	$(STRIP) $@
 	$(OBJCOPY) -O binary $@
-
-$(DISK):
-	dd status=none if=/dev/zero of=$@ bs=1M count=100
 
 $(CONFIGH):
 	cp config.def.h include/config.h
