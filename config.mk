@@ -13,10 +13,9 @@ AS      = $(CROSS_COMPILE)as
 CC      = $(CROSS_COMPILE)cc
 LD      = $(CROSS_COMPILE)ld
 OBJCOPY = $(CROSS_COMPILE)objcopy
-STRIP   = $(CROSS_COMPILE)strip
 
 # Toolchain flags
 
 ASFLAGS = $(EXTRAASFLAGS)
 CFLAGS  = $(EXTRACFLAGS) -std=c90 -ffreestanding -Wall -Wextra
-LDFLAGS = $(EXTRALDFLAGS)
+LDFLAGS = $(EXTRALDFLAGS) -s

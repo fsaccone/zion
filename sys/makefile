@@ -15,7 +15,6 @@ test: $(OUT)
 
 $(OUT): $(OBJS)
 	$(LD) $(LDFLAGS) -e start -o $@ $^
-	$(STRIP) $@
 	$(OBJCOPY) -O binary $@
 
 $(OBJS):
