@@ -25,7 +25,6 @@ freeallmem(void)
 		     end   = freemem[i][1],
 		     done  = 0;
 		void *f;
-		u8 decpart;
 
 		for (f = (void *)CEIL(start, PAGE_SIZE);
 		     (uptr)f + PAGE_SIZE <= end;
@@ -52,11 +51,6 @@ freeallmem(void)
 		(void)consolewrite("\r");
 		(void)consolewrite(MEM_LOG_PRE);
 		(void)consolewriteb10u(done / 1024);
-		(void)consolewrite(".");
-		decpart = ((done % 1024) * 100) / 1024;
-		if (decpart < 10)
-			(void)consolewrite("0");
-		(void)consolewriteb10u(decpart);
 		(void)consolewrite("K  [");
 		(void)consolewriteb16(start);
 		(void)consolewrite(" - ");
