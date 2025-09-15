@@ -1,5 +1,6 @@
 #include "user.h"
 
+#include <arch/types.h>
 #include <interrupt.h>
 #include <panic.h>
 

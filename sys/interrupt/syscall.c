@@ -1,5 +1,6 @@
 #include "syscall.h"
 
+#include <arch/types.h>
 #include <machine/sys.h>
 #include <panic.h>
 #include <pmem.h>
