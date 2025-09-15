@@ -25,4 +25,7 @@ u16 consolewriteb10u(u64 n);
    amount of printed characters. */
 u16 consolewriteb16(u64 n);
 
+/* Initializes serial console. */
+void initconsole(void);
+
 #endif
