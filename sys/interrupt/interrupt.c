@@ -28,13 +28,7 @@ interrupt(void)
 
 		break;
 	case INTERRUPT_TYPE_HARDWARE:
-		if (interruptdriver(&drv)) {
-			setpanicmsg("Unknown hardware interrupt.");
-			tracepanicmsg("interrupt");
-			panic();
-		}
-
-		if (drv.interrupt)
+		if (!interruptdriver(&drv) && drv.interrupt)
 			drv.interrupt();
 
 		break;
