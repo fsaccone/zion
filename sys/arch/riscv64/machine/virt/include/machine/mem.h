@@ -23,7 +23,7 @@
 
 /* Device IRQs. */
 #define UART0_IRQ   10
-#define VIRTIO0_IEQ 1
+#define VIRTIO0_IRQ 1
 
 /* Device priorities. */
 #define UART0_PRIORITY   PLIC_PRIORITY
