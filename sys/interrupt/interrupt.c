@@ -23,6 +23,9 @@ interrupt(void)
 
 		break;
 	case INTERRUPT_TYPE_EXCEPTION:
+		if (isuser)
+			break;
+
 		setpanicmsg("Exception.");
 		tracepanicmsg("interrupt");
 		panic();
