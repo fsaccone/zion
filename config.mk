@@ -1,5 +1,5 @@
 # Installation.
-ROOTPART = ./root
+ROOTPART = root
 
 # Target.
 ARCH    = riscv64
