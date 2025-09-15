@@ -14,6 +14,9 @@
 /* Initializes serial device driver. */
 static void initserialdriver(void);
 
+/* Logs CPU initialization message. */
+static void logcpu(void);
+
 static u8 initdone = 0;
 
 void
@@ -22,6 +25,14 @@ initserialdriver(void)
 #ifdef DRIVER_UART
 	driver_uart().init();
 #endif
+}
+
+void
+logcpu(void)
+{
+	(void)consolewrite(CPU_LOG_PRE);
+	(void)consolewriteintb10u(NCPU);
+	(void)consolewrite(" core(s)\n");
 }
 
 void
@@ -37,9 +48,7 @@ kernel(void)
 
 	initserialdriver();
 
-	(void)consolewrite(CPU_LOG_PRE);
-	(void)consolewriteintb10u(NCPU);
-	(void)consolewrite(" core(s)\n");
+	logcpu();
 
 	physicalmem();
 
