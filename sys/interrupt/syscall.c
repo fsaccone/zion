@@ -1,13 +1,9 @@
 #include "syscall.h"
 
 #include <arch/types.h>
-#include <machine/sys.h>
-#include <panic.h>
-#include <pmem.h>
-#include <spinlock.h>
 #include <syscall.h>
 
-static struct lock l = { 0 };
+#include "syscall/calls.h"
 
 void
 syscall(u16 type, ureg args[SYSCALL_ARGS])
@@ -16,22 +12,10 @@ syscall(u16 type, ureg args[SYSCALL_ARGS])
 
 	switch (type) {
 	case SYSCALL_SHUTDOWN:
-		/* This lock will never be released. */
-		lock(&l);
-
-		pcleanup();
-
-		DO_SYS_SHUTDOWN;
-
+		shutdown();
 		break;
 	case SYSCALL_REBOOT:
-		/* This lock will never be released. */
-		lock(&l);
-
-		pcleanup();
-
-		DO_SYS_REBOOT;
-
+		reboot();
 		break;
 	default:
 	};
