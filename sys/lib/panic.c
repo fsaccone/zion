@@ -14,7 +14,7 @@ panic(void)
 {
 	/* This lock will never be released. It also already disables interrupt
 	   and that means it is not needed to do it manually. */
-	acquirelock(&l);
+	lock(&l);
 
 	(void)consolewrite("[PANIC] ");
 

@@ -9,18 +9,18 @@ struct lock {
 	   values of this size. */
 	ureg locked;
 
-	/* The difference of acquirelock and releaselock calls on this lock. */
+	/* The difference of lock and unlock calls on this lock. */
 	u8 depth;
 
-	/* The state of interrupts at the first acquirelock call on this lock.
-	   If 0, interrupts were disabled; otherwise, they were enabled. */
+	/* The state of interrupts at the first lock call on this lock. If 0,
+	   interrupts were disabled; otherwise, they were enabled. */
 	u8 interruptsenabled;
 };
 
 /* Acquires lock l after waiting for it to be released. */
-void acquirelock(struct lock *l);
+void lock(struct lock *l);
 
 /* Releases acquired lock l. */
-void releaselock(struct lock *l);
+void unlock(struct lock *l);
 
 #endif
