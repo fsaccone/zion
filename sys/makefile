@@ -29,9 +29,7 @@ LIB = lib/console.o \
       $(LIBDRIVER)
 
 INTERRUPT = interrupt/interrupt.o \
-            interrupt/kernel.o \
-            interrupt/syscall.o \
-            interrupt/user.o
+            interrupt/syscall.o
 
 KERNEL = kernel/core.o \
          kernel/drivers.o \
