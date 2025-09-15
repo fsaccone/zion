@@ -3,9 +3,8 @@
 
 #include <arch/types.h>
 
-/* Frees all machine memory regions mapped as usable. Returns 0 normally and -1
-   in case of error. */
-u8 freeallmem(void);
+/* Frees all machine memory regions mapped as usable. */
+void freeallmem(void);
 
 /* Disables virtual memory to use physical instead. */
 void physicalmem(void);
