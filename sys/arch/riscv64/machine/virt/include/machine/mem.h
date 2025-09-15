@@ -14,19 +14,15 @@
 	/* start                       end     */ \
 	{  KERNEL_START + KERNEL_SIZE, RAM_SIZE },
 
-#define PLIC          0xc000000
-#define PLIC_PRIORITY 1
+#define PLIC 0xc000000
 
 /* Device base addresses. */
-#define UART0   0x10000000
-#define VIRTIO0 0x10001000
+#define UART0 0x10000000
 
 /* Device IRQs. */
-#define UART0_IRQ   10
-#define VIRTIO0_IRQ 1
+#define UART0_IRQ 10
 
 /* Device priorities. */
-#define UART0_PRIORITY   PLIC_PRIORITY
-#define VIRTIO0_PRIORITY PLIC_PRIORITY
+#define UART0_PRIORITY 1
 
 #endif
