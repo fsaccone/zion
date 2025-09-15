@@ -1,7 +1,6 @@
 #include <console.h>
 
 #include <arch/types.h>
-#include <config.h>
 #include <driver.h>
 #include <machine/drivers.h>
 #include <spinlock.h>
@@ -56,8 +55,7 @@ inttostr(char *str, u64 n, u8 base, u8 sign)
 u16
 consolewrite(char *m)
 {
-#ifdef CONFIG_SERIAL_CONSOLE
-# ifdef DRIVER_UART
+#ifdef DRIVER_UART
 	u16 i;
 
 	lock(&l);
@@ -68,11 +66,6 @@ consolewrite(char *m)
 	unlock(&l);
 
 	return i;
-# else
-	(void)m;
-
-	return 0;
-# endif
 #else
 	(void)m;
 

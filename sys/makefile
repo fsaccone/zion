@@ -3,26 +3,21 @@ include objs.mk
 
 OUT = sys.bin
 
-CONFIGH = include/config.h
-
 .PHONY: all clean test
 
 all: $(OUT)
 
 clean:
-	rm -f $(OUT) $(CONFIGH) $(OBJS) $(OBJS:.o=.c.o) $(OBJS:.o=.s.o)
+	rm -f $(OUT) $(OBJS) $(OBJS:.o=.c.o) $(OBJS:.o=.s.o)
 
 test: $(OUT)
 	$(QEMU) $(QEMUFLAGS) -bios none \
 	                     -kernel $(OUT)
 
-$(OUT): $(CONFIGH) $(OBJS)
+$(OUT): $(OBJS)
 	$(LD) $(LDFLAGS) -e start -o $@ $^
 	$(STRIP) $@
 	$(OBJCOPY) -O binary $@
-
-$(CONFIGH):
-	cp config.def.h include/config.h
 
 $(OBJS):
 	if [ -f $(@:.o=.c) ]; then \
