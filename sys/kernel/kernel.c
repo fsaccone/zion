@@ -11,7 +11,18 @@
 #include "logs.h"
 #include "mem.h"
 
+/* Initializes serial device driver. */
+static void initserialdriver(void);
+
 static u8 initdone = 0;
+
+void
+initserialdriver(void)
+{
+#ifdef DRIVER_UART
+	driver_uart().init();
+#endif
+}
 
 void
 kernel(void)
@@ -24,9 +35,7 @@ kernel(void)
 		coremain(c);
 	}
 
-#ifdef DRIVER_UART
-	driver_uart().init();
-#endif
+	initserialdriver();
 
 	(void)consolewrite(CPU_LOG_PRE);
 	(void)consolewriteintb10u(NCPU);
