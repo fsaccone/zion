@@ -8,8 +8,7 @@ DIRS = sbin sys
 all: $(DIRS)
 
 clean:
-	for d in sbin/*/; do (cd $$d && $(MAKE) clean); done
-	(cd sys && $(MAKE) clean)
+	for d in $(DIRS); do (cd $$d && $(MAKE) clean); done
 
 $(DIRS):
 	(cd $@ && $(MAKE))
