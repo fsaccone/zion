@@ -12,21 +12,10 @@
 #include "logs.h"
 #include "mem.h"
 
-/* Initializes serial device driver. */
-static void initserialdriver(void);
-
 /* Logs CPU initialization message. */
 static void logcpu(void);
 
 static u8 initdone = 0;
-
-void
-initserialdriver(void)
-{
-#ifdef DRIVER_UART
-	driver_uart().init();
-#endif
-}
 
 void
 logcpu(void)
@@ -48,7 +37,7 @@ kernel(void)
 
 	/* Only core 0 reaches this. */
 
-	initserialdriver();
+	initconsole();
 	logcpu();
 	physicalmem();
 	freeallmem();
