@@ -7,7 +7,7 @@ DIRS = $(ROOTDIRS) sys
 
 .PHONY: all clean help root $(DIRS)
 
-all: root
+all: help
 
 clean:
 	for d in $(DIRS); do (cd $$d && $(MAKE) clean); done
