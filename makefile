@@ -9,6 +9,7 @@ all: sys
 
 clean:
 	rm -f $(SYS)
+	for d in sbin/*/; do (cd $$d && $(MAKE) clean); done
 	(cd sys && $(MAKE) clean)
 
 sys: $(SYS)
