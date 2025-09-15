@@ -31,7 +31,7 @@ void
 logcpu(void)
 {
 	(void)consolewrite(CPU_LOG_PRE);
-	(void)consolewriteintb10u(NCPU);
+	(void)consolewriteb10u(NCPU);
 	(void)consolewrite(" core(s)\n");
 }
 

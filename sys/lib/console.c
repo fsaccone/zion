@@ -81,7 +81,7 @@ consolewrite(char *m)
 }
 
 u16
-consolewriteintb2(u64 n)
+consolewriteb2(u64 n)
 {
 	/* (0b + 64 digits + \0  = 67) */
 	char str[67];
@@ -95,7 +95,7 @@ consolewriteintb2(u64 n)
 }
 
 u16
-consolewriteintb10s(s64 n)
+consolewriteb10s(s64 n)
 {
 	/* (20 digits + \0  = 21) */
 	char str[21];
@@ -106,7 +106,7 @@ consolewriteintb10s(s64 n)
 }
 
 u16
-consolewriteintb10u(u64 n)
+consolewriteb10u(u64 n)
 {
 	/* (20 digits + \0  = 21) */
 	char str[21];
@@ -117,7 +117,7 @@ consolewriteintb10u(u64 n)
 }
 
 u16
-consolewriteintb16(u64 n)
+consolewriteb16(u64 n)
 {
 	/* (0x + 16 digits + \0 = 19) */
 	char str[19];
