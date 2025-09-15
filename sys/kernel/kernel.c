@@ -47,11 +47,8 @@ kernel(void)
 	}
 
 	initserialdriver();
-
 	logcpu();
-
 	physicalmem();
-
 	initdrivers();
 
 	if (freeallmem()) {
@@ -60,6 +57,5 @@ kernel(void)
 	}
 
 	initdone = 1;
-
 	coremain(0);
 }
