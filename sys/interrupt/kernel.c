@@ -4,20 +4,12 @@
 #include <panic.h>
 #include <timer.h>
 
-#include "syscall.h"
-
 void
 kernelinterrupt(void)
 {
 	struct driver drv;
 
 	switch (interrupttype()) {
-	case INTERRUPT_TYPE_SYSCALL:
-		setpanicmsg("System call caused by kernel mode code.");
-		tracepanicmsg("kernelinterrupt");
-		panic();
-
-		break;
 	case INTERRUPT_TYPE_EXCEPTION:
 		setpanicmsg("Exception.");
 		tracepanicmsg("interrupt");
