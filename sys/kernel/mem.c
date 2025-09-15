@@ -42,8 +42,7 @@ freeallmem(void)
 			if (!((done += PAGE_SIZE) % LOG_SIZE)) {
 				(void)consolewrite("\r");
 				(void)consolewrite(MEM_LOG_PRE);
-				(void)consolewriteintb10u(done
-				                          / (1024 * 1024));
+				(void)consolewriteb10u(done / (1024 * 1024));
 				(void)consolewrite("M");
 			}
 		}
@@ -52,16 +51,16 @@ freeallmem(void)
 		   preciseness and print start and end addresses. */
 		(void)consolewrite("\r");
 		(void)consolewrite(MEM_LOG_PRE);
-		(void)consolewriteintb10u(done / (1024 * 1024));
+		(void)consolewriteb10u(done / (1024 * 1024));
 		(void)consolewrite(".");
 		decpart = ((done % (1024 * 1024)) * 100) / (1024 * 1024);
 		if (decpart < 10)
 			(void)consolewrite("0");
-		(void)consolewriteintb10u(decpart);
+		(void)consolewriteb10u(decpart);
 		(void)consolewrite("M  [");
-		(void)consolewriteintb16(start);
+		(void)consolewriteb16(start);
 		(void)consolewrite(" - ");
-		(void)consolewriteintb16(end);
+		(void)consolewriteb16(end);
 		(void)consolewrite("]\n");
 	}
 
