@@ -2,15 +2,17 @@ include config.mk
 
 DIRS = sbin sys
 
-.PHONY: all clean $(DIRS)
+.PHONY: all clean root $(DIRS)
 
-all: $(ROOTPART)/sbin
+all: root
 
 clean:
 	for d in $(DIRS); do \
 		(cd $$d && $(MAKE) clean); \
 		rm -rf $(ROOTPART)/$$d; \
 	done
+
+root: $(ROOTPART)/sbin
 
 $(ROOTPART)/sbin: sbin
 	mkdir -p $@
