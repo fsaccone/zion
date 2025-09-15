@@ -11,8 +11,7 @@ clean:
 	rm -f $(OUT) $(OBJS) $(OBJS:.o=.c.o) $(OBJS:.o=.s.o)
 
 test: $(OUT)
-	$(QEMU) $(QEMUFLAGS) -bios none \
-	                     -kernel $(OUT)
+	exec arch/$(ARCH)/machine/$(MACHINE)/test $(OUT)
 
 $(OUT): $(OBJS)
 	$(LD) $(LDFLAGS) -e start -o $@ $^

@@ -27,3 +27,6 @@ The arch/ARCH/include/arch/ and arch/ARCH/machine/MACHINE/include/machine/
 header files define architecture-specific and machine-specific APIs in a
 non-implementation manner. The APIs are consistent across different
 architectures and machines.
+
+The arch/ARCH/machine/MACHINE/test executable is run by the "test" make target
+with the kernel binary file passed as the first argument.
