@@ -12,11 +12,9 @@ clean:
 		rm -rf $(ROOTPART)/$$d; \
 	done
 
-root: $(ROOTPART)/sbin
-
-$(ROOTPART)/sbin: sbin
-	mkdir -p $@
-	for d in sbin/*/; do cp -f $$d/$$(basename $$d) $@; done
+root: $(DIRS)
+	mkdir -p $(ROOTPART)/sbin
+	for d in sbin/*/; do cp -f $$d$$(basename $$d) $(ROOTPART)/sbin; done
 
 $(DIRS):
 	(cd $@ && $(MAKE))
