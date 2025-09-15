@@ -18,18 +18,18 @@ u8
 freeallmem(void)
 {
 	u8 i;
-	un freemem[FREE_MEMORY_REGIONS_LEN][2] = { FREE_MEMORY_REGIONS };
+	uptr freemem[FREE_MEMORY_REGIONS_LEN][2] = { FREE_MEMORY_REGIONS };
 
 	for (i = 0; i < FREE_MEMORY_REGIONS_LEN; i++) {
-		un start = freemem[i][0],
-		   end   = freemem[i][1],
-		   done  = 0;
+		uptr start = freemem[i][0],
+		     end   = freemem[i][1],
+		     done  = 0;
 		void *f;
 		u8 decpart;
 
 		for (f = (void *)CEIL(start, PAGE_SIZE);
-		     (un)f + PAGE_SIZE <= end;
-		     f = (void *)((un)f + PAGE_SIZE)) {
+		     (uptr)f + PAGE_SIZE <= end;
+		     f = (void *)((uptr)f + PAGE_SIZE)) {
 			if (pfree(f, PAGE_SIZE)) {
 				tracepanicmsg("freeallmem");
 				panic();

@@ -7,7 +7,7 @@
 #include "syscall.h"
 
 void
-userinterrupt(un args[INTERRUPT_ARGS])
+userinterrupt(ureg args[INTERRUPT_ARGS])
 {
 	switch (interrupttype()) {
 	case INTERRUPT_TYPE_SYSCALL:

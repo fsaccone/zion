@@ -37,7 +37,7 @@ redowalk:
 	for (i = 0; i < PAGE_TABLE_ENTRIES; i++) {
 		pageentry ppn, *pte;
 
-		pte = (pageentry *)((un)curpt + i * sizeof(pageentry *));
+		pte = (pageentry *)((uptr)curpt + i * sizeof(pageentry *));
 		ppn = PAGE_ENTRY_GET_PPN(*pte);
 
 		if (ppn == (pageentry)ptr)
@@ -59,7 +59,7 @@ invalidentry(pageentry *pt[PAGE_TABLE_ENTRIES])
 	u16 i;
 
 	for (i = 0; i < PAGE_TABLE_ENTRIES; i++) {
-		pageentry *pte = (void *)((un)pt + i * sizeof(pageentry *));
+		pageentry *pte = (void *)((uptr)pt + i * sizeof(pageentry *));
 
 		if (!PAGE_ENTRY_GET_VALID(*pte))
 			return pte;
@@ -88,7 +88,7 @@ levelpagetable(pageentry *pt[PAGE_TABLE_ENTRIES], u8 l)
 		for (; lvlidx[i] < PAGE_TABLE_ENTRIES; lvlidx[i]++) {
 			pageentry *pte;
 
-			pte = (pageentry *)((un)lastpt
+			pte = (pageentry *)((uptr)lastpt
 			                    + lvlidx[i] * sizeof(pageentry *));
 
 			/* If invalid, create and walk in a new pt. */
@@ -104,7 +104,7 @@ levelpagetable(pageentry *pt[PAGE_TABLE_ENTRIES], u8 l)
 			}
 
 			if (PAGE_ENTRY_GET_WALKABLE(*pte)) {
-				un addr = PAGE_ENTRY_GET_PPN(*pte);
+				uptr addr = PAGE_ENTRY_GET_PPN(*pte);
 
 				lastpt = (pageentry **)addr;
 
@@ -152,13 +152,13 @@ parenttables(pageentry **tables[PAGE_TABLE_LEVELS + 1],
 		for (; lvlidx[i] < PAGE_TABLE_ENTRIES; lvlidx[i]++) {
 			pageentry *e;
 
-			e = (pageentry *)((un)tables[i]
+			e = (pageentry *)((uptr)tables[i]
 			                  + lvlidx[i] * sizeof(pageentry *));
 
 			if (!PAGE_ENTRY_GET_VALID(*e))
 				continue;
 
-			if ((un)e == (un)pte) {
+			if ((uptr)e == (uptr)pte) {
 				tables[i + 1] = NULL;
 				return;
 			}
@@ -194,7 +194,7 @@ validentry(pageentry *pt[PAGE_TABLE_ENTRIES])
 	u16 i;
 
 	for (i = 0; i < PAGE_TABLE_ENTRIES; i++) {
-		pageentry *pte = (void *)((un)pt + i * sizeof(pageentry *));
+		pageentry *pte = (void *)((uptr)pt + i * sizeof(pageentry *));
 
 		if (PAGE_ENTRY_GET_VALID(*pte))
 			return pte;

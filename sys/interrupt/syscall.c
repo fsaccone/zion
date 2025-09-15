@@ -9,7 +9,7 @@
 static struct lock l = { 0 };
 
 u8
-syscall(u16 type, un args[SYSCALL_ARGS])
+syscall(u16 type, ureg args[SYSCALL_ARGS])
 {
 	(void)args;
 
