@@ -5,7 +5,7 @@ DIRS = sbin sys
 .PHONY: all clean \
         sbin sys
 
-all: sbin sys
+all: $(ROOTPART)/sbin
 
 clean:
 	for d in $(DIRS); do \
