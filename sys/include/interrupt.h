@@ -22,7 +22,7 @@ void enableinterrupts(void);
    INTERRUPT_ARGS architecture-specific argument registers of the caller
    context. This function has to be called first inside the interrupt handler,
    because having code before it may alter the values of the registers. */
-un *interruptargs(void);
+ureg *interruptargs(void);
 
 /* Sets drv to the driver of the device which caused the interrupt and returns
    0 normally and returns -1 if the interrupt type is not HARDWARE or the
@@ -41,6 +41,6 @@ u8 interrupttype(void);
 
 /* Sets the first architecture-specific argument register of the caller context
    to r. If it is not called, the register retains its original value. */
-void setinterruptreturn(un r);
+void setinterruptreturn(ureg r);
 
 #endif

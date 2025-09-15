@@ -13,6 +13,6 @@
 
 /* Handles system call of type type having arguments args. Returns 0 normally
    and -1 in case of error. */
-u8 syscall(u16 type, un args[SYSCALL_ARGS]);
+u8 syscall(u16 type, ureg args[SYSCALL_ARGS]);
 
 #endif

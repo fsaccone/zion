@@ -45,7 +45,7 @@ freeframe(void *f)
 	struct frame *ff;
 
 	for (ff = freeframes; ff; ff = ff->n) {
-		if ((un)f == (un)ff)
+		if ((uptr)f == (uptr)ff)
 			return ff;
 	}
 
@@ -53,11 +53,11 @@ freeframe(void *f)
 }
 
 void *
-palloc(un s)
+palloc(uptr s)
 {
 	struct frame *first;
 	struct frame *frames[MAX_PALLOC_FRAMES];
-	un i, nframes = CEIL(s, PAGE_SIZE) / PAGE_SIZE;
+	uptr i, nframes = CEIL(s, PAGE_SIZE) / PAGE_SIZE;
 
 	if (!s || s > MAX_PALLOC) {
 		setpanicmsg("Invalid size.");
@@ -74,7 +74,7 @@ nextfirst:
 	}
 
 	for (i = 0; i < nframes; i++) {
-		frames[i] = freeframe((void *)((un)first - i * PAGE_SIZE));
+		frames[i] = freeframe((void *)((uptr)first - i * PAGE_SIZE));
 
 		if (!frames[i]) {
 			first = first->n;
@@ -101,18 +101,18 @@ pcleanup(void)
 }
 
 u8
-pfree(void *f, un s)
+pfree(void *f, uptr s)
 {
-	un i;
+	uptr i;
 
-	if ((un)f % PAGE_SIZE) {
+	if ((uptr)f % PAGE_SIZE) {
 		setpanicmsg("Misaligned frame.");
 		tracepanicmsg("pfree");
 		return -1;
 	}
 
 	for (i = 0; i < CEIL(s, PAGE_SIZE) / PAGE_SIZE; i++) {
-		struct frame *q = (struct frame *)((un)f + i * PAGE_SIZE);
+		struct frame *q = (struct frame *)((uptr)f + i * PAGE_SIZE);
 
 		q->n = freeframes;
 		freeframes = q;
@@ -122,7 +122,7 @@ pfree(void *f, un s)
 }
 
 void
-pmemset(void *s, u8 c, un n)
+pmemset(void *s, u8 c, uptr n)
 {
 	while (n--)
 		*(u8 *)s++ = c;

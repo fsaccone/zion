@@ -6,7 +6,7 @@
 void
 interrupt(void)
 {
-	un *args = interruptargs();
+	ureg *args = interruptargs();
 	u8 isuser = interruptisuser();
 
 	if (isuser)

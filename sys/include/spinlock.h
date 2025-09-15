@@ -4,8 +4,10 @@
 #include <arch/types.h>
 
 struct lock {
-	/* If 0, lock is not acquired; otherwise, it is. */
-	un locked;
+	/* If 0, lock is not acquired; otherwise, it is. This needs to be the
+	   size of a register because the atomic swap generally works with
+	   values of this size. */
+	ureg locked;
 
 	/* The difference of acquirelock and releaselock calls on this lock. */
 	u8 depth;

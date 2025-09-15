@@ -6,6 +6,6 @@
 
 /* The interrupt handler for interrupts caused by user mode code with arguments
    args. */
-void userinterrupt(un args[INTERRUPT_ARGS]);
+void userinterrupt(ureg args[INTERRUPT_ARGS]);
 
 #endif

@@ -37,6 +37,6 @@
                                   | PAGE_ENTRY_REM_W(e) \
                                   | PAGE_ENTRY_REM_X(e))
 
-typedef un pageentry;
+typedef uptr pageentry;
 
 #endif
