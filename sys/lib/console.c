@@ -60,12 +60,12 @@ consolewrite(char *m)
 # ifdef DRIVER_UART
 	u16 i;
 
-	acquirelock(&l);
+	lock(&l);
 
 	for (i = 0; *m && i < CONSOLE_WRITE_MAX; m++, i++)
 		driver_uart().write((u8 *)m, 1);
 
-	releaselock(&l);
+	unlock(&l);
 
 	return i;
 # else

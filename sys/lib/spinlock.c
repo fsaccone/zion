@@ -5,7 +5,7 @@
 #include <interrupt.h>
 
 void
-acquirelock(struct lock *l)
+lock(struct lock *l)
 {
 	u8 ie = interruptsenabled();
 
@@ -25,7 +25,7 @@ acquirelock(struct lock *l)
 }
 
 void
-releaselock(struct lock *l)
+unlock(struct lock *l)
 {
 	l->locked = 0;
 

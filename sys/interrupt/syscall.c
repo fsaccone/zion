@@ -16,7 +16,7 @@ syscall(u16 type, ureg args[SYSCALL_ARGS])
 	switch (type) {
 	case SYSCALL_SHUTDOWN:
 		/* This lock will never be released. */
-		acquirelock(&l);
+		lock(&l);
 
 		pcleanup();
 
@@ -25,7 +25,7 @@ syscall(u16 type, ureg args[SYSCALL_ARGS])
 		break;
 	case SYSCALL_REBOOT:
 		/* This lock will never be released. */
-		acquirelock(&l);
+		lock(&l);
 
 		pcleanup();
 
