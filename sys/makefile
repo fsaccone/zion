@@ -3,12 +3,14 @@ include objs.mk
 
 OUT = sys.bin
 
+INIT = init/
+
 .PHONY: all clean test
 
 all: $(OUT)
 
 clean:
-	rm -f $(OUT) $(OBJS) $(OBJS:.o=.c.o) $(OBJS:.o=.s.o)
+	rm -rf $(OUT) $(INIT) $(OBJS) $(OBJS:.o=.c.o) $(OBJS:.o=.s.o)
 
 test: $(OUT)
 	exec arch/$(ARCH)/machine/$(MACHINE)/test $(OUT)
@@ -21,6 +23,12 @@ $(OUT): $(OBJS)
 	   bs=1 \
 	   count=$$(($(SYS_BINARY_SIZE) \
 	             - $$(stat -c '%s' $@) % $(SYS_BINARY_SIZE))) >> $@
+
+$(INIT):
+	mkdir -p $@
+	(cd .. && $(MAKE) ROOT=sys/$@ \
+	                  SBIN_ENABLED_PROGRAMS='init' \
+	                  root)
 
 $(OBJS):
 	if [ -f $(@:.o=.c) ]; then \
