@@ -2,17 +2,16 @@
 #define _MACHINE_MEM_H
 
 #include <arch/types.h>
+#include <binary.h>
 
 #define RAM_SIZE (4L * 1024L * 1024L * 1024L)
 
 #define KERNEL_START 0x80000000
-/* This is hardcoded to guess the size of this codebase's binary. */
-#define KERNEL_SIZE  (256 * 1024)
 
 #define FREE_MEMORY_REGIONS_LEN 1
 #define FREE_MEMORY_REGIONS \
 	/* start                       end     */ \
-	{  KERNEL_START + KERNEL_SIZE, RAM_SIZE },
+	{  KERNEL_START + BINARY_SIZE, RAM_SIZE },
 
 #define PLIC 0xc000000
 
