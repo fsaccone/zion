@@ -1,6 +1,6 @@
 include config.mk
 
-# Directories to be installed to ROOTPART.
+# Directories to be installed to ROOT.
 ROOTDIRS = sbin
 
 DIRS = $(ROOTDIRS) sys
@@ -15,11 +15,11 @@ clean:
 help:
 	@printf "Usage:\n"
 	@printf "\t$(MAKE) clean - Clean the whole codebase.\n"
-	@printf "\t$(MAKE) root  - Install the root file system to ROOTPART.\n"
+	@printf "\t$(MAKE) root  - Install the root file system to ROOT.\n"
 
 root: $(ROOTDIRS)
-	mkdir -p $(ROOTPART)/sbin
-	for d in sbin/*/; do cp -f $$d$$(basename $$d) $(ROOTPART)/sbin; done
+	mkdir -p $(ROOT)/sbin
+	for d in sbin/*/; do cp -f $$d$$(basename $$d) $(ROOT)/sbin; done
 
 $(DIRS):
 	(cd $@ && $(MAKE))
