@@ -16,6 +16,11 @@ test: $(OUT)
 $(OUT): $(OBJS)
 	$(LD) $(LDFLAGS) -e start -o $@ $^
 	$(OBJCOPY) -O binary $@
+	dd if=/dev/zero \
+	   status=none \
+	   bs=1 \
+	   count=$$(($(SYS_BINARY_SIZE) \
+	             - $$(stat -c '%s' $@) % $(SYS_BINARY_SIZE))) >> $@
 
 $(OBJS):
 	if [ -f $(@:.o=.c) ]; then \
