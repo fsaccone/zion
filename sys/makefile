@@ -3,14 +3,16 @@ include objs.mk
 
 OUT = sys.bin
 
-INIT = init/
+INIT    = init/
+INITTAR = init.tar
 
 .PHONY: all clean test
 
 all: $(OUT)
 
 clean:
-	rm -rf $(OUT) $(INIT) $(OBJS) $(OBJS:.o=.c.o) $(OBJS:.o=.s.o)
+	rm -rf $(OUT) $(INIT) $(INITTAR) \
+	       $(OBJS) $(OBJS:.o=.c.o) $(OBJS:.o=.s.o)
 
 test: $(OUT)
 	exec arch/$(ARCH)/machine/$(MACHINE)/test $(OUT)
@@ -29,6 +31,9 @@ $(INIT):
 	(cd .. && $(MAKE) ROOT=sys/$@ \
 	                  SBIN_ENABLED_PROGRAMS='init' \
 	                  root)
+
+$(INITTAR): $(INIT)
+	(cd $(INIT) && tar -c .) > $@
 
 $(OBJS):
 	if [ -f $(@:.o=.c) ]; then \
