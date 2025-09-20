@@ -19,7 +19,9 @@ help:
 
 root: $(ROOTDIRS)
 	mkdir -p $(ROOT)/sbin
-	for d in sbin/*/; do cp -f $$d$$(basename $$d) $(ROOT)/sbin; done
+	for d in $(SBIN_ENABLED_PROGRAMS); do \
+		cp -f sbin/$$d/$$(basename $$d) $(ROOT)/sbin; \
+	done
 
 $(DIRS):
 	(cd $@ && $(MAKE))
