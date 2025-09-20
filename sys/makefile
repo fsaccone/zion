@@ -5,6 +5,7 @@ OUT = sys.bin
 
 INIT    = init/
 INITTAR = init.tar
+INITTARMAGIC = '\x5A\x49\x4F\x4E\x49\x4E\x49\x54\x54\x41\x52\x53\x54\x41\x52\x54'
 
 .PHONY: all clean test
 
@@ -20,6 +21,7 @@ test: $(OUT)
 $(OUT): $(OBJS) $(INITTAR)
 	$(LD) $(LDFLAGS) -e start -o $@ $(OBJS)
 	$(OBJCOPY) -O binary $@
+	printf $(INITTARMAGIC) >> $@
 	cat $(INITTAR) >> $@
 
 $(INIT):
