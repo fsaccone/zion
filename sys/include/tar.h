@@ -3,6 +3,16 @@
 
 #include <arch/types.h>
 
+#define TAR_TYPE_AREG      '\0'
+#define TAR_TYPE_REG       '0'
+#define TAR_TYPE_HARDLINK  '1'
+#define TAR_TYPE_SYMLINK   '2'
+#define TAR_TYPE_CHARDEV   '3'
+#define TAR_TYPE_BLOCKDEV  '4'
+#define TAR_TYPE_DIRECTORY '5'
+#define TAR_TYPE_FIFO      '6'
+#define TAR_TYPE_RESERVED  '7'
+
 struct tarheader {
 	u8 name[100];
 	u8 mode[8];
