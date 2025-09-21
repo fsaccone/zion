@@ -8,8 +8,8 @@
 
 #include "inittar.h"
 
-static struct tarheader *inittar = NULL;
-static struct lock       l       = { 0 };
+static struct tarnode *initfiles = NULL;
+static struct lock     l         = { 0 };
 
 void
 coremain(u16 c)
@@ -19,7 +19,7 @@ coremain(u16 c)
 	setupnexttimer();
 
 	lock(&l);
-	if (!inittar && !(inittar = inittaraddress())) {
+	if (!initfiles && !(initfiles = allocinittarfiles())) {
 		setpanicmsg("init.tar was not found in kernel codespace.");
 		tracepanicmsg("coremain");
 		panic();

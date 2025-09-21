@@ -1,6 +1,8 @@
 #include "inittar.h"
 
 #include <machine/mem.h>
+#include <math.h>
+#include <panic.h>
 #include <pmem.h>
 #include <tar.h>
 
@@ -26,8 +28,12 @@
 #define INITTAR_MAGIC_BYTES_14 0x52
 #define INITTAR_MAGIC_BYTES_15 0x54
 
-struct tarheader *
-inittaraddress(void)
+/* Returns the address of the first tar header of init.tar or NULL if init.tar
+   is not found in the kernel memory space. */
+static struct tarheader *firsttarheader(void);
+
+static struct tarheader *
+firsttarheader(void)
 {
 	u8 *b;
 
@@ -56,4 +62,40 @@ inittaraddress(void)
 	}
 
 	return NULL;
+}
+
+struct tarnode *
+allocinittarfiles(void)
+{
+	struct tarheader *first, *h;
+	struct tarnode *head = NULL, *tail;
+
+	if (!(first = firsttarheader()))
+		return NULL;
+
+	for (h = first;
+	     (uptr)h < KERNEL_START + KERNEL_SIZE && istarheader(h);
+	     h = (struct tarheader *)((uptr)h + sizeof(struct tarheader))) {
+		uptr s;
+		struct tarnode *new;
+
+		if (!(new = palloc(sizeof(struct tarnode)))) {
+			tracepanicmsg("allocinittarfiles");
+			panic();
+		}
+
+		new->h = h;
+
+		if (!head)
+			head = new;
+
+		tail->n = new;
+		tail = new;
+
+		/* Skip content sectors. */
+		if ((s = tarheadersize(h)))
+			h += CEIL(s, sizeof(struct tarheader));
+	}
+
+	return head;
 }
