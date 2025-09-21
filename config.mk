@@ -1,6 +1,3 @@
-# Installation.
-ROOT = /mnt
-
 # Target.
 ARCH    = riscv64
 MACHINE = virt
