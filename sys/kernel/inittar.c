@@ -1,5 +1,9 @@
 #include "inittar.h"
 
+#include <machine/mem.h>
+#include <pmem.h>
+#include <tar.h>
+
 /* At build time, the init.tar archive containing the init file system is
    embedded into the kernel binary right after this special magic sequence of
    bytes. It is important to not embed these bytes, in order, in a single
@@ -21,10 +25,6 @@
 #define INITTAR_MAGIC_BYTES_13 0x41
 #define INITTAR_MAGIC_BYTES_14 0x52
 #define INITTAR_MAGIC_BYTES_15 0x54
-
-#include <machine/mem.h>
-#include <pmem.h>
-#include <tar.h>
 
 struct tarheader *
 inittaraddress(void)
