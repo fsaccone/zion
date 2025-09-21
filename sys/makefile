@@ -3,6 +3,8 @@ include objs.mk
 
 OUT = sys.bin
 
+CONFIGH = include/config.h
+
 INIT    = init/
 INITTAR = init.tar
 INITTARMAGIC = '\x5A\x49\x4F\x4E\x49\x4E\x49\x54\x54\x41\x52\x53\x54\x41\x52\x54'
@@ -12,7 +14,7 @@ INITTARMAGIC = '\x5A\x49\x4F\x4E\x49\x4E\x49\x54\x54\x41\x52\x53\x54\x41\x52\x54
 all: $(OUT)
 
 clean:
-	rm -rf $(OUT) $(INIT) $(INITTAR) \
+	rm -rf $(OUT) $(CONFIGH) $(INIT) $(INITTAR) \
 	       $(OBJS) $(OBJS:.o=.c.o) $(OBJS:.o=.s.o)
 
 test: $(OUT)
@@ -31,6 +33,14 @@ $(OUT): $(OBJS) $(INITTAR)
 	   count=$$(($(SYS_BINARY_SIZE) \
 	             - $$(stat -c '%s' $@) % $(SYS_BINARY_SIZE))) >> $@
 
+$(CONFIGH):
+	echo '#ifndef _CONFIG_H' >> $@
+	echo '#define _CONFIG_H' >> $@
+
+	echo '#define BINARY_SIZE $(SYS_BINARY_SIZE)' >> $@
+
+	echo '#endif' >> $@
+
 $(INIT):
 	mkdir -p $@
 	(cd .. && $(MAKE) ROOT=sys/$@ \
@@ -40,7 +50,7 @@ $(INIT):
 $(INITTAR): $(INIT)
 	(cd $(INIT) && tar -c .) > $@
 
-$(OBJS):
+$(OBJS): $(CONFIGH)
 	if [ -f $(@:.o=.c) ]; then \
 		$(CC) $(CFLAGS) -Iarch/$(ARCH)/machine/$(MACHINE)/include \
 		                -Iarch/$(ARCH)/include \
