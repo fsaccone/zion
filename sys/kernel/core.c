@@ -19,13 +19,11 @@ coremain(u16 c)
 	setupnexttimer();
 
 	lock(&l);
-
 	if (!inittar && !(inittar = inittaraddress())) {
 		setpanicmsg("init.tar was not found in kernel codespace.");
 		tracepanicmsg("coremain");
 		panic();
 	}
-
 	unlock(&l);
 
 	for (;;);
