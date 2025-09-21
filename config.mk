@@ -14,7 +14,3 @@ OBJCOPY       = $(CROSS_COMPILE)objcopy
 ASFLAGS = $(EXTRAASFLAGS)
 CFLAGS  = $(EXTRACFLAGS) -std=c90 -ffreestanding -Wall -Wextra
 LDFLAGS = $(EXTRALDFLAGS) -s
-
-# /sys/
-# 256 K = 256 * 1024 = 262144
-SYS_BINARY_SIZE = 262144

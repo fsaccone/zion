@@ -1,4 +1,5 @@
 include ../config.mk
+include config.mk
 include objs.mk
 
 OUT = sys.bin
@@ -35,14 +36,14 @@ $(OUT): $(OBJS) $(INITTAR)
 	dd status=none \
 	   if=/dev/zero \
 	   bs=1 \
-	   count=$$(($(SYS_BINARY_SIZE) \
-	             - $$(stat -c '%s' $@) % $(SYS_BINARY_SIZE))) >> $@
+	   count=$$(($(BINARY_SIZE) \
+	             - $$(stat -c '%s' $@) % $(BINARY_SIZE))) >> $@
 
 $(CONFIGH):
 	echo '#ifndef _CONFIG_H' >> $@
 	echo '#define _CONFIG_H' >> $@
 
-	echo '#define BINARY_SIZE $(SYS_BINARY_SIZE)' >> $@
+	echo '#define BINARY_SIZE $(BINARY_SIZE)' >> $@
 
 	echo '#endif' >> $@
 
