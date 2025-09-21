@@ -38,4 +38,8 @@ struct tarheader {
 /* Returns 1 if ptr points to a valid tar header or 0 otherwise. */
 u8 istarheader(void *ptr);
 
+/* Returns the size field of tar header h in integer format or 0 in case h is
+   null or the size field is not a valid octal string. */
+uptr tarheadersize(struct tarheader *h);
+
 #endif
