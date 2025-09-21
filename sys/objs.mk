@@ -34,6 +34,7 @@ OBJS_LIB = arch/$(ARCH)/lib/atomic.o \
            lib/pmem.o \
            lib/process.o \
            lib/spinlock.o \
+           lib/tar.o \
 
 # All object files.
 OBJS = $(OBJS_START) $(OBJS_INTERRUPT) $(OBJS_KERNEL) $(OBJS_LIB)
