@@ -3,8 +3,15 @@
 
 #include <tar.h>
 
-/* Returns the init.tar archive starting address contained inside the kernel
-   codespace, or NULL if it is not found. */
-struct tarheader *inittaraddress(void);
+/* Node of linked list of struct tarheader. */
+struct tarnode {
+	struct tarheader *h;
+	struct tarnode   *n;
+};
+
+/* Returns an allocated struct tarnode linked list containing all the files in
+   init.tar or NULL if init.tar is not found in the kernel memory space or it
+   is empty. */
+struct tarnode *allocinittarfiles(void);
 
 #endif
