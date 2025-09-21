@@ -14,4 +14,7 @@ struct tarnode {
    is empty. */
 struct tarnode *allocinittarfiles(void);
 
+/* Frees all the allocated struct tarnodes of the files linked list. */
+void freeinittarfiles(struct tarnode *files);
+
 #endif

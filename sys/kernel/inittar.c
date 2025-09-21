@@ -99,3 +99,14 @@ allocinittarfiles(void)
 
 	return head;
 }
+
+void
+freeinittarfiles(struct tarnode *files)
+{
+	struct tarnode *f, *n;
+
+	for (f = files; f; f = n) {
+		n = f->n;
+		pfree(f, sizeof(struct tarnode));
+	}
+}
