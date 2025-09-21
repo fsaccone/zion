@@ -11,9 +11,9 @@ all: $(OUT)
 clean:
 	rm -f $(OUT) $(OBJS)
 
-install: all
+install: $(OUT)
 	mkdir -p $(PREFIX)/sbin
-	cp -f init $(PREFIX)/sbin
+	cp -f $(OUT) $(PREFIX)/sbin
 	chmod 755 $(PREFIX)/sbin
 
 $(OUT): $(OBJS)
