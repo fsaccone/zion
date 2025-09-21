@@ -4,12 +4,17 @@ OUT = init
 
 OBJS = init.o
 
-.PHONY: all clean
+.PHONY: all clean install
 
 all: $(OUT)
 
 clean:
 	rm -f $(OUT) $(OBJS)
+
+install: all
+	mkdir -p $(PREFIX)/sbin
+	cp -f init $(PREFIX)/sbin
+	chmod 755 $(PREFIX)/sbin
 
 $(OUT): $(OBJS)
 	$(CC) $(LDFLAGS) -o $@ $^
