@@ -2,12 +2,12 @@
 #define _MACHINE_MEM_H
 
 #include <arch/types.h>
+#include <config.h>
 
 #define RAM_SIZE (4L * 1024L * 1024L * 1024L)
 
 #define KERNEL_START 0x80000000
-/* (256 K) */
-#define KERNEL_SIZE (256 * 1024)
+#define KERNEL_SIZE BINARY_SIZE
 
 #define FREE_MEMORY_REGIONS_LEN 1
 #define FREE_MEMORY_REGIONS \

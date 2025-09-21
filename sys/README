@@ -30,3 +30,6 @@ architectures and machines.
 
 The arch/ARCH/machine/MACHINE/test executable is run by the "test" make target
 with the kernel binary file passed as the first argument.
+
+The include/config.h header file is generated at build time and contains some
+build configuration variables as preprocessor macros.
