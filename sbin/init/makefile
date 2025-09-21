@@ -12,9 +12,9 @@ clean:
 	rm -f $(OUT) $(OBJS)
 
 install: $(OUT)
-	mkdir -p $(PREFIX)/sbin
-	cp -f $(OUT) $(PREFIX)/sbin
-	chmod 755 $(PREFIX)/sbin
+	mkdir -p ../../out/sbin
+	cp -f $(OUT) ../../out/sbin
+	chmod 755 ../../out/sbin
 
 $(OUT): $(OBJS)
 	$(CC) $(LDFLAGS) -o $@ $^
