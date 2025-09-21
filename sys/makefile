@@ -48,10 +48,10 @@ $(CONFIGH):
 	echo '#endif' >> $@
 
 $(INIT):
-	mkdir -p $@
-	(cd .. && $(MAKE) ROOT=sys/$@ \
-	                  SBIN_ENABLED_PROGRAMS='init' \
-	                  root)
+	mkdir -p $@/sbin
+
+	(cd .. && $(MAKE) sbin/init/install)
+	mv ../out/sbin/init $@/sbin
 
 $(INITTAR): $(INIT)
 	(cd $(INIT) && tar -c .) > $@
