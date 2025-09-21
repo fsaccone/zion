@@ -9,6 +9,7 @@ all: help
 
 clean:
 	rm -f $(SYS)
+	(cd sys && $(MAKE) clean)
 	for t in $(TARGETS); do (cd $$t && $(MAKE) clean); done
 
 help:
