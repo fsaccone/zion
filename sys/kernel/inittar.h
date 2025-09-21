@@ -5,7 +5,7 @@
 #include <tar.h>
 
 /* Returns the init.tar archive starting address contained inside the kernel
-   codespaces, or NULL if it is not found. */
+   codespace, or NULL if it is not found. */
 struct tarheader *inittaraddress(void);
 
 #endif
