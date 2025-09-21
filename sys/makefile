@@ -24,6 +24,11 @@ $(OUT): $(OBJS) $(INITTAR)
 	$(LD) $(LDFLAGS) -e start -o $@ $(OBJS)
 	$(OBJCOPY) -O binary $@
 
+	dd status=none \
+	   if=/dev/zero \
+	   bs=1 \
+	   count=$$((512 - $$(stat -c '%s' $@) % 512)) >> $@
+
 	printf $(INITTARMAGIC) >> $@
 	cat $(INITTAR) >> $@
 
