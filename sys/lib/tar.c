@@ -1,20 +1,12 @@
 #include <tar.h>
 
 #include <arch/types.h>
+#include <string.h>
 
 u8
 istarheader(void *ptr)
 {
-	u8 *m = ((struct tarheader *)ptr)->magic;
-
-	if (m[0] == 'u'
-	 && m[1] == 's'
-	 && m[2] == 't'
-	 && m[3] == 'a'
-	 && m[4] == 'r')
-		return 1;
-
-	return 0;
+	return !strncmp((char *)((struct tarheader *)ptr)->magic, "ustar", 5);
 }
 
 uptr
