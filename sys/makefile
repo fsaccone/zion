@@ -51,7 +51,7 @@ $(INIT):
 	mkdir -p $@/sbin
 
 	(cd .. && $(MAKE) sbin/init/install)
-	mv ../out/sbin/init $@/sbin
+	cp -f ../out/sbin/init $@/sbin
 
 $(INITTAR): $(INIT)
 	(cd $(INIT) && tar -c .) > $@
