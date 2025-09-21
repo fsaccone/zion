@@ -14,9 +14,9 @@ clean:
 help:
 	@printf "Usage:\n"
 	@printf "\t$(MAKE) clean              - Clean the whole codebase.\n"
+	@printf "\t$(MAKE) sys                - Build the kernel binary as $(SYS).\n"
 	@printf "\t$(MAKE) DIR/TARGET         - Build TARGET target of /DIR/.\n"
 	@printf "\t$(MAKE) DIR/TARGET/install - Install built DIR/TARGET to PREFIX.\n"
-	@printf "\t$(MAKE) sys                - Build the kernel binary as $(SYS).\n"
 
 sys: $(SYS)
 
