@@ -3,7 +3,8 @@ include targets.mk
 
 SYS = sys.bin
 
-.PHONY: all clean help sys $(TARGETS) $(TARGETS:=/install)
+.PHONY: all clean help sys \
+        $(TARGETS) $(TARGETS:=/install) $(TARGETS:=/uninstall)
 
 all: help
 
@@ -14,10 +15,11 @@ clean:
 
 help:
 	@printf "Usage:\n"
-	@printf "\t$(MAKE) clean              - Clean the whole codebase.\n"
-	@printf "\t$(MAKE) sys                - Build the kernel binary as $(SYS).\n"
-	@printf "\t$(MAKE) DIR/TARGET         - Build TARGET target of /DIR/.\n"
-	@printf "\t$(MAKE) DIR/TARGET/install - Install built DIR/TARGET to out/.\n"
+	@printf "\t$(MAKE) clean                - Clean the whole codebase.\n"
+	@printf "\t$(MAKE) sys                  - Build the kernel binary as $(SYS).\n"
+	@printf "\t$(MAKE) DIR/TARGET           - Build TARGET target of /DIR/.\n"
+	@printf "\t$(MAKE) DIR/TARGET/install   - Install built DIR/TARGET to out/.\n"
+	@printf "\t$(MAKE) DIR/TARGET/uninstall - Uninstall DIR/TARGET from out/.\n"
 
 sys: $(SYS)
 
@@ -30,3 +32,6 @@ $(TARGETS):
 
 $(TARGETS:=/install):
 	(cd $(@:/install=) && $(MAKE) install)
+
+$(TARGETS:=/uninstall):
+	(cd $(@:/uninstall=) && $(MAKE) uninstall)
