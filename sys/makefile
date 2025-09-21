@@ -21,8 +21,15 @@ test: $(OUT)
 $(OUT): $(OBJS) $(INITTAR)
 	$(LD) $(LDFLAGS) -e start -o $@ $(OBJS)
 	$(OBJCOPY) -O binary $@
+
 	printf $(INITTARMAGIC) >> $@
 	cat $(INITTAR) >> $@
+
+	dd status=none \
+	   if=/dev/zero \
+	   bs=1 \
+	   count=$$(($(SYS_BINARY_SIZE) \
+	             - $$(stat -c '%s' $@) % $(SYS_BINARY_SIZE))) >> $@
 
 $(INIT):
 	mkdir -p $@
