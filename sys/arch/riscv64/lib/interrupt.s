@@ -71,19 +71,17 @@ interrupttype:
 	# 0x00 - Exception.
 	# 0x01 - Syscall.
 	# 0x02 - Hardware.
-	# 0x03 - Software.
-	# 0x04 - Timer.
+	# 0x03 - Timer.
 
 	csrr t0, scause
 
 	# Interrupt bit (I).
 	li t1, 1 << 63
 
-	# If I != 0, code is not an exception nor a syscall.
+	# If I != 0, handle cases with interrupt bit set to 1.
 	and  t2, t0, t1
 	bnez t2, 1f
 
-	# Exception or Syscall.
 	# 8 | 9 -> Syscall.
 	# *     -> Exception.
 
@@ -109,18 +107,17 @@ interrupttype:
 	not t2, t1
 	and t0, t0, t2
 
-	# Interrupt.
-	# 1 || 3  -> Software.
+	# 1 || 3  -> Syscall.
 	# 5 || 7  -> Timer.
 	# 9 || 11 -> Hardware.
 
-	# If 1 jump to 2f.
+	# If 1 jump to 2b.
 	li  t2, 1
-	beq t0, t2, 2f
+	beq t0, t2, 2b
 
-	# If 3 jump to 2f.
+	# If 3 jump to 2b.
 	li  t2, 3
-	beq t0, t2, 2f
+	beq t0, t2, 2b
 
 	# If 5 jump to 3f.
 	li  t2, 5
@@ -142,14 +139,9 @@ interrupttype:
 	li a0, 0x00
 	ret
 
-2:
-	# Software.
-	li a0, 0x03
-	ret
-
 3:
 	# Timer.
-	li a0, 0x04
+	li a0, 0x03
 	ret
 
 4:
