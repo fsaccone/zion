@@ -28,6 +28,7 @@ OBJS_LIB = arch/$(ARCH)/lib/atomic.o \
            arch/$(ARCH)/lib/user.o \
            arch/$(ARCH)/lib/vmem.o \
            lib/console.o \
+           lib/driver/pci.o \
            lib/driver/uart.o \
            lib/pagetable.o \
            lib/panic.o \
