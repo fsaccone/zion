@@ -32,13 +32,6 @@ interrupt(void)
 			drv.interrupt();
 
 		break;
-	case INTERRUPT_TYPE_SOFTWARE:
-		/* Unimplemented. */
-		setpanicmsg("Software interrupt.");
-		tracepanicmsg("interrupt");
-		panic();
-
-		break;
 	case INTERRUPT_TYPE_TIMER:
 		setupnexttimer();
 
