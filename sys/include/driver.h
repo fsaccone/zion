@@ -24,6 +24,9 @@ struct driver {
 /* A list of drivers follows: each is a driver_NAME function with no parameters
    which returns the corresponding struct driver. */
 
+#ifdef DRIVER_PCI
+struct driver driver_pci(void);
+#endif
 #ifdef DRIVER_UART
 struct driver driver_uart(void);
 #endif
