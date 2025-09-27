@@ -1,5 +1,6 @@
 #include <elf.h>
 
+#include <arch/page.h>
 #include <arch/types.h>
 
 struct elffileheader {
@@ -41,8 +42,9 @@ struct elfprogheader {
 };
 
 void *
-allocelf(void *elf)
+allocelf(void *elf, pageentry *pt[PAGE_TABLE_ENTRIES])
 {
 	/* (TODO) */
+	(void)pt;
 	return elf;
 }
