@@ -5,10 +5,8 @@
 #include <panic.h>
 #include <pmem.h>
 
-/* Returns the first valid entry in page tree pt which points to address ptr,
-   or NULL if ptr is not found. */
-static pageentry *findpointerentry(pageentry *pt[PAGE_TABLE_ENTRIES],
-                                   void *ptr);
+/* Returns 1 if the value in ptr is equal to e or 0 otherwise. */
+static u8 equalentries(pageentry e, void *ptr);
 
 /* Returns the first invalid entry in page table pt, or NULL if pt is full. */
 static pageentry *invalidentry(pageentry *pt[PAGE_TABLE_ENTRIES]);
@@ -27,30 +25,10 @@ static void parenttables(pageentry **tables[PAGE_TABLE_LEVELS + 1],
 /* Returns the first valid entry in page table pt, or NULL if pt is empty. */
 static pageentry *validentry(pageentry *pt[PAGE_TABLE_ENTRIES]);
 
-pageentry *
-findpointerentry(pageentry *pt[PAGE_TABLE_ENTRIES], void *ptr)
+u8
+equalentries(pageentry e, void *ptr)
 {
-	pageentry **curpt = pt;
-	u16 i;
-
-redowalk:
-	for (i = 0; i < PAGE_TABLE_ENTRIES; i++) {
-		pageentry ppn, *pte;
-
-		pte = (pageentry *)((uptr)curpt + i * sizeof(pageentry *));
-		ppn = PAGE_ENTRY_GET_PPN(*pte);
-
-		if (ppn == (pageentry)ptr)
-			return pte;
-
-		if (PAGE_ENTRY_GET_WALKABLE(*pte)) {
-			curpt = (pageentry **)ppn;
-
-			goto redowalk;
-		}
-	}
-
-	return NULL;
+	return e == *(pageentry *)ptr;
 }
 
 pageentry *
@@ -280,7 +258,8 @@ freepage(pageentry *pte, pageentry *pt[PAGE_TABLE_ENTRIES])
 		pfree(parents[i], PAGE_TABLE_ENTRIES * sizeof(pageentry *));
 
 		/* Remove entry pointing to invalidated table. */
-		ptrentry = findpointerentry(parents[i - 1], parents[i]);
+		ptrentry = walkpagetree(parents[i - 1], equalentries,
+		                        parents[i]);
 
 		*ptrentry = PAGE_ENTRY_REM_VALID(*ptrentry);
 	}
