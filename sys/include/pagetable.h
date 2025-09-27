@@ -25,10 +25,8 @@ struct pageoptions {
 void pagetable(pageentry *ptable[PAGE_TABLE_ENTRIES]);
 
 /* Returns the first page entry in page tree ptree in levels [minlvl, maxlvl]
-   such that the check function called with the extra parameter returns 1.
-   Returns NULL if no such entry is found. If check returns -1, it stops the
-   walking of the current level page table and continues from where it left in
-   the previous level. */
+   such that the check function called with the extra parameter does not return
+   0. Returns NULL if no such entry is found. */
 pageentry *walkpagetree(pageentry *ptree[PAGE_TABLE_ENTRIES],
                         u8 minlvl, u8 maxlvl,
                         s8 (*check)(pageentry, void *),
