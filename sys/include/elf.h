@@ -3,6 +3,24 @@
 
 #include <arch/page.h>
 
+struct elffileflags {
+	/* Read permission. */
+	u8 r : 1;
+
+	/* Write permission. */
+	u8 w : 1;
+
+	/* Execute permission. */
+	u8 x : 1;
+
+	u8 reserved0 : 1;
+	u8 reserved1[3];
+};
+
+struct elfprogflags {
+	u8 reserved[4];
+};
+
 /* Loads the ELF file whose content is at elf to page table pt and returns its
    load virtual address. */
 void *allocelf(void *elf, pageentry *pt[PAGE_TABLE_ENTRIES]);
