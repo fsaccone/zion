@@ -24,7 +24,8 @@ struct pageoptions {
 /* Allocates a frame and adds a page entry pointing to it with options opts to
    page table pt. It returns the pointer to the page entry or NULL in case of
    error. */
-pageentry *allocpage(pageentry *pt[PAGE_TABLE_ENTRIES], struct pageoptions opts);
+pageentry *allocpage(pageentry *pt[PAGE_TABLE_ENTRIES],
+                     struct pageoptions opts);
 
 /* Allocates an empty page table full of invalid entries and returns its
    pointer. Returns NULL in case of error. */
