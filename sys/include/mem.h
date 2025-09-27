@@ -1,5 +1,5 @@
-#ifndef _VMEM_H
-#define _VMEM_H
+#ifndef _MEM_H
+#define _MEM_H
 
 #include <arch/types.h>
 
