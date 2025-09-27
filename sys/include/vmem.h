@@ -1,5 +1,5 @@
-#ifndef _PAGETABLE_H
-#define _PAGETABLE_H
+#ifndef _VMEM_H
+#define _VMEM_H
 
 #include <arch/page.h>
 #include <arch/types.h>

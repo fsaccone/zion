@@ -1,8 +1,8 @@
 #include <process.h>
 
-#include <pagetable.h>
 #include <panic.h>
 #include <pmem.h>
+#include <vmem.h>
 
 /* Enqueues process p to queue at address q, Returns 0 normally and -1 in case
    of error. */

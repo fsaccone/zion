@@ -31,13 +31,13 @@ OBJS_LIB = arch/$(ARCH)/lib/atomic.o \
            lib/driver/pci.o \
            lib/driver/uart.o \
            lib/elf.o \
-           lib/pagetable.o \
            lib/panic.o \
            lib/pmem.o \
            lib/process.o \
            lib/spinlock.o \
            lib/string.o \
            lib/tar.o \
+           lib/vmem.o \
 
 # All object files.
 OBJS = $(OBJS_START) $(OBJS_INTERRUPT) $(OBJS_KERNEL) $(OBJS_LIB)
