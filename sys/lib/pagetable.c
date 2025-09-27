@@ -4,35 +4,6 @@
 #include <arch/types.h>
 #include <pmem.h>
 
-/* To use with walkpagetree. Returns 1 if the value in ptr is equal to e or 0
-   otherwise. */
-static s8 equalentries(pageentry e, void *ptr);
-
-/* To use with walkpagetree. Returns 1 if entry e is invalid or 0 otherwise. */
-static s8 invalidentry(pageentry e, void *);
-
-/* To use with walkpagetree. Returns 1 if entry e is valid or 0 otherwise. */
-static s8 validentry(pageentry e, void *);
-
-s8
-equalentries(pageentry e, void *ptr)
-{
-	return e == *(pageentry *)ptr;
-}
-
-s8
-invalidentry(pageentry e, void *)
-{
-	return !PAGE_ENTRY_GET_VALID(e);
-}
-
-
-s8
-validentry(pageentry e, void *)
-{
-	return PAGE_ENTRY_GET_VALID(e);
-}
-
 void
 pagetable(pageentry *ptable[PAGE_TABLE_ENTRIES])
 {
