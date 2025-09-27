@@ -78,7 +78,7 @@ createprocess(struct process *parent)
 	}
 
 	p->state = CREATED;
-	pagetable(p->pagetable);
+	pagetable(p->pagetree);
 	p->children = NULL;
 
 	child->p = p;
@@ -102,7 +102,7 @@ initprocess(void)
 
 	init.pid = 0;
 	init.state = CREATED;
-	pagetable(init.pagetable);
+	pagetable(init.pagetree);
 	init.children = NULL;
 
 	if (enqueue(&init, &createdqueue)) {
