@@ -24,6 +24,22 @@ struct elffileheader {
 	u16  shstridx;
 };
 
+struct elfprogheader {
+	u32  stype;
+#ifdef ELF_BITS_64
+	u32  flags;
+#endif
+	uptr soff;
+	uptr svaddr;
+	uptr spaddr;
+	uptr sfsize;
+	uptr smsize;
+#ifdef ELF_BITS_32
+	u32  flags;
+#endif
+	uptr alignment;
+};
+
 void *
 allocelf(void *elf)
 {
