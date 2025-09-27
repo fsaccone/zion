@@ -8,8 +8,8 @@
 /* Returns 1 if the value in ptr is equal to e or 0 otherwise. */
 static u8 equalentries(pageentry e, void *ptr);
 
-/* Returns the first invalid entry in page table pt, or NULL if pt is full. */
-static pageentry *invalidentry(pageentry *pt[PAGE_TABLE_ENTRIES]);
+/* To use with walkpagetree. Returns 1 if entry e is invalid or 0 otherwise. */
+static u8 invalidentry(pageentry e, void *);
 
 /* Returns the first non-full l-level page table it encounters in page tree pt,
    or NULL if pt is full. It creates one if needed. */
@@ -31,19 +31,10 @@ equalentries(pageentry e, void *ptr)
 	return e == *(pageentry *)ptr;
 }
 
-pageentry *
-invalidentry(pageentry *pt[PAGE_TABLE_ENTRIES])
+u8
+invalidentry(pageentry e, void *)
 {
-	u16 i;
-
-	for (i = 0; i < PAGE_TABLE_ENTRIES; i++) {
-		pageentry *pte = (void *)((uptr)pt + i * sizeof(pageentry *));
-
-		if (!PAGE_ENTRY_GET_VALID(*pte))
-			return pte;
-	}
-
-	return NULL;
+	return !PAGE_ENTRY_GET_VALID(e);
 }
 
 pageentry **
@@ -106,7 +97,7 @@ nextlevel:
 		/* Last iteration only. */
 
 		/* If pt is full, walk back and continue. */
-		if (!invalidentry(pt))
+		if (walkpagetree(pt, invalidentry, NULL))
 			goto walkback;
 	}
 
@@ -203,7 +194,7 @@ allocpage(pageentry *pt[PAGE_TABLE_ENTRIES], struct pageoptions opts)
 
 	/* lastpt is non-full, so it is assured that an invalid pte is
 	   found. */
-	pte = invalidentry(lastpt);
+	pte = walkpagetree(lastpt, invalidentry, NULL);
 
 	if (!(f = palloc(PAGE_SIZE))) {
 		tracepanicmsg("allocpage");
