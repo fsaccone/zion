@@ -1,4 +1,4 @@
-#include <pagetable.h>
+#include <vmem.h>
 
 #include <arch/page.h>
 #include <arch/types.h>
