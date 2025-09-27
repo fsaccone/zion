@@ -16,8 +16,11 @@ struct elffileheader {
 	uptr phoff;
 	uptr shoff;
 	u32  flags;
+	u16  ehsize;
 	u16  phesize;
+	u16  phenum;
 	u16  shesize;
+	u16  shenum;
 	u16  shstridx;
 };
 
