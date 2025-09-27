@@ -53,7 +53,9 @@ walkpagetree(pageentry *ptree[PAGE_TABLE_ENTRIES],
 				}
 			}
 
-			if (PAGE_ENTRY_GET_WALKABLE(*pte)) {
+			/* If maxlvl was still not reached, walk in walkable
+			   entries. */
+			if (l < maxlvl && PAGE_ENTRY_GET_WALKABLE(*pte)) {
 				levels[l + 1].ptable
 				             = (pageentry **)
 				               PAGE_ENTRY_GET_PPN(*pte);
