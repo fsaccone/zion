@@ -41,13 +41,21 @@ pagetable(pageentry *ptable[PAGE_TABLE_ENTRIES])
 
 pageentry *
 walkpagetree(pageentry *ptree[PAGE_TABLE_ENTRIES],
+             u8 minlvl, u8 maxlvl,
              s8 (*check)(pageentry, void *),
              void *extra)
 {
 	pageentry **ptable = ptree;
 	u32 l, lvlidxs[PAGE_TABLE_LEVELS] = { 0 };
 
-	for (l = 0; l < PAGE_TABLE_LEVELS; l++) {
+	/* Limit maxlvl to PAGE_TABLE_LEVELS - 1. */
+	if (maxlvl > PAGE_TABLE_LEVELS - 1)
+		maxlvl = PAGE_TABLE_LEVELS - 1;
+
+	if (minlvl > maxlvl)
+		return NULL;
+
+	for (l = 0; l <= maxlvl; l++) {
 		for (; lvlidxs[l] < PAGE_TABLE_ENTRIES; lvlidxs[l]++) {
 			pageentry *pte;
 
@@ -55,12 +63,16 @@ walkpagetree(pageentry *ptree[PAGE_TABLE_ENTRIES],
 			                    + lvlidxs[l]
 			                      * sizeof(pageentry *));
 
-			switch (check(*pte, extra)) {
-			case -1:
-				goto walkback;
-			case 1:
-				return pte;
-			default:
+			/* Only call check if we are at least in level
+			   minlvl. */
+			if (l >= minlvl) {
+				switch (check(*pte, extra)) {
+				case -1:
+					goto walkback;
+				case 1:
+					return pte;
+				default:
+				}
 			}
 
 			if (PAGE_ENTRY_GET_WALKABLE(*pte)) {
