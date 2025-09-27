@@ -72,7 +72,6 @@ pageentry **
 levelpagetable(pageentry *pt[PAGE_TABLE_ENTRIES], u8 l)
 {
 	u16 i, lvlidx[PAGE_TABLE_LEVELS] = { 0 };
-	pageentry **lastpt;
 
 	if (l < 1 && l > PAGE_TABLE_LEVELS) {
 		setpanicmsg("Passed non-existent level.");
@@ -80,7 +79,6 @@ levelpagetable(pageentry *pt[PAGE_TABLE_ENTRIES], u8 l)
 		return NULL;
 	}
 
-	lastpt = pt;
 	for (i = 0; i < l - 1; i++) {
 		/* We need to keep track of the last entry index of each level
 		   in case we need to go backwards after walking through a
@@ -88,15 +86,14 @@ levelpagetable(pageentry *pt[PAGE_TABLE_ENTRIES], u8 l)
 		for (; lvlidx[i] < PAGE_TABLE_ENTRIES; lvlidx[i]++) {
 			pageentry *pte;
 
-			pte = (pageentry *)((uptr)lastpt
+			pte = (pageentry *)((uptr)pt
 			                    + lvlidx[i] * sizeof(pageentry *));
 
 			/* If invalid, create and walk in a new pt. */
 			if (!PAGE_ENTRY_GET_VALID(*pte)) {
-				lastpt = allocpagetable();
+				pagetable(pt);
 
-				*pte = PAGE_ENTRY_SET_PPN(*pte,
-				                          (pageentry)lastpt);
+				*pte = PAGE_ENTRY_SET_PPN(*pte, (pageentry)pt);
 				*pte = PAGE_ENTRY_ADD_VALID(*pte);
 				*pte = PAGE_ENTRY_SET_WALKABLE(*pte);
 
@@ -106,7 +103,7 @@ levelpagetable(pageentry *pt[PAGE_TABLE_ENTRIES], u8 l)
 			if (PAGE_ENTRY_GET_WALKABLE(*pte)) {
 				uptr addr = PAGE_ENTRY_GET_PPN(*pte);
 
-				lastpt = (pageentry **)addr;
+				pt = (pageentry **)addr;
 
 				goto nextlevel;
 			}
@@ -119,8 +116,8 @@ walkback:
 			return NULL;
 
 		/* If none of the entries are walkable, there is no space in
-		   lastpt: we need to go back one level and continue from
-		   where we left. */
+		   pt: we need to go back one level and continue from where we
+		   left. */
 		i -= 2;
 		continue;
 
@@ -130,12 +127,12 @@ nextlevel:
 
 		/* Last iteration only. */
 
-		/* If lastpt is full, walk back and continue. */
-		if (!invalidentry(lastpt))
+		/* If pt is full, walk back and continue. */
+		if (!invalidentry(pt))
 			goto walkback;
 	}
 
-	return lastpt;
+	return pt;
 }
 
 void
@@ -253,19 +250,6 @@ allocpage(pageentry *pt[PAGE_TABLE_ENTRIES], struct pageoptions opts)
 	return pte;
 }
 
-pageentry **
-allocpagetable(void)
-{
-	pageentry **pt;
-
-	if (!(pt = palloc(PAGE_TABLE_ENTRIES * sizeof(pageentry *)))) {
-		tracepanicmsg("allocpagetable");
-		return NULL;
-	}
-
-	return pt;
-}
-
 void
 freepage(pageentry *pte, pageentry *pt[PAGE_TABLE_ENTRIES])
 {
@@ -300,4 +284,10 @@ freepage(pageentry *pte, pageentry *pt[PAGE_TABLE_ENTRIES])
 
 		*ptrentry = PAGE_ENTRY_REM_VALID(*ptrentry);
 	}
+}
+
+void
+pagetable(pageentry *pt[PAGE_TABLE_ENTRIES])
+{
+	pmemset(pt, 0, PAGE_TABLE_ENTRIES * sizeof(pageentry *));
 }
