@@ -11,8 +11,8 @@ static u8 equalentries(pageentry e, void *ptr);
 /* To use with walkpagetree. Returns 1 if entry e is invalid or 0 otherwise. */
 static u8 invalidentry(pageentry e, void *);
 
-/* Returns the first valid entry in page table pt, or NULL if pt is empty. */
-static pageentry *validentry(pageentry *pt[PAGE_TABLE_ENTRIES]);
+/* To use with walkpagetree. Returns 1 if entry e is valid or 0 otherwise. */
+static u8 validentry(pageentry e, void *);
 
 u8
 equalentries(pageentry e, void *ptr)
@@ -26,19 +26,11 @@ invalidentry(pageentry e, void *)
 	return !PAGE_ENTRY_GET_VALID(e);
 }
 
-pageentry *
-validentry(pageentry *pt[PAGE_TABLE_ENTRIES])
+
+u8
+validentry(pageentry e, void *)
 {
-	u16 i;
-
-	for (i = 0; i < PAGE_TABLE_ENTRIES; i++) {
-		pageentry *pte = (void *)((uptr)pt + i * sizeof(pageentry *));
-
-		if (PAGE_ENTRY_GET_VALID(*pte))
-			return pte;
-	}
-
-	return NULL;
+	return PAGE_ENTRY_GET_VALID(e);
 }
 
 void
