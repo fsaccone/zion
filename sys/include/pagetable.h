@@ -21,17 +21,6 @@ struct pageoptions {
 	u8 reserved : 4;
 };
 
-/* Allocates a frame and adds a page entry pointing to it with options opts to
-   page table pt. It returns the pointer to the page entry or NULL in case of
-   error. */
-pageentry *allocpage(pageentry *pt[PAGE_TABLE_ENTRIES],
-                     struct pageoptions opts);
-
-/* Makes page table entry pte invalid and frees the frame it points to and all
-   the parent tables in page tree pt which became empty after the removal of
-   pte. */
-void freepage(pageentry *pte, pageentry *pt[PAGE_TABLE_ENTRIES]);
-
 /* Makes pt an empty page table. */
 void pagetable(pageentry *pt[PAGE_TABLE_ENTRIES]);
 
