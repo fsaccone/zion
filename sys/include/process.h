@@ -1,6 +1,7 @@
 #ifndef _PROCESS_H
 #define _PROCESS_H
 
+#include <arch/page.h>
 #include <arch/types.h>
 
 /* Maximum 16 bits unsigned integer. */
@@ -27,7 +28,7 @@ struct process {
 	enum processstate state;
 
 	/* The pointer to the root table of the virtual page tree. */
-	void *pagetable;
+	pageentry *pagetable[PAGE_TABLE_ENTRIES];
 
 	/* The CPU context. */
 	void *ctx;
