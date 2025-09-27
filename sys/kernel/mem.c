@@ -5,9 +5,9 @@
 #include <console.h>
 #include <machine/mem.h>
 #include <math.h>
+#include <mem.h>
 #include <panic.h>
 #include <pmem.h>
-#include <vmem.h>
 
 #include "logs.h"
 
