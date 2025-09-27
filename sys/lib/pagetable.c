@@ -6,28 +6,28 @@
 
 /* To use with walkpagetree. Returns 1 if the value in ptr is equal to e or 0
    otherwise. */
-static u8 equalentries(pageentry e, void *ptr);
+static s8 equalentries(pageentry e, void *ptr);
 
 /* To use with walkpagetree. Returns 1 if entry e is invalid or 0 otherwise. */
-static u8 invalidentry(pageentry e, void *);
+static s8 invalidentry(pageentry e, void *);
 
 /* To use with walkpagetree. Returns 1 if entry e is valid or 0 otherwise. */
-static u8 validentry(pageentry e, void *);
+static s8 validentry(pageentry e, void *);
 
-u8
+s8
 equalentries(pageentry e, void *ptr)
 {
 	return e == *(pageentry *)ptr;
 }
 
-u8
+s8
 invalidentry(pageentry e, void *)
 {
 	return !PAGE_ENTRY_GET_VALID(e);
 }
 
 
-u8
+s8
 validentry(pageentry e, void *)
 {
 	return PAGE_ENTRY_GET_VALID(e);
@@ -41,24 +41,42 @@ pagetable(pageentry *ptable[PAGE_TABLE_ENTRIES])
 
 pageentry *
 walkpagetree(pageentry *ptree[PAGE_TABLE_ENTRIES],
-             u8 (*check)(pageentry, void *),
+             s8 (*check)(pageentry, void *),
              void *extra)
 {
 	pageentry **ptable = ptree;
-	u32 i;
+	u32 l, lvlidxs[PAGE_TABLE_LEVELS] = { 0 };
 
-rewalk:
-	for (i = 0; i < PAGE_TABLE_ENTRIES; i++) {
-		pageentry *pte = (pageentry *)((uptr)ptable
-		                               + i * sizeof(pageentry *));
+	for (l = 0; l < PAGE_TABLE_LEVELS; l++) {
+		for (; lvlidxs[l] < PAGE_TABLE_ENTRIES; lvlidxs[l]++) {
+			pageentry *pte;
 
-		if (check(*pte, extra))
-			return pte;
+			pte = (pageentry *)((uptr)ptable
+			                    + lvlidxs[l]
+			                      * sizeof(pageentry *));
 
-		if (PAGE_ENTRY_GET_WALKABLE(*pte)) {
-			ptable = (pageentry **)PAGE_ENTRY_GET_PPN(*pte);
-			goto rewalk;
+			switch (check(*pte, extra)) {
+			case -1:
+				goto walkback;
+			case 1:
+				return pte;
+			default:
+			}
+
+			if (PAGE_ENTRY_GET_WALKABLE(*pte)) {
+				ptable = (pageentry **)
+				         PAGE_ENTRY_GET_PPN(*pte);
+				goto nextlevel;
+			}
 		}
+
+		/* If we got here, the  walked level is full and it contains no
+		   walkable entries. */
+		break;
+
+walkback:
+		l -= 2;
+nextlevel:
 	}
 
 	return NULL;
