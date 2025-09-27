@@ -5,7 +5,8 @@
 #include <panic.h>
 #include <pmem.h>
 
-/* Returns 1 if the value in ptr is equal to e or 0 otherwise. */
+/* To use with walkpagetree. Returns 1 if the value in ptr is equal to e or 0
+   otherwise. */
 static u8 equalentries(pageentry e, void *ptr);
 
 /* To use with walkpagetree. Returns 1 if entry e is invalid or 0 otherwise. */
