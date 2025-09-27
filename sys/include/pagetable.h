@@ -21,8 +21,8 @@ struct pageoptions {
 	u8 reserved : 4;
 };
 
-/* Makes pt an empty page table. */
-void pagetable(pageentry *pt[PAGE_TABLE_ENTRIES]);
+/* Makes ptable an empty page table. */
+void pagetable(pageentry *ptable[PAGE_TABLE_ENTRIES]);
 
 /* Returns the first page entry in page tree ptree such that the check
    function called with the extra parameter does not return 0. Returns NULL if

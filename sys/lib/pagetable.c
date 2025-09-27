@@ -34,9 +34,9 @@ validentry(pageentry e, void *)
 }
 
 void
-pagetable(pageentry *pt[PAGE_TABLE_ENTRIES])
+pagetable(pageentry *ptable[PAGE_TABLE_ENTRIES])
 {
-	pmemset(pt, 0, PAGE_TABLE_ENTRIES * sizeof(pageentry *));
+	pmemset(ptable, 0, PAGE_TABLE_ENTRIES * sizeof(pageentry *));
 }
 
 pageentry *
