@@ -43,15 +43,8 @@ walkpagetree(pageentry *ptree[PAGE_TABLE_ENTRIES],
 
 			/* Only call check if we are at least in level
 			   minlvl. */
-			if (l >= minlvl) {
-				switch (check(*pte, extra)) {
-				case -1:
-					goto walkback;
-				case 1:
-					return pte;
-				default:
-				}
-			}
+			if (l >= minlvl && check (*pte, extra))
+				return pte;
 
 			/* If maxlvl was still not reached, walk in walkable
 			   entries. */
@@ -63,9 +56,20 @@ walkpagetree(pageentry *ptree[PAGE_TABLE_ENTRIES],
 			}
 		}
 
-		/* If we got here, the  walked level is full and it contains no
-		   walkable entries. */
-		break;
+		if (l == maxlvl) {
+			u32 i;
+
+			/* If we already walked through all the parent root
+			   tables, that means we checked all the entries and
+			   should break to return; else, we should just walk
+			   back as normal. */
+			for (i = 0; i < maxlvl; i++) {
+				if (levels[i].i < PAGE_TABLE_ENTRIES - 1)
+					goto walkback;
+			}
+
+			break;
+		}
 
 walkback:
 		l -= 2;
