@@ -8,7 +8,9 @@
 #define PAGE_TABLE_ENTRIES 512
 #define PAGE_TABLE_LEVELS  5
 
-#define PAGE_SIZE 4096
+#define PAGE_SIZE     (4 * 1024)
+#define MEGAPAGE_SIZE (2 * 1024 * 1024)
+#define GIGAPAGE_SIZE (1 * 1024 * 1024 * 1024)
 
 #define PAGE_ENTRY_GET_VALID(e)    ((e) & 1)
 #define PAGE_ENTRY_GET_PADDR(e)    (((((e) >> 10) << 20) >> 10))
