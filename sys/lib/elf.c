@@ -42,9 +42,11 @@ struct elfprogheader {
 };
 
 void *
-allocelf(void *elf, pageentry *pt[PAGE_TABLE_ENTRIES])
+allocelf(void *elf, struct elffileflags flags,
+         pageentry *pt[PAGE_TABLE_ENTRIES])
 {
 	/* (TODO) */
 	(void)pt;
+	(void)flags;
 	return elf;
 }
