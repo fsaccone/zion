@@ -291,3 +291,28 @@ pagetable(pageentry *pt[PAGE_TABLE_ENTRIES])
 {
 	pmemset(pt, 0, PAGE_TABLE_ENTRIES * sizeof(pageentry *));
 }
+
+pageentry *
+walkpagetree(pageentry *ptree[PAGE_TABLE_ENTRIES],
+             u8 (*check)(pageentry, void *),
+             void *extra)
+{
+	pageentry **ptable = ptree;
+	u32 i;
+
+rewalk:
+	for (i = 0; i < PAGE_TABLE_ENTRIES; i++) {
+		pageentry *pte = (pageentry *)((uptr)ptable
+		                               + i * sizeof(pageentry *));
+
+		if (check(*pte, extra))
+			return pte;
+
+		if (PAGE_ENTRY_GET_WALKABLE(*pte)) {
+			ptable = (pageentry **)PAGE_ENTRY_GET_PPN(*pte);
+			goto rewalk;
+		}
+	}
+
+	return NULL;
+}

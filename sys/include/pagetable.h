@@ -35,4 +35,11 @@ void freepage(pageentry *pte, pageentry *pt[PAGE_TABLE_ENTRIES]);
 /* Makes pt an empty page table. */
 void pagetable(pageentry *pt[PAGE_TABLE_ENTRIES]);
 
+/* Returns the first page entry in page tree ptree such that the check
+   function called with the extra parameter does not return 0. Returns NULL if
+   no such entry is found. */
+pageentry *walkpagetree(pageentry *ptree[PAGE_TABLE_ENTRIES],
+                        u8 (*check)(pageentry, void *),
+                        void *extra);
+
 #endif
