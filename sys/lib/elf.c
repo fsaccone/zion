@@ -4,7 +4,7 @@
 #include <arch/types.h>
 
 struct elffileheader {
-	u32                 magic;
+	u8                  magic[4];
 	u8                  class;
 	u8                  data;
 	u8                  version;
