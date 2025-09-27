@@ -27,13 +27,12 @@ struct pageoptions {
 pageentry *allocpage(pageentry *pt[PAGE_TABLE_ENTRIES],
                      struct pageoptions opts);
 
-/* Allocates an empty page table full of invalid entries and returns its
-   pointer. Returns NULL in case of error. */
-pageentry **allocpagetable(void);
-
 /* Makes page table entry pte invalid and frees the frame it points to and all
    the parent tables in page tree pt which became empty after the removal of
    pte. */
 void freepage(pageentry *pte, pageentry *pt[PAGE_TABLE_ENTRIES]);
+
+/* Makes pt an empty page table. */
+void pagetable(pageentry *pt[PAGE_TABLE_ENTRIES]);
 
 #endif
