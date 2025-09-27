@@ -8,8 +8,7 @@
 #define PAGE_TABLE_ENTRIES 512
 #define PAGE_TABLE_LEVELS  5
 
-#define PAGE_SIZE_EXPONENT 12
-#define PAGE_SIZE          (1 << PAGE_SIZE_EXPONENT)
+#define PAGE_SIZE 4096
 
 #define PAGE_ENTRY_GET_VALID(e)    ((e) & 1)
 #define PAGE_ENTRY_GET_PADDR(e)    (((((e) >> 10) << 20) >> 10))
