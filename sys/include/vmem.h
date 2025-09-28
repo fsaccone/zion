@@ -29,7 +29,7 @@ void pagetable(pageentry *ptable[PAGE_TABLE_ENTRIES]);
    0. Returns NULL if no such entry is found. */
 pageentry *walkpagetree(pageentry *ptree[PAGE_TABLE_ENTRIES],
                         u8 minlvl, u8 maxlvl,
-                        s8 (*check)(pageentry, void *),
+                        s8 (*check)(pageentry *, void *),
                         void *extra);
 
 #endif
