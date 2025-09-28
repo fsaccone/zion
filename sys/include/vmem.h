@@ -21,11 +21,8 @@ struct pageoptions {
 	u8 reserved : 4;
 };
 
-/* The data of an entry in the context of its page table. */
+/* Page entry in the context of its page table. */
 struct pte {
-	/* The pointer to the entry. */
-	pageentry *e;
-
 	/* The level (starting at 0) of its page table. */
 	u8 l;
 
