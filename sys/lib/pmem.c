@@ -53,11 +53,20 @@ freeframe(void *f)
 }
 
 void *
-palloc(uptr s)
+palloc(uptr s, uptr align)
 {
 	struct frame *first;
 	struct frame *frames[MAX_PALLOC_FRAMES];
 	uptr i, nframes = CEIL(s, PAGE_SIZE) / PAGE_SIZE;
+
+	if (!align)
+		align = PAGE_SIZE;
+
+	if (align % PAGE_SIZE) {
+		setpanicmsg("Invalid alignment.");
+		tracepanicmsg("palloc");
+		return NULL;
+	}
 
 	if (!s || s > MAX_PALLOC) {
 		setpanicmsg("Invalid size.");
@@ -71,6 +80,12 @@ nextfirst:
 		setpanicmsg("Memory full.");
 		tracepanicmsg("palloc");
 		return NULL;
+	}
+
+	/* If first page is unaligned. */
+	if ((uptr)first % align) {
+		first = first->n;
+		goto nextfirst;
 	}
 
 	for (i = 0; i < nframes; i++) {
@@ -97,7 +112,7 @@ nextfirst:
 void
 pcleanup(void)
 {
-	while (!palloc(PAGE_SIZE));
+	while (!palloc(PAGE_SIZE, 0));
 }
 
 u8

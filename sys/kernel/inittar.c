@@ -79,7 +79,7 @@ allocinittarfiles(void)
 		uptr s;
 		struct tarnode *new;
 
-		if (!(new = palloc(sizeof(struct tarnode)))) {
+		if (!(new = palloc(sizeof(struct tarnode), 0))) {
 			tracepanicmsg("allocinittarfiles");
 			panic();
 		}
