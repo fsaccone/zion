@@ -33,8 +33,6 @@ struct pte {
 	u32 i;
 };
 
-/* Makes ptable an empty page table. */
-void pagetable(pageentry *ptable[PAGE_TABLE_ENTRIES]);
 
 /* Returns the first page entry in page tree ptree in levels [minlvl, maxlvl],
    where levels start at 0, such that the check function called with the extra
