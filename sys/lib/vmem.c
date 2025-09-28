@@ -9,12 +9,6 @@ struct walklevel {
 	pageentry **ptable;
 };
 
-void
-pagetable(pageentry *ptable[PAGE_TABLE_ENTRIES])
-{
-	pmemset(ptable, 0, PAGE_TABLE_ENTRIES * sizeof(pageentry *));
-}
-
 pageentry *
 walkpagetree(pageentry *ptree[PAGE_TABLE_ENTRIES],
              u8 minlvl, u8 maxlvl,
