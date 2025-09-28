@@ -6,11 +6,11 @@
 
 struct walklevel {
 	u32 i;
-	pageentry **ptable;
+	pageentry *ptable;
 };
 
 pageentry *
-walkpagetree(pageentry *ptree[PAGE_TABLE_ENTRIES],
+walkpagetree(pageentry ptree[PAGE_TABLE_ENTRIES],
              u8 minlvl, u8 maxlvl,
              u8 (*check)(struct pte, void *),
              void *extra)
@@ -31,11 +31,8 @@ walkpagetree(pageentry *ptree[PAGE_TABLE_ENTRIES],
 		for (; levels[l].i < PAGE_TABLE_ENTRIES; levels[l].i++) {
 			struct pte e;
 
-			e.e = (pageentry *)((uptr)levels[l].ptable
-			                    + levels[l].i
-			                      * sizeof(pageentry *));
-
 			e.i = levels[l].i;
+			e.e = &levels[l].ptable[e.i];
 
 			/* Only call check if we are at least in level
 			   minlvl. */
@@ -46,7 +43,7 @@ walkpagetree(pageentry *ptree[PAGE_TABLE_ENTRIES],
 			   entries. */
 			if (l < maxlvl && PAGE_ENTRY_GET_WALKABLE(*e.e)) {
 				levels[l + 1].ptable
-				             = (pageentry **)
+				             = (pageentry *)
 				               PAGE_ENTRY_GET_PADDR(*e.e);
 				goto nextlevel;
 			}
