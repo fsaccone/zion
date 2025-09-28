@@ -10,8 +10,9 @@
 #define NULL ((void *)0)
 
 /* Allocate as much adjacent frames as needed to fit size s, fill with zeros
-   and return the pointer to the first one. Returns NULL in case of error. */
-void *palloc(uptr s);
+   and return the pointer to the first one, which will be aligned to align or
+   to PAGE_SIZE if align is 0. Returns NULL in case of error. */
+void *palloc(uptr s, uptr align);
 
 /* Allocates all free memory pages, thus filling all used memory with zeros. */
 void pcleanup(void);

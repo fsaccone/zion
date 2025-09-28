@@ -21,7 +21,7 @@ enqueue(struct process *p, struct processlist **q)
 {
 	struct processlist *new, *tail;
 
-	if (!(new = palloc(sizeof(struct processlist))))
+	if (!(new = palloc(sizeof(struct processlist), 0)))
 		return -1;
 
 	new->p = p;
@@ -61,12 +61,12 @@ createprocess(struct process *parent)
 	struct process *p;
 	struct processlist *child;
 
-	if (!(p = palloc(sizeof(struct process)))) {
+	if (!(p = palloc(sizeof(struct process), 0))) {
 		tracepanicmsg("createprocess");
 		return NULL;
 	}
 
-	if (!(child = palloc(sizeof(struct processlist)))) {
+	if (!(child = palloc(sizeof(struct processlist), 0))) {
 		tracepanicmsg("createprocess");
 		return NULL;
 	}
