@@ -33,8 +33,10 @@ walkpagetree(struct pte *o,
 			struct pte e;
 			pageentry ev;
 
+			e.ptable = levels[l].ptable;
 			e.i = levels[l].i;
-			ev  = levels[l].ptable[e.i];
+
+			ev  = e.ptable[e.i];
 
 			/* Only call check if we are at least in level
 			   minlvl. */
