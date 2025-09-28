@@ -18,7 +18,7 @@ pagetable(pageentry *ptable[PAGE_TABLE_ENTRIES])
 pageentry *
 walkpagetree(pageentry *ptree[PAGE_TABLE_ENTRIES],
              u8 minlvl, u8 maxlvl,
-             s8 (*check)(struct pte, void *),
+             u8 (*check)(struct pte, void *),
              void *extra)
 {
 	u32 l;
