@@ -9,9 +9,19 @@ struct walklevel {
 	pageentry *ptable;
 };
 
+/* Check function of walkpagetree. Returns 1 if entry e is an invalid entry, or
+   0 otherwise. */
+static u8 invalidentry(struct pte e, void *);
+
 /* Check function of walkpagetree. Returns 1 if entry e is an invalid entry
    preceding *(u32 *)n - 1 invalid entries in its table, or 0 otherwise. */
 static u8 startsninvalidentries(struct pte e, void *n);
+
+u8
+invalidentry(struct pte e, void *)
+{
+	return !PAGE_ENTRY_GET_VALID(e.ptable[e.i]);
+}
 
 u8
 startsninvalidentries(struct pte e, void *n)
