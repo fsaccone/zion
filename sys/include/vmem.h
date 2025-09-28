@@ -37,7 +37,7 @@ struct pte {
 /* Returns the first page entry in page tree ptree in levels [minlvl, maxlvl],
    where levels start at 0, such that the check function called with the extra
    parameter does not return 0. Returns NULL if no such entry is found. */
-pageentry *walkpagetree(pageentry *ptree[PAGE_TABLE_ENTRIES],
+pageentry *walkpagetree(pageentry ptree[PAGE_TABLE_ENTRIES],
                         u8 minlvl, u8 maxlvl,
                         u8 (*check)(struct pte, void *),
                         void *extra);
