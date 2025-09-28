@@ -9,8 +9,9 @@ struct walklevel {
 	pageentry *ptable;
 };
 
-pageentry *
-walkpagetree(pageentry ptree[PAGE_TABLE_ENTRIES],
+u8
+walkpagetree(struct pte *o,
+             pageentry ptree[PAGE_TABLE_ENTRIES],
              u8 minlvl, u8 maxlvl,
              u8 (*check)(struct pte, void *),
              void *extra)
@@ -23,7 +24,7 @@ walkpagetree(pageentry ptree[PAGE_TABLE_ENTRIES],
 		maxlvl = PAGE_TABLE_LEVELS - 1;
 
 	if (minlvl > maxlvl)
-		return NULL;
+		return -1;
 
 	levels[0].ptable = ptree;
 
@@ -36,8 +37,10 @@ walkpagetree(pageentry ptree[PAGE_TABLE_ENTRIES],
 
 			/* Only call check if we are at least in level
 			   minlvl. */
-			if (l >= minlvl && check(e, extra))
-				return e.e;
+			if (l >= minlvl && check(e, extra)) {
+				*o = e;
+				return 0;
+			}
 
 			/* If maxlvl was still not reached, walk in walkable
 			   entries. */
@@ -69,5 +72,5 @@ walkback:
 nextlevel:
 	}
 
-	return NULL;
+	return -1;
 }
