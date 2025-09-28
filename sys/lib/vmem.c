@@ -18,7 +18,7 @@ pagetable(pageentry *ptable[PAGE_TABLE_ENTRIES])
 pageentry *
 walkpagetree(pageentry *ptree[PAGE_TABLE_ENTRIES],
              u8 minlvl, u8 maxlvl,
-             s8 (*check)(pageentry, void *),
+             s8 (*check)(pageentry *, void *),
              void *extra)
 {
 	u32 l;
@@ -43,7 +43,7 @@ walkpagetree(pageentry *ptree[PAGE_TABLE_ENTRIES],
 
 			/* Only call check if we are at least in level
 			   minlvl. */
-			if (l >= minlvl && check(*pte, extra))
+			if (l >= minlvl && check(pte, extra))
 				return pte;
 
 			/* If maxlvl was still not reached, walk in walkable
