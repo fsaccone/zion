@@ -21,6 +21,18 @@ struct pageoptions {
 	u8 reserved : 4;
 };
 
+/* The data of an entry in the context of its page table. */
+struct pte {
+	/* The pointer to the entry. */
+	pageentry *e;
+
+	/* The level (starting at 1) of its page table. */
+	u8 l;
+
+	/* The index of the entry in its page table. */
+	u32 i;
+};
+
 /* Makes ptable an empty page table. */
 void pagetable(pageentry *ptable[PAGE_TABLE_ENTRIES]);
 
@@ -29,7 +41,7 @@ void pagetable(pageentry *ptable[PAGE_TABLE_ENTRIES]);
    0. Returns NULL if no such entry is found. */
 pageentry *walkpagetree(pageentry *ptree[PAGE_TABLE_ENTRIES],
                         u8 minlvl, u8 maxlvl,
-                        s8 (*check)(pageentry *, void *),
+                        s8 (*check)(struct pte, void *),
                         void *extra);
 
 #endif

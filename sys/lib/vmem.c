@@ -18,7 +18,7 @@ pagetable(pageentry *ptable[PAGE_TABLE_ENTRIES])
 pageentry *
 walkpagetree(pageentry *ptree[PAGE_TABLE_ENTRIES],
              u8 minlvl, u8 maxlvl,
-             s8 (*check)(pageentry *, void *),
+             s8 (*check)(struct pte, void *),
              void *extra)
 {
 	u32 l;
@@ -35,23 +35,25 @@ walkpagetree(pageentry *ptree[PAGE_TABLE_ENTRIES],
 
 	for (l = 0; l <= maxlvl; l++) {
 		for (; levels[l].i < PAGE_TABLE_ENTRIES; levels[l].i++) {
-			pageentry *pte;
+			struct pte e;
 
-			pte = (pageentry *)((uptr)levels[l].ptable
+			e.e = (pageentry *)((uptr)levels[l].ptable
 			                    + levels[l].i
 			                      * sizeof(pageentry *));
 
+			e.i = levels[l].i;
+
 			/* Only call check if we are at least in level
 			   minlvl. */
-			if (l >= minlvl && check(pte, extra))
-				return pte;
+			if (l >= minlvl && check(e, extra))
+				return e.e;
 
 			/* If maxlvl was still not reached, walk in walkable
 			   entries. */
-			if (l < maxlvl && PAGE_ENTRY_GET_WALKABLE(*pte)) {
+			if (l < maxlvl && PAGE_ENTRY_GET_WALKABLE(*e.e)) {
 				levels[l + 1].ptable
 				             = (pageentry **)
-				               PAGE_ENTRY_GET_PADDR(*pte);
+				               PAGE_ENTRY_GET_PADDR(*e.e);
 				goto nextlevel;
 			}
 		}
