@@ -178,6 +178,7 @@ walkpagetree(struct pte *o,
 				paddr = PAGE_ENTRY_GET_PADDR(ev);
 
 				levels[l + 1].ptable = (pageentry *)paddr;
+				levels[l + 1].i = 0;
 
 				/* Set current entry as checked. */
 				levels[l].i++;
