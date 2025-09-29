@@ -11,9 +11,10 @@
 #define KERNEL_SIZE  (uptr)BINARY_SIZE
 
 #define FREE_MEMORY_REGIONS_LEN 1
-#define FREE_MEMORY_REGIONS \
+#define FREE_MEMORY_REGIONS { \
 	/* start                       end     */ \
-	{  KERNEL_START + KERNEL_SIZE, RAM_SIZE },
+	{  KERNEL_START + KERNEL_SIZE, RAM_SIZE }, \
+}
 
 #define PLIC (uptr)0xc000000
 

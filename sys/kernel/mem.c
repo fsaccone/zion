@@ -18,7 +18,7 @@ void
 freeallmem(void)
 {
 	u8 i;
-	uptr freemem[FREE_MEMORY_REGIONS_LEN][2] = { FREE_MEMORY_REGIONS };
+	uptr freemem[FREE_MEMORY_REGIONS_LEN][2] = FREE_MEMORY_REGIONS;
 
 	for (i = 0; i < FREE_MEMORY_REGIONS_LEN; i++) {
 		uptr start = freemem[i][0],
