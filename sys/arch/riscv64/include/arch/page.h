@@ -39,6 +39,14 @@
                                       | PAGE_ENTRY_REM_W(e) \
                                       | PAGE_ENTRY_REM_X(e))
 
+#define PAGE_LVLIDXS_FROM_VADDR(vaddr) { \
+	((vaddr) >> 48) & 0b111111111, \
+	((vaddr) >> 39) & 0b111111111, \
+	((vaddr) >> 30) & 0b111111111, \
+	((vaddr) >> 21) & 0b111111111, \
+	((vaddr) >> 12) & 0b111111111, \
+}
+
 #define PAGE_VADDR_FROM_LVLIDXS(lvlidxs) (((lvlidxs)[0] << 48) \
                                         | ((lvlidxs)[1] << 39) \
                                         | ((lvlidxs)[2] << 30) \
