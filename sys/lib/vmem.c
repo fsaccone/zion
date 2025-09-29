@@ -31,7 +31,7 @@ struct walklevel {
    level leading to e if entry e is state->e, or returns 0 otherwise. */
 static s8 getlvlidxs(struct pte e, void *state);
 
-/* Check function of walkpagetree state must be of type struct
+/* Check function of walkpagetree. Parameter state must be of type struct
    getninvalidstate *. Returns 0 and appends entry e to state->cur if it is
    invalid or sets it to NULL if it is valid. If the length of state->cur
    reaches state->n, it is copied to state->res and 1 is returned. Returns -1
