@@ -68,6 +68,9 @@ getninvalid(struct pte e, void *state)
 
 		s->entries = NULL;
 
+		/* Reset count. */
+		s->c = 0;
+
 		return 0;
 	}
 
