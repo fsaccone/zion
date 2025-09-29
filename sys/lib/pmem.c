@@ -137,6 +137,13 @@ pfree(void *f, uptr s)
 }
 
 void
+pmemcpy(void *d, void *s, uptr n)
+{
+	while (n--)
+		*(u8 *)d++ = *(u8 *)s++;
+}
+
+void
 pmemset(void *s, u8 c, uptr n)
 {
 	while (n--)

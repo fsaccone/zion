@@ -21,6 +21,9 @@ void pcleanup(void);
    otherwise. */
 u8 pfree(void *f, uptr s);
 
+/* Copy n bytes from s to d. */
+void pmemcpy(void *d, void *s, uptr n);
+
 /* Sets all n bytes starting from s to c. */
 void pmemset(void *s, u8 c, uptr n);
 
