@@ -34,10 +34,6 @@ static s8 invalidentry(struct pte e, void *);
    the tree entries in order. */
 static s8 getninvalidentries(struct pte e, void *state);
 
-/* Check function of walkpagetree. Returns 1 if entry e is an invalid entry
-   preceding *(u32 *)n - 1 invalid entries in its table, or 0 otherwise. */
-static s8 startsninvalidentries(struct pte e, void *n);
-
 s8
 invalidentry(struct pte e, void *)
 {
@@ -96,23 +92,6 @@ getninvalidentries(struct pte e, void *state)
 	}
 
 	return 0;
-}
-
-s8
-startsninvalidentries(struct pte e, void *n)
-{
-	u32 i, ne = *(u32 *)n;
-
-	/* If not enough space in e.ptable. */
-	if (e.i + ne > PAGE_TABLE_ENTRIES)
-		return 0;
-
-	for (i = e.i; i < e.i + ne; i++) {
-		if (PAGE_ENTRY_GET_VALID(e.ptable[i]))
-			return 0;
-	}
-
-	return 1;
 }
 
 pageentry *
