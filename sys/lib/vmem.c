@@ -11,7 +11,7 @@ struct getlvlidxsstate {
 };
 
 struct getninvalidstate {
-	uptr l;
+	uptr n;
 	struct ptenode *cur;
 	struct ptenode *res;
 };
@@ -34,7 +34,7 @@ static s8 getlvlidxs(struct pte e, void *state);
 /* Check function of walkpagetree state must be of type struct
    getninvalidstate *. Returns 0 and appends entry e to state->cur if it is
    invalid or sets it to NULL if it is valid. If the length of state->cur
-   reaches state->l, it is copied to state->res and 1 is returned. Returns -1
+   reaches state->n, it is copied to state->res and 1 is returned. Returns -1
    in case of error. To append entries to the linked lists, it allocates nodes
    using pmem. This function is based on the assumption that walkpagetree walks
    the tree entries in order. */
@@ -96,7 +96,7 @@ getninvalid(struct pte e, void *state)
 	}
 
 	for (c = 1, pn = s->cur; pn; pn = pn->n, c++) {
-		if (c < s->l)
+		if (c < s->n)
 			continue;
 
 		s->res = s->cur;
