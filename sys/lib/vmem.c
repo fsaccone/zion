@@ -120,11 +120,8 @@ allocpagetable(void)
 }
 
 s8
-walkpagetree(struct pte *o,
-             pageentry ptree[PAGE_TABLE_ENTRIES],
-             u8 minlvl, u8 maxlvl,
-             s8 (*check)(struct pte, void *),
-             void *extra)
+walkpagetree(struct pte *o, pageentry ptree[PAGE_TABLE_ENTRIES], u8 maxlvl,
+             s8 (*check)(struct pte, void *), void *extra)
 {
 	u32 l;
 	struct walklevel levels[PAGE_TABLE_LEVELS] = { 0 };
@@ -132,9 +129,6 @@ walkpagetree(struct pte *o,
 	/* Limit maxlvl to PAGE_TABLE_LEVELS - 1. */
 	if (maxlvl > PAGE_TABLE_LEVELS - 1)
 		maxlvl = PAGE_TABLE_LEVELS - 1;
-
-	if (minlvl > maxlvl)
-		return 1;
 
 	levels[0].ptable = ptree;
 
@@ -150,9 +144,7 @@ walkpagetree(struct pte *o,
 
 			ev  = e.ptable[e.i];
 
-			/* Only call check if we are at least in level
-			   minlvl. */
-			if (l >= minlvl && (ret = check(e, extra))) {
+			if ((ret = check(e, extra))) {
 				if (ret == -1) {
 					tracepanicmsg("walkpagetree");
 					return -1;
