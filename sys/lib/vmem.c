@@ -146,7 +146,9 @@ walkpagetree(struct pte *o,
 					return -1;
 				}
 
-				*o = e;
+				if (o)
+					*o = e;
+
 				return 0;
 			}
 
