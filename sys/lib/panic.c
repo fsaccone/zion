@@ -31,8 +31,10 @@ setpanicmsg(char *m)
 {
 	u32 i;
 
-	for (i = 0; m[i] && i < CONSOLE_WRITE_MAX; i++)
+	for (i = 0; m[i] && i < CONSOLE_WRITE_MAX - 1; i++)
 		panicmsg[core()][i] = m[i];
+
+	panicmsg[core()][i] = '\0';
 }
 
 void
@@ -43,17 +45,19 @@ tracepanicmsg(char *t)
 	     post[1] = ")";
 
 	/* Get to the end of panicmsg. */
-	for (i = 0; panicmsg[core()][i] && i < CONSOLE_WRITE_MAX; i++);
+	for (i = 0; panicmsg[core()][i] && i < CONSOLE_WRITE_MAX - 1; i++);
 
 	/* Write pre. */
-	for (j = 0; j < sizeof(pre) && i < CONSOLE_WRITE_MAX; j++, i++)
+	for (j = 0; j < sizeof(pre) && i < CONSOLE_WRITE_MAX - 1; j++, i++)
 		panicmsg[core()][i] = pre[j];
 
 	/* Write t. */
-	for (j = 0; t[j] && i < CONSOLE_WRITE_MAX; j++, i++)
+	for (j = 0; t[j] && i < CONSOLE_WRITE_MAX - 1; j++, i++)
 		panicmsg[core()][i] = t[j];
 
 	/* Write post. */
-	for (j = 0; j < sizeof(post) && i < CONSOLE_WRITE_MAX; j++, i++)
+	for (j = 0; j < sizeof(post) && i < CONSOLE_WRITE_MAX - 1; j++, i++)
 		panicmsg[core()][i] = post[j];
+
+	panicmsg[core()][i] = '\0';
 }
