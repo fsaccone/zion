@@ -21,9 +21,6 @@ struct walklevel {
 	pageentry *ptable;
 };
 
-/* Check function of walkpagetree. Returns 1 if entry e is an invalid entry, or
-   0 otherwise. */
-static s8 invalidentry(struct pte e, void *);
 
 /* Check function of walkpagetree state must be of type struct
    getninvalidentriesstate *. Returns 0 and appends entry e to state->cur if it
@@ -33,12 +30,6 @@ static s8 invalidentry(struct pte e, void *);
    using pmem. This function is based on the assumption that walkpagetree walks
    the tree entries in order. */
 static s8 getninvalidentries(struct pte e, void *state);
-
-s8
-invalidentry(struct pte e, void *)
-{
-	return !PAGE_ENTRY_GET_VALID(e.ptable[e.i]);
-}
 
 s8
 getninvalidentries(struct pte e, void *state)
