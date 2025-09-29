@@ -89,7 +89,7 @@ getninvalid(struct pte e, void *state)
 		tail->n = newpn;
 	}
 
-	if (s->c++ >= s->n)
+	if (++s->c >= s->n)
 		return 1;
 
 	return 0;
