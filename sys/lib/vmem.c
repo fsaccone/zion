@@ -5,6 +5,11 @@
 #include <panic.h>
 #include <pmem.h>
 
+struct getentrylvlidxsstate {
+	struct pte e;
+	u32 lvlidxs[PAGE_TABLE_LEVELS];
+};
+
 struct getninvalidentriesstate {
 	uptr l;
 	struct ptenode *cur;
@@ -21,6 +26,10 @@ struct walklevel {
 	pageentry *ptable;
 };
 
+/* Check function of walkpagetree. Parameter state must be of type struct
+   getentrylvlidxsstate *. Returns 1 and sets state->lvlidxs to the indexes of
+   each level leading to e if entry e is state->e, or returns 0 otherwise. */
+static s8 getentrylvlidxs(struct pte e, void *state);
 
 /* Check function of walkpagetree state must be of type struct
    getninvalidentriesstate *. Returns 0 and appends entry e to state->cur if it
@@ -30,6 +39,19 @@ struct walklevel {
    using pmem. This function is based on the assumption that walkpagetree walks
    the tree entries in order. */
 static s8 getninvalidentries(struct pte e, void *state);
+
+s8
+getentrylvlidxs(struct pte e, void *state)
+{
+	struct getentrylvlidxsstate *s = (struct getentrylvlidxsstate *)state;
+
+	s->lvlidxs[e.l] = e.i;
+
+	if (pmemcmp(&e, &s->e, sizeof(struct pte)))
+		return 0;
+
+	return 1;
+}
 
 s8
 getninvalidentries(struct pte e, void *state)
