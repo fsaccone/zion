@@ -16,7 +16,8 @@
 #define PAGE_ENTRY_GET_R(e)        (((e) >> 1) & 1)
 #define PAGE_ENTRY_GET_W(e)        (((e) >> 2) & 1)
 #define PAGE_ENTRY_GET_X(e)        (((e) >> 3) & 1)
-#define PAGE_ENTRY_GET_WALKABLE(e) (~PAGE_ENTRY_GET_R(e) \
+#define PAGE_ENTRY_GET_WALKABLE(e) (PAGE_ENTRY_GET_VALID(e) \
+                                  & ~PAGE_ENTRY_GET_R(e) \
                                   & ~PAGE_ENTRY_GET_W(e) \
                                   & ~PAGE_ENTRY_GET_X(e))
 
@@ -33,7 +34,8 @@
 #define PAGE_ENTRY_REM_USER(e)     ((e) & ~(1 << 4))
 
 #define PAGE_ENTRY_SET_PADDR(e, paddr) ((e) | (paddr))
-#define PAGE_ENTRY_SET_WALKABLE(e)     (PAGE_ENTRY_REM_R(e) \
+#define PAGE_ENTRY_SET_WALKABLE(e)     (PAGE_ENTRY_ADD_VALID(e) \
+                                      | PAGE_ENTRY_REM_R(e) \
                                       | PAGE_ENTRY_REM_W(e) \
                                       | PAGE_ENTRY_REM_X(e))
 
