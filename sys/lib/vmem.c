@@ -2,6 +2,7 @@
 
 #include <arch/page.h>
 #include <arch/types.h>
+#include <math.h>
 #include <panic.h>
 #include <pmem.h>
 
@@ -109,6 +110,57 @@ allocpagetable(void)
 	}
 
 	return ptable;
+}
+
+s8
+valloc(uptr *o, pageentry ptree[PAGE_TABLE_ENTRIES], struct pageoptions opts,
+       uptr s)
+{
+	struct getninvalidstate state = { 0 };
+	struct ptenode *e;
+
+	state.n = CEIL(s, PAGE_SIZE) / PAGE_SIZE;
+
+	switch (walkpagetree(NULL, ptree, PAGE_TABLE_LEVELS - 1, getninvalid,
+	                     &state)) {
+	case -1:
+		tracepanicmsg("valloc");
+		return -1;
+	case 1:
+		return 1;
+	default:
+	}
+
+	for (e = state.entries; e; e = e->n) {
+		void *f;
+		pageentry *eptr = &e->e.ptable[e->e.i];
+
+		if (!(f = palloc(PAGE_SIZE, 0))) {
+			tracepanicmsg("valloc");
+			return -1;
+		}
+
+		*eptr = PAGE_ENTRY_SET_PADDR(*eptr, (uptr)f);
+
+		*eptr = PAGE_ENTRY_ADD_VALID(*eptr);
+
+		if (opts.r)
+			*eptr = PAGE_ENTRY_ADD_R(*eptr);
+
+		if (opts.w)
+			*eptr = PAGE_ENTRY_ADD_W(*eptr);
+
+		if (opts.x)
+			*eptr = PAGE_ENTRY_ADD_X(*eptr);
+
+		if (opts.u)
+			*eptr = PAGE_ENTRY_ADD_USER(*eptr);
+	}
+
+	if (o)
+		*o = PAGE_VADDR_FROM_LVLIDXS(state.lvlidxs);
+
+	return 0;
 }
 
 s8
