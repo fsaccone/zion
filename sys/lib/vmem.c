@@ -5,6 +5,17 @@
 #include <panic.h>
 #include <pmem.h>
 
+struct getninvalidentriesstate {
+	uptr l;
+	struct ptenode *cur;
+	struct ptenode *res;
+};
+
+struct ptenode {
+	struct pte e;
+	struct ptenode *n;
+};
+
 struct walklevel {
 	u32 i;
 	pageentry *ptable;
@@ -14,6 +25,15 @@ struct walklevel {
    0 otherwise. */
 static s8 invalidentry(struct pte e, void *);
 
+/* Check function of walkpagetree state must be of type struct
+   getninvalidentriesstate *. Returns 0 and appends entry e to state->cur if it
+   is invalid or sets it to NULL if it is valid. If the length of state->cur
+   reaches state->l, it is copied to state->res and 1 is returned. Returns -1
+   in case of error. To append entries to the linked lists, it allocates nodes
+   using pmem. This function is based on the assumption that walkpagetree walks
+   the tree entries in order. */
+static s8 getninvalidentries(struct pte e, void *state);
+
 /* Check function of walkpagetree. Returns 1 if entry e is an invalid entry
    preceding *(u32 *)n - 1 invalid entries in its table, or 0 otherwise. */
 static s8 startsninvalidentries(struct pte e, void *n);
@@ -22,6 +42,57 @@ s8
 invalidentry(struct pte e, void *)
 {
 	return !PAGE_ENTRY_GET_VALID(e.ptable[e.i]);
+}
+
+s8
+getninvalidentries(struct pte e, void *state)
+{
+	struct getninvalidentriesstate *s = (struct getninvalidentriesstate *)
+	                                    state;
+	struct ptenode *newpn, *tail, *pn;
+	uptr c;
+
+	if (PAGE_ENTRY_GET_VALID(e.ptable[e.i])) {
+		struct ptenode *pnnext;
+
+		/* Free s->cur. */
+		for (pn = s->cur; pn; pn = pnnext) {
+			pnnext = pn->n;
+			pfree(pn, sizeof(struct ptenode));
+		}
+
+		s->cur = NULL;
+
+		return 0;
+	}
+
+	/* Entry e is invalid. */
+
+	if (!(newpn = palloc(sizeof(struct ptenode), 0))) {
+		tracepanicmsg("getninvalidentries");
+		return -1;
+	}
+
+	pmemcpy(&newpn->e, &e, sizeof(struct pte));
+
+	if (!s->cur) {
+		s->cur = newpn;
+	} else {
+		/* Get tail. */
+		for (tail = s->cur; tail->n; tail = tail->n);
+
+		tail->n = newpn;
+	}
+
+	for (c = 1, pn = s->cur; pn; pn = pn->n, c++) {
+		if (c < s->l)
+			continue;
+
+		s->res = s->cur;
+		return 1;
+	}
+
+	return 0;
 }
 
 s8
