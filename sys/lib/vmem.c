@@ -5,7 +5,7 @@
 #include <panic.h>
 #include <pmem.h>
 
-struct getentrylvlidxsstate {
+struct getlvlidxsstate {
 	struct pte e;
 	u32 lvlidxs[PAGE_TABLE_LEVELS];
 };
@@ -27,9 +27,9 @@ struct walklevel {
 };
 
 /* Check function of walkpagetree. Parameter state must be of type struct
-   getentrylvlidxsstate *. Returns 1 and sets state->lvlidxs to the indexes of
-   each level leading to e if entry e is state->e, or returns 0 otherwise. */
-static s8 getentrylvlidxs(struct pte e, void *state);
+   getlvlidxsstate *. Returns 1 and sets state->lvlidxs to the indexes of each
+   level leading to e if entry e is state->e, or returns 0 otherwise. */
+static s8 getlvlidxs(struct pte e, void *state);
 
 /* Check function of walkpagetree state must be of type struct
    getninvalidentriesstate *. Returns 0 and appends entry e to state->cur if it
@@ -41,9 +41,9 @@ static s8 getentrylvlidxs(struct pte e, void *state);
 static s8 getninvalidentries(struct pte e, void *state);
 
 s8
-getentrylvlidxs(struct pte e, void *state)
+getlvlidxs(struct pte e, void *state)
 {
-	struct getentrylvlidxsstate *s = (struct getentrylvlidxsstate *)state;
+	struct getlvlidxsstate *s = (struct getlvlidxsstate *)state;
 
 	s->lvlidxs[e.l] = e.i;
 
