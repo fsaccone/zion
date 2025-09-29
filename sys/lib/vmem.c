@@ -115,6 +115,19 @@ startsninvalidentries(struct pte e, void *n)
 	return 1;
 }
 
+pageentry *
+allocpagetable(void)
+{
+	pageentry *ptable;
+
+	if (!(ptable = palloc(PAGE_TABLE_ENTRIES * sizeof(pageentry), 0))) {
+		tracepanicmsg("allocpagetable");
+		return NULL;
+	}
+
+	return ptable;
+}
+
 s8
 walkpagetree(struct pte *o,
              pageentry ptree[PAGE_TABLE_ENTRIES],
