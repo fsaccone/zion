@@ -12,6 +12,7 @@ struct getlvlidxsstate {
 
 struct getninvalidstate {
 	uptr n;
+	u32 lvlidxs[PAGE_TABLE_LEVELS];
 	struct ptenode *cur;
 	struct ptenode *res;
 };
@@ -32,12 +33,14 @@ struct walklevel {
 static s8 getlvlidxs(struct pte e, void *state);
 
 /* Check function of walkpagetree. Parameter state must be of type struct
-   getninvalidstate *. Returns 0 and appends entry e to state->cur if it is
-   invalid or sets it to NULL if it is valid. If the length of state->cur
-   reaches state->n, it is copied to state->res and 1 is returned. Returns -1
-   in case of error. To append entries to the linked lists, it allocates nodes
-   using pmem. This function is based on the assumption that walkpagetree walks
-   the tree entries in order. */
+   getninvalidstate *. Returns 0 and appends last-level entry e to state->cur
+   if it is invalid or sets state->cur to NULL if it is valid. If the length of
+   state->cur reaches state->n, it is copied to state->res and 1 is returned.
+   The state->lvlidxs array holds the index of each level leading to the first
+   element of the state->cur linked list when 1 is returned. Returns -1 in case
+   of error. To append entries to the linked lists, it allocates nodes using
+   pmem. This function is based on the assumption that walkpagetree walks the
+   tree entries in order. */
 static s8 getninvalid(struct pte e, void *state);
 
 s8
@@ -59,6 +62,12 @@ getninvalid(struct pte e, void *state)
 	struct getninvalidstate *s = (struct getninvalidstate *)state;
 	struct ptenode *newpn, *tail, *pn;
 	uptr c;
+
+	/* Always save level index of non-last-level entries and save level
+	   index of a last-level entry only if it is the first of the linked
+	   list. */
+	if (e.l < PAGE_TABLE_LEVELS - 1 || !s->cur)
+		s->lvlidxs[e.l] = e.i;
 
 	/* Only check last level entries. */
 	if (e.l < PAGE_TABLE_LEVELS - 1)
