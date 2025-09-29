@@ -10,7 +10,7 @@ struct getninvalidstate {
 	uptr n;
 
 	/* Outputs. */
-	u32 lvlidxs[PAGE_TABLE_LEVELS];
+	uptr lvlidxs[PAGE_TABLE_LEVELS];
 	struct ptenode *entries;
 
 	/* Private. */
