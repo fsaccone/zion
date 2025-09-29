@@ -39,6 +39,12 @@
                                       | PAGE_ENTRY_REM_W(e) \
                                       | PAGE_ENTRY_REM_X(e))
 
+#define PAGE_VADDR_FROM_LVLIDXS(lvlidxs) (((lvlidxs)[0] << 48) \
+                                        | ((lvlidxs)[1] << 39) \
+                                        | ((lvlidxs)[2] << 30) \
+                                        | ((lvlidxs)[3] << 21) \
+                                        | ((lvlidxs)[4] << 12))
+
 typedef uptr pageentry;
 
 #endif
