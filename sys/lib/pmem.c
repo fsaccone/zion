@@ -115,7 +115,7 @@ pcleanup(void)
 	while (!palloc(PAGE_SIZE, 0));
 }
 
-u8
+s8
 pfree(void *f, uptr s)
 {
 	uptr i;

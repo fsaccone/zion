@@ -24,7 +24,7 @@ initinterrupts(void)
 	*(u32 *)PLIC_MEM_THRESHOLD(c) = 0;
 }
 
-u8
+s8
 interruptdriver(struct driver *drv)
 {
 	if (interrupttype() != INTERRUPT_TYPE_HARDWARE)

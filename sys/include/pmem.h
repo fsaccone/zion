@@ -19,7 +19,7 @@ void pcleanup(void);
 
 /* Free enough frames from p to fit size s. Returns -1 in case of error and 0
    otherwise. */
-u8 pfree(void *f, uptr s);
+s8 pfree(void *f, uptr s);
 
 /* Copy n bytes from s to d. */
 void pmemcpy(void *d, void *s, uptr n);
