@@ -10,7 +10,7 @@ struct getlvlidxsstate {
 	u32 lvlidxs[PAGE_TABLE_LEVELS];
 };
 
-struct getninvalidentriesstate {
+struct getninvalidstate {
 	uptr l;
 	struct ptenode *cur;
 	struct ptenode *res;
@@ -32,13 +32,13 @@ struct walklevel {
 static s8 getlvlidxs(struct pte e, void *state);
 
 /* Check function of walkpagetree state must be of type struct
-   getninvalidentriesstate *. Returns 0 and appends entry e to state->cur if it
-   is invalid or sets it to NULL if it is valid. If the length of state->cur
+   getninvalidstate *. Returns 0 and appends entry e to state->cur if it is
+   invalid or sets it to NULL if it is valid. If the length of state->cur
    reaches state->l, it is copied to state->res and 1 is returned. Returns -1
    in case of error. To append entries to the linked lists, it allocates nodes
    using pmem. This function is based on the assumption that walkpagetree walks
    the tree entries in order. */
-static s8 getninvalidentries(struct pte e, void *state);
+static s8 getninvalid(struct pte e, void *state);
 
 s8
 getlvlidxs(struct pte e, void *state)
@@ -54,10 +54,9 @@ getlvlidxs(struct pte e, void *state)
 }
 
 s8
-getninvalidentries(struct pte e, void *state)
+getninvalid(struct pte e, void *state)
 {
-	struct getninvalidentriesstate *s = (struct getninvalidentriesstate *)
-	                                    state;
+	struct getninvalidstate *s = (struct getninvalidstate *)state;
 	struct ptenode *newpn, *tail, *pn;
 	uptr c;
 
@@ -68,7 +67,7 @@ getninvalidentries(struct pte e, void *state)
 		for (pn = s->cur; pn; pn = pnnext) {
 			pnnext = pn->n;
 			if (pfree(pn, sizeof(struct ptenode))) {
-				tracepanicmsg("getninvalidentries");
+				tracepanicmsg("getninvalid");
 				return -1;
 			}
 		}
@@ -81,7 +80,7 @@ getninvalidentries(struct pte e, void *state)
 	/* Entry e is invalid. */
 
 	if (!(newpn = palloc(sizeof(struct ptenode), 0))) {
-		tracepanicmsg("getninvalidentries");
+		tracepanicmsg("getninvalid");
 		return -1;
 	}
 
