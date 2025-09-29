@@ -2,7 +2,7 @@
 
 #include <arch/types.h>
 
-u8
+s8
 strncmp(char *s1, char *s2, uptr n)
 {
 	for (; n > 0; n--, s1++, s2++) {
