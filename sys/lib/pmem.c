@@ -136,6 +136,17 @@ pfree(void *f, uptr s)
 	return 0;
 }
 
+s8
+pmemcmp(void *a, void *b, uptr n)
+{
+	for (; n > 0; n--, a++, b++) {
+		if (*(u8 *)a != *(u8 *)b)
+			return *(u8 *)a - *(u8 *)b;
+	}
+
+	return 0;
+}
+
 void
 pmemcpy(void *d, void *s, uptr n)
 {

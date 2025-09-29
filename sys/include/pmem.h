@@ -21,6 +21,13 @@ void pcleanup(void);
    otherwise. */
 s8 pfree(void *f, uptr s);
 
+/* Returns 0 if the memory block pointed to by a is equal to the memory block 
+   pointed to by b, a negative number if the memory block pointer by a is less
+   than the memory block pointer by b, or a positive number if the memory block
+   pointed by a is greater than the memory block pointed by b. Each memory
+   block is made of n bytes. */
+s8 pmemcmp(void *a, void *b, uptr n);
+
 /* Copy n bytes from s to d. */
 void pmemcpy(void *d, void *s, uptr n);
 
