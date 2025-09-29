@@ -58,7 +58,10 @@ getninvalidentries(struct pte e, void *state)
 		/* Free s->cur. */
 		for (pn = s->cur; pn; pn = pnnext) {
 			pnnext = pn->n;
-			pfree(pn, sizeof(struct ptenode));
+			if (pfree(pn, sizeof(struct ptenode))) {
+				tracepanicmsg("getninvalidentries");
+				return -1;
+			}
 		}
 
 		s->cur = NULL;
