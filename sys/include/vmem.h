@@ -33,6 +33,9 @@ struct pte {
 	u32 i;
 };
 
+/* Allocates a page table full of invalid entries and returns its address.
+   Returns NULL in case of error. */
+pageentry *allocpagetable(void);
 
 /* Sets o to the first page entry in page tree ptree in levels
    [minlvl, maxlvl], where levels start at 0, such that the check function
