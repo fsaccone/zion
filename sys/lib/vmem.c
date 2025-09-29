@@ -60,6 +60,10 @@ getninvalid(struct pte e, void *state)
 	struct ptenode *newpn, *tail, *pn;
 	uptr c;
 
+	/* Only check last level entries. */
+	if (e.l < PAGE_TABLE_LEVELS - 1)
+		return 0;
+
 	if (PAGE_ENTRY_GET_VALID(e.ptable[e.i])) {
 		struct ptenode *pnnext;
 
