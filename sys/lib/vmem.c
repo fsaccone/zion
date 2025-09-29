@@ -154,7 +154,8 @@ walkpagetree(struct pte *o,
 			s8 ret;
 
 			e.ptable = levels[l].ptable;
-			e.i = levels[l].i;
+			e.l      = l;
+			e.i      = levels[l].i;
 
 			ev  = e.ptable[e.i];
 
