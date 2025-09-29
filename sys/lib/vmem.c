@@ -179,6 +179,9 @@ walkpagetree(struct pte *o,
 
 				levels[l + 1].ptable = (pageentry *)paddr;
 
+				/* Set current entry as checked. */
+				levels[l].i++;
+
 				goto nextlevel;
 			}
 		}
