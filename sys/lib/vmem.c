@@ -8,8 +8,8 @@
 struct getninvalidstate {
 	uptr n;
 	u32 lvlidxs[PAGE_TABLE_LEVELS];
-	struct ptenode *cur;
-	struct ptenode *res;
+	uptr c;
+	struct ptenode *entries;
 };
 
 struct ptenode {
@@ -23,14 +23,14 @@ struct walklevel {
 };
 
 /* Check function of walkpagetree. Parameter state must be of type struct
-   getninvalidstate *. Returns 0 and appends last-level entry e to state->cur
-   if it is invalid or sets state->cur to NULL if it is valid. If the length of
-   state->cur reaches state->n, it is copied to state->res and 1 is returned.
-   The state->lvlidxs array holds the index of each level leading to the first
-   element of the state->cur linked list when 1 is returned. Returns -1 in case
-   of error. To append entries to the linked lists, it allocates nodes using
-   pmem. This function is based on the assumption that walkpagetree walks the
-   tree entries in order. */
+   getninvalidstate *. Returns 0 and appends last-level entry e to
+   state->entries if it is invalid or frees state->entries if it is valid. If
+   the length of state->entries, saved in state->c, reaches state->n, 1 is
+   returned. The state->lvlidxs array holds the index of each level leading to
+   the first element of the state->entries linked list when 1 is returned.
+   Returns -1 in case of error. To append entries to the linked list, it
+   allocates nodes using pmem. This function is based on the assumption that
+   walkpagetree walks the tree entries in order. */
 static s8 getninvalid(struct pte e, void *state);
 
 s8
@@ -38,12 +38,11 @@ getninvalid(struct pte e, void *state)
 {
 	struct getninvalidstate *s = (struct getninvalidstate *)state;
 	struct ptenode *newpn, *tail, *pn;
-	uptr c;
 
 	/* Always save level index of non-last-level entries and save level
 	   index of a last-level entry only if it is the first of the linked
 	   list. */
-	if (e.l < PAGE_TABLE_LEVELS - 1 || !s->cur)
+	if (e.l < PAGE_TABLE_LEVELS - 1 || !s->entries)
 		s->lvlidxs[e.l] = e.i;
 
 	/* Only check last level entries. */
@@ -53,8 +52,8 @@ getninvalid(struct pte e, void *state)
 	if (PAGE_ENTRY_GET_VALID(e.ptable[e.i])) {
 		struct ptenode *pnnext;
 
-		/* Free s->cur. */
-		for (pn = s->cur; pn; pn = pnnext) {
+		/* Free s->entries. */
+		for (pn = s->entries; pn; pn = pnnext) {
 			pnnext = pn->n;
 			if (pfree(pn, sizeof(struct ptenode))) {
 				tracepanicmsg("getninvalid");
@@ -62,7 +61,7 @@ getninvalid(struct pte e, void *state)
 			}
 		}
 
-		s->cur = NULL;
+		s->entries = NULL;
 
 		return 0;
 	}
@@ -76,22 +75,17 @@ getninvalid(struct pte e, void *state)
 
 	pmemcpy(&newpn->e, &e, sizeof(struct pte));
 
-	if (!s->cur) {
-		s->cur = newpn;
+	if (!s->entries) {
+		s->entries = newpn;
 	} else {
 		/* Get tail. */
-		for (tail = s->cur; tail->n; tail = tail->n);
+		for (tail = s->entries; tail->n; tail = tail->n);
 
 		tail->n = newpn;
 	}
 
-	for (c = 1, pn = s->cur; pn; pn = pn->n, c++) {
-		if (c < s->n)
-			continue;
-
-		s->res = s->cur;
+	if (s->c++ >= s->n)
 		return 1;
-	}
 
 	return 0;
 }
