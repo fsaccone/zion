@@ -37,6 +37,15 @@ struct pte {
    Returns NULL in case of error. */
 pageentry *allocpagetable(void);
 
+/* Validates as much adjacent last-level pages entries of page tree ptree,
+   allocating their respective frames and all the intermediate page tables,
+   as needed to fit size s. Sets o to the virtual address of the first
+   allocated page. Initializes each page entry with options opts. Returns -1 in
+   case of error, 1 if there is not enough space in page tree or 0
+   otherwise. */
+s8 valloc(uptr *o, pageentry ptree[PAGE_TABLE_ENTRIES],
+          struct pageoptions opts, uptr s);
+
 /* Sets o to the first page entry in page tree ptree up to maxlvl level (the
    root level is 0) such that the check function called with the entry and the
    extra parameter does not return 0. Returns 0 if such entry is found, 1 if it
