@@ -2,6 +2,7 @@
 
 #include <arch/page.h>
 #include <arch/types.h>
+#include <panic.h>
 #include <pmem.h>
 
 struct walklevel {
@@ -11,19 +12,19 @@ struct walklevel {
 
 /* Check function of walkpagetree. Returns 1 if entry e is an invalid entry, or
    0 otherwise. */
-static u8 invalidentry(struct pte e, void *);
+static s8 invalidentry(struct pte e, void *);
 
 /* Check function of walkpagetree. Returns 1 if entry e is an invalid entry
    preceding *(u32 *)n - 1 invalid entries in its table, or 0 otherwise. */
-static u8 startsninvalidentries(struct pte e, void *n);
+static s8 startsninvalidentries(struct pte e, void *n);
 
-u8
+s8
 invalidentry(struct pte e, void *)
 {
 	return !PAGE_ENTRY_GET_VALID(e.ptable[e.i]);
 }
 
-u8
+s8
 startsninvalidentries(struct pte e, void *n)
 {
 	u32 i, ne = *(u32 *)n;
@@ -40,11 +41,11 @@ startsninvalidentries(struct pte e, void *n)
 	return 1;
 }
 
-u8
+s8
 walkpagetree(struct pte *o,
              pageentry ptree[PAGE_TABLE_ENTRIES],
              u8 minlvl, u8 maxlvl,
-             u8 (*check)(struct pte, void *),
+             s8 (*check)(struct pte, void *),
              void *extra)
 {
 	u32 l;
@@ -55,7 +56,7 @@ walkpagetree(struct pte *o,
 		maxlvl = PAGE_TABLE_LEVELS - 1;
 
 	if (minlvl > maxlvl)
-		return -1;
+		return 1;
 
 	levels[0].ptable = ptree;
 
@@ -63,6 +64,7 @@ walkpagetree(struct pte *o,
 		for (; levels[l].i < PAGE_TABLE_ENTRIES; levels[l].i++) {
 			struct pte e;
 			pageentry ev;
+			s8 ret;
 
 			e.ptable = levels[l].ptable;
 			e.i = levels[l].i;
@@ -71,7 +73,12 @@ walkpagetree(struct pte *o,
 
 			/* Only call check if we are at least in level
 			   minlvl. */
-			if (l >= minlvl && check(e, extra)) {
+			if (l >= minlvl && (ret = check(e, extra))) {
+				if (ret == -1) {
+					tracepanicmsg("walkpagetree");
+					return -1;
+				}
+
 				*o = e;
 				return 0;
 			}
@@ -109,5 +116,5 @@ walkback:
 nextlevel:
 	}
 
-	return -1;
+	return 1;
 }
