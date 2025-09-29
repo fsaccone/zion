@@ -29,7 +29,7 @@ ureg *interruptargs(void);
 /* Sets drv to the driver of the device which caused the interrupt and returns
    0 normally and returns -1 if the interrupt type is not HARDWARE or the
    device is unknown. */
-u8 interruptdriver(struct driver *drv);
+s8 interruptdriver(struct driver *drv);
 
 /* Returns 1 if the interrupt comes from user mode or 0 if it comes from kernel
    mode. */
