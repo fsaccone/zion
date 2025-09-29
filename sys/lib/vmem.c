@@ -6,10 +6,15 @@
 #include <pmem.h>
 
 struct getninvalidstate {
+	/* Inputs. */
 	uptr n;
+
+	/* Outputs. */
 	u32 lvlidxs[PAGE_TABLE_LEVELS];
-	uptr c;
 	struct ptenode *entries;
+
+	/* Private. */
+	uptr c;
 };
 
 struct ptenode {
