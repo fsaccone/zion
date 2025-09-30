@@ -39,6 +39,10 @@ struct walklevel {
    walkpagetree walks the tree entries in order. */
 static s8 getninvalid(struct pte e, void *state);
 
+/* Check function of walkpagetree. Returns 1 if entry e is valid or 0
+   otherwise. */
+static s8 validentry(struct pte e, void *);
+
 s8
 getninvalid(struct pte e, void *state)
 {
@@ -97,6 +101,12 @@ getninvalid(struct pte e, void *state)
 		return 1;
 
 	return 0;
+}
+
+s8
+validentry(struct pte e, void *)
+{
+	return PAGE_ENTRY_GET_VALID(e.ptable[e.i]);
 }
 
 pageentry *
@@ -159,6 +169,89 @@ valloc(uptr *o, pageentry ptree[PAGE_TABLE_ENTRIES], struct pageoptions opts,
 
 	if (o)
 		*o = PAGE_VADDR_FROM_LVLIDXS(state.lvlidxs);
+
+	return 0;
+}
+s8
+vfree(pageentry ptree[PAGE_TABLE_ENTRIES], uptr vaddr, uptr s)
+{
+	uptr i, lvlidxs[PAGE_TABLE_LEVELS] = PAGE_LVLIDXS_FROM_VADDR(vaddr);
+
+	for (i = 0; i < CEIL(s, PAGE_SIZE) / PAGE_SIZE; i++) {
+		pageentry *lastpt, *e;
+		sptr l;
+		void *f;
+
+		/* Get the last-level page table containing the entry. */
+		lastpt = ptree;
+		for (l = 0; l < PAGE_TABLE_LEVELS - 1; l++)
+			lastpt = (pageentry *)
+			         PAGE_ENTRY_GET_PADDR(lastpt[lvlidxs[l]]);
+
+		e = &lastpt[lvlidxs[PAGE_TABLE_LEVELS - 1]];
+
+		f = (void *)PAGE_ENTRY_GET_PADDR(*e);
+
+		if (pfree(f, PAGE_SIZE)) {
+			tracepanicmsg("vfree");
+			return -1;
+		}
+
+		/* Make the entry invalid. */
+		*e = PAGE_ENTRY_REM_VALID(*e);
+
+		/* Increase last-level index leading to entry and check:
+		     1. if any page table is empty (i.e. full of invalid
+		        entries): if it is, free it.
+		     2. if any level index reaches PAGE_TABLE_ENTRIES: if it
+		        does, increase the previous level index and reset the
+		        current one to 0. */
+		lvlidxs[PAGE_TABLE_LEVELS - 1]++;
+		for (l = PAGE_TABLE_LEVELS - 1; l >= 0; l--) {
+			sptr j;
+			pageentry *pt;
+
+			/* Check 1. */
+
+			/* Find current page table pt. */
+			pt = ptree;
+			for (j = 0; j < l; j++)
+				pt = (pageentry *)
+				     PAGE_ENTRY_GET_PADDR(pt[lvlidxs[j]]);
+
+			switch (walkpagetree(NULL, pt, 0, validentry, NULL)) {
+			case -1:
+				tracepanicmsg("vfree");
+				return -1;
+			case 1:
+				/* Valid entry found: page table is not
+				   empty. */
+				break;
+			default:
+				/* Valid entry not found: page table is
+				   empty. */
+				if (pfree(pt, PAGE_TABLE_ENTRIES
+				              * sizeof(pageentry))) {
+					tracepanicmsg("vfree");
+					return -1;
+				}
+			}
+
+			/* Check 2. */
+
+			if (lvlidxs[l] < PAGE_TABLE_ENTRIES)
+				continue;
+
+			if (!l) {
+				setpanicmsg("End of page tree reached.");
+				tracepanicmsg("vfree");
+				return -1;
+			}
+
+			lvlidxs[l - 1]++;
+			lvlidxs[l] = 0;
+		}
+	}
 
 	return 0;
 }
