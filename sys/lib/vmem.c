@@ -234,14 +234,11 @@ vfree(pageentry ptree[PAGE_TABLE_ENTRIES], uptr vaddr, uptr s)
 			}
 
 			switch (walkpagetree(NULL, pt, 0, validentry, NULL)) {
-			case -1:
-				tracepanicmsg("vfree");
-				return -1;
-			case 1:
+			case 0:
 				/* Valid entry found: page table is not
 				   empty. */
 				break;
-			default:
+			case 1:
 				/* Valid entry not found: page table is
 				   empty. */
 				if (pfree(pt, PAGE_TABLE_ENTRIES
@@ -253,6 +250,11 @@ vfree(pageentry ptree[PAGE_TABLE_ENTRIES], uptr vaddr, uptr s)
 				/* Make entry pointing to the page table
 				   invalid. */
 				*etopt = PAGE_ENTRY_REM_VALID(*etopt);
+
+				break;
+			default:
+				tracepanicmsg("vfree");
+				return -1;
 			}
 
 			/* Check 2. */
