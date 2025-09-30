@@ -52,7 +52,7 @@ getninvalid(struct pte e, void *state)
 	/* Always save level index of non-last-level entries and save level
 	   index of a last-level entry only if it is the first of the linked
 	   list. */
-	if (e.l < PAGE_TABLE_LEVELS - 1 || !s->entries)
+	if (!s->entries)
 		s->lvlidxs[e.l] = e.i;
 
 	/* Only check last level entries. */
