@@ -215,15 +215,23 @@ vfree(pageentry ptree[PAGE_TABLE_ENTRIES], uptr vaddr, uptr s)
 		lvlidxs[PAGE_TABLE_LEVELS - 1]++;
 		for (l = PAGE_TABLE_LEVELS - 1; l >= 0; l--) {
 			sptr j;
-			pageentry *pt;
+			pageentry *pt, *etopt;
 
 			/* Check 1. */
 
-			/* Find current page table pt. */
+			/* Find current page table pt and the entry pointing to
+			   it, etopt, which is needed when pt has to be
+			   freed. */
 			pt = ptree;
-			for (j = 0; j < l; j++)
+			for (j = 0; j < l; j++) {
 				pt = (pageentry *)
 				     PAGE_ENTRY_GET_PADDR(pt[lvlidxs[j]]);
+
+				/* Only on the second last iteration, i.e. on
+				   the parent page table. */
+				if (j == l - 2)
+					etopt = &pt[lvlidxs[j]];
+			}
 
 			switch (walkpagetree(NULL, pt, 0, validentry, NULL)) {
 			case -1:
@@ -241,6 +249,10 @@ vfree(pageentry ptree[PAGE_TABLE_ENTRIES], uptr vaddr, uptr s)
 					tracepanicmsg("vfree");
 					return -1;
 				}
+
+				/* Make entry pointing to the page table
+				   invalid. */
+				*etopt = PAGE_ENTRY_REM_VALID(*etopt);
 			}
 
 			/* Check 2. */
