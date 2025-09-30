@@ -224,13 +224,13 @@ vfree(pageentry ptree[PAGE_TABLE_ENTRIES], uptr vaddr, uptr s)
 			   freed. */
 			pt = ptree;
 			for (j = 0; j < l; j++) {
+				/* Set etopt on the previous pt, which is the
+				   parent of the pt which is going to be set
+				   next. */
+				etopt = &pt[lvlidxs[j]];
+
 				pt = (pageentry *)
 				     PAGE_ENTRY_GET_PADDR(pt[lvlidxs[j]]);
-
-				/* Only on the second last iteration, i.e. on
-				   the parent page table. */
-				if (j == l - 2)
-					etopt = &pt[lvlidxs[j]];
 			}
 
 			switch (walkpagetree(NULL, pt, 0, validentry, NULL)) {
