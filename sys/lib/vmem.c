@@ -190,6 +190,12 @@ vfree(pageentry ptree[PAGE_TABLE_ENTRIES], uptr vaddr, uptr s)
 
 		e = &lastpt[lvlidxs[PAGE_TABLE_LEVELS - 1]];
 
+		if (!PAGE_ENTRY_GET_VALID(*e)) {
+			setpanicmsg("Invalid page.");
+			tracepanicmsg("valloc");
+			return -1;
+		}
+
 		f = (void *)PAGE_ENTRY_GET_PADDR(*e);
 
 		if (pfree(f, PAGE_SIZE)) {
