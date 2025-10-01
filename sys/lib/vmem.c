@@ -199,6 +199,7 @@ valloc(uptr *o, pageentry ptree[PAGE_TABLE_ENTRIES], struct pageoptions opts,
 
 	return 0;
 }
+
 s8
 vfree(pageentry ptree[PAGE_TABLE_ENTRIES], uptr vaddr, uptr s)
 {
