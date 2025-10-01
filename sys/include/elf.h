@@ -24,6 +24,6 @@ struct elfprogflags {
 /* Loads the ELF file whose content is at elf to a newly allocated page tree at
    address 0x0 and returns the address to the page tree or NULL in case of
    error. */
-pageentry *allocelf(void *elf, struct elffileflags flags);
+pageentry *allocelf(void *elf);
 
 #endif
