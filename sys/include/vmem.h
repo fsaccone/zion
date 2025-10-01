@@ -21,18 +21,6 @@ struct pageoptions {
 	u8 reserved : 4;
 };
 
-/* Page entry in the context of its page tree. */
-struct pte {
-	/* Its page table. */
-	pageentry *ptable;
-
-	/* The level (starting at 0) of its page table. */
-	u8 l;
-
-	/* The index of the entry in its page table. */
-	u32 i;
-};
-
 /* Allocates a page table full of invalid entries and returns its address.
    Returns NULL in case of error. */
 pageentry *allocpagetable(void);
@@ -49,13 +37,5 @@ s8 valloc(pageentry ptree[PAGE_TABLE_ENTRIES], uptr vaddr,
    which were emptied after the operation. Returns -1 in case of error and 0
    otherwise. */
 s8 vfree(pageentry ptree[PAGE_TABLE_ENTRIES], uptr vaddr);
-
-/* Sets o to the first page entry in page tree ptree up to maxlvl level (the
-   root level is 0) such that the check function called with the entry and the
-   extra parameter does not return 0. Returns 0 if such entry is found, 1 if it
-   is not found or -1 in case of error. The check function may raise an error
-   by returning -1. */
-s8 walkpagetree(struct pte *o, pageentry ptree[PAGE_TABLE_ENTRIES], u8 maxlvl,
-                s8 (*check)(struct pte, void *), void *extra);
 
 #endif
