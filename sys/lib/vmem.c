@@ -29,7 +29,7 @@ valloc(pageentry ptree[PAGE_TABLE_ENTRIES], uptr vaddr,
 
 	/* Get last-level page table pointing to e starting from ptree. */
 	lastpt = ptree;
-	for (l = 0; l < PAGE_TABLE_LEVELS; l++) {
+	for (l = 0; l < PAGE_TABLE_LEVELS - 1; l++) {
 		pageentry *lastpte = &lastpt[lvlidxs[l]];
 
 		/* Allocate invalid intermediate page tables. */
