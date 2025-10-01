@@ -173,7 +173,7 @@ valloc(pageentry ptree[PAGE_TABLE_ENTRIES], uptr vaddr,
 			*lastpte = PAGE_ENTRY_SET_PADDR(*lastpte, (uptr)newpt);
 		}
 
-		lastpt = PAGE_ENTRY_GET_PADDR(*lastpte);
+		lastpt = (pageentry *)PAGE_ENTRY_GET_PADDR(*lastpte);
 	}
 
 	e = lastpt[lvlidxs[PAGE_TABLE_LEVELS - 1]];
@@ -220,7 +220,7 @@ vfree(pageentry ptree[PAGE_TABLE_ENTRIES], uptr vaddr)
 			return -1;
 		}
 
-		lastpt = PAGE_ENTRY_GET_PADDR(*lastpte);
+		lastpt = (pageentry *)PAGE_ENTRY_GET_PADDR(*lastpte);
 	}
 
 	e = lastpt[lvlidxs[PAGE_TABLE_LEVELS - 1]];
