@@ -2,6 +2,9 @@
 .global astart
 
 astart:
+	# Switch to physical memory.
+	csrwi satp, 0
+
 	call initmisa
 	call delegate
 
