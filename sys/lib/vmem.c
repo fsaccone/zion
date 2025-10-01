@@ -176,7 +176,7 @@ valloc(pageentry ptree[PAGE_TABLE_ENTRIES], uptr vaddr,
 		lastpt = (pageentry *)PAGE_ENTRY_GET_PADDR(*lastpte);
 	}
 
-	e = lastpt[lvlidxs[PAGE_TABLE_LEVELS - 1]];
+	e = &lastpt[lvlidxs[PAGE_TABLE_LEVELS - 1]];
 
 	if (!(f = palloc(PAGE_SIZE, 0))) {
 		tracepanicmsg("valloc");
@@ -223,7 +223,7 @@ vfree(pageentry ptree[PAGE_TABLE_ENTRIES], uptr vaddr)
 		lastpt = (pageentry *)PAGE_ENTRY_GET_PADDR(*lastpte);
 	}
 
-	e = lastpt[lvlidxs[PAGE_TABLE_LEVELS - 1]];
+	e = &lastpt[lvlidxs[PAGE_TABLE_LEVELS - 1]];
 
 	if (!PAGE_ENTRY_GET_VALID(*e)) {
 		setpanicmsg("Invalid page.");
