@@ -207,10 +207,10 @@ trapvec:
 	sd   ra,  (26 * 8)(sp)
 	sd   gp,  (27 * 8)(sp)
 
-	# The a0 register is held by sscratch instead of the stack so that we
+	# The a0 register is held by uscratch instead of the stack so that we
 	# can choose to change its value when switching back to the caller
 	# context.
-	csrw sscratch, a0
+	csrw uscratch, a0
 
 	# If type is 8, 9 or 11 then the trap is an ecall exception: sepc needs
 	# to increment by 4, the size of the ecall instruction, before
@@ -265,8 +265,8 @@ trapvec:
 	ld   gp,  (27 * 8)(sp)
 	addi sp,  sp, ((7 + 12 + 7 + 1 + 1) * 8)
 
-	# The sscratch register may hold the original value of a0 or a new one.
+	# The uscratch register may hold the original value of a0 or a new one.
 	# See above.
-	csrr a0, sscratch
+	csrr a0, uscratch
 
 	sret
