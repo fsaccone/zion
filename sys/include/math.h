@@ -3,4 +3,6 @@
 
 #define CEIL(x, n) ((((x) + (n) - 1) / (n)) * (n))
 
+#define MIN(a, b) (((a) < (b)) ? (a) : (b))
+
 #endif
