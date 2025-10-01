@@ -20,6 +20,17 @@ allocpagetable(void)
 }
 
 s8
+freepagetable(pageentry *ptable)
+{
+	if (pfree(ptable, PAGE_TABLE_ENTRIES * sizeof(pageentry))) {
+		tracepanicmsg("freepagetable");
+		return -1;
+	}
+
+	return 0;
+}
+
+s8
 valloc(pageentry *ptree, uptr vaddr, struct pageoptions opts)
 {
 	uptr l, lvlidxs[PAGE_TABLE_LEVELS] = PAGE_LVLIDXS_FROM_VADDR(vaddr);
@@ -152,9 +163,7 @@ vfree(pageentry *ptree, uptr vaddr)
 		}
 
 		if (isempty) {
-			/* Free and invalidate page table. */
-			if (pfree(pt,
-			          sizeof(pageentry) * PAGE_TABLE_ENTRIES)) {
+			if (freepagetable(pt)) {
 				tracepanicmsg("vfree");
 				return -1;
 			}

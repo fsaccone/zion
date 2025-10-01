@@ -25,6 +25,10 @@ struct pageoptions {
    Returns NULL in case of error. */
 pageentry *allocpagetable(void);
 
+/* Frees page table ptable. Does not free the children tables. Returns -1 in
+   case of error or 0 otherwise. */
+s8 freepagetable(pageentry *ptable);
+
 /* Validates page pointed by virtual address vaddr of page tree ptree using
    options opts, allocating a frame and making the page entry point to its
    physical address. Allocates missing intermediate page tables. Returns -1 in
