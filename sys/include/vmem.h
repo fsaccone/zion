@@ -44,11 +44,11 @@ pageentry *allocpagetable(void);
 s8 valloc(pageentry ptree[PAGE_TABLE_ENTRIES], uptr vaddr,
           struct pageoptions opts);
 
-/* Frees enough pages in page tree ptree to fit size s starting at the page
-   pointed by virtual address vaddr and all the page tables which get empty
-   (i.e. full of invalid entries) after the operation. Returns -1 in case of
-   error or 0 otherwise. */
-s8 vfree(pageentry ptree[PAGE_TABLE_ENTRIES], uptr vaddr, uptr s);
+/* Invalidates allocated page pointed by virtual address vaddr of page tree
+   ptree, freeing the physical frame pointed by it and all the page tables
+   which were emptied after the operation. Returns -1 in case of error and 0
+   otherwise. */
+s8 vfree(pageentry ptree[PAGE_TABLE_ENTRIES], uptr vaddr);
 
 /* Sets o to the first page entry in page tree ptree up to maxlvl level (the
    root level is 0) such that the check function called with the entry and the
