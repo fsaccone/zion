@@ -16,6 +16,7 @@ struct getninvalidstate {
 
 	/* Private. */
 	uptr c;
+	struct ptenode *entriestail;
 };
 
 struct ptenode {
@@ -55,7 +56,7 @@ s8
 getninvalid(struct pte e, void *state)
 {
 	struct getninvalidstate *s = (struct getninvalidstate *)state;
-	struct ptenode *newpn, *tail, *pn;
+	struct ptenode *newpn, *pn;
 
 	/* Always save level index of non-last-level entries and save level
 	   index of a last-level entry only if it is the first of the linked
@@ -99,10 +100,8 @@ getninvalid(struct pte e, void *state)
 	if (!s->entries) {
 		s->entries = newpn;
 	} else {
-		/* Get tail. */
-		for (tail = s->entries; tail->n; tail = tail->n);
-
-		tail->n = newpn;
+		s->entriestail->n = newpn;
+		s->entriestail = newpn;
 	}
 
 	if (++s->c >= s->n)
