@@ -29,13 +29,12 @@ pageentry *allocpagetable(void);
    options opts, allocating a frame and making the page entry point to its
    physical address. Allocates missing intermediate page tables. Returns -1 in
    case of error and 0 otherwise. */
-s8 valloc(pageentry ptree[PAGE_TABLE_ENTRIES], uptr vaddr,
-          struct pageoptions opts);
+s8 valloc(pageentry *ptree, uptr vaddr, struct pageoptions opts);
 
 /* Invalidates allocated page pointed by virtual address vaddr of page tree
    ptree, freeing the physical frame pointed by it and all the page tables
    which were emptied after the operation. Returns -1 in case of error and 0
    otherwise. */
-s8 vfree(pageentry ptree[PAGE_TABLE_ENTRIES], uptr vaddr);
+s8 vfree(pageentry *ptree, uptr vaddr);
 
 #endif
