@@ -42,7 +42,12 @@ valloc(pageentry ptree[PAGE_TABLE_ENTRIES], uptr vaddr,
 			}
 
 			*lastpte = PAGE_ENTRY_ADD_VALID(*lastpte);
+			*lastpte = PAGE_ENTRY_SET_WALKABLE(*lastpte);
 			*lastpte = PAGE_ENTRY_SET_PADDR(*lastpte, (uptr)newpt);
+		} else if (!PAGE_ENTRY_GET_WALKABLE(*lastpte)) {
+			setpanicmsg("Non-walkable page table.");
+			tracepanicmsg("valloc");
+			return -1;
 		}
 
 		lastpt = (pageentry *)PAGE_ENTRY_GET_PADDR(*lastpte);
@@ -88,6 +93,10 @@ vfree(pageentry ptree[PAGE_TABLE_ENTRIES], uptr vaddr)
 
 		if (!PAGE_ENTRY_GET_VALID(*lastpte)) {
 			setpanicmsg("Invalid page.");
+			tracepanicmsg("vfree");
+			return -1;
+		} else if (!PAGE_ENTRY_GET_WALKABLE(*lastpte)) {
+			setpanicmsg("Non-walkable page table.");
 			tracepanicmsg("vfree");
 			return -1;
 		}
