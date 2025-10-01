@@ -48,6 +48,10 @@ struct walklevel {
    the tree entries in order. */
 static s8 getninvalid(struct pte e, void *state);
 
+/* Return the single integer representing the entry pointed by level indexes
+   lvlidxs. */
+static uptr idxfromlvlidxs(uptr lvlidxs[PAGE_TABLE_LEVELS]);
+
 /* Check function of walkpagetree. Returns 1 if entry e is valid or 0
    otherwise. */
 static s8 validentry(struct pte e, void *);
@@ -108,6 +112,20 @@ getninvalid(struct pte e, void *state)
 		return 1;
 
 	return 0;
+}
+
+uptr
+idxfromlvlidxs(uptr lvlidxs[PAGE_TABLE_LEVELS])
+{
+	uptr i, idx = 0;
+
+	for (i = 0; i < PAGE_TABLE_LEVELS; i++) {
+		uptr l = PAGE_TABLE_LEVELS - 1 - i;
+
+		idx += l * PAGE_TABLE_ENTRIES * lvlidxs[l];
+	}
+
+	return idx;
 }
 
 s8
