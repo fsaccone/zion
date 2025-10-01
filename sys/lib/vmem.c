@@ -29,14 +29,22 @@ struct walklevel {
 };
 
 /* Check function of walkpagetree. Parameter state must be of type struct
-   getninvalidstate *. Returns 0 and appends last-level entry e to
-   state->entries if it is invalid or frees state->entries if it is valid. If
-   the length of state->entries, saved in state->c, reaches state->n, 1 is
-   returned. The state->lvlidxs array holds the index of each level leading to
-   the first element of the state->entries linked list when 1 is returned.
-   Returns -1 in case of error. To append entries to the linked list, it
-   allocates nodes using pmem. This function is based on the assumption that
-   walkpagetree walks the tree entries in order. */
+   getninvalidstate *.
+
+   Returns 0 and appends last-level entry e to
+   state->entries if it is invalid or frees state->entries if it is valid.
+
+   If the length of state->entries, saved in state->c, reaches state->n, 1 is
+   returned.
+
+   The state->lvlidxs array holds the index of each level leading to the first
+   element of the state->entries linked list when 1 is returned.
+
+   Returns -1 in case of error.
+
+   To append entries to the state->entries linked list, it allocates nodes
+   using pmem. This function is based on the assumption that walkpagetree walks
+   the tree entries in order. */
 static s8 getninvalid(struct pte e, void *state);
 
 /* Check function of walkpagetree. Returns 1 if entry e is valid or 0
