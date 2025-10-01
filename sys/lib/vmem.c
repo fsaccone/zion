@@ -203,103 +203,77 @@ valloc(pageentry ptree[PAGE_TABLE_ENTRIES], uptr vaddr,
 }
 
 s8
-vfree(pageentry ptree[PAGE_TABLE_ENTRIES], uptr vaddr, uptr s)
+vfree(pageentry ptree[PAGE_TABLE_ENTRIES], uptr vaddr)
 {
-	uptr i, lvlidxs[PAGE_TABLE_LEVELS] = PAGE_LVLIDXS_FROM_VADDR(vaddr);
+	uptr l, i, lvlidxs[PAGE_TABLE_LEVELS] = PAGE_LVLIDXS_FROM_VADDR(vaddr);
+	pageentry *lastpt, *e;
+	void *f;
 
-	for (i = 0; i < CEIL(s, PAGE_SIZE) / PAGE_SIZE; i++) {
-		pageentry *lastpt, *e;
-		sptr l;
-		void *f;
+	/* Get last-level page table pointing to e starting from ptree. */
+	lastpt = ptree;
+	for (l = 0; l < PAGE_TABLE_LEVELS; l++) {
+		pageentry *lastpte = &lastpt[lvlidxs[l]];
 
-		/* Get the last-level page table containing the entry. */
-		lastpt = ptree;
-		for (l = 0; l < PAGE_TABLE_LEVELS - 1; l++)
-			lastpt = (pageentry *)
-			         PAGE_ENTRY_GET_PADDR(lastpt[lvlidxs[l]]);
-
-		e = &lastpt[lvlidxs[PAGE_TABLE_LEVELS - 1]];
-
-		if (!PAGE_ENTRY_GET_VALID(*e)) {
+		if (!PAGE_ENTRY_GET_VALID(*lastpte)) {
 			setpanicmsg("Invalid page.");
-			tracepanicmsg("valloc");
-			return -1;
-		}
-
-		f = (void *)PAGE_ENTRY_GET_PADDR(*e);
-
-		if (pfree(f, PAGE_SIZE)) {
 			tracepanicmsg("vfree");
 			return -1;
 		}
 
-		/* Make the entry invalid. */
-		*e = PAGE_ENTRY_REM_VALID(*e);
+		lastpt = PAGE_ENTRY_GET_PADDR(*lastpte);
+	}
 
-		/* Increase last-level index leading to entry and check:
-		     1. if any page table is empty (i.e. full of invalid
-		        entries): if it is, free it.
-		     2. if any level index reaches PAGE_TABLE_ENTRIES: if it
-		        does, increase the previous level index and reset the
-		        current one to 0. */
-		lvlidxs[PAGE_TABLE_LEVELS - 1]++;
-		for (l = PAGE_TABLE_LEVELS - 1; l >= 0; l--) {
-			sptr j;
-			pageentry *pt, *etopt;
+	e = lastpt[lvlidxs[PAGE_TABLE_LEVELS - 1]];
 
-			/* Check 1. */
+	if (!PAGE_ENTRY_GET_VALID(*e)) {
+		setpanicmsg("Invalid page.");
+		tracepanicmsg("vfree");
+		return -1;
+	}
 
-			/* Find current page table pt and the entry pointing to
-			   it, etopt, which is needed when pt has to be
-			   freed. */
-			pt = ptree;
-			for (j = 0; j < l; j++) {
-				/* Set etopt on the previous pt, which is the
-				   parent of the pt which is going to be set
-				   next. */
-				etopt = &pt[lvlidxs[j]];
+	f = (void *)PAGE_ENTRY_GET_PADDR(*e);
 
-				pt = (pageentry *)
-				     PAGE_ENTRY_GET_PADDR(pt[lvlidxs[j]]);
-			}
+	if (pfree(f, PAGE_SIZE)) {
+		tracepanicmsg("vfree");
+		return -1;
+	}
 
-			switch (walkpagetree(NULL, pt, 0, validentry, NULL)) {
-			case 0:
-				/* Valid entry found: page table is not
-				   empty. */
-				break;
-			case 1:
-				/* Valid entry not found: page table is
-				   empty. */
-				if (pfree(pt, PAGE_TABLE_ENTRIES
-				              * sizeof(pageentry))) {
-					tracepanicmsg("vfree");
-					return -1;
-				}
+	*e = PAGE_ENTRY_REM_VALID(*e);
 
-				/* Make entry pointing to the page table
-				   invalid. */
-				*etopt = PAGE_ENTRY_REM_VALID(*etopt);
+	/* Check if any page table is empty (i.e. full of invalid entries): if
+	   it is, free it. */
+	for (i = 0; i < PAGE_TABLE_LEVELS - 1; i++) {
+		pageentry *pt, *etopt;
+		uptr j, ei;
+		u8 isempty;
 
-				break;
-			default:
+		/* Find current page table pt and the entry pointing to it,
+		   etopt, which is needed when pt has to be freed. */
+		pt = ptree;
+		for (j = 0; j < PAGE_TABLE_LEVELS - i - 1; j++) {
+			/* Set etopt on the previous pt, which is the parent of
+			   the pt which is going to be set next. */
+			etopt = &pt[lvlidxs[j]];
+
+			pt = (pageentry *)PAGE_ENTRY_GET_PADDR(pt[lvlidxs[j]]);
+		}
+
+		/* Set isempty. */
+		isempty = 1;
+		for (ei = 0; ei < PAGE_TABLE_ENTRIES && isempty; ei++) {
+			if (PAGE_ENTRY_GET_VALID(pt[ei]))
+				isempty = 0;
+		}
+
+		if (isempty) {
+			/* Free and invalidate page table. */
+			if (pfree(pt,
+			          sizeof(pageentry) * PAGE_TABLE_ENTRIES)) {
 				tracepanicmsg("vfree");
 				return -1;
 			}
 
-			/* Check 2. */
-
-			if (lvlidxs[l] < PAGE_TABLE_ENTRIES)
-				continue;
-
-			if (!l) {
-				setpanicmsg("End of page tree reached.");
-				tracepanicmsg("vfree");
-				return -1;
-			}
-
-			lvlidxs[l - 1]++;
-			lvlidxs[l] = 0;
+			*etopt = PAGE_ENTRY_REM_VALID(*etopt);
 		}
 	}
 
