@@ -32,7 +32,6 @@ kernel(void)
 	(void)consolewriteb10u(NCPU);
 	(void)consolewrite(" core(s)\n");
 
-	physicalmem();
 	freeallmem();
 	initdrivers();
 	initinterrupts();

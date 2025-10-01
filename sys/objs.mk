@@ -24,7 +24,6 @@ OBJS_LIB = arch/$(ARCH)/lib/atomic.o \
            arch/$(ARCH)/lib/core.o \
            arch/$(ARCH)/lib/ctx.o \
            arch/$(ARCH)/lib/interrupt.o \
-           arch/$(ARCH)/lib/mem.o \
            arch/$(ARCH)/lib/timer.o \
            arch/$(ARCH)/lib/user.o \
            lib/console.o \
