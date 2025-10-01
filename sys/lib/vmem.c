@@ -55,6 +55,12 @@ valloc(pageentry ptree[PAGE_TABLE_ENTRIES], uptr vaddr,
 
 	e = &lastpt[lvlidxs[PAGE_TABLE_LEVELS - 1]];
 
+	if (PAGE_ENTRY_GET_VALID(*e)) {
+		setpanicmsg("Already valid page.");
+		tracepanicmsg("valloc");
+		return -1;
+	}
+
 	if (!(f = palloc(PAGE_SIZE, 0))) {
 		tracepanicmsg("valloc");
 		return -1;
