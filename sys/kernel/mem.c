@@ -5,7 +5,6 @@
 #include <console.h>
 #include <machine/mem.h>
 #include <math.h>
-#include <mem.h>
 #include <panic.h>
 #include <pmem.h>
 
@@ -57,10 +56,4 @@ freeallmem(void)
 		(void)consolewriteb16(end);
 		(void)consolewrite("]\n");
 	}
-}
-
-void
-physicalmem(void)
-{
-	memswitch(NULL, 0);
 }
