@@ -148,54 +148,56 @@ allocpagetable(void)
 }
 
 s8
-valloc(uptr *o, pageentry ptree[PAGE_TABLE_ENTRIES], struct pageoptions opts,
-       uptr s)
+valloc(pageentry ptree[PAGE_TABLE_ENTRIES], uptr vaddr,
+       struct pageoptions opts)
 {
-	struct getninvalidstate state = { 0 };
-	struct ptenode *e;
+	uptr l, lvlidxs[PAGE_TABLE_LEVELS] = PAGE_LVLIDXS_FROM_VADDR(vaddr);
+	pageentry *lastpt, *e;
+	void *f;
 
-	state.n = CEIL(s, PAGE_SIZE) / PAGE_SIZE;
+	/* Get last-level page table pointing to e starting from ptree. */
+	lastpt = ptree;
+	for (l = 0; l < PAGE_TABLE_LEVELS; l++) {
+		pageentry *lastpte = &lastpt[lvlidxs[l]];
 
-	switch (walkpagetree(NULL, ptree, PAGE_TABLE_LEVELS - 1, getninvalid,
-	                     &state)) {
-	case -1:
-		tracepanicmsg("valloc");
-		return -1;
-	case 1:
-		setpanicmsg("Page tree full.");
-		tracepanicmsg("valloc");
-		return -1;
-	default:
-	}
+		/* Allocate invalid intermediate page tables. */
+		if (!PAGE_ENTRY_GET_VALID(*lastpte)) {
+			pageentry *newpt;
 
-	for (e = state.entries; e; e = e->n) {
-		void *f;
-		pageentry *eptr = &e->e.ptable[e->e.i];
+			if (!(newpt = allocpagetable())) {
+				tracepanicmsg("valloc");
+				return -1;
+			}
 
-		if (!(f = palloc(PAGE_SIZE, 0))) {
-			tracepanicmsg("valloc");
-			return -1;
+			*lastpte = PAGE_ENTRY_ADD_VALID(*lastpte);
+			*lastpte = PAGE_ENTRY_SET_PADDR(*lastpte, (uptr)newpt);
 		}
 
-		*eptr = PAGE_ENTRY_SET_PADDR(*eptr, (uptr)f);
-
-		*eptr = PAGE_ENTRY_ADD_VALID(*eptr);
-
-		if (opts.r)
-			*eptr = PAGE_ENTRY_ADD_R(*eptr);
-
-		if (opts.w)
-			*eptr = PAGE_ENTRY_ADD_W(*eptr);
-
-		if (opts.x)
-			*eptr = PAGE_ENTRY_ADD_X(*eptr);
-
-		if (opts.u)
-			*eptr = PAGE_ENTRY_ADD_USER(*eptr);
+		lastpt = PAGE_ENTRY_GET_PADDR(*lastpte);
 	}
 
-	if (o)
-		*o = PAGE_VADDR_FROM_LVLIDXS(state.lvlidxs);
+	e = lastpt[lvlidxs[PAGE_TABLE_LEVELS - 1]];
+
+	if (!(f = palloc(PAGE_SIZE, 0))) {
+		tracepanicmsg("valloc");
+		return -1;
+	}
+
+	*e = PAGE_ENTRY_SET_PADDR(*e, (uptr)f);
+
+	*e = PAGE_ENTRY_ADD_VALID(*e);
+
+	if (opts.r)
+		*e = PAGE_ENTRY_ADD_R(*e);
+
+	if (opts.w)
+		*e = PAGE_ENTRY_ADD_W(*e);
+
+	if (opts.x)
+		*e = PAGE_ENTRY_ADD_X(*e);
+
+	if (opts.u)
+		*e = PAGE_ENTRY_ADD_USER(*e);
 
 	return 0;
 }
