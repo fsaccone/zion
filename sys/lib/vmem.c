@@ -145,7 +145,7 @@ valloc(uptr *o, pageentry ptree[PAGE_TABLE_ENTRIES], struct pageoptions opts,
 		tracepanicmsg("valloc");
 		return -1;
 	case 1:
-		setpanicmsg("pagetreefull");
+		setpanicmsg("Page tree full.");
 		tracepanicmsg("valloc");
 		return -1;
 	default:
