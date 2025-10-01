@@ -30,6 +30,41 @@ freepagetable(pageentry *ptable)
 	return 0;
 }
 
+void *
+paddr(pageentry *ptree, uptr vaddr)
+{
+	uptr l, lvlidxs[PAGE_TABLE_LEVELS] = PAGE_LVLIDXS_FROM_VADDR(vaddr);
+	pageentry *lastpt, *e;
+
+	/* Get last-level page table pointing to e starting from ptree. */
+	lastpt = ptree;
+	for (l = 0; l < PAGE_TABLE_LEVELS - 1; l++) {
+		pageentry *lastpte = &lastpt[lvlidxs[l]];
+
+		if (!PAGE_ENTRY_GET_VALID(*lastpte)) {
+			setpanicmsg("Invalid page.");
+			tracepanicmsg("paddr");
+			return NULL;
+		} else if (!PAGE_ENTRY_GET_WALKABLE(*lastpte)) {
+			setpanicmsg("Non-walkable page table.");
+			tracepanicmsg("paddr");
+			return NULL;
+		}
+
+		lastpt = (pageentry *)PAGE_ENTRY_GET_PADDR(*lastpte);
+	}
+
+	e = &lastpt[lvlidxs[PAGE_TABLE_LEVELS - 1]];
+
+	if (!PAGE_ENTRY_GET_VALID(*e)) {
+		setpanicmsg("Invalid page.");
+		tracepanicmsg("paddr");
+		return NULL;
+	}
+
+	return (void *)PAGE_ENTRY_GET_PADDR(*e);
+}
+
 s8
 valloc(pageentry *ptree, uptr vaddr, struct pageoptions opts)
 {
