@@ -41,8 +41,7 @@ pageentry *allocpagetable(void);
    allocating their respective frames and all the intermediate page tables,
    as needed to fit size s. Sets o to the virtual address of the first
    allocated page. Initializes each page entry with options opts. Returns -1 in
-   case of error, 1 if there is not enough space in page tree or 0
-   otherwise. */
+   case of error or 0 otherwise. */
 s8 valloc(uptr *o, pageentry ptree[PAGE_TABLE_ENTRIES],
           struct pageoptions opts, uptr s);
 
