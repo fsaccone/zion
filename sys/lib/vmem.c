@@ -20,8 +20,7 @@ allocpagetable(void)
 }
 
 s8
-valloc(pageentry ptree[PAGE_TABLE_ENTRIES], uptr vaddr,
-       struct pageoptions opts)
+valloc(pageentry *ptree, uptr vaddr, struct pageoptions opts)
 {
 	uptr l, lvlidxs[PAGE_TABLE_LEVELS] = PAGE_LVLIDXS_FROM_VADDR(vaddr);
 	pageentry *lastpt, *e;
@@ -86,7 +85,7 @@ valloc(pageentry ptree[PAGE_TABLE_ENTRIES], uptr vaddr,
 }
 
 s8
-vfree(pageentry ptree[PAGE_TABLE_ENTRIES], uptr vaddr)
+vfree(pageentry *ptree, uptr vaddr)
 {
 	uptr l, i, lvlidxs[PAGE_TABLE_LEVELS] = PAGE_LVLIDXS_FROM_VADDR(vaddr);
 	pageentry *lastpt, *e;
