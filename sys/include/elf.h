@@ -21,9 +21,9 @@ struct elfprogflags {
 	u8 reserved[4];
 };
 
-/* Loads the ELF file whose content is at elf to page table pt and returns its
-   load virtual address or NULL in case of error. */
-void *allocelf(void *elf, struct elffileflags flags,
-               pageentry pt[PAGE_TABLE_ENTRIES]);
+/* Loads the ELF file whose content is at elf to a newly allocated page tree at
+   address 0x0 and returns the address to the page tree or NULL in case of
+   error. */
+pageentry *allocelf(void *elf, struct elffileflags flags);
 
 #endif

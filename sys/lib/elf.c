@@ -41,12 +41,10 @@ struct elfprogheader {
 	uptr                alignment;
 };
 
-void *
-allocelf(void *elf, struct elffileflags flags,
-         pageentry pt[PAGE_TABLE_ENTRIES])
+pageentry *
+allocelf(void *elf, struct elffileflags flags)
 {
 	/* (TODO) */
-	(void)pt;
 	(void)flags;
 	return elf;
 }
