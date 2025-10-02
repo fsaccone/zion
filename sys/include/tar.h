@@ -3,6 +3,8 @@
 
 #include <arch/types.h>
 
+#define TAR_NAME_SIZE 100;
+
 #define TAR_TYPE_AREG      '\0'
 #define TAR_TYPE_REG       '0'
 #define TAR_TYPE_HARDLINK  '1'
@@ -14,7 +16,7 @@
 #define TAR_TYPE_RESERVED  '7'
 
 struct tarheader {
-	u8 name[100];
+	u8 name[TAR_NAME_SIZE];
 	u8 mode[8];
 	u8 uid[8];
 	u8 gid[8];
@@ -22,7 +24,7 @@ struct tarheader {
 	u8 mtime[12];
 	u8 checksum[8];
 	u8 type;
-	u8 linkname[100];
+	u8 linkname[TAR_NAME_SIZE];
 	u8 magic[6];
 	u8 version[2];
 	u8 uname[32];
