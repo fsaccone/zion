@@ -1,13 +1,17 @@
-OUTS = sbin/init
+include ../../config.mk
+
+PROGRAMS = sbin/init
 
 .PHONY: all clean
 
-all: $(OUTS)
+all: $(PROGRAMS)
 
 clean:
-	rm -f $(OUTS)
+	rm -f $(PROGRAMS)
 
-$(OUTS):
+$(PROGRAMS):
 	mkdir -p $$(dirname $@)
 	(cd ../../ && $(MAKE) $@/install)
 	(cp -f ../../out/$@ $@)
+
+	$(OBJCOPY) -O binary $@
