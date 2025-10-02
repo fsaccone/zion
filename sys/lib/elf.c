@@ -45,6 +45,5 @@ pageentry *
 allocelf(void *elf)
 {
 	/* (TODO) */
-	(void)flags;
 	return elf;
 }
