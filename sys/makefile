@@ -6,17 +6,21 @@ OUT = sys.bin
 
 CONFIGH = include/config.h
 
-INIT    = init/
-INITTAR = init.tar
+INITTAR      = init.tar
 INITTARMAGIC = '\x5A\x49\x4F\x4E\x49\x4E\x49\x54\x54\x41\x52\x53\x54\x41\x52\x54'
 
-.PHONY: all clean test
+.PHONY: all clean init test
 
 all: $(OUT)
 
 clean:
-	rm -rf $(OUT) $(CONFIGH) $(INIT) $(INITTAR) \
+	rm -rf $(OUT) $(CONFIGH) $(INITTAR) \
 	       $(OBJS) $(OBJS:.o=.c.o) $(OBJS:.o=.s.o)
+	(cd init && $(MAKE) clean)
+
+init:
+	(cd init && $(MAKE) all)
+
 
 test: $(OUT)
 	exec arch/$(ARCH)/machine/$(MACHINE)/test $(OUT)
@@ -47,14 +51,8 @@ $(CONFIGH):
 
 	echo '#endif' >> $@
 
-$(INIT):
-	mkdir -p $@/sbin
-
-	(cd .. && $(MAKE) sbin/init/install)
-	cp -f ../out/sbin/init $@/sbin
-
-$(INITTAR): $(INIT)
-	(cd $(INIT) && tar -c .) > $@
+$(INITTAR): init
+	(cd init && tar -c $$(find . -type f ! -path './makefile')) > $@
 
 $(OBJS): $(CONFIGH)
 	if [ -f $(@:.o=.c) ]; then \
