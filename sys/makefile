@@ -52,7 +52,7 @@ $(CONFIGH):
 	echo '#endif' >> $@
 
 $(INITTAR): init
-	(cd init && tar -c $$(find . -type f ! -path './makefile')) > $@
+	(cd init && tar -c $$(find * -type f ! -path 'makefile')) > $@
 
 $(OBJS): $(CONFIGH)
 	if [ -f $(@:.o=.c) ]; then \
