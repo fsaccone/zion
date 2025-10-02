@@ -3,6 +3,7 @@
 #include <arch/types.h>
 #include <panic.h>
 #include <pmem.h>
+#include <process.h>
 #include <spinlock.h>
 #include <string.h>
 #include <tar.h>
@@ -38,6 +39,11 @@ coremain(u16 c)
 		if (!f) {
 			setpanicmsg("Unable to find sbin/init file in "
 			            "init.tar.");
+			tracepanicmsg("coremain");
+			panic();
+		}
+
+		if (!initprocess(tarbase(f->h))) {
 			tracepanicmsg("coremain");
 			panic();
 		}
