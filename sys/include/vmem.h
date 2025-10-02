@@ -34,15 +34,13 @@ s8 freepagetable(pageentry *ptable);
 void *paddr(pageentry *ptree, uptr vaddr);
 
 /* Validates page pointed by virtual address vaddr of page tree ptree using
-   options opts, allocating a frame and making the page entry point to its
-   physical address. Allocates missing intermediate page tables. Returns -1 in
-   case of error and 0 otherwise. */
-s8 valloc(pageentry *ptree, uptr vaddr, struct pageoptions opts);
+   options opts, mapping it to the paddr physical address. Allocates missing
+   intermediate page tables. Returns -1 in case of error and 0 otherwise. */
+s8 vmap(pageentry *ptree, uptr vaddr, void *paddr, struct pageoptions opts);
 
 /* Invalidates allocated page pointed by virtual address vaddr of page tree
-   ptree, freeing the physical frame pointed by it and all the page tables
-   which were emptied after the operation. Returns -1 in case of error and 0
-   otherwise. */
-s8 vfree(pageentry *ptree, uptr vaddr);
+   ptree, freeing the page tables which were emptied after the operation.
+   Returns -1 in case of error and 0 otherwise. */
+s8 vunmap(pageentry *ptree, uptr vaddr);
 
 #endif
