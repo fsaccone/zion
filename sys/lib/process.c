@@ -5,6 +5,11 @@
 #include <pmem.h>
 #include <vmem.h>
 
+/* Dequeues a process from queue at address q and sets pointer p to it. The p
+   pointer is set to NULL if the queue is empty. Returns -1 in case of error or
+   0 otherwise. */
+static s8 dequeue(struct process **p, struct processlist **q);
+
 /* Enqueues process p to queue at address q, Returns 0 normally and -1 in case
    of error. */
 static u8 enqueue(struct process *p, struct processlist **q);
@@ -17,6 +22,27 @@ static struct processlist *createdqueue           = NULL;
 static struct process      init                   = { 0 };
 static struct process     *coreprocesses[NCPU]    = { 0 };
 static u8                  pidbitmap[PID_MAX / 8] = { 0 };
+
+s8
+dequeue(struct process **p, struct processlist **q)
+{
+	struct processlist *tail;
+
+	if (!*q) {
+		*p = NULL;
+		return 0;
+	}
+
+	/* Find tail of q. */
+	for (tail = *q; tail->n; tail = tail->n);
+
+	*p = tail->p;
+
+	if (pfree(tail, sizeof(struct processlist)))
+		return -1;
+
+	return 0;
+}
 
 u8
 enqueue(struct process *p, struct processlist **q)
