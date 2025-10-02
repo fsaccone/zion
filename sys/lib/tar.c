@@ -10,7 +10,7 @@ istarheader(void *ptr)
 }
 
 void *
-tarprogram(struct tarheader *h)
+tarbase(struct tarheader *h)
 {
 	return (void *)((uptr)h + sizeof(struct tarheader));
 }

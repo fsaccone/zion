@@ -38,8 +38,8 @@ struct tarheader {
 /* Returns 1 if ptr points to a valid tar header or 0 otherwise. */
 u8 istarheader(void *ptr);
 
-/* Returns the address of the program code of the tar header h. */
-void *tarprogram(struct tarheader *h);
+/* Returns the base address of the file whose tar header is h. */
+void *tarbase(struct tarheader *h);
 
 /* Returns the size of the file whose tar header is h. */
 uptr tarsize(struct tarheader *h);
