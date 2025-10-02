@@ -42,4 +42,7 @@ u8 istarheader(void *ptr);
    null or the size field is not a valid octal string. */
 uptr tarheadersize(struct tarheader *h);
 
+/* Returns the address of the program code of the tar header h. */
+void *tarprogram(struct tarheader *h);
+
 #endif

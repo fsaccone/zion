@@ -27,3 +27,9 @@ tarheadersize(struct tarheader *h)
 
 	return s;
 }
+
+void *
+tarprogram(struct tarheader *h)
+{
+	return (void *)((uptr)h + sizeof(struct tarheader));
+}
