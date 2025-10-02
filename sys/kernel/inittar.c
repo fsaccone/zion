@@ -93,7 +93,7 @@ allocinittarfiles(void)
 		tail = new;
 
 		/* Skip content sectors. */
-		if ((s = tarheadersize(h)))
+		if ((s = tarsize(h)))
 			h += CEIL(s, sizeof(struct tarheader));
 	}
 
