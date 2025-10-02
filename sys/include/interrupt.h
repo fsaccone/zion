@@ -45,4 +45,8 @@ u8 interrupttype(void);
    to r. If it is not called, the register retains its original value. */
 void setinterruptreturn(ureg r);
 
+/* Does not return. Makes the running core in a state where it just waits for
+   an interrupt to reactivate it. */
+void waitforinterrupt(void);
+
 #endif

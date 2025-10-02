@@ -6,6 +6,7 @@
 .global interruptsenabled
 .global interrupttype
 .global setinterruptreturn
+.global waitforinterrupt
 
 disableinterrupts:
 	csrr t0,      sstatus
@@ -155,6 +156,9 @@ setinterruptreturn:
 	csrw sscratch, a0
 
 	ret
+
+waitforinterrupt:
+	wfi
 
 .section .data
 
