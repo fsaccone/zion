@@ -12,7 +12,7 @@ static s8 dequeue(struct process **p, struct processlist **q);
 
 /* Enqueues process p to queue at address q, Returns 0 normally and -1 in case
    of error. */
-static u8 enqueue(struct process *p, struct processlist **q);
+static s8 enqueue(struct process *p, struct processlist **q);
 
 /* Returns the first unused PID from pidbitmap and sets it to used. Returns 0
    if pidbitmap is full. */
@@ -44,7 +44,7 @@ dequeue(struct process **p, struct processlist **q)
 	return 0;
 }
 
-u8
+s8
 enqueue(struct process *p, struct processlist **q)
 {
 	struct processlist *new, *tail;
