@@ -1,6 +1,7 @@
 #ifndef _PROCESS_H
 #define _PROCESS_H
 
+#include <arch/ctx.h>
 #include <arch/page.h>
 #include <arch/types.h>
 
@@ -31,7 +32,7 @@ struct process {
 	pageentry pagetree[PAGE_TABLE_ENTRIES];
 
 	/* The CPU context. */
-	void *ctx;
+	u8 ctx[CTX_SIZE];
 
 	/* A linked list containing the children processes of the process. */
 	struct processlist *children;
