@@ -9,8 +9,14 @@ istarheader(void *ptr)
 	return !strncmp((char *)((struct tarheader *)ptr)->magic, "ustar", 5);
 }
 
+void *
+tarprogram(struct tarheader *h)
+{
+	return (void *)((uptr)h + sizeof(struct tarheader));
+}
+
 uptr
-tarheadersize(struct tarheader *h)
+tarsize(struct tarheader *h)
 {
 	uptr s = 0;
 	u8 i;
@@ -26,10 +32,4 @@ tarheadersize(struct tarheader *h)
 	}
 
 	return s;
-}
-
-void *
-tarprogram(struct tarheader *h)
-{
-	return (void *)((uptr)h + sizeof(struct tarheader));
 }
