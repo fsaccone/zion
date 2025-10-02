@@ -66,11 +66,10 @@ paddr(pageentry *ptree, uptr vaddr)
 }
 
 s8
-valloc(pageentry *ptree, uptr vaddr, struct pageoptions opts)
+vmap(pageentry *ptree, uptr vaddr, void *paddr, struct pageoptions opts)
 {
 	uptr l, lvlidxs[PAGE_TABLE_LEVELS] = PAGE_LVLIDXS_FROM_VADDR(vaddr);
 	pageentry *lastpt, *e;
-	void *f;
 
 	/* Get last-level page table pointing to e starting from ptree. */
 	lastpt = ptree;
@@ -106,12 +105,7 @@ valloc(pageentry *ptree, uptr vaddr, struct pageoptions opts)
 		return -1;
 	}
 
-	if (!(f = palloc(PAGE_SIZE, 0))) {
-		tracepanicmsg("valloc");
-		return -1;
-	}
-
-	*e = PAGE_ENTRY_SET_PADDR(*e, (uptr)f);
+	*e = PAGE_ENTRY_SET_PADDR(*e, (uptr)paddr);
 
 	*e = PAGE_ENTRY_ADD_VALID(*e);
 
@@ -131,11 +125,10 @@ valloc(pageentry *ptree, uptr vaddr, struct pageoptions opts)
 }
 
 s8
-vfree(pageentry *ptree, uptr vaddr)
+vunmap(pageentry *ptree, uptr vaddr)
 {
 	uptr l, i, lvlidxs[PAGE_TABLE_LEVELS] = PAGE_LVLIDXS_FROM_VADDR(vaddr);
 	pageentry *lastpt, *e;
-	void *f;
 
 	/* Get last-level page table pointing to e starting from ptree. */
 	lastpt = ptree;
@@ -159,13 +152,6 @@ vfree(pageentry *ptree, uptr vaddr)
 
 	if (!PAGE_ENTRY_GET_VALID(*e)) {
 		setpanicmsg("Invalid page.");
-		tracepanicmsg("vfree");
-		return -1;
-	}
-
-	f = (void *)PAGE_ENTRY_GET_PADDR(*e);
-
-	if (pfree(f, PAGE_SIZE)) {
 		tracepanicmsg("vfree");
 		return -1;
 	}
