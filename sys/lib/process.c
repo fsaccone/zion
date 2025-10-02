@@ -84,7 +84,7 @@ unusedpid(void)
 	return 0;
 }
 
-struct process *
+s8
 createprocess(void *pbase, struct process *parent)
 {
 	struct process *p;
@@ -92,18 +92,18 @@ createprocess(void *pbase, struct process *parent)
 
 	if (!(p = palloc(sizeof(struct process), 0))) {
 		tracepanicmsg("createprocess");
-		return NULL;
+		return -1;
 	}
 
 	if (!(child = palloc(sizeof(struct processlist), 0))) {
 		tracepanicmsg("createprocess");
-		return NULL;
+		return -1;
 	}
 
 	if (!(p->pid = unusedpid())) {
 		setpanicmsg("PID_MAX exceeded.");
 		tracepanicmsg("createprocess");
-		return NULL;
+		return -1;
 	}
 
 	p->state = CREATED;
@@ -117,13 +117,13 @@ createprocess(void *pbase, struct process *parent)
 
 	if (enqueue(p, &createdqueue)) {
 		tracepanicmsg("createprocess");
-		return NULL;
+		return -1;
 	}
 
-	return p;
+	return 0;
 }
 
-struct process *
+s8
 initprocess(void *pbase)
 {
 	/* Set bit 0 to used. */
@@ -136,8 +136,8 @@ initprocess(void *pbase)
 
 	if (enqueue(&init, &createdqueue)) {
 		tracepanicmsg("initprocess");
-		return NULL;
+		return -1;
 	}
 
-	return &init;
+	return 0;
 }

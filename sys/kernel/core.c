@@ -43,7 +43,7 @@ coremain(u16 c)
 			panic();
 		}
 
-		if (!initprocess(tarbase(f->h))) {
+		if (initprocess(tarbase(f->h))) {
 			tracepanicmsg("coremain");
 			panic();
 		}
