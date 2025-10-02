@@ -62,7 +62,7 @@ paddr(pageentry *ptree, uptr vaddr)
 		return NULL;
 	}
 
-	return (void *)PAGE_ENTRY_GET_PADDR(*e);
+	return (void *)(PAGE_ENTRY_GET_PADDR(*e) + (vaddr % PAGE_SIZE));
 }
 
 s8
