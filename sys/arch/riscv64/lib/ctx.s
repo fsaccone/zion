@@ -1,5 +1,12 @@
 .section .text
+.global setctxpc
 .global switchctx
+
+setctxpc:
+	# Load new pc to ra of ctx.
+	ld a1, 8(a0)
+
+	ret
 
 switchctx:
 	# If old is NULL, just load new.
