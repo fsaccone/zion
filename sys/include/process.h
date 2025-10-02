@@ -38,12 +38,12 @@ struct process {
 	struct processlist *children;
 };
 
-/* Creates a child process of process parent with program base address pbase
-   and returns its pointer. Returns NULL in case of error. */
-struct process *createprocess(void *pbase, struct process *parent);
+/* Creates a child process of process parent with program base address pbase.
+   Returns -1 in case of error or 0 otherwise. */
+s8 createprocess(void *pbase, struct process *parent);
 
-/* Initializes first process with program base address pbase and returns its
-   pointer. Returns NULL in case of error. */
-struct process *initprocess(void *pbase);
+/* Initializes first process with program base address pbase. Returns -1 in
+   case of error or 0 otherwise. */
+s8 initprocess(void *pbase);
 
 #endif
