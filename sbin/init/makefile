@@ -14,7 +14,7 @@ clean:
 install: $(OUT)
 	mkdir -p ../../out/sbin
 	cp -f $(OUT) ../../out/sbin
-	chmod 755 ../../out/sbin
+	chmod 755 ../../out/sbin/$(OUT)
 
 uninstall:
 	rm -f ../../out/sbin/$(OUT)
