@@ -1,5 +1,6 @@
 #include <process.h>
 
+#include <ctx.h>
 #include <machine/cpu.h>
 #include <panic.h>
 #include <pmem.h>
@@ -84,7 +85,7 @@ unusedpid(void)
 }
 
 struct process *
-createprocess(struct process *parent)
+createprocess(void *pbase, struct process *parent)
 {
 	struct process *p;
 	struct processlist *child;
@@ -107,6 +108,7 @@ createprocess(struct process *parent)
 
 	p->state = CREATED;
 	p->children = NULL;
+	setctxpc(p->ctx, pbase);
 
 	child->p = p;
 
@@ -122,7 +124,7 @@ createprocess(struct process *parent)
 }
 
 struct process *
-initprocess(void)
+initprocess(void *pbase)
 {
 	/* Set bit 0 to used. */
 	pidbitmap[0] |= 1;
@@ -130,6 +132,7 @@ initprocess(void)
 	init.pid = 0;
 	init.state = CREATED;
 	init.children = NULL;
+	setctxpc(init.ctx, pbase);
 
 	if (enqueue(&init, &createdqueue)) {
 		tracepanicmsg("initprocess");
