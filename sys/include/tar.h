@@ -3,7 +3,7 @@
 
 #include <arch/types.h>
 
-#define TAR_NAME_SIZE 100;
+#define TAR_NAME_SIZE 100
 
 #define TAR_TYPE_AREG      '\0'
 #define TAR_TYPE_REG       '0'
