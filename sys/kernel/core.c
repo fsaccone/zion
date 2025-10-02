@@ -4,6 +4,8 @@
 #include <panic.h>
 #include <pmem.h>
 #include <spinlock.h>
+#include <string.h>
+#include <tar.h>
 #include <timer.h>
 
 #include "inittar.h"
@@ -14,8 +16,6 @@ static struct lock     l         = { 0 };
 void
 coremain(u16 c)
 {
-	(void)c;
-
 	setupnexttimer();
 
 	lock(&l);
@@ -25,6 +25,23 @@ coremain(u16 c)
 		panic();
 	}
 	unlock(&l);
+
+	if (!c) {
+		struct tarnode *f;
+
+		for (f = initfiles; f; f = f->n) {
+			if (!strncmp((char *)f->h->name, "sbin/init",
+			             TAR_NAME_SIZE))
+				break;
+		}
+
+		if (!f) {
+			setpanicmsg("Unable to find sbin/init file in "
+			            "init.tar.");
+			tracepanicmsg("coremain");
+			panic();
+		}
+	}
 
 	for (;;);
 }
