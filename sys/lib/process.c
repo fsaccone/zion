@@ -12,9 +12,9 @@ static u8 enqueue(struct process *p, struct processlist **q);
    if pidbitmap is full. */
 static u16 unusedpid(void);
 
+static struct processlist *createdqueue           = NULL;
 static struct process      init                   = { 0 };
 static u8                  pidbitmap[PID_MAX / 8] = { 0 };
-static struct processlist *createdqueue           = NULL;
 
 u8
 enqueue(struct process *p, struct processlist **q)
