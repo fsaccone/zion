@@ -1,5 +1,6 @@
 #include <process.h>
 
+#include <machine/cpu.h>
 #include <panic.h>
 #include <pmem.h>
 #include <vmem.h>
@@ -14,6 +15,7 @@ static u16 unusedpid(void);
 
 static struct processlist *createdqueue           = NULL;
 static struct process      init                   = { 0 };
+static struct process     *coreprocesses[NCPU]    = { 0 };
 static u8                  pidbitmap[PID_MAX / 8] = { 0 };
 
 u8
