@@ -42,10 +42,10 @@ struct process {
 	struct processlist *children;
 };
 
-/* Allocates a child process of process parent with program base address pbase.
-   If parent is NULL, it creates the init process, parent of every other
-   process: if it was already created, an error is raised. Returns -1 in case
-   of error or 0 otherwise. */
-s8 allocprocess(void *pbase, struct process *parent);
+/* Allocates a child process of process parent with program base address pbase
+   and size psize. If parent is NULL, it creates the init process, parent of
+   every other process: if it was already created, an error is raised. Returns
+   -1 in case of error or 0 otherwise. */
+s8 allocprocess(void *pbase, uptr psize, struct process *parent);
 
 #endif

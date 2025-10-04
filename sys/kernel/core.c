@@ -29,6 +29,7 @@ coremain(u16 c)
 
 	if (!c) {
 		struct tarnode *f;
+		void *initbase;
 
 		for (f = initfiles; f; f = f->n) {
 			if (!strncmp((char *)f->h->name, "sbin/init",
@@ -43,8 +44,15 @@ coremain(u16 c)
 			panic();
 		}
 
+		/* Copy content of sbin/init aligning it to PAGE_SIZE. */
+		if (!(initbase = palloc(tarsize(f->h), 0))) {
+			tracepanicmsg("coremain");
+			panic();
+		}
+		pmemcpy(initbase, tarbase(f->h), tarsize(f->h));
+
 		/* Allocate init process. */
-		if (allocprocess(tarbase(f->h), NULL)) {
+		if (allocprocess(initbase, tarsize(f->h), NULL)) {
 			tracepanicmsg("coremain");
 			panic();
 		}
