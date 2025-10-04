@@ -5,13 +5,13 @@
 
 setctxpc:
 	# Load new pc to ra of ctx.
-	ld a1, 8(a0)
+	ld a1, (0 * 8)(a0)
 
 	ret
 
 setctxsp:
 	# Load new sp to sp of ctx.
-	ld a1, (2 * 8)(a0)
+	ld a1, (1 * 8)(a0)
 
 	ret
 
