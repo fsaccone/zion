@@ -4,8 +4,7 @@
 #include <tar.h>
 
 /* Returns an allocated struct tarnode linked list containing all the files in
-   init.tar or NULL if init.tar is not found in the kernel memory space or it
-   is empty. */
+   init.tar or NULL in case of error. */
 struct tarnode *allocinittarfiles(void);
 
 /* Frees all the allocated struct tarnodes of the files linked list. */

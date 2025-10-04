@@ -3,7 +3,8 @@
 
 #include <arch/types.h>
 
-/* Frees all machine memory regions mapped as usable. */
-void freeallmem(void);
+/* Frees all machine memory regions mapped as usable. Returns -1 in case of
+   error or 0 otherwise. */
+s8 freeallmem(void);
 
 #endif

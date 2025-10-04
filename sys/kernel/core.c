@@ -21,7 +21,6 @@ coremain(u16 c)
 
 	lock(&l);
 	if (!initfiles && !(initfiles = allocinittarfiles())) {
-		setpanicmsg("Unable to find init.tar in kernel codespace.");
 		tracepanicmsg("coremain");
 		panic();
 	}
