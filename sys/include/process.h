@@ -16,6 +16,11 @@ enum processstate {
 	TERMINATED,
 };
 
+struct framenode {
+	void *f;
+	struct framenode *n;
+};
+
 struct processlist {
 	struct process *p;
 	struct processlist *n;
@@ -24,6 +29,10 @@ struct processlist {
 struct process {
 	/* The process ID. */
 	u16 pid;
+
+	/* A linked list containing the frames which were allocated for the
+	   process. */
+	struct framenode *allocated;
 
 	/* The process state. */
 	enum processstate state;
