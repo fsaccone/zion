@@ -48,4 +48,7 @@ struct process {
    frames. Returns -1 in case of error or 0 otherwise. */
 s8 createprocess(struct framenode *text, struct process *parent);
 
+/* Returns the linked list containing all the processes. */
+struct processnode *processes(void);
+
 #endif

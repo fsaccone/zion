@@ -24,7 +24,7 @@ static s8 allocprocess(struct process **p, struct framenode *text);
    Returns 1 if the bit map is full or 0 otherwise. */
 static u8 unusedpid(u16 *o);
 
-static struct processnode *processes              = NULL;
+static struct processnode *processlist            = NULL;
 static struct process     *coreprocesses[NCPU]    = { 0 };
 static u8                  pidbitmap[PID_MAX / 8] = { 0 };
 
@@ -148,12 +148,18 @@ createprocess(struct framenode *text, struct process *parent)
 
 	pn->p = p;
 
-	pn->n = processes;
-	processes = pn;
+	pn->n = processlist;
+	processlist = pn;
 
 	return 0;
 
 panic:
 	tracepanicmsg("createprocess");
 	return -1;
+}
+
+struct processnode *
+processes(void)
+{
+	return processlist;
 }
