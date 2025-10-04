@@ -11,17 +11,25 @@ s8
 createinitprocess(struct tarheader *init)
 {
 	struct framenode *text = NULL, *texttail = NULL;
-	uptr a;
+	void *b = tarbase(init);
+	uptr a, s = tarsize(init);
 
 	/* Save content of init in the text linked list of frames. */
-	for (a = 0; a < tarsize(init); a += PAGE_SIZE) {
+	for (a = 0; a < s; a += PAGE_SIZE) {
 		struct framenode *fn;
+		void *f;
 
 		if (!(fn = palloc(sizeof(struct framenode), 0)))
 			goto panic;
 
-		fn->f = (void *)(MIN((uptr)tarbase(init) + a,
-		                     (uptr)tarbase(init) + tarsize(init)));
+		if (!(f = palloc(PAGE_SIZE, 0)))
+			goto panic;
+
+		pmemcpy(f, (void *)((uptr)b + a), a > s
+		                                  ? PAGE_SIZE - (a - s)
+		                                  : PAGE_SIZE);
+
+		fn->f = f;
 		fn->n = NULL;
 
 		/* Append fn to text. */
