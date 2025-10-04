@@ -44,8 +44,8 @@ struct process {
 };
 
 /* Allocates a child process of process parent, or a standalone process with no
-   parent if it is NULL, with program text contained in the text linked list of
-   frames. Returns -1 in case of error or 0 otherwise. */
+   parent if it is NULL, of state CREATED with program text contained in the
+   text linked list of frames. Returns -1 in case of error or 0 otherwise. */
 s8 createprocess(struct framenode *text, struct process *parent);
 
 /* Returns the linked list containing all the processes. */
