@@ -37,6 +37,11 @@ struct tarheader {
 	u8 reserved[12];
 };
 
+struct tarnode {
+	struct tarheader *h;
+	struct tarnode *n;
+};
+
 /* Returns 1 if ptr points to a valid tar header or 0 otherwise. */
 u8 istarheader(void *ptr);
 
