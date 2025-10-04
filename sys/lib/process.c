@@ -53,6 +53,10 @@ allocprocess(struct process **p, struct framenode *text)
 		goto panic;
 	}
 
+	/* Allocate context. */
+	if (!((*p)->ctx = palloc(CTX_SIZE, 0)))
+		goto panic;
+
 	/* Allocate page tree. */
 	if (!((*p)->pagetree = allocpagetable()))
 		goto panic;

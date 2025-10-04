@@ -37,7 +37,7 @@ struct process {
 	pageentry *pagetree;
 
 	/* The CPU context. */
-	u8 ctx[CTX_SIZE];
+	void *ctx;
 
 	/* A linked list containing the children processes of the process. */
 	struct processnode *children;
