@@ -17,10 +17,8 @@ createinitprocess(struct tarheader *init)
 	for (a = 0; a < tarsize(init); a += PAGE_SIZE) {
 		struct framenode *fn;
 
-		if (!(fn = palloc(sizeof(struct framenode), 0))) {
-			tracepanicmsg("coremain");
-			return -1;
-		}
+		if (!(fn = palloc(sizeof(struct framenode), 0)))
+			goto panic;
 
 		fn->f = (void *)(MIN((uptr)tarbase(init) + a, tarsize(init)));
 		fn->n = NULL;
@@ -33,10 +31,12 @@ createinitprocess(struct tarheader *init)
 		texttail = fn;
 	}
 
-	if (createprocess(text, NULL)) {
-		tracepanicmsg("createinitprocess");
-		return -1;
-	}
+	if (createprocess(text, NULL))
+		goto panic;
 
 	return 0;
+
+panic:
+	tracepanicmsg("coremain");
+	return -1;
 }

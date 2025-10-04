@@ -28,10 +28,8 @@ freeallmem(void)
 		for (f = (void *)CEIL(start, PAGE_SIZE);
 		     (uptr)f + PAGE_SIZE <= end;
 		     f = (void *)((uptr)f + PAGE_SIZE)) {
-			if (pfree(f, PAGE_SIZE)) {
-				tracepanicmsg("freeallmem");
-				return -1;
-			}
+			if (pfree(f, PAGE_SIZE))
+				goto panic;
 
 			/* Log how many KiB have been loaded every LOG_SIZE
 			   bytes. Logging more frequently makes the overall
@@ -58,4 +56,8 @@ freeallmem(void)
 	}
 
 	return 0;
+
+panic:
+	tracepanicmsg("freeallmem");
+	return -1;
 }

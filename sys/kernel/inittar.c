@@ -72,8 +72,7 @@ allocinittarfiles(void)
 
 	if (!(first = firsttarheader())) {
 		setpanicmsg("Unable to find init.tar in kernel codespace.");
-		tracepanicmsg("allocinittarfiles");
-		return NULL;
+		goto panic;
 	}
 
 	for (h = first;
@@ -82,10 +81,8 @@ allocinittarfiles(void)
 		uptr s;
 		struct tarnode *new;
 
-		if (!(new = palloc(sizeof(struct tarnode), 0))) {
-			tracepanicmsg("allocinittarfiles");
-			return NULL;
-		}
+		if (!(new = palloc(sizeof(struct tarnode), 0)))
+			goto panic;
 
 		new->h = h;
 
@@ -101,6 +98,10 @@ allocinittarfiles(void)
 	}
 
 	return head;
+
+panic:
+	tracepanicmsg("allocinittarfiles");
+	return NULL;
 }
 
 void
