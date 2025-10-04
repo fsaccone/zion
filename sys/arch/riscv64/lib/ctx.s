@@ -1,10 +1,17 @@
 .section .text
 .global setctxpc
+.global setctxsp
 .global switchctx
 
 setctxpc:
 	# Load new pc to ra of ctx.
 	ld a1, 8(a0)
+
+	ret
+
+setctxsp:
+	# Load new sp to sp of ctx.
+	ld a1, (2 * 8)(a0)
 
 	ret
 
