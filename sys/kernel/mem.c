@@ -13,7 +13,7 @@
 /* (10M) */
 #define LOG_SIZE (10 * 1024 * 1024)
 
-void
+s8
 freeallmem(void)
 {
 	u8 i;
@@ -30,7 +30,7 @@ freeallmem(void)
 		     f = (void *)((uptr)f + PAGE_SIZE)) {
 			if (pfree(f, PAGE_SIZE)) {
 				tracepanicmsg("freeallmem");
-				panic();
+				return -1;
 			}
 
 			/* Log how many KiB have been loaded every LOG_SIZE
@@ -56,4 +56,6 @@ freeallmem(void)
 		(void)consolewriteb16(end);
 		(void)consolewrite("]\n");
 	}
+
+	return 0;
 }
