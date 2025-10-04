@@ -20,20 +20,11 @@
    error or 0 otherwise */
 static s8 allocprocess(struct process **p, struct framenode *text);
 
-/* Dequeues a process from queue at address q and sets pointer p to it. The p
-   pointer is set to NULL if the queue is empty. Returns -1 in case of error or
-   0 otherwise. */
-static s8 dequeue(struct process **p, struct processnode **q);
-
-/* Enqueues process p to queue at address q, Returns 0 normally and -1 in case
-   of error. */
-static s8 enqueue(struct process *p, struct processnode **q);
-
 /* Returns the first unused PID from pidbitmap and sets it to used. Returns 0
    on the first call or if pidbitmap is full. */
 static u16 unusedpid(void);
 
-static struct processnode *createdqueue           = NULL;
+static struct processnode *processes              = NULL;
 static u8                  initdone               = 0;
 static struct process     *coreprocesses[NCPU]    = { 0 };
 static u8                  pidbitmap[PID_MAX / 8] = { 0 };
@@ -118,59 +109,6 @@ panic:
 	return -1;
 }
 
-s8
-dequeue(struct process **p, struct processnode **q)
-{
-	struct processnode *tail;
-
-	if (!*q) {
-		*p = NULL;
-		return 0;
-	}
-
-	/* Find tail of q. */
-	for (tail = *q; tail->n; tail = tail->n);
-
-	*p = tail->p;
-
-	if (pfree(tail, sizeof(struct processnode)))
-		goto panic;
-
-	return 0;
-
-panic:
-	tracepanicmsg("dequeue");
-	return -1;
-}
-
-s8
-enqueue(struct process *p, struct processnode **q)
-{
-	struct processnode *new, *tail;
-
-	if (!(new = palloc(sizeof(struct processnode), 0)))
-		goto panic;
-
-	new->p = p;
-	new->n = NULL;
-
-	if (!*q) {
-		*q = new;
-		return 0;
-	}
-
-	/* Find tail of q. */
-	for (tail = *q; tail->n; tail = tail->n);
-
-	tail->n = new;
-
-	return 0;
-
-panic:
-	tracepanicmsg("enqueue");
-	return -1;
-}
-
 u16
 unusedpid(void)
 {
@@ -190,14 +128,22 @@ s8
 createprocess(struct framenode *text, struct process *parent)
 {
 	struct process *p;
+	struct processnode *pn;
 
 	if (allocprocess(&p, text))
 		goto panic;
 
 	/* Append to parent if it is not the init process. */
 	if (parent) {
-		if (enqueue(p, &parent->children))
+		struct processnode *newchild;
+
+		if (!(newchild = palloc(sizeof(struct processnode), 0)))
 			goto panic;
+
+		newchild->p = p;
+
+		newchild->n = parent->children;
+		parent->children = newchild;
 	} else if (initdone) {
 		setpanicmsg("Init process allocated twice.");
 		goto panic;
@@ -205,9 +151,13 @@ createprocess(struct framenode *text, struct process *parent)
 		initdone = 1;
 	}
 
-	/* Append to the queue. */
-	if (enqueue(p, &createdqueue))
+	if (!(pn = palloc(sizeof(struct processnode), 0)))
 		goto panic;
+
+	pn->p = p;
+
+	pn->n = processes;
+	processes = pn;
 
 	return 0;
 
