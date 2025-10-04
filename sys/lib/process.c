@@ -110,17 +110,10 @@ allocprocess(void *pbase, struct process *parent)
 	setctxpc(p->ctx, pbase);
 
 	if (parent) {
-		struct processlist *child;
-
-		if (!(child = palloc(sizeof(struct processlist), 0))) {
+		if (enqueue(p, &parent->children)) {
 			tracepanicmsg("allocprocess");
 			return -1;
 		}
-
-		child->p = p;
-
-		child->n = parent->children;
-		parent->children = child;
 	} else if (initdone) {
 		setpanicmsg("Init process allocated twice.");
 		tracepanicmsg("allocprocess");
