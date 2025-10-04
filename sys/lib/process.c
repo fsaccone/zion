@@ -57,18 +57,18 @@ allocprocess(struct process **p, struct framenode *text)
 	struct framenode *textfn;
 
 	if (!(*p = palloc(sizeof(struct process), 0)))
-		return -1;
+		goto panic;
 
 	/* Set pid, check if it returns 0 after the init process was already
 	   created. */
 	if (!((*p)->pid = unusedpid()) && initdone) {
 		setpanicmsg("PID_MAX exceeded.");
-		return -1;
+		goto panic;
 	}
 
 	/* Allocate page tree. */
 	if (!((*p)->pagetree = allocpagetable()))
-		return -1;
+		goto panic;
 
 	/* Set other initial values. */
 	(*p)->state = CREATED;
@@ -80,11 +80,11 @@ allocprocess(struct process **p, struct framenode *text)
 		struct framenode *fn;
 
 		if (!(f = palloc(PAGE_SIZE, 0)))
-			return -1;
+			goto panic;
 
 		/* Append f to *p->allocated. */
 		if (!(fn = palloc(sizeof(struct framenode), 0)))
-			return -1;
+			goto panic;
 		fn->f = f;
 		fn->n = (*p)->allocated;
 		(*p)->allocated = fn;
@@ -93,7 +93,7 @@ allocprocess(struct process **p, struct framenode *text)
 		         VIRTUAL_STACK_START + a,
 		         f,
 		         stackopts)) {
-			return -1;
+			goto panic;
 		}
 	}
 
@@ -103,9 +103,8 @@ allocprocess(struct process **p, struct framenode *text)
 		if (vmap((*p)->pagetree,
 		         VIRTUAL_PROGRAM_START + a++,
 		         textfn->f,
-		         textopts)) {
-			return -1;
-		}
+		         textopts))
+			goto panic;
 	}
 
 	/* Set program counter and stack pointer. */
@@ -113,6 +112,10 @@ allocprocess(struct process **p, struct framenode *text)
 	setctxsp((*p)->ctx, (void *)VIRTUAL_STACK_END);
 
 	return 0;
+
+panic:
+	tracepanicmsg("allocprocess");
+	return -1;
 }
 
 s8
@@ -131,9 +134,13 @@ dequeue(struct process **p, struct processnode **q)
 	*p = tail->p;
 
 	if (pfree(tail, sizeof(struct processnode)))
-		return -1;
+		goto panic;
 
 	return 0;
+
+panic:
+	tracepanicmsg("dequeue");
+	return -1;
 }
 
 s8
@@ -142,7 +149,7 @@ enqueue(struct process *p, struct processnode **q)
 	struct processnode *new, *tail;
 
 	if (!(new = palloc(sizeof(struct processnode), 0)))
-		return -1;
+		goto panic;
 
 	new->p = p;
 	new->n = NULL;
@@ -158,6 +165,10 @@ enqueue(struct process *p, struct processnode **q)
 	tail->n = new;
 
 	return 0;
+
+panic:
+	tracepanicmsg("enqueue");
+	return -1;
 }
 
 u16
