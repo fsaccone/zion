@@ -97,6 +97,12 @@ s8
 allocprocess(void *pbase, uptr psize, struct process *parent)
 {
 	struct process *p;
+	struct pageoptions stackopts = {
+		.u = 1,
+		.r = 1,
+		.w = 1,
+		.x = 1,
+	};
 	struct pageoptions textopts = {
 		.u = 1,
 		.r = 1,
@@ -135,6 +141,24 @@ allocprocess(void *pbase, uptr psize, struct process *parent)
 		return -1;
 	}
 
+	/* Allocate and map stack. */
+	for (a = 0; a < STACK_SIZE; a += PAGE_SIZE) {
+		void *f;
+
+		if (!(f = palloc(PAGE_SIZE, 0))) {
+			tracepanicmsg("allocprocess");
+			return -1;
+		}
+
+		if (vmap(p->pagetree,
+		         VIRTUAL_STACK_START + a,
+		         f,
+		         stackopts)) {
+			tracepanicmsg("allocprocess");
+			return -1;
+		}
+	}
+
 	/* Map text. */
 	for (a = 0; a < psize; a += PAGE_SIZE) {
 		if (vmap(p->pagetree,
@@ -146,8 +170,9 @@ allocprocess(void *pbase, uptr psize, struct process *parent)
 		}
 	}
 
-	/* Set program counter. */
-	setctxpc(p->ctx, VIRTUAL_PROGRAM_START);
+	/* Set program counter and stack pointer. */
+	setctxpc(p->ctx, (void *)VIRTUAL_PROGRAM_START);
+	setctxsp(p->ctx, (void *)VIRTUAL_STACK_END);
 
 	/* Append to parent if it is not the init process. */
 	if (parent) {
