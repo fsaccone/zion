@@ -144,11 +144,21 @@ allocprocess(void *pbase, uptr psize, struct process *parent)
 	/* Allocate and map stack. */
 	for (a = 0; a < STACK_SIZE; a += PAGE_SIZE) {
 		void *f;
+		struct framenode *fn;
 
 		if (!(f = palloc(PAGE_SIZE, 0))) {
 			tracepanicmsg("allocprocess");
 			return -1;
 		}
+
+		/* Append f to p->allocated. */
+		if (!(fn = palloc(sizeof(struct framenode), 0))) {
+			tracepanicmsg("allocprocess");
+			return -1;
+		}
+		fn->f = f;
+		fn->n = p->allocated;
+		p->allocated = fn;
 
 		if (vmap(p->pagetree,
 		         VIRTUAL_STACK_START + a,
