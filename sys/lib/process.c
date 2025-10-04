@@ -94,21 +94,28 @@ allocprocess(void *pbase, struct process *parent)
 		return -1;
 	}
 
+	/* Set pid, check if it returns 0 after the init process was already
+	   created. */
 	if (!(p->pid = unusedpid()) && initdone) {
 		setpanicmsg("PID_MAX exceeded.");
 		tracepanicmsg("allocprocess");
 		return -1;
 	}
 
+	/* Allocate page tree. */
 	if (!(p->pagetree = allocpagetable())) {
 		tracepanicmsg("allocprocess");
 		return -1;
 	}
 
+	/* Set other initial values. */
 	p->state = CREATED;
 	p->children = NULL;
+
+	/* Set program counter. */
 	setctxpc(p->ctx, pbase);
 
+	/* Append to parent if it is not the init process. */
 	if (parent) {
 		if (enqueue(p, &parent->children)) {
 			tracepanicmsg("allocprocess");
@@ -122,6 +129,7 @@ allocprocess(void *pbase, struct process *parent)
 		initdone = 1;
 	}
 
+	/* Append to the queue. */
 	if (enqueue(p, &createdqueue)) {
 		tracepanicmsg("allocprocess");
 		return -1;
