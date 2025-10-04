@@ -6,6 +6,10 @@
 #include <pmem.h>
 #include <vmem.h>
 
+#define VIRTUAL_PROGRAM_START 0x0
+#define VIRTUAL_STACK_END     ((uptr)(~0))
+#define VIRTUAL_STACK_START   (VIRTUAL_STACK_END - STACK_SIZE)
+
 /* Dequeues a process from queue at address q and sets pointer p to it. The p
    pointer is set to NULL if the queue is empty. Returns -1 in case of error or
    0 otherwise. */
