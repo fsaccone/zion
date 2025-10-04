@@ -20,7 +20,8 @@ createinitprocess(struct tarheader *init)
 		if (!(fn = palloc(sizeof(struct framenode), 0)))
 			goto panic;
 
-		fn->f = (void *)(MIN((uptr)tarbase(init) + a, tarsize(init)));
+		fn->f = (void *)(MIN((uptr)tarbase(init) + a,
+		                     (uptr)tarbase(init) + tarsize(init)));
 		fn->n = NULL;
 
 		/* Append fn to text. */
