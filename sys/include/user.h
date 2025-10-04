@@ -3,8 +3,12 @@
 
 #include <arch/page.h>
 
-/* Jumps to address a in user mode and switches to virtual memory using page
-   tree ptree if it is not NULL. */
-void usermode(void *a, pageentry *ptree);
+/* Set page tree ptree as the one used by usermode to enable virtual memory. */
+void setuserptree(pageentry *ptree);
+
+/* Enables virtual memory using the page tree set by setuserptree and jumps to
+   address 0x0 in user mode. This is supposed to be set as the program counter
+   of a context before switching to it. */
+void usermode(void);
 
 #endif
