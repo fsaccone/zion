@@ -1,10 +1,15 @@
 #include <process.h>
 
+#include <arch/page.h>
+#include <arch/types.h>
 #include <ctx.h>
 #include <machine/cpu.h>
+#include <math.h>
 #include <panic.h>
 #include <pmem.h>
 #include <vmem.h>
+
+#define STACK_SIZE CEIL(8192, PAGE_SIZE)
 
 #define VIRTUAL_PROGRAM_START 0x0
 #define VIRTUAL_STACK_END     ((uptr)(~0))
