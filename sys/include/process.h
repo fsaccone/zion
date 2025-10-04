@@ -21,9 +21,9 @@ struct framenode {
 	struct framenode *n;
 };
 
-struct processlist {
+struct processnode {
 	struct process *p;
-	struct processlist *n;
+	struct processnode *n;
 };
 
 struct process {
@@ -44,7 +44,7 @@ struct process {
 	u8 ctx[CTX_SIZE];
 
 	/* A linked list containing the children processes of the process. */
-	struct processlist *children;
+	struct processnode *children;
 };
 
 /* Allocates a child process of process parent with program base address pbase
