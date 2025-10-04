@@ -85,7 +85,7 @@ unusedpid(void)
 }
 
 s8
-createprocess(void *pbase, struct process *parent)
+allocprocess(void *pbase, struct process *parent)
 {
 	struct process *p;
 	struct processlist *child;
