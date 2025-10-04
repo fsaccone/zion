@@ -51,8 +51,8 @@ coremain(u16 c)
 		}
 		pmemcpy(initbase, tarbase(f->h), tarsize(f->h));
 
-		/* Allocate init process. */
-		if (allocprocess(initbase, tarsize(f->h), NULL)) {
+		/* Create init process. */
+		if (createprocess(initbase, tarsize(f->h), NULL)) {
 			tracepanicmsg("coremain");
 			panic();
 		}

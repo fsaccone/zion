@@ -51,6 +51,6 @@ struct process {
    and size psize. If parent is NULL, it creates the init process, parent of
    every other process: if it was already created, an error is raised. Returns
    -1 in case of error or 0 otherwise. */
-s8 allocprocess(void *pbase, uptr psize, struct process *parent);
+s8 createprocess(void *pbase, uptr psize, struct process *parent);
 
 #endif

@@ -94,7 +94,7 @@ unusedpid(void)
 }
 
 s8
-allocprocess(void *pbase, uptr psize, struct process *parent)
+createprocess(void *pbase, uptr psize, struct process *parent)
 {
 	struct process *p;
 	struct pageoptions stackopts = {
@@ -112,7 +112,7 @@ allocprocess(void *pbase, uptr psize, struct process *parent)
 	uptr a;
 
 	if (!(p = palloc(sizeof(struct process), 0))) {
-		tracepanicmsg("allocprocess");
+		tracepanicmsg("createprocess");
 		return -1;
 	}
 
@@ -120,13 +120,13 @@ allocprocess(void *pbase, uptr psize, struct process *parent)
 	   created. */
 	if (!(p->pid = unusedpid()) && initdone) {
 		setpanicmsg("PID_MAX exceeded.");
-		tracepanicmsg("allocprocess");
+		tracepanicmsg("createprocess");
 		return -1;
 	}
 
 	/* Allocate page tree. */
 	if (!(p->pagetree = allocpagetable())) {
-		tracepanicmsg("allocprocess");
+		tracepanicmsg("createprocess");
 		return -1;
 	}
 
@@ -137,7 +137,7 @@ allocprocess(void *pbase, uptr psize, struct process *parent)
 	/* Require pbase to be aligned to PAGE_SIZE. */
 	if ((uptr)pbase % PAGE_SIZE) {
 		setpanicmsg("Passed pbase not aligned to PAGE_SIZE.");
-		tracepanicmsg("allocprocess");
+		tracepanicmsg("createprocess");
 		return -1;
 	}
 
@@ -147,13 +147,13 @@ allocprocess(void *pbase, uptr psize, struct process *parent)
 		struct framenode *fn;
 
 		if (!(f = palloc(PAGE_SIZE, 0))) {
-			tracepanicmsg("allocprocess");
+			tracepanicmsg("createprocess");
 			return -1;
 		}
 
 		/* Append f to p->allocated. */
 		if (!(fn = palloc(sizeof(struct framenode), 0))) {
-			tracepanicmsg("allocprocess");
+			tracepanicmsg("createprocess");
 			return -1;
 		}
 		fn->f = f;
@@ -164,7 +164,7 @@ allocprocess(void *pbase, uptr psize, struct process *parent)
 		         VIRTUAL_STACK_START + a,
 		         f,
 		         stackopts)) {
-			tracepanicmsg("allocprocess");
+			tracepanicmsg("createprocess");
 			return -1;
 		}
 	}
@@ -175,7 +175,7 @@ allocprocess(void *pbase, uptr psize, struct process *parent)
 		         VIRTUAL_PROGRAM_START + a,
 		         (void *)((uptr)pbase + a),
 		         textopts)) {
-			tracepanicmsg("allocprocess");
+			tracepanicmsg("createprocess");
 			return -1;
 		}
 	}
@@ -187,12 +187,12 @@ allocprocess(void *pbase, uptr psize, struct process *parent)
 	/* Append to parent if it is not the init process. */
 	if (parent) {
 		if (enqueue(p, &parent->children)) {
-			tracepanicmsg("allocprocess");
+			tracepanicmsg("createprocess");
 			return -1;
 		}
 	} else if (initdone) {
 		setpanicmsg("Init process allocated twice.");
-		tracepanicmsg("allocprocess");
+		tracepanicmsg("createprocess");
 		return -1;
 	} else {
 		initdone = 1;
@@ -200,7 +200,7 @@ allocprocess(void *pbase, uptr psize, struct process *parent)
 
 	/* Append to the queue. */
 	if (enqueue(p, &createdqueue)) {
-		tracepanicmsg("allocprocess");
+		tracepanicmsg("createprocess");
 		return -1;
 	}
 
