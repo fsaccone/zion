@@ -25,7 +25,6 @@ static s8 allocprocess(struct process **p, struct framenode *text);
 static u8 unusedpid(u16 *o);
 
 static struct processnode *processlist            = NULL;
-static struct process     *coreprocesses[NCPU]    = { 0 };
 static u8                  pidbitmap[PID_MAX / 8] = { 0 };
 
 s8
