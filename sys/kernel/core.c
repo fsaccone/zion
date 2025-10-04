@@ -1,6 +1,7 @@
 #include "core.h"
 
 #include <arch/types.h>
+#include <math.h>
 #include <panic.h>
 #include <pmem.h>
 #include <process.h>
@@ -29,7 +30,8 @@ coremain(u16 c)
 
 	if (!c) {
 		struct tarnode *f;
-		void *initbase;
+		struct framenode *text = NULL, *texttail = NULL;
+		uptr a;
 
 		for (f = initfiles; f; f = f->n) {
 			if (!strncmp((char *)f->h->name, "sbin/init",
@@ -44,15 +46,30 @@ coremain(u16 c)
 			panic();
 		}
 
-		/* Copy content of sbin/init aligning it to PAGE_SIZE. */
-		if (!(initbase = palloc(tarsize(f->h), 0))) {
-			tracepanicmsg("coremain");
-			panic();
+		/* Save content of sbin/init in the text linked list of
+		   frames. */
+		for (a = 0; a < tarsize(f->h); a += PAGE_SIZE) {
+			struct framenode *fn;
+
+			if (!(fn = palloc(sizeof(struct framenode), 0))) {
+				tracepanicmsg("coremain");
+				panic();
+			}
+
+			fn->f = (void *)(MIN((uptr)tarbase(f->h) + a,
+			                     tarsize(f->h)));
+			fn->n = NULL;
+
+			/* Append fn to text. */
+			if (!texttail)
+				text = fn;
+			else
+				texttail->n = fn;
+			texttail = fn;
 		}
-		pmemcpy(initbase, tarbase(f->h), tarsize(f->h));
 
 		/* Create init process. */
-		if (createprocess(initbase, tarsize(f->h), NULL)) {
+		if (createprocess(text, NULL)) {
 			tracepanicmsg("coremain");
 			panic();
 		}

@@ -43,10 +43,10 @@ struct process {
 	struct processnode *children;
 };
 
-/* Allocates a child process of process parent with program base address pbase
-   and size psize. If parent is NULL, it creates the init process, parent of
-   every other process: if it was already created, an error is raised. Returns
-   -1 in case of error or 0 otherwise. */
-s8 createprocess(void *pbase, uptr psize, struct process *parent);
+/* Allocates a child process of process parent with program text contained in
+   the text linked list of frames. If parent is NULL, it creates the init
+   process, parent of every other process: if it was already created, an error
+   is raised. Returns -1 in case of error or 0 otherwise. */
+s8 createprocess(struct framenode *text, struct process *parent);
 
 #endif
