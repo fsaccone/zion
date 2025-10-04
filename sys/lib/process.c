@@ -106,6 +106,11 @@ allocprocess(void *pbase, struct process *parent)
 		return -1;
 	}
 
+	if (!(p->pagetree = allocpagetable())) {
+		tracepanicmsg("createprocess");
+		return -1;
+	}
+
 	p->state = CREATED;
 	p->children = NULL;
 	setctxpc(p->ctx, pbase);
@@ -128,6 +133,11 @@ initprocess(void *pbase)
 {
 	/* Set bit 0 to used. */
 	pidbitmap[0] |= 1;
+
+	if (!(init.pagetree = allocpagetable())) {
+		tracepanicmsg("initprocess");
+		return -1;
+	}
 
 	init.pid = 0;
 	init.state = CREATED;

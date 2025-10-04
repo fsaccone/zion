@@ -29,7 +29,7 @@ struct process {
 	enum processstate state;
 
 	/* The pointer to the root table of the virtual page tree. */
-	pageentry pagetree[PAGE_TABLE_ENTRIES];
+	pageentry *pagetree;
 
 	/* The CPU context. */
 	u8 ctx[CTX_SIZE];
