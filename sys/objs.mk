@@ -15,6 +15,7 @@ OBJS_INTERRUPT = interrupt/interrupt.o \
 OBJS_KERNEL = arch/$(ARCH)/astart.o \
               kernel/core.o \
               kernel/drivers.o \
+              kernel/init.o \
               kernel/inittar.o \
               kernel/kernel.o \
               kernel/mem.o \
