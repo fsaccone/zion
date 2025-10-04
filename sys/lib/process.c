@@ -89,9 +89,16 @@ unusedpid(void)
 }
 
 s8
-allocprocess(void *pbase, struct process *parent)
+allocprocess(void *pbase, uptr psize, struct process *parent)
 {
 	struct process *p;
+	struct pageoptions textopts = {
+		.u = 1,
+		.r = 1,
+		.w = 0,
+		.x = 1,
+	};
+	uptr a;
 
 	if (!(p = palloc(sizeof(struct process), 0))) {
 		tracepanicmsg("allocprocess");
@@ -116,8 +123,26 @@ allocprocess(void *pbase, struct process *parent)
 	p->state = CREATED;
 	p->children = NULL;
 
+	/* Require pbase to be aligned to PAGE_SIZE. */
+	if ((uptr)pbase % PAGE_SIZE) {
+		setpanicmsg("Passed pbase not aligned to PAGE_SIZE.");
+		tracepanicmsg("allocprocess");
+		return -1;
+	}
+
+	/* Map text. */
+	for (a = 0; a < psize; a += PAGE_SIZE) {
+		if (vmap(p->pagetree,
+		         VIRTUAL_PROGRAM_START + a,
+		         (void *)((uptr)pbase + a),
+		         textopts)) {
+			tracepanicmsg("allocprocess");
+			return -1;
+		}
+	}
+
 	/* Set program counter. */
-	setctxpc(p->ctx, pbase);
+	setctxpc(p->ctx, VIRTUAL_PROGRAM_START);
 
 	/* Append to parent if it is not the init process. */
 	if (parent) {
