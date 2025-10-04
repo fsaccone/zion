@@ -32,14 +32,16 @@ kernel(void)
 	(void)consolewriteb10u(NCPU);
 	(void)consolewrite(" core(s)\n");
 
-	if (freeallmem()) {
-		tracepanicmsg("kernel");
-		panic();
-	}
+	if (freeallmem())
+		goto panic;
 
 	initdrivers();
 	initinterrupts();
 
 	initdone = 1;
 	coremain(0);
+
+panic:
+	tracepanicmsg("kernel");
+	panic();
 }

@@ -180,30 +180,27 @@ createprocess(struct framenode *text, struct process *parent)
 {
 	struct process *p;
 
-	if (allocprocess(&p, text)) {
-		tracepanicmsg("createprocess");
-		return -1;
-	}
+	if (allocprocess(&p, text))
+		goto panic;
 
 	/* Append to parent if it is not the init process. */
 	if (parent) {
-		if (enqueue(p, &parent->children)) {
-			tracepanicmsg("createprocess");
-			return -1;
-		}
+		if (enqueue(p, &parent->children))
+			goto panic;
 	} else if (initdone) {
 		setpanicmsg("Init process allocated twice.");
-		tracepanicmsg("createprocess");
-		return -1;
+		goto panic;
 	} else {
 		initdone = 1;
 	}
 
 	/* Append to the queue. */
-	if (enqueue(p, &createdqueue)) {
-		tracepanicmsg("createprocess");
-		return -1;
-	}
+	if (enqueue(p, &createdqueue))
+		goto panic;
 
 	return 0;
+
+panic:
+	tracepanicmsg("createprocess");
+	return -1;
 }

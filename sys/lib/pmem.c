@@ -64,22 +64,19 @@ palloc(uptr s, uptr align)
 
 	if (align % PAGE_SIZE) {
 		setpanicmsg("Invalid alignment.");
-		tracepanicmsg("palloc");
-		return NULL;
+		goto panic;
 	}
 
 	if (!s || s > MAX_PALLOC) {
 		setpanicmsg("Invalid size.");
-		tracepanicmsg("palloc");
-		return NULL;
+		goto panic;
 	}
 
 	first = freeframes;
 nextfirst:
 	if (!first) {
 		setpanicmsg("Memory full.");
-		tracepanicmsg("palloc");
-		return NULL;
+		goto panic;
 	}
 
 	/* If first page is unaligned. */
@@ -107,6 +104,10 @@ nextfirst:
 	}
 
 	return first;
+
+panic:
+	tracepanicmsg("palloc");
+	return NULL;
 }
 
 void
@@ -122,8 +123,7 @@ pfree(void *f, uptr s)
 
 	if ((uptr)f % PAGE_SIZE) {
 		setpanicmsg("Misaligned frame.");
-		tracepanicmsg("pfree");
-		return -1;
+		goto panic;
 	}
 
 	for (i = 0; i < CEIL(s, PAGE_SIZE) / PAGE_SIZE; i++) {
@@ -134,6 +134,10 @@ pfree(void *f, uptr s)
 	}
 
 	return 0;
+
+panic:
+	tracepanicmsg("pfree");
+	return -1;
 }
 
 s8

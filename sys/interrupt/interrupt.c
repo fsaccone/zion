@@ -23,8 +23,7 @@ interrupt(void)
 			break;
 
 		setpanicmsg("Exception.");
-		tracepanicmsg("interrupt");
-		panic();
+		goto panic;
 
 		break;
 	case INTERRUPT_TYPE_HARDWARE:
@@ -38,4 +37,8 @@ interrupt(void)
 		break;
 	default:
 	}
+
+panic:
+	tracepanicmsg("interrupt");
+	panic();
 }

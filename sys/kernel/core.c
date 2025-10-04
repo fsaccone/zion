@@ -20,10 +20,8 @@ coremain(u16 c)
 	setupnexttimer();
 
 	lock(&l);
-	if (!initfiles && !(initfiles = allocinittarfiles())) {
-		tracepanicmsg("coremain");
-		panic();
-	}
+	if (!initfiles && !(initfiles = allocinittarfiles()))
+		goto panic;
 	unlock(&l);
 
 	if (!c) {
@@ -38,15 +36,16 @@ coremain(u16 c)
 		if (!init) {
 			setpanicmsg("Unable to find sbin/init file in "
 			            "init.tar.");
-			tracepanicmsg("coremain");
-			panic();
+			goto panic;
 		}
 
-		if (createinitprocess(init->h)) {
-			tracepanicmsg("coremain");
-			panic();
-		}
+		if (createinitprocess(init->h))
+			goto panic;
 	}
 
 	for (;;);
+
+panic:
+	tracepanicmsg("coremain");
+	panic();
 }

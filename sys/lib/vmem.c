@@ -11,23 +11,27 @@ allocpagetable(void)
 {
 	pageentry *ptable;
 
-	if (!(ptable = palloc(PAGE_TABLE_ENTRIES * sizeof(pageentry), 0))) {
-		tracepanicmsg("allocpagetable");
-		return NULL;
-	}
+	if (!(ptable = palloc(PAGE_TABLE_ENTRIES * sizeof(pageentry), 0)))
+		goto panic;
 
 	return ptable;
+
+panic:
+	tracepanicmsg("allocpagetable");
+	return NULL;
 }
 
 s8
 freepagetable(pageentry *ptable)
 {
-	if (pfree(ptable, PAGE_TABLE_ENTRIES * sizeof(pageentry))) {
-		tracepanicmsg("freepagetable");
-		return -1;
-	}
+	if (pfree(ptable, PAGE_TABLE_ENTRIES * sizeof(pageentry)))
+		goto panic;
 
 	return 0;
+
+panic:
+	tracepanicmsg("freepagetable");
+	return -1;
 }
 
 void *
@@ -43,12 +47,10 @@ paddr(pageentry *ptree, uptr vaddr)
 
 		if (!PAGE_ENTRY_GET_VALID(*lastpte)) {
 			setpanicmsg("Invalid page.");
-			tracepanicmsg("paddr");
-			return NULL;
+			goto panic;
 		} else if (!PAGE_ENTRY_GET_WALKABLE(*lastpte)) {
 			setpanicmsg("Non-walkable page table.");
-			tracepanicmsg("paddr");
-			return NULL;
+			goto panic;
 		}
 
 		lastpt = (pageentry *)PAGE_ENTRY_GET_PADDR(*lastpte);
@@ -58,11 +60,14 @@ paddr(pageentry *ptree, uptr vaddr)
 
 	if (!PAGE_ENTRY_GET_VALID(*e)) {
 		setpanicmsg("Invalid page.");
-		tracepanicmsg("paddr");
-		return NULL;
+		goto panic;
 	}
 
 	return (void *)(PAGE_ENTRY_GET_PADDR(*e) + (vaddr % PAGE_SIZE));
+
+panic:
+	tracepanicmsg("paddr");
+	return NULL;
 }
 
 s8
@@ -80,18 +85,15 @@ vmap(pageentry *ptree, uptr vaddr, void *paddr, struct pageoptions opts)
 		if (!PAGE_ENTRY_GET_VALID(*lastpte)) {
 			pageentry *newpt;
 
-			if (!(newpt = allocpagetable())) {
-				tracepanicmsg("valloc");
-				return -1;
-			}
+			if (!(newpt = allocpagetable()))
+				goto panic;
 
 			*lastpte = PAGE_ENTRY_ADD_VALID(*lastpte);
 			*lastpte = PAGE_ENTRY_SET_WALKABLE(*lastpte);
 			*lastpte = PAGE_ENTRY_SET_PADDR(*lastpte, (uptr)newpt);
 		} else if (!PAGE_ENTRY_GET_WALKABLE(*lastpte)) {
 			setpanicmsg("Non-walkable page table.");
-			tracepanicmsg("valloc");
-			return -1;
+			goto panic;
 		}
 
 		lastpt = (pageentry *)PAGE_ENTRY_GET_PADDR(*lastpte);
@@ -101,8 +103,7 @@ vmap(pageentry *ptree, uptr vaddr, void *paddr, struct pageoptions opts)
 
 	if (PAGE_ENTRY_GET_VALID(*e)) {
 		setpanicmsg("Already valid page.");
-		tracepanicmsg("valloc");
-		return -1;
+		goto panic;
 	}
 
 	*e = PAGE_ENTRY_SET_PADDR(*e, (uptr)paddr);
@@ -122,6 +123,10 @@ vmap(pageentry *ptree, uptr vaddr, void *paddr, struct pageoptions opts)
 		*e = PAGE_ENTRY_ADD_USER(*e);
 
 	return 0;
+
+panic:
+	tracepanicmsg("vmap");
+	return -1;
 }
 
 s8
@@ -137,12 +142,10 @@ vunmap(pageentry *ptree, uptr vaddr)
 
 		if (!PAGE_ENTRY_GET_VALID(*lastpte)) {
 			setpanicmsg("Invalid page.");
-			tracepanicmsg("vfree");
-			return -1;
+			goto panic;
 		} else if (!PAGE_ENTRY_GET_WALKABLE(*lastpte)) {
 			setpanicmsg("Non-walkable page table.");
-			tracepanicmsg("vfree");
-			return -1;
+			goto panic;
 		}
 
 		lastpt = (pageentry *)PAGE_ENTRY_GET_PADDR(*lastpte);
@@ -152,8 +155,7 @@ vunmap(pageentry *ptree, uptr vaddr)
 
 	if (!PAGE_ENTRY_GET_VALID(*e)) {
 		setpanicmsg("Invalid page.");
-		tracepanicmsg("vfree");
-		return -1;
+		goto panic;
 	}
 
 	*e = PAGE_ENTRY_REM_VALID(*e);
@@ -184,14 +186,16 @@ vunmap(pageentry *ptree, uptr vaddr)
 		}
 
 		if (isempty) {
-			if (freepagetable(pt)) {
-				tracepanicmsg("vfree");
-				return -1;
-			}
+			if (freepagetable(pt))
+				goto panic;
 
 			*etopt = PAGE_ENTRY_REM_VALID(*etopt);
 		}
 	}
 
 	return 0;
+
+panic:
+	tracepanicmsg("vunmap");
+	return -1;
 }
