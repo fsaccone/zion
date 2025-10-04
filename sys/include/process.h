@@ -4,6 +4,7 @@
 #include <arch/ctx.h>
 #include <arch/page.h>
 #include <arch/types.h>
+#include <pmem.h>
 
 /* Maximum 16 bits unsigned integer. */
 #define PID_MAX 65535
@@ -14,11 +15,6 @@ enum processstate {
 	RUNNING,
 	BLOCKED,
 	TERMINATED,
-};
-
-struct framenode {
-	void *f;
-	struct framenode *n;
 };
 
 struct processnode {
