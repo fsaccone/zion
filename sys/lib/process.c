@@ -15,6 +15,11 @@
 #define VIRTUAL_STACK_END     ((uptr)(~0))
 #define VIRTUAL_STACK_START   (VIRTUAL_STACK_END - STACK_SIZE)
 
+/* Allocates process and sets pointer p to it after initializing it using pbase
+   as the base address of the program and psize as its size. Returns -1 in case
+   of error or 0 otherwise */
+static s8 allocprocess(struct process **p, void *pbase, uptr psize);
+
 /* Dequeues a process from queue at address q and sets pointer p to it. The p
    pointer is set to NULL if the queue is empty. Returns -1 in case of error or
    0 otherwise. */
@@ -32,6 +37,87 @@ static struct processnode *createdqueue           = NULL;
 static u8                  initdone               = 0;
 static struct process     *coreprocesses[NCPU]    = { 0 };
 static u8                  pidbitmap[PID_MAX / 8] = { 0 };
+
+s8
+allocprocess(struct process **p, void *pbase, uptr psize)
+{
+	struct pageoptions stackopts = {
+		.u = 1,
+		.r = 1,
+		.w = 1,
+		.x = 1,
+	};
+	struct pageoptions textopts = {
+		.u = 1,
+		.r = 1,
+		.w = 0,
+		.x = 1,
+	};
+	uptr a;
+
+	if (!(*p = palloc(sizeof(struct process), 0)))
+		return -1;
+
+	/* Set pid, check if it returns 0 after the init process was already
+	   created. */
+	if (!((*p)->pid = unusedpid()) && initdone) {
+		setpanicmsg("PID_MAX exceeded.");
+		return -1;
+	}
+
+	/* Allocate page tree. */
+	if (!((*p)->pagetree = allocpagetable()))
+		return -1;
+
+	/* Set other initial values. */
+	(*p)->state = CREATED;
+	(*p)->children = NULL;
+
+	/* Require pbase to be aligned to PAGE_SIZE. */
+	if ((uptr)pbase % PAGE_SIZE) {
+		setpanicmsg("Passed pbase not aligned to PAGE_SIZE.");
+		return -1;
+	}
+
+	/* Allocate and map stack. */
+	for (a = 0; a < STACK_SIZE; a += PAGE_SIZE) {
+		void *f;
+		struct framenode *fn;
+
+		if (!(f = palloc(PAGE_SIZE, 0)))
+			return -1;
+
+		/* Append f to *p->allocated. */
+		if (!(fn = palloc(sizeof(struct framenode), 0)))
+			return -1;
+		fn->f = f;
+		fn->n = (*p)->allocated;
+		(*p)->allocated = fn;
+
+		if (vmap((*p)->pagetree,
+		         VIRTUAL_STACK_START + a,
+		         f,
+		         stackopts)) {
+			return -1;
+		}
+	}
+
+	/* Map text. */
+	for (a = 0; a < psize; a += PAGE_SIZE) {
+		if (vmap((*p)->pagetree,
+		         VIRTUAL_PROGRAM_START + a,
+		         (void *)((uptr)pbase + a),
+		         textopts)) {
+			return -1;
+		}
+	}
+
+	/* Set program counter and stack pointer. */
+	setctxpc((*p)->ctx, (void *)VIRTUAL_PROGRAM_START);
+	setctxsp((*p)->ctx, (void *)VIRTUAL_STACK_END);
+
+	return 0;
+}
 
 s8
 dequeue(struct process **p, struct processnode **q)
@@ -97,92 +183,11 @@ s8
 createprocess(void *pbase, uptr psize, struct process *parent)
 {
 	struct process *p;
-	struct pageoptions stackopts = {
-		.u = 1,
-		.r = 1,
-		.w = 1,
-		.x = 1,
-	};
-	struct pageoptions textopts = {
-		.u = 1,
-		.r = 1,
-		.w = 0,
-		.x = 1,
-	};
-	uptr a;
 
-	if (!(p = palloc(sizeof(struct process), 0))) {
+	if (allocprocess(&p, pbase, psize)) {
 		tracepanicmsg("createprocess");
 		return -1;
 	}
-
-	/* Set pid, check if it returns 0 after the init process was already
-	   created. */
-	if (!(p->pid = unusedpid()) && initdone) {
-		setpanicmsg("PID_MAX exceeded.");
-		tracepanicmsg("createprocess");
-		return -1;
-	}
-
-	/* Allocate page tree. */
-	if (!(p->pagetree = allocpagetable())) {
-		tracepanicmsg("createprocess");
-		return -1;
-	}
-
-	/* Set other initial values. */
-	p->state = CREATED;
-	p->children = NULL;
-
-	/* Require pbase to be aligned to PAGE_SIZE. */
-	if ((uptr)pbase % PAGE_SIZE) {
-		setpanicmsg("Passed pbase not aligned to PAGE_SIZE.");
-		tracepanicmsg("createprocess");
-		return -1;
-	}
-
-	/* Allocate and map stack. */
-	for (a = 0; a < STACK_SIZE; a += PAGE_SIZE) {
-		void *f;
-		struct framenode *fn;
-
-		if (!(f = palloc(PAGE_SIZE, 0))) {
-			tracepanicmsg("createprocess");
-			return -1;
-		}
-
-		/* Append f to p->allocated. */
-		if (!(fn = palloc(sizeof(struct framenode), 0))) {
-			tracepanicmsg("createprocess");
-			return -1;
-		}
-		fn->f = f;
-		fn->n = p->allocated;
-		p->allocated = fn;
-
-		if (vmap(p->pagetree,
-		         VIRTUAL_STACK_START + a,
-		         f,
-		         stackopts)) {
-			tracepanicmsg("createprocess");
-			return -1;
-		}
-	}
-
-	/* Map text. */
-	for (a = 0; a < psize; a += PAGE_SIZE) {
-		if (vmap(p->pagetree,
-		         VIRTUAL_PROGRAM_START + a,
-		         (void *)((uptr)pbase + a),
-		         textopts)) {
-			tracepanicmsg("createprocess");
-			return -1;
-		}
-	}
-
-	/* Set program counter and stack pointer. */
-	setctxpc(p->ctx, (void *)VIRTUAL_PROGRAM_START);
-	setctxsp(p->ctx, (void *)VIRTUAL_STACK_END);
 
 	/* Append to parent if it is not the init process. */
 	if (parent) {
