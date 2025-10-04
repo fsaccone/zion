@@ -90,18 +90,18 @@ allocprocess(void *pbase, struct process *parent)
 	struct process *p;
 
 	if (!(p = palloc(sizeof(struct process), 0))) {
-		tracepanicmsg("createprocess");
+		tracepanicmsg("allocprocess");
 		return -1;
 	}
 
 	if (!(p->pid = unusedpid()) && initdone) {
 		setpanicmsg("PID_MAX exceeded.");
-		tracepanicmsg("createprocess");
+		tracepanicmsg("allocprocess");
 		return -1;
 	}
 
 	if (!(p->pagetree = allocpagetable())) {
-		tracepanicmsg("createprocess");
+		tracepanicmsg("allocprocess");
 		return -1;
 	}
 
@@ -113,7 +113,7 @@ allocprocess(void *pbase, struct process *parent)
 		struct processlist *child;
 
 		if (!(child = palloc(sizeof(struct processlist), 0))) {
-			tracepanicmsg("createprocess");
+			tracepanicmsg("allocprocess");
 			return -1;
 		}
 
@@ -123,14 +123,14 @@ allocprocess(void *pbase, struct process *parent)
 		parent->children = child;
 	} else if (initdone) {
 		setpanicmsg("Init process allocated twice.");
-		tracepanicmsg("createprocess");
+		tracepanicmsg("allocprocess");
 		return -1;
 	} else {
 		initdone = 1;
 	}
 
 	if (enqueue(p, &createdqueue)) {
-		tracepanicmsg("createprocess");
+		tracepanicmsg("allocprocess");
 		return -1;
 	}
 
