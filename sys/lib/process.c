@@ -15,10 +15,10 @@
 #define VIRTUAL_STACK_END     ((uptr)(~0))
 #define VIRTUAL_STACK_START   (VIRTUAL_STACK_END - STACK_SIZE)
 
-/* Allocates process and sets pointer p to it after initializing it using pbase
-   as the base address of the program and psize as its size. Returns -1 in case
-   of error or 0 otherwise */
-static s8 allocprocess(struct process **p, void *pbase, uptr psize);
+/* Allocates process and sets pointer p to it after initializing it using text
+   as the frames containing the text of the program. Returns -1 in case of
+   error or 0 otherwise */
+static s8 allocprocess(struct process **p, struct framenode *text);
 
 /* Dequeues a process from queue at address q and sets pointer p to it. The p
    pointer is set to NULL if the queue is empty. Returns -1 in case of error or
@@ -39,7 +39,7 @@ static struct process     *coreprocesses[NCPU]    = { 0 };
 static u8                  pidbitmap[PID_MAX / 8] = { 0 };
 
 s8
-allocprocess(struct process **p, void *pbase, uptr psize)
+allocprocess(struct process **p, struct framenode *text)
 {
 	struct pageoptions stackopts = {
 		.u = 1,
@@ -54,6 +54,7 @@ allocprocess(struct process **p, void *pbase, uptr psize)
 		.x = 1,
 	};
 	uptr a;
+	struct framenode *textfn;
 
 	if (!(*p = palloc(sizeof(struct process), 0)))
 		return -1;
@@ -72,12 +73,6 @@ allocprocess(struct process **p, void *pbase, uptr psize)
 	/* Set other initial values. */
 	(*p)->state = CREATED;
 	(*p)->children = NULL;
-
-	/* Require pbase to be aligned to PAGE_SIZE. */
-	if ((uptr)pbase % PAGE_SIZE) {
-		setpanicmsg("Passed pbase not aligned to PAGE_SIZE.");
-		return -1;
-	}
 
 	/* Allocate and map stack. */
 	for (a = 0; a < STACK_SIZE; a += PAGE_SIZE) {
@@ -103,10 +98,11 @@ allocprocess(struct process **p, void *pbase, uptr psize)
 	}
 
 	/* Map text. */
-	for (a = 0; a < psize; a += PAGE_SIZE) {
+	a = 0;
+	for (textfn = text; textfn; textfn = textfn->n) {
 		if (vmap((*p)->pagetree,
-		         VIRTUAL_PROGRAM_START + a,
-		         (void *)((uptr)pbase + a),
+		         VIRTUAL_PROGRAM_START + a++,
+		         textfn->f,
 		         textopts)) {
 			return -1;
 		}
@@ -180,11 +176,11 @@ unusedpid(void)
 }
 
 s8
-createprocess(void *pbase, uptr psize, struct process *parent)
+createprocess(struct framenode *text, struct process *parent)
 {
 	struct process *p;
 
-	if (allocprocess(&p, pbase, psize)) {
+	if (allocprocess(&p, text)) {
 		tracepanicmsg("createprocess");
 		return -1;
 	}
