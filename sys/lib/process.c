@@ -16,11 +16,11 @@ static s8 dequeue(struct process **p, struct processlist **q);
 static s8 enqueue(struct process *p, struct processlist **q);
 
 /* Returns the first unused PID from pidbitmap and sets it to used. Returns 0
-   if pidbitmap is full. */
+   on the first call or if pidbitmap is full. */
 static u16 unusedpid(void);
 
 static struct processlist *createdqueue           = NULL;
-static struct process      init                   = { 0 };
+static u8                  initdone               = 0;
 static struct process     *coreprocesses[NCPU]    = { 0 };
 static u8                  pidbitmap[PID_MAX / 8] = { 0 };
 
@@ -88,19 +88,13 @@ s8
 allocprocess(void *pbase, struct process *parent)
 {
 	struct process *p;
-	struct processlist *child;
 
 	if (!(p = palloc(sizeof(struct process), 0))) {
 		tracepanicmsg("createprocess");
 		return -1;
 	}
 
-	if (!(child = palloc(sizeof(struct processlist), 0))) {
-		tracepanicmsg("createprocess");
-		return -1;
-	}
-
-	if (!(p->pid = unusedpid())) {
+	if (!(p->pid = unusedpid()) && initdone) {
 		setpanicmsg("PID_MAX exceeded.");
 		tracepanicmsg("createprocess");
 		return -1;
@@ -115,37 +109,28 @@ allocprocess(void *pbase, struct process *parent)
 	p->children = NULL;
 	setctxpc(p->ctx, pbase);
 
-	child->p = p;
+	if (parent) {
+		struct processlist *child;
 
-	child->n = parent->children;
-	parent->children = child;
+		if (!(child = palloc(sizeof(struct processlist), 0))) {
+			tracepanicmsg("createprocess");
+			return -1;
+		}
+
+		child->p = p;
+
+		child->n = parent->children;
+		parent->children = child;
+	} else if (initdone) {
+		setpanicmsg("Init process allocated twice.");
+		tracepanicmsg("createprocess");
+		return -1;
+	} else {
+		initdone = 1;
+	}
 
 	if (enqueue(p, &createdqueue)) {
 		tracepanicmsg("createprocess");
-		return -1;
-	}
-
-	return 0;
-}
-
-s8
-initprocess(void *pbase)
-{
-	/* Set bit 0 to used. */
-	pidbitmap[0] |= 1;
-
-	if (!(init.pagetree = allocpagetable())) {
-		tracepanicmsg("initprocess");
-		return -1;
-	}
-
-	init.pid = 0;
-	init.state = CREATED;
-	init.children = NULL;
-	setctxpc(init.ctx, pbase);
-
-	if (enqueue(&init, &createdqueue)) {
-		tracepanicmsg("initprocess");
 		return -1;
 	}
 

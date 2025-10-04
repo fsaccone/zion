@@ -43,7 +43,8 @@ coremain(u16 c)
 			panic();
 		}
 
-		if (initprocess(tarbase(f->h))) {
+		/* Allocate init process. */
+		if (allocprocess(tarbase(f->h), NULL)) {
 			tracepanicmsg("coremain");
 			panic();
 		}
