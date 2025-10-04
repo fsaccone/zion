@@ -38,9 +38,9 @@ struct process {
 	struct processlist *children;
 };
 
-/* Creates a child process of process parent with program base address pbase.
+/* Allocates a child process of process parent with program base address pbase.
    Returns -1 in case of error or 0 otherwise. */
-s8 createprocess(void *pbase, struct process *parent);
+s8 allocprocess(void *pbase, struct process *parent);
 
 /* Initializes first process with program base address pbase. Returns -1 in
    case of error or 0 otherwise. */
