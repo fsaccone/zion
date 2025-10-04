@@ -20,12 +20,11 @@
    error or 0 otherwise */
 static s8 allocprocess(struct process **p, struct framenode *text);
 
-/* Returns the first unused PID from pidbitmap and sets it to used. Returns 0
-   on the first call or if pidbitmap is full. */
-static u16 unusedpid(void);
+/* Finds the first unused PID from pidbitmap, sets it to used and sets o to it.
+   Returns 1 if the bit map is full or 0 otherwise. */
+static u8 unusedpid(u16 *o);
 
 static struct processnode *processes              = NULL;
-static u8                  initdone               = 0;
 static struct process     *coreprocesses[NCPU]    = { 0 };
 static u8                  pidbitmap[PID_MAX / 8] = { 0 };
 
@@ -50,9 +49,7 @@ allocprocess(struct process **p, struct framenode *text)
 	if (!(*p = palloc(sizeof(struct process), 0)))
 		goto panic;
 
-	/* Set pid, check if it returns 0 after the init process was already
-	   created. */
-	if (!((*p)->pid = unusedpid()) && initdone) {
+	if (unusedpid(&(*p)->pid)) {
 		setpanicmsg("PID_MAX exceeded.");
 		goto panic;
 	}
@@ -109,19 +106,20 @@ panic:
 	return -1;
 }
 
-u16
-unusedpid(void)
+u8
+unusedpid(u16 *o)
 {
 	u16 i;
 
 	for (i = 0; i < PID_MAX; i++) {
 		if (!(pidbitmap[i / 8] & (1 << (i % 8)))) {
 			pidbitmap[i / 8] |= (1 << (i % 8));
-			return i;
+			*o = i;
+			return 0;
 		}
 	}
 
-	return 0;
+	return 1;
 }
 
 s8
@@ -133,7 +131,6 @@ createprocess(struct framenode *text, struct process *parent)
 	if (allocprocess(&p, text))
 		goto panic;
 
-	/* Append to parent if it is not the init process. */
 	if (parent) {
 		struct processnode *newchild;
 
@@ -144,11 +141,6 @@ createprocess(struct framenode *text, struct process *parent)
 
 		newchild->n = parent->children;
 		parent->children = newchild;
-	} else if (initdone) {
-		setpanicmsg("Init process allocated twice.");
-		goto panic;
-	} else {
-		initdone = 1;
 	}
 
 	if (!(pn = palloc(sizeof(struct processnode), 0)))
