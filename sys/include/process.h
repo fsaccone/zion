@@ -4,13 +4,9 @@
 #include <arch/ctx.h>
 #include <arch/page.h>
 #include <arch/types.h>
-#include <math.h>
 
 /* Maximum 16 bits unsigned integer. */
 #define PID_MAX 65535
-
-/* The number of bytes of a process stack. */
-#define STACK_SIZE CEIL(8192, PAGE_SIZE)
 
 enum processstate {
 	CREATED,
