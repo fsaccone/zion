@@ -19,6 +19,9 @@ kernel(void)
 {
 	u16 c = core();
 
+	initinterrupts();
+	disableinterrupts();
+
 	if (c) {
 		while (!initdone);
 
@@ -40,7 +43,6 @@ kernel(void)
 		goto panic;
 
 	initdrivers();
-	initinterrupts();
 
 	initdone = 1;
 	coremain(0);

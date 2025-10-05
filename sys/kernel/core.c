@@ -42,8 +42,6 @@ panic:
 void
 coremain(u16 c)
 {
-	disableinterrupts();
-
 	if (!c && core0())
 		goto panic;
 
