@@ -2,6 +2,7 @@
 #define _SPINLOCK_H
 
 #include <arch/types.h>
+#include <machine/cpu.h>
 
 struct lock {
 	/* If 0, lock is not acquired; otherwise, it is. This needs to be the
@@ -9,8 +10,9 @@ struct lock {
 	   values of this size. */
 	ureg locked;
 
-	/* The difference of lock and unlock calls on this lock. */
-	u8 depth;
+	/* The difference of lock and unlock calls on this lock for each
+	   core. */
+	u8 depth[NCPU];
 
 	/* The state of interrupts at the first lock call on this lock. If 0,
 	   interrupts were disabled; otherwise, they were enabled. */

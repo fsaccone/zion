@@ -2,20 +2,22 @@
 
 #include <arch/types.h>
 #include <atomic.h>
+#include <core.h>
 #include <interrupt.h>
 
 void
 lock(struct lock *l)
 {
 	u8 ie = interruptsenabled();
+	u16 c = core();
 
 	disableinterrupts();
 
 	/* If first call, set interruptsenabled. */
-	if (!l->depth)
+	if (!l->depth[c])
 		l->interruptsenabled = ie;
 
-	l->depth++;
+	l->depth[c]++;
 
 	/* Wait for lock to be unlocked. */
 	for (;;) {
@@ -27,10 +29,12 @@ lock(struct lock *l)
 void
 unlock(struct lock *l)
 {
+	u16 c = core();
+
 	l->locked = 0;
 
-	l->depth--;
+	l->depth[c]--;
 
-	if (!l->depth && l->interruptsenabled)
+	if (!l->depth[c] && l->interruptsenabled)
 		enableinterrupts();
 }
