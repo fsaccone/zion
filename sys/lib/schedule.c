@@ -8,7 +8,6 @@
 #include <spinlock.h>
 #include <user.h>
 
-u8              corectxs[NCPU][CTX_SIZE] = { 0 };
 struct process *coreprocesses[NCPU]      = { 0 };
 
 void
@@ -19,7 +18,7 @@ nextschedule(void)
 	if (!coreprocesses[c])
 		return;
 
-	switchctx(coreprocesses[c]->ctx, corectxs[c]);
+	switchctx(coreprocesses[c]->uctx, coreprocesses[c]->kctx);
 }
 
 void
@@ -37,15 +36,15 @@ schedule(void)
 			switch (p->state) {
 			case READY:
 				p->state = RUNNING;
-
-				unlock(&p->lock);
-
 				coreprocesses[c] = p;
 
 				setuserptree(p->pagetree);
-				setuserpc((uptr)getctxpc(p->ctx));
-				setctxpc(p->ctx, usermode);
-				switchctx(corectxs[c], p->ctx);
+				setuserpc((uptr)getctxpc(p->uctx));
+				setctxpc(p->uctx, usermode);
+
+				unlock(&p->lock);
+
+				switchctx(p->kctx, p->uctx);
 
 				break;
 			default:

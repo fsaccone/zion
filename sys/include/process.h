@@ -39,8 +39,11 @@ struct process {
 	/* The pointer to the root table of the virtual page tree. */
 	pageentry *pagetree;
 
-	/* The CPU context. */
-	u8 ctx[CTX_SIZE];
+	/* The context of the core before switching to the process. */
+	u8 kctx[CTX_SIZE];
+
+	/* The context of the process in user mode. */
+	u8 uctx[CTX_SIZE];
 
 	/* A linked list containing the children processes of the process. */
 	struct processnode *children;
