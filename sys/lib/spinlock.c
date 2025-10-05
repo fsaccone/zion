@@ -15,7 +15,7 @@ lock(struct lock *l)
 
 	/* If first call, set interruptsenabled. */
 	if (!l->depth[c])
-		l->interruptsenabled = ie;
+		l->interruptsenabled[c] = ie;
 
 	l->depth[c]++;
 
@@ -35,6 +35,6 @@ unlock(struct lock *l)
 
 	l->depth[c]--;
 
-	if (!l->depth[c] && l->interruptsenabled)
+	if (!l->depth[c] && l->interruptsenabled[c])
 		enableinterrupts();
 }
