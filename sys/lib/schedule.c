@@ -42,6 +42,9 @@ schedule(void)
 			case READY:
 				p->state = RUNNING;
 
+				/* After setting the process state to RUNNING,
+				   unlock all the other cores: they will skip
+				   this process and find another one. */
 				unlock(&p->lock);
 
 				coreprocesses[c] = p;
