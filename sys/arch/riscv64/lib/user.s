@@ -5,13 +5,13 @@
 
 setuserpc:
 	la t0, userpc
-	ld a0, 0(t0)
+	sd a0, 0(t0)
 
 	ret
 
 setuserptree:
 	la t0, userptree
-	ld a0, 0(t0)
+	sd a0, 0(t0)
 
 	ret
 
