@@ -16,6 +16,7 @@ nextschedule(void)
 	u16 c = core();
 
 	setuserptree(coreprocesses[c]->pagetree);
+	setuserpc((uptr)getctxpc(coreprocesses[c]->ctx));
 	setctxpc(corectxs[c], usermode);
 	switchctx(coreprocesses[c]->ctx, corectxs[c]);
 
@@ -38,6 +39,7 @@ schedule(void)
 				coreprocesses[c] = p;
 
 				setuserptree(p->pagetree);
+				setuserpc((uptr)getctxpc(p->ctx));
 				setctxpc(p->ctx, usermode);
 				switchctx(corectxs[c], p->ctx);
 
