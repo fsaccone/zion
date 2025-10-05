@@ -3,6 +3,9 @@
 
 #include <arch/page.h>
 
+/* Set virtual address pc as the one usermode jumps to. */
+void setuserpc(uptr pc);
+
 /* Set page tree ptree as the one used by usermode to enable virtual memory. */
 void setuserptree(pageentry *ptree);
 
