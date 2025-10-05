@@ -41,10 +41,10 @@ panic:
 void
 coremain(u16 c)
 {
-	setupnexttimer();
-
 	if (!c && core0())
 		goto panic;
+
+	setupnexttimer();
 
 	schedule();
 
