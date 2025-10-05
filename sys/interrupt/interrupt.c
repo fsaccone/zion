@@ -8,9 +8,9 @@
 void
 interrupt(void)
 {
-	ureg *args   = interruptargs();
-	u8    isuser = interruptisuser(),
-	      type   = interrupttype();
+	ureg *args = interruptargs();
+	u8 isuser = interruptisuser(),
+	   type   = interrupttype();
 	struct driver drv;
 
 	switch (type) {
