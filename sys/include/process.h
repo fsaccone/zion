@@ -5,6 +5,7 @@
 #include <arch/page.h>
 #include <arch/types.h>
 #include <pmem.h>
+#include <spinlock.h>
 
 /* Maximum 16 bits unsigned integer. */
 #define PID_MAX 65535
@@ -24,6 +25,9 @@ struct processnode {
 struct process {
 	/* The process ID. */
 	u16 pid;
+
+	/* The spinlock of the process, used by the scheduler. */
+	struct lock lock;
 
 	/* A linked list containing the frames which were allocated for the
 	   process. */
