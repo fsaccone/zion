@@ -1,6 +1,13 @@
 .section .text
+.global setuserpc
 .global setuserptree
 .global usermode
+
+setuserpc:
+	la t0, userpc
+	ld a0, 0(t0)
+
+	ret
 
 setuserptree:
 	la t0, userptree
@@ -9,7 +16,9 @@ setuserptree:
 	ret
 
 usermode:
-	csrwi sepc, 0x0
+	# Set program counter.
+	la t0, userpc
+	csrw sepc, t0
 
 	# Load page tree address.
 	la t0, userptree
@@ -23,4 +32,5 @@ usermode:
 	sret
 
 .section .data
+userpc:    .dword 0
 userptree: .dword 0
