@@ -7,4 +7,8 @@
    file. */
 s8 createinitprocess(struct tarheader *init);
 
+/* Find and return the init file in files, or NULL if no such file is
+   present. */
+struct tarheader *findinitfile(struct tarnode *files);
+
 #endif

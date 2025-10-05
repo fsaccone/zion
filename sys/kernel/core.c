@@ -26,21 +26,15 @@ coremain(u16 c)
 	unlock(&l);
 
 	if (!c) {
-		struct tarnode *init;
+		struct tarheader *init;
 
-		for (init = initfiles; init; init = init->n) {
-			if (!strncmp((char *)init->h->name, "sbin/init",
-			             TAR_NAME_SIZE))
-				break;
-		}
-
-		if (!init) {
+		if (!(init = findinitfile(initfiles))) {
 			setpanicmsg("Unable to find sbin/init file in "
 			            "init.tar.");
 			goto panic;
 		}
 
-		if (createinitprocess(init->h))
+		if (createinitprocess(init))
 			goto panic;
 	}
 
