@@ -18,10 +18,12 @@ setuserptree:
 usermode:
 	# Set program counter.
 	la t0, userpc
+	ld t0, 0(t0)
 	csrw sepc, t0
 
 	# Load page tree address.
 	la t0, userptree
+	ld t0, 0(t0)
 
 	# Set MODE to 1010 (Sv57).
 	li t1, 0b1010 << 60
