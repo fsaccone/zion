@@ -1,6 +1,7 @@
 #include <console.h>
 #include <interrupt.h>
 #include <panic.h>
+#include <schedule.h>
 #include <timer.h>
 
 #include "syscall.h"
@@ -31,6 +32,7 @@ interrupt(void)
 		break;
 	case INTERRUPT_TYPE_TIMER:
 		setupnexttimer();
+		nextschedule();
 
 		break;
 	default:
