@@ -88,8 +88,9 @@ allocinittarfiles(void)
 
 		if (!head)
 			head = new;
+		else
+			tail->n = new;
 
-		tail->n = new;
 		tail = new;
 
 		/* Skip content sectors. */
