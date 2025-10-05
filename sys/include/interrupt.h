@@ -2,7 +2,6 @@
 #define _INTERRUPT_H
 
 #include <arch/types.h>
-#include <driver.h>
 
 #define INTERRUPT_ARGS 5
 
@@ -17,19 +16,11 @@ void disableinterrupts(void);
 /* Enables interrupts. */
 void enableinterrupts(void);
 
-/* Initializes interrupts. */
-void initinterrupts(void);
-
 /* Returns an array of size INTERRUPT_ARGS containing the values of the first
    INTERRUPT_ARGS architecture-specific argument registers of the caller
    context. This function has to be called first inside the interrupt handler,
    because having code before it may alter the values of the registers. */
 ureg *interruptargs(void);
-
-/* Sets drv to the driver of the device which caused the interrupt and returns
-   0 normally and returns -1 if the interrupt type is not HARDWARE or the
-   device is unknown. */
-s8 interruptdriver(struct driver *drv);
 
 /* Returns 1 if the interrupt comes from user mode or 0 if it comes from kernel
    mode. */
