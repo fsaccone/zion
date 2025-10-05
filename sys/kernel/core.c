@@ -1,6 +1,7 @@
 #include "core.h"
 
 #include <arch/types.h>
+#include <interrupt.h>
 #include <panic.h>
 #include <schedule.h>
 #include <string.h>
@@ -44,6 +45,7 @@ coremain(u16 c)
 	if (!c && core0())
 		goto panic;
 
+	enableinterrupts();
 	setupnexttimer();
 
 	schedule();
