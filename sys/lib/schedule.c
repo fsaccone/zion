@@ -5,7 +5,18 @@
 #include <machine/cpu.h>
 #include <process.h>
 
-u8 corectxs[NCPU][CTX_SIZE] = { 0 };
+u8              corectxs[NCPU][CTX_SIZE] = { 0 };
+struct process *coreprocesses[NCPU]      = { 0 };
+
+void
+nextschedule(void)
+{
+	u16 c = core();
+
+	switchctx(coreprocesses[c]->ctx, corectxs[c]);
+
+	return;
+}
 
 void
 schedule(void)
@@ -20,6 +31,8 @@ schedule(void)
 			switch (p->state) {
 			case READY:
 				p->state = RUNNING;
+				coreprocesses[c] = p;
+
 				switchctx(corectxs[c], p->ctx);
 				break;
 			default:
