@@ -95,7 +95,7 @@ allocprocess(struct process **p, struct framenode *text)
 	}
 
 	/* Set stack pointer. */
-	setctxsp((*p)->ctx, (void *)VIRTUAL_STACK_END);
+	setctxsp((*p)->uctx, (void *)VIRTUAL_STACK_END);
 
 	return 0;
 
