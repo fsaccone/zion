@@ -4,6 +4,7 @@
 #include <panic.h>
 #include <pmem.h>
 #include <spinlock.h>
+#include <schedule.h>
 #include <string.h>
 #include <tar.h>
 #include <timer.h>
@@ -43,7 +44,7 @@ coremain(u16 c)
 			goto panic;
 	}
 
-	for (;;);
+	schedule();
 
 panic:
 	tracepanicmsg("coremain");
