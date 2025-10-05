@@ -41,13 +41,14 @@ schedule(void)
 			switch (p->state) {
 			case READY:
 				p->state = RUNNING;
+
+				unlock(&p->lock);
+
 				coreprocesses[c] = p;
 
 				setuserptree(p->pagetree);
 				setuserpc((uptr)getctxpc(p->uctx));
 				setctxpc(p->uctx, usermode);
-
-				unlock(&p->lock);
 
 				switchctx(p->kctx, p->uctx);
 
