@@ -33,6 +33,7 @@ OBJS_LIB = arch/$(ARCH)/lib/atomic.o \
            lib/panic.o \
            lib/pmem.o \
            lib/process.o \
+           lib/schedule.o \
            lib/spinlock.o \
            lib/string.o \
            lib/tar.o \
