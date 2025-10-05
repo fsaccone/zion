@@ -38,6 +38,8 @@ interrupt(void)
 	default:
 	}
 
+	return;
+
 panic:
 	tracepanicmsg("interrupt");
 	panic();
