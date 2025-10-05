@@ -20,10 +20,7 @@ lock(struct lock *l)
 	l->depth[c]++;
 
 	/* Wait for lock to be unlocked. */
-	for (;;) {
-		if (!atomicswap(&l->locked, 1))
-			break;
-	}
+	while (atomicswap(&l->locked, 1));
 }
 
 void
