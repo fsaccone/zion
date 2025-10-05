@@ -19,7 +19,6 @@ kernel(void)
 {
 	u16 c = core();
 
-	initinterrupts();
 	disableinterrupts();
 
 	if (c) {
