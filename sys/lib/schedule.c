@@ -1,9 +1,11 @@
 #include <schedule.h>
 
+#include <console.h>
 #include <core.h>
 #include <ctx.h>
 #include <machine/cpu.h>
 #include <process.h>
+#include <user.h>
 
 u8              corectxs[NCPU][CTX_SIZE] = { 0 };
 struct process *coreprocesses[NCPU]      = { 0 };
@@ -13,6 +15,8 @@ nextschedule(void)
 {
 	u16 c = core();
 
+	setuserptree(coreprocesses[c]->pagetree);
+	setctxpc(corectxs[c], usermode);
 	switchctx(coreprocesses[c]->ctx, corectxs[c]);
 
 	return;
@@ -33,7 +37,10 @@ schedule(void)
 				p->state = RUNNING;
 				coreprocesses[c] = p;
 
+				setuserptree(p->pagetree);
+				setctxpc(p->ctx, usermode);
 				switchctx(corectxs[c], p->ctx);
+
 				break;
 			default:
 			}
