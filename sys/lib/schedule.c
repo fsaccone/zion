@@ -9,7 +9,7 @@
 #include <spinlock.h>
 #include <user.h>
 
-struct process *coreprocesses[NCPU]      = { 0 };
+struct process *coreprocesses[NCPU] = { 0 };
 
 void
 nextschedule(void)
