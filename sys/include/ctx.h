@@ -14,7 +14,7 @@ void setctxpc(u8 ctx[CTX_SIZE], void *pc);
 void setctxsp(u8 ctx[CTX_SIZE], void *sp);
 
 /* Make CPU switch to the context in new after saving its current context in
-   old. If old is NULL, it just loads new. */
+   old. */
 void switchctx(u8 old[CTX_SIZE], u8 new[CTX_SIZE]);
 
 #endif
