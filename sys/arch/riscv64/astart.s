@@ -78,11 +78,6 @@ initmstatus:
 	li t1, 1 << 3
 	or t0, t0, t1
 
-	# Set MPIE to 0.
-	li  t1, 1 << 7
-	not t1, t1
-	and t0, t0, t1
-
 	csrw mstatus, t0
 
 	ret
