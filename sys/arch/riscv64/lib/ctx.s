@@ -5,20 +5,20 @@
 .global switchctx
 
 getctxpc:
-	# Save ra of ctx.
-	sd a0, (0 * 8)(a0)
+	# Load ra from ctx.
+	ld a0, (0 * 8)(a0)
 
 	ret
 
 setctxpc:
-	# Load new pc to ra of ctx.
-	ld a1, (0 * 8)(a0)
+	# Save new pc to ra of ctx.
+	sd a1, (0 * 8)(a0)
 
 	ret
 
 setctxsp:
-	# Load new sp to sp of ctx.
-	ld a1, (1 * 8)(a0)
+	# Save new sp to sp of ctx.
+	sd a1, (1 * 8)(a0)
 
 	ret
 
