@@ -23,6 +23,16 @@ enableinterrupts:
 	or   t0,      t0, t1
 	csrw sstatus, t0
 
+	# Set sie.SSIE, sie.STIE and sie.SEIE to 1.
+	li   t0, 0
+	li   t1,  1 << 1
+	or   t0,  t0, t1
+	li   t1,  1 << 5
+	or   t0,  t0, t1
+	li   t1,  1 << 9
+	or   t0,  t0, t1
+	csrw sie, t0
+
 	ret
 
 interruptargs:
