@@ -1,14 +1,11 @@
 #include <arch/types.h>
 #include <console.h>
 #include <core.h>
-#include <driver.h>
 #include <interrupt.h>
 #include <machine/cpu.h>
-#include <machine/drivers.h>
 #include <panic.h>
 
 #include "core.h"
-#include "drivers.h"
 #include "logs.h"
 #include "mem.h"
 
@@ -40,8 +37,6 @@ kernel(void)
 
 	if (freeallmem())
 		goto panic;
-
-	initdrivers();
 
 	initdone = 1;
 	coremain(0);

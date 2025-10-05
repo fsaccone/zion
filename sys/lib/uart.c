@@ -1,8 +1,4 @@
-#include <machine/drivers.h>
-
-#ifdef DRIVER_UART
-
-#include <driver.h>
+#include <uart.h>
 
 #include <arch/types.h>
 #include <machine/mem.h>
@@ -31,23 +27,8 @@
 /* Transmit holding register. */
 #define THR ((u8 *)UART0 + 0x00)
 
-static void init(void);
-static void write(u8 c);
-
-struct driver
-driver_uart(void)
-{
-	struct driver d = {
-		.init            = init,
-		.interrupt       = NULL,
-		.write.character = write,
-	};
-
-	return d;
-};
-
 void
-init(void)
+inituart(void)
 {
 	/* Temporarily disable interrupts. */
 	*IER = 0;
@@ -72,9 +53,7 @@ init(void)
 }
 
 void
-write(u8 c)
+uartwrite(u8 c)
 {
 	*THR = c;
 }
-
-#endif

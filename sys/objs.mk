@@ -14,7 +14,6 @@ OBJS_INTERRUPT = interrupt/interrupt.o \
 # Object files from kernel/ with the addition of arch/ARCH/astart.o.
 OBJS_KERNEL = arch/$(ARCH)/astart.o \
               kernel/core.o \
-              kernel/drivers.o \
               kernel/init.o \
               kernel/inittar.o \
               kernel/kernel.o \
@@ -28,7 +27,6 @@ OBJS_LIB = arch/$(ARCH)/lib/atomic.o \
            arch/$(ARCH)/lib/timer.o \
            arch/$(ARCH)/lib/user.o \
            lib/console.o \
-           lib/driver/uart.o \
            lib/panic.o \
            lib/pmem.o \
            lib/process.o \
@@ -36,6 +34,7 @@ OBJS_LIB = arch/$(ARCH)/lib/atomic.o \
            lib/spinlock.o \
            lib/string.o \
            lib/tar.o \
+           lib/uart.o \
            lib/vmem.o \
 
 # All object files.
