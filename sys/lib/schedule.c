@@ -5,6 +5,7 @@
 #include <ctx.h>
 #include <machine/cpu.h>
 #include <process.h>
+#include <spinlock.h>
 #include <user.h>
 
 u8              corectxs[NCPU][CTX_SIZE] = { 0 };
@@ -33,6 +34,8 @@ schedule(void)
 		for (pn = processes(); pn; pn = pn->n) {
 			struct process *p = pn->p;
 
+			lock(&p->lock);
+
 			switch (p->state) {
 			case READY:
 				p->state = RUNNING;
@@ -46,6 +49,8 @@ schedule(void)
 				break;
 			default:
 			}
+
+			unlock(&p->lock);
 		}
 	}
 }
