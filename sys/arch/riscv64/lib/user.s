@@ -31,6 +31,19 @@ usermode:
 
 	csrw satp, t0
 
+	# Set sstatus.SPIE to 1 to enable interrupts in user mode.
+	csrr t0, sstatus
+	li   t1, 1 << 5
+	or   t0, t0, t1
+	csrw sstatus, t0
+
+	# Set sstatus.SPP to 0 to make sret switch to user mode.
+	csrr t0, sstatus
+	li   t1, 1 << 8
+	not  t1, t1
+	and  t0, t0, t1
+	csrw sstatus, t0
+
 	sret
 
 .section .data
