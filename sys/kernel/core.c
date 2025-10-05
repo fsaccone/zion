@@ -57,5 +57,5 @@ coremain(u16 c)
 
 panic:
 	tracepanicmsg("coremain");
-	panic();
+	return;
 }
