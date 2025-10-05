@@ -10,8 +10,8 @@ void setuserpc(uptr pc);
 void setuserptree(pageentry *ptree);
 
 /* Enables virtual memory using the page tree set by setuserptree and jumps to
-   address 0x0 in user mode. This is supposed to be set as the program counter
-   of a context before switching to it. */
+   address set by seruserpc in user mode. This is supposed to be set as the
+   program counter of a context before switching to it. */
 void usermode(void);
 
 #endif
