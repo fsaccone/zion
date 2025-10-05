@@ -2,8 +2,6 @@
 
 #include <arch/types.h>
 #include <panic.h>
-#include <pmem.h>
-#include <spinlock.h>
 #include <schedule.h>
 #include <string.h>
 #include <tar.h>
@@ -16,17 +14,17 @@
    error or 0 otherwise. */
 static s8 core0(void);
 
-static struct tarnode *initfiles = NULL;
-static struct lock     l         = { 0 };
-
 s8
 core0(void)
 {
+	struct tarnode *files;
 	struct tarheader *init;
 
-	if (!(init = findinitfile(initfiles))) {
-		setpanicmsg("Unable to find sbin/init file in "
-		            "init.tar.");
+	if (!(files = allocinittarfiles()))
+		goto panic;
+
+	if (!(init = findinitfile(files))) {
+		setpanicmsg("Unable to find sbin/init file in init.tar.");
 		goto panic;
 	}
 
@@ -44,11 +42,6 @@ void
 coremain(u16 c)
 {
 	setupnexttimer();
-
-	lock(&l);
-	if (!initfiles && !(initfiles = allocinittarfiles()))
-		goto panic;
-	unlock(&l);
 
 	if (!c && core0())
 		goto panic;
