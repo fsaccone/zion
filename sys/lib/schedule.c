@@ -15,8 +15,10 @@ nextschedule(void)
 {
 	u16 c = core();
 
-	if (!coreprocesses[c])
+	if (!coreprocesses[c] || coreprocesses[c]->state != RUNNING)
 		return;
+
+	coreprocesses[c]->state = READY;
 
 	switchctx(coreprocesses[c]->uctx, coreprocesses[c]->kctx);
 }
