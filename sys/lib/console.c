@@ -1,9 +1,8 @@
 #include <console.h>
 
 #include <arch/types.h>
-#include <driver.h>
-#include <machine/drivers.h>
 #include <spinlock.h>
+#include <uart.h>
 
 /* Writes a NULL-terminated string to str which contains the number n written
    in base base. If sign is not 0, it treats n as signed and prefixes str with
@@ -55,22 +54,16 @@ inttostr(char *str, u64 n, u8 base, u8 sign)
 u16
 consolewrite(char *m)
 {
-#ifdef DRIVER_UART
 	u16 i;
 
 	lock(&l);
 
 	for (i = 0; *m && i < CONSOLE_WRITE_MAX; m++, i++)
-		driver_uart().write.character(*m);
+		uartwrite(*m);
 
 	unlock(&l);
 
 	return i;
-#else
-	(void)m;
-
-	return 0;
-#endif
 }
 
 u16
@@ -126,7 +119,5 @@ consolewriteb16(u64 n)
 void
 initconsole(void)
 {
-#ifdef DRIVER_UART
-	driver_uart().init();
-#endif
+	inituart();
 }
