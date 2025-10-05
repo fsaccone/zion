@@ -16,7 +16,9 @@ panic(void)
 	   and that means it is not needed to do it manually. */
 	lock(&l);
 
-	(void)consolewrite("[PANIC] ");
+	(void)consolewrite("[PANIC (Core ");
+	(void)consolewriteb10u(core());
+	(void)consolewrite(")] ");
 
 	(void)consolewrite(panicmsg[core()]);
 
