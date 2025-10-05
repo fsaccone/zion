@@ -14,9 +14,10 @@ struct lock {
 	   core. */
 	u8 depth[NCPU];
 
-	/* The state of interrupts at the first lock call on this lock. If 0,
-	   interrupts were disabled; otherwise, they were enabled. */
-	u8 interruptsenabled;
+	/* The state of interrupts at the first lock call on this lock for each
+	   core. If 0, interrupts were disabled; otherwise, they were
+	   enabled. */
+	u8 interruptsenabled[NCPU];
 };
 
 /* Acquires lock l after waiting for it to be released. */
