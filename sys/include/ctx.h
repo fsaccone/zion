@@ -4,6 +4,9 @@
 #include <arch/ctx.h>
 #include <arch/types.h>
 
+/* Returns the program counter of context ctx. */
+void *getctxpc(u8 ctx[CTX_SIZE]);
+
 /* Sets the program counter of context ctx to pc. */
 void setctxpc(u8 ctx[CTX_SIZE], void *pc);
 
