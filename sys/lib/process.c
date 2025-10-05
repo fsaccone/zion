@@ -94,8 +94,7 @@ allocprocess(struct process **p, struct framenode *text)
 			goto panic;
 	}
 
-	/* Set program counter and stack pointer. */
-	setctxpc((*p)->ctx, (void *)VIRTUAL_PROGRAM_START);
+	/* Set stack pointer. */
 	setctxsp((*p)->ctx, (void *)VIRTUAL_STACK_END);
 
 	return 0;
