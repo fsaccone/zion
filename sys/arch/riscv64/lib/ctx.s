@@ -23,9 +23,6 @@ setctxsp:
 	ret
 
 switchctx:
-	# If old is NULL, just load new.
-	beqz a0, 1f
-
 	# Since ra is already set to the address that called switchctx, we do
 	# not need to store the pc manually.
 
@@ -62,7 +59,6 @@ switchctx:
 	sd x30, (29 * 8)(a0)
 	sd x31, (30 * 8)(a0)
 
-1:
 	# Load all registers from new.
 	ld x1,  (0  * 8)(a1)
 	ld x2,  (1  * 8)(a1)
