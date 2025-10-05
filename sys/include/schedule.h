@@ -6,7 +6,8 @@
 void schedule(void);
 
 /* Switches to the context of the running core that was saved when it switched
-   to the process, effectively continuing the execution of the scheduler. */
+   to the process, effectively continuing the execution of the scheduler. Does
+   noting if the running core did not switch context before. */
 void nextschedule(void);
 
 #endif
