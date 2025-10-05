@@ -16,6 +16,9 @@ nextschedule(void)
 {
 	u16 c = core();
 
+	if (!coreprocesses[c])
+		return;
+
 	switchctx(coreprocesses[c]->ctx, corectxs[c]);
 }
 
