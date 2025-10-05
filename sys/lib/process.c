@@ -58,7 +58,7 @@ allocprocess(struct process **p, struct framenode *text)
 		goto panic;
 
 	/* Set other initial values. */
-	(*p)->state = CREATED;
+	(*p)->state = READY;
 	(*p)->children = NULL;
 
 	/* Allocate and map stack. */
