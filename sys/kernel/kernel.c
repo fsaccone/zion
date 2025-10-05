@@ -21,7 +21,11 @@ kernel(void)
 
 	if (c) {
 		while (!initdone);
+
 		coremain(c);
+
+		/* If coremain returns. */
+		goto panic;
 	}
 
 	/* Only core 0 reaches this. */
@@ -41,6 +45,7 @@ kernel(void)
 	initdone = 1;
 	coremain(0);
 
+	/* If coremain returns. */
 panic:
 	tracepanicmsg("kernel");
 	panic();
