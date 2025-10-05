@@ -1,7 +1,14 @@
 .section .text
+.global getctxpc
 .global setctxpc
 .global setctxsp
 .global switchctx
+
+getctxpc:
+	# Save ra of ctx.
+	sd a0, (0 * 8)(a0)
+
+	ret
 
 setctxpc:
 	# Load new pc to ra of ctx.
