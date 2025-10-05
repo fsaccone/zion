@@ -12,8 +12,33 @@
 #include "init.h"
 #include "inittar.h"
 
+/* The main function of core 0, in addition to coremain. Returns -1 in case of
+   error or 0 otherwise. */
+static s8 core0(void);
+
 static struct tarnode *initfiles = NULL;
 static struct lock     l         = { 0 };
+
+s8
+core0(void)
+{
+	struct tarheader *init;
+
+	if (!(init = findinitfile(initfiles))) {
+		setpanicmsg("Unable to find sbin/init file in "
+		            "init.tar.");
+		goto panic;
+	}
+
+	if (createinitprocess(init))
+		goto panic;
+
+	return 0;
+
+panic:
+	tracepanicmsg("core0");
+	return -1;
+}
 
 void
 coremain(u16 c)
@@ -25,18 +50,8 @@ coremain(u16 c)
 		goto panic;
 	unlock(&l);
 
-	if (!c) {
-		struct tarheader *init;
-
-		if (!(init = findinitfile(initfiles))) {
-			setpanicmsg("Unable to find sbin/init file in "
-			            "init.tar.");
-			goto panic;
-		}
-
-		if (createinitprocess(init))
-			goto panic;
-	}
+	if (!c && core0())
+		goto panic;
 
 	schedule();
 
