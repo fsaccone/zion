@@ -5,6 +5,7 @@
 #include <panic.h>
 #include <pmem.h>
 #include <process.h>
+#include <string.h>
 #include <tar.h>
 
 s8
@@ -48,4 +49,17 @@ createinitprocess(struct tarheader *init)
 panic:
 	tracepanicmsg("coremain");
 	return -1;
+}
+
+struct tarheader *
+findinitfile(struct tarnode *files)
+{
+	struct tarnode *tn;
+
+	for (tn = files; tn; tn = tn->n) {
+		if (!strncmp((char *)tn->h->name, "sbin/init", TAR_NAME_SIZE))
+			break;
+	}
+
+	return tn ? tn->h : NULL;
 }
