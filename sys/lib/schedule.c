@@ -34,6 +34,9 @@ schedule(void)
 			switch (p->state) {
 			case READY:
 				p->state = RUNNING;
+
+				unlock(&p->lock);
+
 				coreprocesses[c] = p;
 
 				setuserptree(p->pagetree);
