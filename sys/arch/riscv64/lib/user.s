@@ -41,4 +41,8 @@ usermode:
 	and  t0, t0, t1
 	csrw sstatus, t0
 
+	# Set stack pointer to maximum address.
+	li  sp, 0
+	not sp, sp
+
 	sret
