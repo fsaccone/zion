@@ -20,7 +20,7 @@ OBJS_LIB = arch/$(ARCH)/lib/atomic.o \
            arch/$(ARCH)/lib/timer.o \
            arch/$(ARCH)/lib/user.o \
            lib/console.o \
-           lib/handleint.o \
+           lib/handleinterrupt.o \
            lib/panic.o \
            lib/pmem.o \
            lib/process.o \

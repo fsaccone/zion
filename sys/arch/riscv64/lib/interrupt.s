@@ -1,7 +1,7 @@
 .section .text
 .global disableinterrupts
 .global enableinterrupts
-.global handleinterrupt
+.global interrupt
 .global interruptargs
 .global interruptisuser
 .global interruptsenabled
@@ -36,7 +36,7 @@ enableinterrupts:
 
 	ret
 
-handleinterrupt:
+interrupt:
 	# Switch to physical memory
 	csrwi satp, 0
 
@@ -96,7 +96,7 @@ handleinterrupt:
 	csrw sepc, t0
 
 2:
-	call handleint
+	call handleinterrupt
 
 3:
 	# See top of function.

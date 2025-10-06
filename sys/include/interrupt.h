@@ -16,9 +16,9 @@ void disableinterrupts(void);
 /* Enables interrupts. */
 void enableinterrupts(void);
 
-/* The interrupt handler. It does architecture-specific actions and eventually
-   calls handleint. */
-void handleinterrupt(void);
+/* The entry point of the interrupt handler. It does architecture-specific
+   actions and eventually calls handleinterrupt. */
+void interrupt(void);
 
 /* Returns an array of size INTERRUPT_ARGS containing the values of the first
    INTERRUPT_ARGS architecture-specific argument registers of the caller
