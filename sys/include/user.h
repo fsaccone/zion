@@ -3,11 +3,18 @@
 
 #include <arch/page.h>
 
-/* Set virtual address pc as the one usermode jumps to. */
-void setuserpc(uptr pc);
+/* Get virtual address pc of usermode for core c. */
+uptr getuserpc(u16 c);
 
-/* Set page tree ptree as the one used by usermode to enable virtual memory. */
-void setuserptree(pageentry *ptree);
+/* Get page tree of usermode for core c. */
+pageentry *getuserptree(u16 c);
+
+/* Set virtual address pc as the one usermode jumps to for core c. */
+void setuserpc(u16 c, uptr pc);
+
+/* Set page tree ptree as the one used by usermode to enable virtual memory for
+   core c. */
+void setuserptree(u16 c, pageentry *ptree);
 
 /* Enables virtual memory using the page tree set by setuserptree and jumps to
    address set by seruserpc in user mode. This is supposed to be set as the
