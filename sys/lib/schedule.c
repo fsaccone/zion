@@ -53,7 +53,7 @@ schedule(void)
 				setuserpc(c, (uptr)getctxpc(p->uctx));
 				setusersp(c, (uptr)getctxsp(p->uctx));
 
-				setctxpc(p->uctx, usermode);
+				setctxpc(p->uctx, usermodebase());
 				setctxsp(p->uctx, getcursp());
 
 				switchctx(p->kctx, p->uctx);
