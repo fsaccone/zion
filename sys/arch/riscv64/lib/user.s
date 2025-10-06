@@ -1,6 +1,17 @@
 .section .text
+.global userinterruptbase
 .global usermode
 .global usermodebase
+
+userinterrupt:
+	csrwi satp, 0
+
+	j interrupt
+
+userinterruptbase:
+	la a0, userinterrupt
+
+	ret
 
 usermode:
 	# Set program counter.
