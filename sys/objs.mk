@@ -16,6 +16,7 @@ OBJS_KERNEL = arch/$(ARCH)/astart.o \
               kernel/core.o \
               kernel/kernel.o \
               kernel/mem.o \
+              kernel/raminit.o \
 
 # Object files from arch/ARCH/lib/ and lib/.
 OBJS_LIB = arch/$(ARCH)/lib/atomic.o \
