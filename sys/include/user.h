@@ -4,8 +4,8 @@
 #include <arch/page.h>
 
 /* Returns the physical address of the user mode interrupt handler. All the
-   handler does is switch to phyisical memory and jump to interrupt, making it
-   always fit inside a page. */
+   handler does is switch to phyisical memory, reset the kernel interrupt
+   handler and jump to interrupt, making it always fit inside a page. */
 void *userinterruptbase(void);
 
 /* Get virtual address pc of usermode for core c. */

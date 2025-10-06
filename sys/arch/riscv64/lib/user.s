@@ -7,6 +7,10 @@
 userinterrupt:
 	csrwi satp, 0
 
+	# Reset kernel interrupt handler.
+	la   t0,    interrupt
+	csrw stvec, t0
+
 	j interrupt
 .align 12
 
