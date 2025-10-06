@@ -21,17 +21,6 @@ usermode:
 	or   t0, t0, t1
 	csrw sstatus, t0
 
-	# Set sip.SSIP, sip.STIP and sip.SEIP to 1 to enable all types of
-	# interrupts in user mode.
-	li   t0, 0
-	li   t1,  1 << 1
-	or   t0,  t0, t1
-	li   t1,  1 << 5
-	or   t0,  t0, t1
-	li   t1,  1 << 9
-	or   t0,  t0, t1
-	csrw sip, t0
-
 	# Set sstatus.SPP to 0 to make sret switch to user mode.
 	csrr t0, sstatus
 	li   t1, 1 << 8
