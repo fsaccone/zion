@@ -218,7 +218,7 @@ trapvec:
 	csrw sepc, t0
 
 2:
-	call interrupt
+	call handleint
 
 	# See top of function.
 	ld   t0,  (0 * 8 )(sp)
