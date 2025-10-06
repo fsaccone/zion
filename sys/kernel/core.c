@@ -5,7 +5,6 @@
 #include <panic.h>
 #include <schedule.h>
 #include <string.h>
-#include <tar.h>
 #include <timer.h>
 
 /* The main function of core 0, in addition to coremain. Returns -1 in case of
