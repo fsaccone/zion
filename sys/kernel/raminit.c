@@ -8,10 +8,10 @@
 s8
 raminitframes(struct framenode **frames)
 {
-	uptr a, base = KERNEL_START + BINARY_SIZE;
+	uptr a;
 	struct framenode *tail;
 
-	if (base % PAGE_SIZE) {
+	if (RAMINIT_BASE % PAGE_SIZE) {
 		setpanicmsg("Raminit program not aligned to PAGE_SIZE.");
 		goto panic;
 	}
@@ -29,7 +29,7 @@ raminitframes(struct framenode **frames)
 		if (!(fn = palloc(sizeof(struct framenode), 0)))
 			goto panic;
 
-		fn->f = (void *)(base + a);
+		fn->f = (void *)(RAMINIT_BASE + a);
 		fn->n = NULL;
 
 		if (!*frames)
