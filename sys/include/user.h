@@ -31,7 +31,7 @@ void setusersp(u16 c, uptr sp);
      1. Enables virtual memory using the page tree set by setuserptree.
      2. Sets stack pointer to the address set by setusersp.
      3. Enables user mode.
-     4. Set interrupt handler to virtual address 0x80000000.
+     4. Set interrupt handler to virtual address 0x0.
      5. Jumps to the virtual address set by setuserpc. */
 void usermode(void);
 
