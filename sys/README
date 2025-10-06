@@ -33,3 +33,8 @@ with the kernel binary file passed as the first argument.
 
 The include/config.h header file is generated at build time and contains some
 build configuration variables as preprocessor macros.
+
+The raminit/ source files are linked together independently to output the
+raminit program, that is the first user space program which gets run by the
+kernel. It is embedded to the kernel binary at build time at offset
+BINARY_SIZE, which is defined in config.mk.
