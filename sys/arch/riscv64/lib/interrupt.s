@@ -37,9 +37,6 @@ enableinterrupts:
 	ret
 
 interrupt:
-	# Switch to physical memory
-	csrwi satp, 0
-
 	# ((7 t-regs + 12 s-regs + 7 a-regs + 1 ra + 1 gp) * 8 bytes)
 	addi sp,  sp, -((7 + 12 + 7 + 1 + 1) * 8)
 	sd   t0,  (0 * 8 )(sp)
