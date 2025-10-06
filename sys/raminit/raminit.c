@@ -1,0 +1,5 @@
+void
+raminit(void)
+{
+	for(;;);
+}

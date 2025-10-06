@@ -5,13 +5,16 @@ include objs.mk
 OUT = sys.bin
 
 CONFIGH = include/config.h
+RAMINIT = raminit.bin
 
 .PHONY: all clean test
 
 all: $(OUT)
 
 clean:
-	rm -rf $(OUT) $(CONFIGH) $(OBJS) $(OBJS:.o=.c.o) $(OBJS:.o=.s.o)
+	rm -rf $(OUT) $(CONFIGH) $(RAMINIT) \
+	       $(OBJS) $(OBJS:.o=.c.o) $(OBJS:.o=.s.o)
+	(cd raminit && make clean)
 
 test: $(OUT)
 	exec arch/$(ARCH)/machine/$(MACHINE)/test $(OUT)
@@ -27,6 +30,10 @@ $(CONFIGH):
 	echo '#define BINARY_SIZE $(BINARY_SIZE)' >> $@
 
 	echo '#endif' >> $@
+
+$(RAMINIT):
+	(cd raminit && make $@)
+	cp raminit/$@ $@
 
 $(OBJS): $(CONFIGH)
 	if [ -f $(@:.o=.c) ]; then \
