@@ -96,10 +96,7 @@ handleinterrupt:
 	csrw sepc, t0
 
 2:
-	# Call the return value of getinterrupthandler() if it is not NULL.
-	call getinterrupthandler
-	beqz a0, 3f
-	jalr a0
+	call handleint
 
 3:
 	# See top of function.
