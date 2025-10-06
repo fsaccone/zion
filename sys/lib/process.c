@@ -88,10 +88,12 @@ allocprocess(struct process **p, struct framenode *text)
 	a = 0;
 	for (textfn = text; textfn; textfn = textfn->n) {
 		if (vmap((*p)->pagetree,
-		         VIRTUAL_PROGRAM_START + a++,
+		         VIRTUAL_PROGRAM_START + a,
 		         textfn->f,
 		         textopts))
 			goto panic;
+
+		a += PAGE_SIZE;
 	}
 
 	/* Set stack pointer. */
