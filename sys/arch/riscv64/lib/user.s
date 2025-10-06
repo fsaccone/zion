@@ -8,17 +8,12 @@ usermode:
 	call getuserpc
 	csrw sepc, a0
 
-	# Enable virtual memory.
-	mv a0, tp
+	# Save page tree address (shifted right of 12 bits) to satp, without
+	# enabling virtual memory.
+	mv   a0,   tp
 	call getuserpc
-	li t0, 0b1010 << 60
-	or a0, a0, t0
-	csrw satp, a0
-
-	# Set stack pointer.
-	mv a0, tp
-	call getusersp
-	mv sp, a0
+	srli t0,   a0, 12
+	csrw satp, t0
 
 	# Set sstatus.SPIE to 1 to enable interrupts in user mode.
 	csrr t0, sstatus
@@ -43,6 +38,17 @@ usermode:
 	not  t1, t1
 	and  t0, t0, t1
 	csrw sstatus, t0
+
+	# Set stack pointer.
+	mv a0, tp
+	call getusersp
+	mv sp, a0
+
+	# Enable virtual memory.
+	csrr t0,   satp
+	li   t1,   0b1010 << 60
+	or   t0,   t0, t1
+	csrw satp, t0
 
 	sret
 
