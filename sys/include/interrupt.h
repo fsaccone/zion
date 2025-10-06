@@ -16,12 +16,8 @@ void disableinterrupts(void);
 /* Enables interrupts. */
 void enableinterrupts(void);
 
-/* Returns the pointer to the handler function which was set by
-   setinterrupthandler. */
-void *getinterrupthandler(void);
-
-/* The interrupt handler. This will do architecture-specific actions to
-   eventually call the function set by setinterrupthandler. */
+/* The interrupt handler. It does architecture-specific actions and eventually
+   calls handleint. */
 void handleinterrupt(void);
 
 /* Returns an array of size INTERRUPT_ARGS containing the values of the first
@@ -39,9 +35,6 @@ u8 interruptsenabled(void);
 
 /* Returns the interrupt type code. */
 u8 interrupttype(void);
-
-/* Sets handler as the function handleinterrupts calls to handle interrupts. */
-void setinterrupthandler(void (*handler)(void));
 
 /* Sets the first architecture-specific argument register of the caller context
    to r. If it is not called, the register retains its original value. */
