@@ -52,6 +52,7 @@ schedule(void)
 				setuserptree(c, p->pagetree);
 				setuserpc(c, (uptr)getctxpc(p->uctx));
 				setctxpc(p->uctx, usermode);
+				setctxsp(p->uctx, getcursp());
 
 				switchctx(p->kctx, p->uctx);
 
