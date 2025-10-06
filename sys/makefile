@@ -36,6 +36,7 @@ $(CONFIGH):
 	echo '#define _CONFIG_H' >> $@
 
 	echo '#define BINARY_SIZE $(BINARY_SIZE)' >> $@
+	echo '#define RAMINIT_BINARY_SIZE $(RAMINIT_BINARY_SIZE)' >> $@
 
 	echo '#endif' >> $@
 
