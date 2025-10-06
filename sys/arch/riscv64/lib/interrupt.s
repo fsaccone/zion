@@ -104,7 +104,7 @@ interrupttype:
 	li  t2, 9
 	beq t0, t2, 2f
 
-	# Exception (not 8).
+	# Exception (not 8 or 9).
 	li a0, 0x00
 	ret
 
