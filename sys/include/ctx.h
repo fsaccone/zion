@@ -7,6 +7,9 @@
 /* Returns the program counter of context ctx. */
 void *getctxpc(u8 ctx[CTX_SIZE]);
 
+/* Returns the stack pointer of the running core. */
+void *getcursp(void);
+
 /* Sets the program counter of context ctx to pc. */
 void setctxpc(u8 ctx[CTX_SIZE], void *pc);
 

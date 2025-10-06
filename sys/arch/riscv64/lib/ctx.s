@@ -1,5 +1,6 @@
 .section .text
 .global getctxpc
+.global getcursp
 .global setctxpc
 .global setctxsp
 .global switchctx
@@ -7,6 +8,11 @@
 getctxpc:
 	# Load ra from ctx.
 	ld a0, (0 * 8)(a0)
+
+	ret
+
+getcursp:
+	mv a0, sp
 
 	ret
 
