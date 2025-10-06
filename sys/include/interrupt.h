@@ -20,6 +20,10 @@ void enableinterrupts(void);
    setinterrupthandler. */
 void *getinterrupthandler(void);
 
+/* The interrupt handler. This will do architecture-specific actions to
+   eventually call the function set by setinterrupthandler. */
+void handleinterrupt(void);
+
 /* Returns an array of size INTERRUPT_ARGS containing the values of the first
    INTERRUPT_ARGS architecture-specific argument registers of the caller
    context. This function has to be called first inside the interrupt handler,
