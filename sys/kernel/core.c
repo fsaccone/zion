@@ -8,9 +8,6 @@
 #include <tar.h>
 #include <timer.h>
 
-#include "init.h"
-#include "inittar.h"
-
 /* The main function of core 0, in addition to coremain. Returns -1 in case of
    error or 0 otherwise. */
 static s8 core0(void);
@@ -18,19 +15,8 @@ static s8 core0(void);
 s8
 core0(void)
 {
-	struct tarnode *files;
-	struct tarheader *init;
-
-	if (!(files = allocinittarfiles()))
-		goto panic;
-
-	if (!(init = findinitfile(files))) {
-		setpanicmsg("Unable to find sbin/init file in init.tar.");
-		goto panic;
-	}
-
-	if (createinitprocess(init))
-		goto panic;
+	setpanicmsg("Unimplemented.");
+	goto panic;
 
 	return 0;
 

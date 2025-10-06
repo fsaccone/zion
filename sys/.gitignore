@@ -1,4 +1,1 @@
 include/config.h
-init/*
-!init/makefile
-init.tar

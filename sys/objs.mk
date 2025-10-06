@@ -14,8 +14,6 @@ OBJS_INTERRUPT = interrupt/interrupt.o \
 # Object files from kernel/ with the addition of arch/ARCH/astart.o.
 OBJS_KERNEL = arch/$(ARCH)/astart.o \
               kernel/core.o \
-              kernel/init.o \
-              kernel/inittar.o \
               kernel/kernel.o \
               kernel/mem.o \
 
