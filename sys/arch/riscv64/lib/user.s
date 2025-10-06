@@ -1,5 +1,6 @@
 .section .text
 .global usermode
+.global usermodebase
 
 usermode:
 	# Set program counter.
@@ -44,3 +45,8 @@ usermode:
 	csrw sstatus, t0
 
 	sret
+
+usermodebase:
+	la a0, usermode
+
+	ret

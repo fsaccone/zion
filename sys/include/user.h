@@ -29,4 +29,7 @@ void setusersp(u16 c, uptr sp);
      4. Jumps to the virtual address set by setuserpc. */
 void usermode(void);
 
+/* Returns the physical address of the usermode function. */
+void *usermodebase(void);
+
 #endif
