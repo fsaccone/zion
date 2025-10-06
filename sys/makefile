@@ -6,42 +6,19 @@ OUT = sys.bin
 
 CONFIGH = include/config.h
 
-INITTAR      = init.tar
-INITTARMAGIC = '\x5A\x49\x4F\x4E\x49\x4E\x49\x54\x54\x41\x52\x53\x54\x41\x52\x54'
-
-.PHONY: all clean init test
+.PHONY: all clean test
 
 all: $(OUT)
 
 clean:
-	rm -rf $(OUT) $(CONFIGH) $(INITTAR) \
-	       $(OBJS) $(OBJS:.o=.c.o) $(OBJS:.o=.s.o)
-	(cd init && $(MAKE) clean)
-
-init:
-	(cd init && $(MAKE) all)
-
+	rm -rf $(OUT) $(CONFIGH) $(OBJS) $(OBJS:.o=.c.o) $(OBJS:.o=.s.o)
 
 test: $(OUT)
 	exec arch/$(ARCH)/machine/$(MACHINE)/test $(OUT)
 
-$(OUT): $(OBJS) $(INITTAR)
-	$(LD) $(LDFLAGS) -e start -o $@ $(OBJS)
+$(OUT): $(OBJS)
+	$(LD) $(LDFLAGS) -e start -o $@ $^
 	$(OBJCOPY) -O binary $@
-
-	dd status=none \
-	   if=/dev/zero \
-	   bs=1 \
-	   count=$$((512 - $$(stat -c '%s' $@) % 512)) >> $@
-
-	printf $(INITTARMAGIC) >> $@
-	cat $(INITTAR) >> $@
-
-	dd status=none \
-	   if=/dev/zero \
-	   bs=1 \
-	   count=$$(($(BINARY_SIZE) \
-	             - $$(stat -c '%s' $@) % $(BINARY_SIZE))) >> $@
 
 $(CONFIGH):
 	echo '#ifndef _CONFIG_H' >> $@
@@ -50,9 +27,6 @@ $(CONFIGH):
 	echo '#define BINARY_SIZE $(BINARY_SIZE)' >> $@
 
 	echo '#endif' >> $@
-
-$(INITTAR): init
-	(cd init && tar -c $$(find * -type f ! -path 'makefile')) > $@
 
 $(OBJS): $(CONFIGH)
 	if [ -f $(@:.o=.c) ]; then \
