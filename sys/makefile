@@ -19,9 +19,17 @@ clean:
 test: $(OUT)
 	exec arch/$(ARCH)/machine/$(MACHINE)/test $(OUT)
 
-$(OUT): $(OBJS)
-	$(LD) $(LDFLAGS) -e start -o $@ $^
+$(OUT): $(OBJS) $(RAMINIT)
+	$(LD) $(LDFLAGS) -e start -o $@ $(OBJS)
 	$(OBJCOPY) -O binary $@
+
+	dd status=none \
+	   if=/dev/zero \
+	   bs=1 \
+	   count=$$(($(BINARY_SIZE) - $$(stat -c '%s' $@) % $(BINARY_SIZE))) \
+	   >> $@
+
+	cat $(RAMINIT) >> $@
 
 $(CONFIGH):
 	echo '#ifndef _CONFIG_H' >> $@
