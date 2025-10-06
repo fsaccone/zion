@@ -15,9 +15,6 @@ is the entry point of the kernel binary.
 The arch/ARCH/astart source file defines the astart symbol, which is the
 function start eventually jumps to.
 
-The interrupt/ source files define the interrupt symbol, which is the function
-set as the interrupt handler by astart.
-
 The kernel/ source files define the kernel symbol, which is the function astart
 eventually jumps to.
 

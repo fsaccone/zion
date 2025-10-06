@@ -5,12 +5,6 @@ include ../config.mk
 # binary.
 OBJS_START = arch/$(ARCH)/machine/$(MACHINE)/start.o
 
-# Object files from interrupt/.
-OBJS_INTERRUPT = interrupt/interrupt.o \
-                 interrupt/syscall.o \
-                 interrupt/syscall/reboot.o \
-                 interrupt/syscall/shutdown.o \
-
 # Object files from kernel/ with the addition of arch/ARCH/astart.o.
 OBJS_KERNEL = arch/$(ARCH)/astart.o \
               kernel/core.o \
@@ -26,14 +20,17 @@ OBJS_LIB = arch/$(ARCH)/lib/atomic.o \
            arch/$(ARCH)/lib/timer.o \
            arch/$(ARCH)/lib/user.o \
            lib/console.o \
+           lib/handleint.o \
            lib/panic.o \
            lib/pmem.o \
            lib/process.o \
            lib/schedule.o \
            lib/spinlock.o \
            lib/string.o \
+           lib/syscall/reboot.o \
+           lib/syscall/shutdown.o \
            lib/uart.o \
            lib/vmem.o \
 
 # All object files.
-OBJS = $(OBJS_START) $(OBJS_INTERRUPT) $(OBJS_KERNEL) $(OBJS_LIB)
+OBJS = $(OBJS_START) $(OBJS_KERNEL) $(OBJS_LIB)
