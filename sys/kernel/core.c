@@ -3,6 +3,7 @@
 #include <arch/page.h>
 #include <arch/types.h>
 #include <config.h>
+#include <console.h>
 #include <interrupt.h>
 #include <panic.h>
 #include <process.h>
@@ -10,6 +11,7 @@
 #include <string.h>
 #include <timer.h>
 
+#include "logs.h"
 #include "raminit.h"
 
 /* The main function of core 0, in addition to coremain. Returns -1 in case of
@@ -21,8 +23,16 @@ core0(void)
 {
 	struct framenode *riframes;
 
+	(void)consolewrite(RAMINIT_LOG_PRE);
+
 	if (raminitframes(&riframes))
 		goto panic;
+
+	(void)consolewrite("[");
+	(void)consolewriteb16(RAMINIT_BASE);
+	(void)consolewrite(" - ");
+	(void)consolewriteb16(RAMINIT_BASE + RAMINIT_BINARY_SIZE);
+	(void)consolewrite("]\n");
 
 	if (createprocess(riframes, NULL))
 		goto panic;
