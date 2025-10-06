@@ -7,10 +7,12 @@
 #include <math.h>
 #include <panic.h>
 #include <pmem.h>
+#include <user.h>
 #include <vmem.h>
 
 #define STACK_SIZE CEIL(8192, PAGE_SIZE)
 
+#define VIRTUAL_INT_HANDLER   0x80000000
 #define VIRTUAL_PROGRAM_START 0x0
 #define VIRTUAL_STACK_END     ((uptr)(~0))
 #define VIRTUAL_STACK_START   (VIRTUAL_STACK_END - STACK_SIZE)
@@ -30,6 +32,12 @@ static u8                  pidbitmap[PID_MAX / 8] = { 0 };
 s8
 allocprocess(struct process **p, struct framenode *text)
 {
+	struct pageoptions inthandleropts = {
+		.u = 1,
+		.r = 1,
+		.w = 0,
+		.x = 1,
+	};
 	struct pageoptions stackopts = {
 		.u = 1,
 		.r = 1,
@@ -44,6 +52,7 @@ allocprocess(struct process **p, struct framenode *text)
 	};
 	uptr a;
 	struct framenode *textfn;
+	void *intbase;
 
 	if (!(*p = palloc(sizeof(struct process), 0)))
 		goto panic;
@@ -95,6 +104,19 @@ allocprocess(struct process **p, struct framenode *text)
 
 		a += PAGE_SIZE;
 	}
+
+	/* Map interrupt handler. */
+	intbase = userinterruptbase();
+	if ((uptr)intbase % PAGE_SIZE) {
+		setpanicmsg("User interrupt handler not aligned to"
+		            " PAGE_SIZE.");
+		goto panic;
+	}
+	if (vmap((*p)->pagetree,
+	         VIRTUAL_INT_HANDLER,
+	         intbase,
+	         inthandleropts))
+		goto panic;
 
 	/* Set program counter and stack pointer. */
 	setctxpc((*p)->uctx, (void *)VIRTUAL_PROGRAM_START);
