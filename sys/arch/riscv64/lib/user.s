@@ -3,10 +3,12 @@
 .global usermode
 .global usermodebase
 
+.align 12
 userinterrupt:
 	csrwi satp, 0
 
 	j interrupt
+.align 12
 
 userinterruptbase:
 	la a0, userinterrupt
