@@ -31,6 +31,7 @@ $(OUT): $(OBJS) $(RAMINIT)
 
 	cat $(RAMINIT) >> $@
 
+
 $(CONFIGH):
 	echo '#ifndef _CONFIG_H' >> $@
 	echo '#define _CONFIG_H' >> $@
@@ -43,6 +44,12 @@ $(CONFIGH):
 $(RAMINIT):
 	(cd raminit && make $@)
 	cp raminit/$@ $@
+
+	dd status=none \
+	   if=/dev/zero \
+	   bs=1 \
+	   count=$$(($(RAMINIT_BINARY_SIZE) \
+	             - $$(stat -c '%s' $@) % $(RAMINIT_BINARY_SIZE))) >> $@
 
 $(OBJS): $(CONFIGH)
 	if [ -f $(@:.o=.c) ]; then \
