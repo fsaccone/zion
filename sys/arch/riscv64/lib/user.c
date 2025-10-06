@@ -6,6 +6,7 @@
 
 static uptr  pcs[NCPU]    = { 0 };
 static void *ptrees[NCPU] = { 0 };
+static uptr  sps[NCPU]    = { 0 };
 
 uptr
 getuserpc(u16 c)
@@ -19,6 +20,12 @@ getuserptree(u16 c)
 	return ptrees[c];
 }
 
+uptr
+getusersp(u16 c)
+{
+	return sps[c];
+}
+
 void
 setuserpc(u16 c, uptr pc)
 {
@@ -29,4 +36,10 @@ void
 setuserptree(u16 c, pageentry *ptree)
 {
 	ptrees[c] = ptree;
+}
+
+void
+setusersp(u16 c, uptr sp)
+{
+	sps[c] = sp;
 }
