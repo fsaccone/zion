@@ -1,4 +1,4 @@
-#include <handleint.h>
+#include <handleinterrupt.h>
 
 #include <arch/types.h>
 #include <console.h>
@@ -33,7 +33,7 @@ syscall(u16 type, ureg args[SYSCALL_ARGS])
 }
 
 void
-handleint(void)
+handleinterrupt(void)
 {
 	ureg *args = interruptargs();
 	u8 isuser = interruptisuser(),
