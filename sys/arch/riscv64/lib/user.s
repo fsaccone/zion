@@ -7,15 +7,17 @@ usermode:
 	call getuserpc
 	csrw sepc, a0
 
-	# Load page tree address.
+	# Enable virtual memory.
 	mv a0, tp
 	call getuserpc
-
-	# Set MODE to 1010 (Sv57).
 	li t0, 0b1010 << 60
 	or a0, a0, t0
-
 	csrw satp, a0
+
+	# Set stack pointer.
+	mv a0, tp
+	call getusersp
+	mv sp, a0
 
 	# Set sstatus.SPIE to 1 to enable interrupts in user mode.
 	csrr t0, sstatus
@@ -40,9 +42,5 @@ usermode:
 	not  t1, t1
 	and  t0, t0, t1
 	csrw sstatus, t0
-
-	# Set stack pointer to maximum address.
-	li  sp, 0
-	not sp, sp
 
 	sret
