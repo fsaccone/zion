@@ -16,9 +16,11 @@ void setuserpc(u16 c, uptr pc);
    core c. */
 void setuserptree(u16 c, pageentry *ptree);
 
-/* Enables virtual memory using the page tree set by setuserptree and jumps to
-   address set by seruserpc in user mode. This is supposed to be set as the
-   program counter of a context before switching to it. */
+/* Sets up the environment to enable virtual memory and switch to user mode:
+     1. Enables virtual memory using the page tree set by setuserptree.
+     2. Sets stack pointer to the maximum address possible.
+     3. Enables user mode.
+     4. Jumps to the virtual address set by setuserpc. */
 void usermode(void);
 
 #endif
