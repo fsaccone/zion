@@ -49,8 +49,8 @@ schedule(void)
 
 				coreprocesses[c] = p;
 
-				setuserptree(p->pagetree);
-				setuserpc((uptr)getctxpc(p->uctx));
+				setuserptree(c, p->pagetree);
+				setuserpc(c, (uptr)getctxpc(p->uctx));
 				setctxpc(p->uctx, usermode);
 
 				switchctx(p->kctx, p->uctx);
