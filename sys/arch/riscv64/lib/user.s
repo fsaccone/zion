@@ -57,7 +57,8 @@ usermode:
 	csrw satp, t0
 
 	# Set stvec to 0x80000000.
-	csrwi stvec, 0x80000000
+	li   t0, 0x80000000
+	csrw stvec, t0
 
 	sret
 
