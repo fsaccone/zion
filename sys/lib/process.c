@@ -2,7 +2,6 @@
 
 #include <arch/page.h>
 #include <arch/types.h>
-#include <ctx.h>
 #include <machine/cpu.h>
 #include <math.h>
 #include <panic.h>
@@ -95,9 +94,6 @@ allocprocess(struct process **p, struct framenode *text)
 
 		a += PAGE_SIZE;
 	}
-
-	/* Set stack pointer. */
-	setctxsp((*p)->uctx, (void *)VIRTUAL_STACK_END);
 
 	return 0;
 
