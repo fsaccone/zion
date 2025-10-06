@@ -52,6 +52,9 @@ usermode:
 	or   t0,   t0, t1
 	csrw satp, t0
 
+	# Set stvec to 0x80000000.
+	csrwi stvec, 0x80000000
+
 	sret
 
 usermodebase:
