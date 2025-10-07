@@ -17,6 +17,9 @@ pageentry *getuserptree(u16 c);
 /* Get stack pointer of usermode for core c. */
 uptr getusersp(u16 c);
 
+/* Get trap frame of usermode for core c. */
+void *getusertframe(u16 c);
+
 /* Set virtual address pc as the one usermode jumps to for core c. */
 void setuserpc(u16 c, uptr pc);
 
@@ -27,12 +30,17 @@ void setuserptree(u16 c, pageentry *ptree);
 /* Set address sp as the stack pointer to use for usermode for core c. */
 void setusersp(u16 c, uptr sp);
 
+/* Set trap frame tframe as the one used by usermode to save the necessary
+   data before switching mode for core c. */
+void setusertframe(u16 c, void *tframe);
+
 /* Sets up the environment to enable virtual memory and switch to user mode:
-     1. Enables virtual memory using the page tree set by setuserptree.
-     2. Sets stack pointer to the address set by setusersp.
-     3. Enables user mode.
-     4. Set interrupt handler to virtual address 0x0.
-     5. Jumps to the virtual address set by setuserpc. */
+     1. Save the necessary data to the trap frame set by setusertframe.
+     2. Enables virtual memory using the page tree set by setuserptree.
+     3. Sets stack pointer to the address set by setusersp.
+     4. Enables user mode.
+     5. Set interrupt handler to virtual address 0x0.
+     6. Jumps to the virtual address set by setuserpc. */
 void usermode(void);
 
 /* Returns the physical address of the usermode function. */
