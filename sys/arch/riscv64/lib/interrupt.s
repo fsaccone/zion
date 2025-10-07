@@ -207,7 +207,7 @@ interrupttype:
 	ret
 
 2:
-	# Syscall (8).
+	# Syscall (8 or 9).
 	li a0, 0x01
 	ret
 
