@@ -1,5 +1,6 @@
 .section .text
 .global trampoline
+.global trampolinebase
 
 # Each user trap frame has this structure:
 #   [0,      22 * 8 + 7] = Registers.
@@ -104,3 +105,8 @@ trampoline:
 	# Return
 	sret
 .align 12
+
+trampolinebase:
+	la a0, trampoline
+
+	ret

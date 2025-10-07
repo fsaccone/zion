@@ -15,4 +15,7 @@
      5. Load the initial context and return to user mode. */
 void trampoline(void);
 
+/* Returns the physical address of trampoline. */
+void *trampolinebase(void);
+
 #endif
