@@ -5,6 +5,7 @@
 #include <math.h>
 #include <panic.h>
 #include <pmem.h>
+#include <trampoline.h>
 
 pageentry *
 allocpagetable(void)
@@ -22,7 +23,7 @@ panic:
 }
 
 s8
-allocvas(pageentry *ptree, void *trampoline, void *tframe, u8 user)
+allocvas(pageentry *ptree, void *tframe, u8 user)
 {
 	struct pageoptions popts;
 	uptr a;
@@ -32,7 +33,7 @@ allocvas(pageentry *ptree, void *trampoline, void *tframe, u8 user)
 	popts.r = 1;
 	popts.w = 0;
 	popts.x = 0;
-	if (vmap(ptree, VADDR_TRAMPOLINE, trampoline, popts))
+	if (vmap(ptree, VADDR_TRAMPOLINE, trampolinebase(), popts))
 		goto panic;
 
 	/* Trap frame. */

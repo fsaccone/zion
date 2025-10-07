@@ -35,7 +35,7 @@ struct pageoptions {
 pageentry *allocpagetable(void);
 
 /* Initializes the default virtual address space for page tree ptree:
-     1. Map VADDR_TRAMPOLINE to trampoline frame trampoline.
+     1. Map VADDR_TRAMPOLINE to trampoline.
      2. Map VADDR_TRAP_FRAME to trap frame tframe.
      3. Allocate stack of size STACK_SIZE through separate frames.
      4. Map addresses VADDR_STACK_START to VADDR_STACK_END to their respective
@@ -43,7 +43,7 @@ pageentry *allocpagetable(void);
    Trampoline and trap frame pages are set for kernel mode, while the stack
    pages are set to kernel mode only if user is 0. Returns -1 in case of error
    or 0 otherwise. */
-s8 allocvas(pageentry *ptree, void *trampoline, void *tframe, u8 user);
+s8 allocvas(pageentry *ptree, void *tframe, u8 user);
 
 /* Frees page table ptable. Does not free the children tables. Returns -1 in
    case of error or 0 otherwise. */
