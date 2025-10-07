@@ -11,6 +11,7 @@
 #include <string.h>
 #include <timer.h>
 
+#include "kvmem.h"
 #include "logs.h"
 #include "raminit.h"
 
@@ -48,6 +49,9 @@ void
 coremain(u16 c)
 {
 	if (!c && core0())
+		goto panic;
+
+	if (kvmem())
 		goto panic;
 
 	enableinterrupts();

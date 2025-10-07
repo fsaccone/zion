@@ -9,6 +9,7 @@ OBJS_START = arch/$(ARCH)/machine/$(MACHINE)/start.o
 OBJS_KERNEL = arch/$(ARCH)/astart.o \
               kernel/core.o \
               kernel/kernel.o \
+              kernel/kvmem.o \
               kernel/mem.o \
               kernel/raminit.o \
 
