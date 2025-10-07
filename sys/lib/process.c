@@ -10,14 +10,6 @@
 #include <user.h>
 #include <vmem.h>
 
-#define STACK_SIZE CEIL(8192, PAGE_SIZE)
-
-#define VIRTUAL_INT_HANDLER   (0 * PAGE_SIZE)
-#define VIRTUAL_TRAPFRAME     (1 * PAGE_SIZE)
-#define VIRTUAL_PROGRAM_START (2 * PAGE_SIZE)
-#define VIRTUAL_STACK_END     ((uptr)(~0))
-#define VIRTUAL_STACK_START   (VIRTUAL_STACK_END - STACK_SIZE)
-
 /* Allocates process and sets pointer p to it after initializing it using text
    as the frames containing the text of the program. Returns -1 in case of
    error or 0 otherwise */
@@ -36,7 +28,6 @@ allocprocess(struct process **p, struct framenode *text)
 	struct pageoptions popts = { 0 };
 	uptr a;
 	struct framenode *textfn;
-	void *intbase;
 
 	if (!(*p = palloc(sizeof(struct process), 0)))
 		goto panic;
@@ -46,36 +37,21 @@ allocprocess(struct process **p, struct framenode *text)
 		goto panic;
 	}
 
-	/* Allocate page tree. */
-	if (!((*p)->pagetree = allocpagetable()))
-		goto panic;
-
 	/* Set other initial values. */
 	(*p)->state = READY;
 	(*p)->children = NULL;
 
-	/* Allocate and map stack. */
-	popts.u = 1;
-	popts.r = 1;
-	popts.w = 1;
-	popts.x = 0;
-	for (a = 0; a < STACK_SIZE; a += PAGE_SIZE) {
-		void *f;
-		struct framenode *fn;
+	/* Allocate page tree. */
+	if (!((*p)->pagetree = allocpagetable()))
+		goto panic;
 
-		if (!(f = palloc(PAGE_SIZE, 0)))
-			goto panic;
+	/* Allocate trap frame. */
+	if (!((*p)->trapframe = palloc(PAGE_SIZE, 0)))
+		goto panic;
 
-		/* Append f to *p->allocated. */
-		if (!(fn = palloc(sizeof(struct framenode), 0)))
-			goto panic;
-		fn->f = f;
-		fn->n = (*p)->allocated;
-		(*p)->allocated = fn;
-
-		if (vmap((*p)->pagetree, VIRTUAL_STACK_START + a, f, popts))
-			goto panic;
-	}
+	/* Initialize virtual address space. */
+	if (allocvas((*p)->pagetree, userinterruptbase(), (*p)->trapframe))
+		goto panic;
 
 	/* Map text. */
 	popts.u = 1;
@@ -84,40 +60,16 @@ allocprocess(struct process **p, struct framenode *text)
 	popts.x = 1;
 	a = 0;
 	for (textfn = text; textfn; textfn = textfn->n) {
-		if (vmap((*p)->pagetree, VIRTUAL_PROGRAM_START + a, textfn->f,
+		if (vmap((*p)->pagetree, VADDR_FIRST_FREE_PAGE + a, textfn->f,
 		         popts))
 			goto panic;
 
 		a += PAGE_SIZE;
 	}
 
-	/* Allocate and map trap frame. */
-	popts.u = 0;
-	popts.r = 1;
-	popts.w = 1;
-	popts.x = 0;
-	if (!((*p)->trapframe = palloc(PAGE_SIZE, 0)))
-		goto panic;
-	if (vmap((*p)->pagetree, VIRTUAL_TRAPFRAME, (*p)->trapframe, popts))
-		goto panic;
-
-	/* Map interrupt handler. */
-	popts.u = 0;
-	popts.r = 1;
-	popts.w = 0;
-	popts.x = 1;
-	intbase = userinterruptbase();
-	if ((uptr)intbase % PAGE_SIZE) {
-		setpanicmsg("User interrupt handler not aligned to"
-		            " PAGE_SIZE.");
-		goto panic;
-	}
-	if (vmap((*p)->pagetree, VIRTUAL_INT_HANDLER, intbase, popts))
-		goto panic;
-
 	/* Set program counter and stack pointer. */
-	setctxpc((*p)->uctx, (void *)VIRTUAL_PROGRAM_START);
-	setctxsp((*p)->uctx, (void *)VIRTUAL_STACK_END);
+	setctxpc((*p)->uctx, (void *)VADDR_FIRST_FREE_PAGE);
+	setctxsp((*p)->uctx, (void *)VADDR_STACK_END);
 
 	return 0;
 
