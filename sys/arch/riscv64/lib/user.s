@@ -52,7 +52,7 @@ usermode:
 	# Save page tree address (shifted right of 12 bits) to satp, without
 	# enabling virtual memory.
 	mv   a0,   tp
-	call getuserpc
+	call getuserptree
 	srli t0,   a0, 12
 	csrw satp, t0
 
