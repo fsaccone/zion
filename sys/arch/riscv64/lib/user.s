@@ -20,6 +20,14 @@ userinterruptbase:
 	ret
 
 usermode:
+	# Get trap frame.
+	mv a0, tp
+	call getusertframe
+
+	# Save stack pointer and thread pointer to trap frame.
+	sd sp, 0(a0)
+	sd tp, 8(a0)
+
 	# Set program counter.
 	mv a0, tp
 	call getuserpc
