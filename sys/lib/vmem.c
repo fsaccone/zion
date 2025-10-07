@@ -61,7 +61,7 @@ allocvaddrspace(pageentry *ptree, void *trampoline, void *tframe)
 	return 0;
 
 panic:
-	tracepanicmsg("freepagetable");
+	tracepanicmsg("allocvaddrspace");
 	return -1;
 }
 
