@@ -7,7 +7,6 @@ OBJS_START = arch/$(ARCH)/machine/$(MACHINE)/start.o
 
 # Object files from kernel/ with the addition of arch/ARCH/astart.o.
 OBJS_KERNEL = arch/$(ARCH)/astart.o \
-              kernel/core.o \
               kernel/kernel.o \
               kernel/kvmem.o \
               kernel/mem.o \

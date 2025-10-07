@@ -1,33 +1,31 @@
+#include <arch/page.h>
 #include <arch/types.h>
+#include <config.h>
 #include <console.h>
 #include <core.h>
 #include <interrupt.h>
-#include <machine/cpu.h>
 #include <panic.h>
+#include <process.h>
+#include <schedule.h>
+#include <string.h>
+#include <timer.h>
 
-#include "core.h"
-#include "logs.h"
 #include "mem.h"
+#include "kvmem.h"
+#include "logs.h"
+#include "raminit.h"
 
-static u8 initdone = 0;
+/* The main function of core 0. Returns -1 in case of error or 0 otherwise. */
+static s8 core0(void);
 
-void
-kernel(void)
+/* Temporarily one, gets set as the return value of the call to core0. Needed
+   to sync cores. */
+static s8 core0ret = 1;
+
+s8
+core0(void)
 {
-	u16 c = core();
-
-	disableinterrupts();
-
-	if (c) {
-		while (!initdone);
-
-		coremain(c);
-
-		/* If coremain returns. */
-		goto panic;
-	}
-
-	/* Only core 0 reaches this. */
+	struct framenode *riframes;
 
 	initconsole();
 
@@ -38,11 +36,48 @@ kernel(void)
 	if (freeallmem())
 		goto panic;
 
-	initdone = 1;
-	coremain(0);
+	(void)consolewrite(RAMINIT_LOG_PRE);
 
-	/* If coremain returns. */
+	if (raminitframes(&riframes))
+		goto panic;
+
+	(void)consolewrite("[");
+	(void)consolewriteb16(RAMINIT_BASE);
+	(void)consolewrite(" - ");
+	(void)consolewriteb16(RAMINIT_BASE + RAMINIT_BINARY_SIZE);
+	(void)consolewrite("]\n");
+
+	if (createprocess(riframes, NULL))
+		goto panic;
+
+	return 0;
+
+panic:
+	tracepanicmsg("core0");
+	return -1;
+}
+
+void
+kernel(void)
+{
+	u16 c = core();
+
+	disableinterrupts();
+
+	if (!c && (core0ret = core0()) == -1)
+		goto panic;
+
+	while (core0ret);
+
+	if (kvmem())
+		goto panic;
+
+	enableinterrupts();
+	setupnexttimer();
+
+	schedule();
+
 panic:
 	tracepanicmsg("kernel");
-	panic();
+	return;
 }
