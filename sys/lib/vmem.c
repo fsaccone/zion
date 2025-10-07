@@ -50,7 +50,7 @@ initvaddrspace(pageentry *ptree, void *trampoline, void *tframe)
 	popts.r = 1;
 	popts.w = 1;
 	popts.x = 0;
-	if (vmap(ptree, VADDR_TRAPFRAME, tframe, popts))
+	if (vmap(ptree, VADDR_TRAP_FRAME, tframe, popts))
 		goto panic;
 
 	return 0;

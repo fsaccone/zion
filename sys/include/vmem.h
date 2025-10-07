@@ -5,7 +5,7 @@
 #include <arch/types.h>
 
 #define VADDR_TRAMPOLINE      (0 * PAGE_SIZE)
-#define VADDR_TRAPFRAME       (1 * PAGE_SIZE)
+#define VADDR_TRAP_FRAME      (1 * PAGE_SIZE)
 #define VADDR_FIRST_FREE_PAGE (2 * PAGE_SIZE)
 
 struct pageoptions {
@@ -35,7 +35,7 @@ s8 freepagetable(pageentry *ptable);
 
 /* Initializes the default virtual address space for page tree ptree:
      1. Map VADDR_TRAMPOLINE to trampoline frame trampoline.
-     2. Map VADDR_TRAPFRAME to trap frame tframe.
+     2. Map VADDR_TRAP_FRAME to trap frame tframe.
    Returns -1 in case of error or 0 otherwise. */
 s8 initvaddrspace(pageentry *ptree, void *trampoline, void *tframe);
 
