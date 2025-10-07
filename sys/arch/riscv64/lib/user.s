@@ -5,6 +5,22 @@
 
 .align 12
 userinterrupt:
+	# Get trap frame.
+	li t0, 0x1000
+
+	# Load stack pointer and thread pointer from trap frame.
+	ld t1, 0(t0)
+	ld t2, 8(t0)
+
+	# Save current stack pointer and thread pointer to trap frame.
+	sd sp, 0(t0)
+	sd tp, 8(t0)
+
+	# Set stack pointer and thread pointer.
+	mv sp, t1
+	mv tp, t2
+
+	# Enable physical memory.
 	csrwi satp, 0
 
 	# Reset kernel interrupt handler.

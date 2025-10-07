@@ -4,7 +4,8 @@
 #include <arch/page.h>
 
 /* Returns the physical address of the user mode interrupt handler. All the
-   handler does is switch to phyisical memory, reset the kernel interrupt
+   handler does is load the data saved in the trap frame, assumed to be at
+   address PAGE_SIZE, switch to phyisical memory, reset the kernel interrupt
    handler and jump to interrupt, making it always fit inside a page. */
 void *userinterruptbase(void);
 
