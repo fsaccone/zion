@@ -41,7 +41,7 @@ pageentry *allocpagetable(void);
      4. Map addresses VADDR_STACK_START to VADDR_STACK_END to their respective
         frames.
    Returns -1 in case of error or 0 otherwise. */
-s8 allocvaddrspace(pageentry *ptree, void *trampoline, void *tframe);
+s8 allocvas(pageentry *ptree, void *trampoline, void *tframe);
 
 /* Frees page table ptable. Does not free the children tables. Returns -1 in
    case of error or 0 otherwise. */
@@ -49,7 +49,7 @@ s8 freepagetable(pageentry *ptable);
 
 /* Unmap each stack page of virtual address space of page tree ptree and frees
    every mapped frame. Returns -1 in case of error or 0 otherwise. */
-s8 freevaddrspacestack(pageentry *ptree);
+s8 freevasstack(pageentry *ptree);
 
 /* Returns the physical address pointed by virtual address vaddr in page tree
    ptree, or NULL in case of error. */
