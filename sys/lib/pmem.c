@@ -5,22 +5,22 @@
 #include <math.h>
 #include <panic.h>
 
-struct frame {
-	struct frame *n;
+struct freeframe {
+	struct freeframe *n;
 };
 
 /* Removes f from freeframes. */
-static void allocframe(struct frame *f);
+static void allocframe(struct freeframe *f);
 
-/* Finds f in freeframes and returns it as a struct frame *. */
-static struct frame *freeframe(void *f);
+/* Finds f in freeframes and returns it as a struct freeframe *. */
+static struct freeframe *freeframe(void *f);
 
-static struct frame *freeframes = NULL;
+static struct freeframe *freeframes = NULL;
 
 void
-allocframe(struct frame *f)
+allocframe(struct freeframe *f)
 {
-	struct frame *prev;
+	struct freeframe *prev;
 
 	if (!f)
 		return;
@@ -39,10 +39,10 @@ allocframe(struct frame *f)
 	prev->n = f->n;
 }
 
-struct frame *
+struct freeframe *
 freeframe(void *f)
 {
-	struct frame *ff;
+	struct freeframe *ff;
 
 	for (ff = freeframes; ff; ff = ff->n) {
 		if ((uptr)f == (uptr)ff)
@@ -55,8 +55,8 @@ freeframe(void *f)
 void *
 palloc(uptr s, uptr align)
 {
-	struct frame *first;
-	struct frame *frames[MAX_PALLOC_FRAMES];
+	struct freeframe *first;
+	struct freeframe *frames[MAX_PALLOC_FRAMES];
 	uptr i, nframes = CEIL(s, PAGE_SIZE) / PAGE_SIZE;
 
 	if (!align)
@@ -127,7 +127,8 @@ pfree(void *f, uptr s)
 	}
 
 	for (i = 0; i < CEIL(s, PAGE_SIZE) / PAGE_SIZE; i++) {
-		struct frame *q = (struct frame *)((uptr)f + i * PAGE_SIZE);
+		struct freeframe *q = (struct freeframe *)
+		                      ((uptr)f + i * PAGE_SIZE);
 
 		q->n = freeframes;
 		freeframes = q;
