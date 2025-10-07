@@ -94,7 +94,7 @@ allocprocess(struct process **p, struct framenode *text)
 	/* Allocate and map trap frame. */
 	popts.u = 0;
 	popts.r = 1;
-	popts.w = 0;
+	popts.w = 1;
 	popts.x = 0;
 	if (!((*p)->trapframe = palloc(PAGE_SIZE, 0)))
 		goto panic;
