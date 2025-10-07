@@ -22,20 +22,7 @@ panic:
 }
 
 s8
-freepagetable(pageentry *ptable)
-{
-	if (pfree(ptable, PAGE_TABLE_ENTRIES * sizeof(pageentry)))
-		goto panic;
-
-	return 0;
-
-panic:
-	tracepanicmsg("freepagetable");
-	return -1;
-}
-
-s8
-initvaddrspace(pageentry *ptree, void *trampoline, void *tframe)
+allocvaddrspace(pageentry *ptree, void *trampoline, void *tframe)
 {
 	struct pageoptions popts;
 	uptr a;
@@ -70,6 +57,19 @@ initvaddrspace(pageentry *ptree, void *trampoline, void *tframe)
 		if (vmap(ptree, VADDR_STACK_START + a, f, popts))
 			goto panic;
 	}
+
+	return 0;
+
+panic:
+	tracepanicmsg("freepagetable");
+	return -1;
+}
+
+s8
+freepagetable(pageentry *ptable)
+{
+	if (pfree(ptable, PAGE_TABLE_ENTRIES * sizeof(pageentry)))
+		goto panic;
 
 	return 0;
 
