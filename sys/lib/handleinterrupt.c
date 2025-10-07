@@ -67,6 +67,6 @@ handleinterrupt(void)
 	return;
 
 panic:
-	tracepanicmsg("handleint");
+	tracepanicmsg("handleinterrupt");
 	panic();
 }
