@@ -50,7 +50,7 @@ allocprocess(struct process **p, struct framenode *text)
 		goto panic;
 
 	/* Initialize virtual address space. */
-	if (allocvas((*p)->pagetree, userinterruptbase(), (*p)->trapframe))
+	if (allocvas((*p)->pagetree, userinterruptbase(), (*p)->trapframe, 1))
 		goto panic;
 
 	/* Map text. */
