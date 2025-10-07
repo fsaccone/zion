@@ -5,10 +5,11 @@
 
 #define INTERRUPT_ARGS 5
 
-#define INTERRUPT_TYPE_EXCEPTION 0x00
-#define INTERRUPT_TYPE_SYSCALL   0x01
-#define INTERRUPT_TYPE_HARDWARE  0x02
-#define INTERRUPT_TYPE_TIMER     0x03
+#define INTERRUPT_TYPE_EXCEPTION  0x00
+#define INTERRUPT_TYPE_SYSCALL    0x01
+#define INTERRUPT_TYPE_HARDWARE   0x02
+#define INTERRUPT_TYPE_TIMER      0x03
+#define INTERRUPT_TYPE_PAGE_FAULT 0x04
 
 /* Disables interrupts. */
 void disableinterrupts(void);

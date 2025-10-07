@@ -181,6 +181,7 @@ interrupttype:
 	# 0x01 - Syscall.
 	# 0x02 - Hardware.
 	# 0x03 - Timer.
+	# 0x04 - Page fault.
 
 	csrr t0, scause
 
@@ -192,6 +193,7 @@ interrupttype:
 	bnez t2, 1f
 
 	# 8 | 9 -> Syscall.
+	# 12 | 13 | 15 -> Page fault.
 	# *     -> Exception.
 
 	# If 8 jump to 2f.
@@ -202,6 +204,18 @@ interrupttype:
 	li  t2, 9
 	beq t0, t2, 2f
 
+	# If 12 jump to 3f.
+	li  t2, 12
+	beq t0, t2, 3f
+
+	# If 13 jump to 3f.
+	li  t2, 13
+	beq t0, t2, 3f
+
+	# If 15 jump to 3f.
+	li  t2, 15
+	beq t0, t2, 3f
+
 	# Exception (not 8 or 9).
 	li a0, 0x00
 	ret
@@ -209,6 +223,11 @@ interrupttype:
 2:
 	# Syscall (8 or 9).
 	li a0, 0x01
+	ret
+
+3:
+	# Page fault (12, 13 or 15).
+	li a0, 0x04
 	ret
 
 1:
