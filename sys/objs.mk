@@ -5,12 +5,9 @@ include ../config.mk
 # binary.
 OBJS_START = arch/$(ARCH)/machine/$(MACHINE)/start.o
 
-# Object files from kernel/ with the addition of arch/ARCH/astart.o.
-OBJS_KERNEL = arch/$(ARCH)/astart.o \
-              kernel/kernel.o \
-              kernel/kvmem.o \
-              kernel/mem.o \
-              kernel/raminit.o \
+# The second object file is arch/ARCH/astart.o, which defines the function
+# start jumps to.
+OBJS_ASTART = arch/$(ARCH)/astart.o
 
 # Object files from arch/ARCH/lib/ and lib/.
 OBJS_LIB = arch/$(ARCH)/lib/atomic.o \
@@ -34,5 +31,11 @@ OBJS_LIB = arch/$(ARCH)/lib/atomic.o \
            lib/uart.o \
            lib/vmem.o \
 
+# Object files from src/.
+OBJS_SRC = src/kernel.o \
+           src/kvmem.o \
+           src/mem.o \
+           src/raminit.o \
+
 # All object files.
-OBJS = $(OBJS_START) $(OBJS_KERNEL) $(OBJS_LIB)
+OBJS = $(OBJS_START) $(OBJS_ASTART) $(OBJS_LIB) $(OBJS_SRC)
