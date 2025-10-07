@@ -76,7 +76,7 @@ usermode:
 
 	# Enable virtual memory.
 	csrr t0,   satp
-	li   t1,   0b1010 << 60
+	li   t1,   10 << 60
 	or   t0,   t0, t1
 	csrw satp, t0
 
