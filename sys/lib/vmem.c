@@ -22,7 +22,7 @@ panic:
 }
 
 s8
-allocvas(pageentry *ptree, void *trampoline, void *tframe)
+allocvas(pageentry *ptree, void *trampoline, void *tframe, u8 user)
 {
 	struct pageoptions popts;
 	uptr a;
@@ -44,7 +44,7 @@ allocvas(pageentry *ptree, void *trampoline, void *tframe)
 		goto panic;
 
 	/* Stack. */
-	popts.u = 0;
+	popts.u = user;
 	popts.r = 1;
 	popts.w = 1;
 	popts.x = 0;
