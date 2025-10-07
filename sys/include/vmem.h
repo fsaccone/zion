@@ -34,10 +34,6 @@ struct pageoptions {
    Returns NULL in case of error. */
 pageentry *allocpagetable(void);
 
-/* Frees page table ptable. Does not free the children tables. Returns -1 in
-   case of error or 0 otherwise. */
-s8 freepagetable(pageentry *ptable);
-
 /* Initializes the default virtual address space for page tree ptree:
      1. Map VADDR_TRAMPOLINE to trampoline frame trampoline.
      2. Map VADDR_TRAP_FRAME to trap frame tframe.
@@ -45,7 +41,11 @@ s8 freepagetable(pageentry *ptable);
      4. Map addresses VADDR_STACK_START to VADDR_STACK_END to their respective
         frames.
    Returns -1 in case of error or 0 otherwise. */
-s8 initvaddrspace(pageentry *ptree, void *trampoline, void *tframe);
+s8 allocvaddrspace(pageentry *ptree, void *trampoline, void *tframe);
+
+/* Frees page table ptable. Does not free the children tables. Returns -1 in
+   case of error or 0 otherwise. */
+s8 freepagetable(pageentry *ptable);
 
 /* Returns the physical address pointed by virtual address vaddr in page tree
    ptree, or NULL in case of error. */
