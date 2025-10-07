@@ -12,8 +12,9 @@
 
 #define STACK_SIZE CEIL(8192, PAGE_SIZE)
 
-#define VIRTUAL_INT_HANDLER   0x0
-#define VIRTUAL_PROGRAM_START PAGE_SIZE
+#define VIRTUAL_INT_HANDLER   (0 * PAGE_SIZE)
+#define VIRTUAL_TRAPFRAME     (1 * PAGE_SIZE)
+#define VIRTUAL_PROGRAM_START (2 * PAGE_SIZE)
 #define VIRTUAL_STACK_END     ((uptr)(~0))
 #define VIRTUAL_STACK_START   (VIRTUAL_STACK_END - STACK_SIZE)
 
@@ -49,6 +50,12 @@ allocprocess(struct process **p, struct framenode *text)
 		.r = 1,
 		.w = 0,
 		.x = 1,
+	};
+	struct pageoptions tframeopts = {
+		.u = 0,
+		.r = 1,
+		.w = 0,
+		.x = 0,
 	};
 	uptr a;
 	struct framenode *textfn;
@@ -104,6 +111,15 @@ allocprocess(struct process **p, struct framenode *text)
 
 		a += PAGE_SIZE;
 	}
+
+	/* Allocate and map trap frame. */
+	if (!((*p)->trapframe = palloc(PAGE_SIZE, 0)))
+		goto panic;
+	if (vmap((*p)->pagetree,
+	         VIRTUAL_TRAPFRAME,
+	         (*p)->trapframe,
+	         tframeopts))
+		goto panic;
 
 	/* Map interrupt handler. */
 	intbase = userinterruptbase();

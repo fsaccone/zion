@@ -36,6 +36,9 @@ struct process {
 	/* The process state. */
 	enum processstate state;
 
+	/* The trap frame of the process. */
+	void *trapframe;
+
 	/* The pointer to the root table of the virtual page tree. */
 	pageentry *pagetree;
 
