@@ -33,30 +33,7 @@ static u8                  pidbitmap[PID_MAX / 8] = { 0 };
 s8
 allocprocess(struct process **p, struct framenode *text)
 {
-	struct pageoptions inthandleropts = {
-		.u = 1,
-		.r = 1,
-		.w = 0,
-		.x = 1,
-	};
-	struct pageoptions stackopts = {
-		.u = 1,
-		.r = 1,
-		.w = 1,
-		.x = 1,
-	};
-	struct pageoptions textopts = {
-		.u = 1,
-		.r = 1,
-		.w = 0,
-		.x = 1,
-	};
-	struct pageoptions tframeopts = {
-		.u = 0,
-		.r = 1,
-		.w = 0,
-		.x = 0,
-	};
+	struct pageoptions popts = { 0 };
 	uptr a;
 	struct framenode *textfn;
 	void *intbase;
@@ -78,6 +55,10 @@ allocprocess(struct process **p, struct framenode *text)
 	(*p)->children = NULL;
 
 	/* Allocate and map stack. */
+	popts.u = 1;
+	popts.r = 1;
+	popts.w = 1;
+	popts.x = 0;
 	for (a = 0; a < STACK_SIZE; a += PAGE_SIZE) {
 		void *f;
 		struct framenode *fn;
@@ -92,46 +73,47 @@ allocprocess(struct process **p, struct framenode *text)
 		fn->n = (*p)->allocated;
 		(*p)->allocated = fn;
 
-		if (vmap((*p)->pagetree,
-		         VIRTUAL_STACK_START + a,
-		         f,
-		         stackopts)) {
+		if (vmap((*p)->pagetree, VIRTUAL_STACK_START + a, f, popts)) {
 			goto panic;
 		}
 	}
 
 	/* Map text. */
+	popts.u = 1;
+	popts.r = 1;
+	popts.w = 0;
+	popts.x = 1;
 	a = 0;
 	for (textfn = text; textfn; textfn = textfn->n) {
-		if (vmap((*p)->pagetree,
-		         VIRTUAL_PROGRAM_START + a,
-		         textfn->f,
-		         textopts))
+		if (vmap((*p)->pagetree, VIRTUAL_PROGRAM_START + a, textfn->f,
+		         popts))
 			goto panic;
 
 		a += PAGE_SIZE;
 	}
 
 	/* Allocate and map trap frame. */
+	popts.u = 0;
+	popts.r = 1;
+	popts.w = 0;
+	popts.x = 0;
 	if (!((*p)->trapframe = palloc(PAGE_SIZE, 0)))
 		goto panic;
-	if (vmap((*p)->pagetree,
-	         VIRTUAL_TRAPFRAME,
-	         (*p)->trapframe,
-	         tframeopts))
+	if (vmap((*p)->pagetree, VIRTUAL_TRAPFRAME, (*p)->trapframe, popts))
 		goto panic;
 
 	/* Map interrupt handler. */
+	popts.u = 0;
+	popts.r = 1;
+	popts.w = 0;
+	popts.x = 1;
 	intbase = userinterruptbase();
 	if ((uptr)intbase % PAGE_SIZE) {
 		setpanicmsg("User interrupt handler not aligned to"
 		            " PAGE_SIZE.");
 		goto panic;
 	}
-	if (vmap((*p)->pagetree,
-	         VIRTUAL_INT_HANDLER,
-	         intbase,
-	         inthandleropts))
+	if (vmap((*p)->pagetree, VIRTUAL_INT_HANDLER, intbase, popts))
 		goto panic;
 
 	/* Set program counter and stack pointer. */
