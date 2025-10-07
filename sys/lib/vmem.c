@@ -78,6 +78,31 @@ panic:
 	return -1;
 }
 
+s8
+freevaddrspacestack(pageentry *ptree)
+{
+	uptr a;
+
+	for (a = 0; a < STACK_SIZE; a += PAGE_SIZE) {
+		void *f;
+
+		if (!(f = paddr(ptree, VADDR_STACK_START + a)))
+			goto panic;
+
+		if (pfree(f, PAGE_SIZE))
+			goto panic;
+
+		if (vunmap(ptree, VADDR_STACK_START + a))
+			goto panic;
+	}
+
+	return 0;
+
+panic:
+	tracepanicmsg("freevaddrspacestack");
+	return -1;
+}
+
 void *
 paddr(pageentry *ptree, uptr vaddr)
 {
