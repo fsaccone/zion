@@ -73,9 +73,8 @@ allocprocess(struct process **p, struct framenode *text)
 		fn->n = (*p)->allocated;
 		(*p)->allocated = fn;
 
-		if (vmap((*p)->pagetree, VIRTUAL_STACK_START + a, f, popts)) {
+		if (vmap((*p)->pagetree, VIRTUAL_STACK_START + a, f, popts))
 			goto panic;
-		}
 	}
 
 	/* Map text. */
