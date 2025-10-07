@@ -4,8 +4,9 @@
 #include <arch/page.h>
 #include <arch/types.h>
 
-#define VADDR_TRAMPOLINE (0 * PAGE_SIZE)
-#define VADDR_TRAPFRAME  (1 * PAGE_SIZE)
+#define VADDR_TRAMPOLINE      (0 * PAGE_SIZE)
+#define VADDR_TRAPFRAME       (1 * PAGE_SIZE)
+#define VADDR_FIRST_FREE_PAGE (2 * PAGE_SIZE)
 
 struct pageoptions {
 	/* If 1, the page is for user-mode; otherwise, it is for
