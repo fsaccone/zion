@@ -47,6 +47,10 @@ s8 allocvaddrspace(pageentry *ptree, void *trampoline, void *tframe);
    case of error or 0 otherwise. */
 s8 freepagetable(pageentry *ptable);
 
+/* Unmap each stack page of virtual address space of page tree ptree and frees
+   every mapped frame. Returns -1 in case of error or 0 otherwise. */
+s8 freevaddrspacestack(pageentry *ptree);
+
 /* Returns the physical address pointed by virtual address vaddr in page tree
    ptree, or NULL in case of error. */
 void *paddr(pageentry *ptree, uptr vaddr);
