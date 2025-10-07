@@ -38,7 +38,9 @@ s8
 initvaddrspace(pageentry *ptree, void *trampoline, void *tframe)
 {
 	struct pageoptions popts;
+	uptr a;
 
+	/* Trampoline. */
 	popts.u = 0;
 	popts.r = 1;
 	popts.w = 0;
@@ -46,12 +48,28 @@ initvaddrspace(pageentry *ptree, void *trampoline, void *tframe)
 	if (vmap(ptree, VADDR_TRAMPOLINE, trampoline, popts))
 		goto panic;
 
+	/* Trap frame. */
 	popts.u = 0;
 	popts.r = 1;
 	popts.w = 1;
 	popts.x = 0;
 	if (vmap(ptree, VADDR_TRAP_FRAME, tframe, popts))
 		goto panic;
+
+	/* Stack. */
+	popts.u = 0;
+	popts.r = 1;
+	popts.w = 1;
+	popts.x = 0;
+	for (a = 0; a < STACK_SIZE; a += PAGE_SIZE) {
+		void *f;
+
+		if (!(f = palloc(PAGE_SIZE, 0)))
+			goto panic;
+
+		if (vmap(ptree, VADDR_STACK_START + a, f, popts))
+			goto panic;
+	}
 
 	return 0;
 
