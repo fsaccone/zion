@@ -61,6 +61,11 @@ handleinterrupt(void)
 		nextschedule();
 
 		break;
+	case INTERRUPT_TYPE_PAGE_FAULT:
+		setpanicmsg("Page fault.");
+		goto panic;
+
+		break;
 	default:
 	}
 
