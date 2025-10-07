@@ -228,32 +228,32 @@ interrupttype:
 	li  t2, 3
 	beq t0, t2, 2b
 
-	# If 5 jump to 3f.
+	# If 5 jump to 2f.
 	li  t2, 5
-	beq t0, t2, 3f
+	beq t0, t2, 2f
 
-	# If 7 jump to 3f.
+	# If 7 jump to 2f.
 	li  t2, 7
+	beq t0, t2, 2f
+
+	# If 9 jump to 3f.
+	li  t2, 9
 	beq t0, t2, 3f
 
-	# If 9 jump to 4f.
-	li  t2, 9
-	beq t0, t2, 4f
-
-	# If 11 jump to 4f.
+	# If 11 jump to 3f.
 	li  t2, 11
-	beq t0, t2, 4f
+	beq t0, t2, 3f
 
 	# Default (0x00 - Exception).
 	li a0, 0x00
 	ret
 
-3:
+2:
 	# Timer.
 	li a0, 0x03
 	ret
 
-4:
+3:
 	# Hardware.
 	li a0, 0x02
 	ret
