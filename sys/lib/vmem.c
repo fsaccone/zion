@@ -34,6 +34,32 @@ panic:
 	return -1;
 }
 
+s8
+initvaddrspace(pageentry *ptree, void *trampoline, void *tframe)
+{
+	struct pageoptions popts;
+
+	popts.u = 0;
+	popts.r = 1;
+	popts.w = 0;
+	popts.x = 0;
+	if (vmap(ptree, VADDR_TRAMPOLINE, trampoline, popts))
+		goto panic;
+
+	popts.u = 0;
+	popts.r = 1;
+	popts.w = 1;
+	popts.x = 0;
+	if (vmap(ptree, VADDR_TRAPFRAME, tframe, popts))
+		goto panic;
+
+	return 0;
+
+panic:
+	tracepanicmsg("freepagetable");
+	return -1;
+}
+
 void *
 paddr(pageentry *ptree, uptr vaddr)
 {

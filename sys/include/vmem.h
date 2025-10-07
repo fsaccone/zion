@@ -4,6 +4,9 @@
 #include <arch/page.h>
 #include <arch/types.h>
 
+#define VADDR_TRAMPOLINE (0 * PAGE_SIZE)
+#define VADDR_TRAPFRAME  (1 * PAGE_SIZE)
+
 struct pageoptions {
 	/* If 1, the page is for user-mode; otherwise, it is for
 	   kernel-mode. */
@@ -28,6 +31,12 @@ pageentry *allocpagetable(void);
 /* Frees page table ptable. Does not free the children tables. Returns -1 in
    case of error or 0 otherwise. */
 s8 freepagetable(pageentry *ptable);
+
+/* Initializes the default virtual address space for page tree ptree:
+     1. Map VADDR_TRAMPOLINE to trampoline frame trampoline.
+     2. Map VADDR_TRAPFRAME to trap frame tframe.
+   Returns -1 in case of error or 0 otherwise. */
+s8 initvaddrspace(pageentry *ptree, void *trampoline, void *tframe);
 
 /* Returns the physical address pointed by virtual address vaddr in page tree
    ptree, or NULL in case of error. */
