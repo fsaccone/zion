@@ -22,7 +22,7 @@ panic:
 }
 
 s8
-allocvaddrspace(pageentry *ptree, void *trampoline, void *tframe)
+allocvas(pageentry *ptree, void *trampoline, void *tframe)
 {
 	struct pageoptions popts;
 	uptr a;
@@ -61,7 +61,7 @@ allocvaddrspace(pageentry *ptree, void *trampoline, void *tframe)
 	return 0;
 
 panic:
-	tracepanicmsg("allocvaddrspace");
+	tracepanicmsg("allocvas");
 	return -1;
 }
 
@@ -79,7 +79,7 @@ panic:
 }
 
 s8
-freevaddrspacestack(pageentry *ptree)
+freevasstack(pageentry *ptree)
 {
 	uptr a;
 
@@ -99,7 +99,7 @@ freevaddrspacestack(pageentry *ptree)
 	return 0;
 
 panic:
-	tracepanicmsg("freevaddrspacestack");
+	tracepanicmsg("freevasstack");
 	return -1;
 }
 
