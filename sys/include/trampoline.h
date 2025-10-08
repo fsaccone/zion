@@ -1,6 +1,11 @@
 #ifndef _TRAMPOLINE_H
 #define _TRAMPOLINE_H
 
+#include <arch/page.h>
+
+/* Prepares the kernel trap frame and the context to jump to trampolineret. */
+void setuptrampolineret(pageentry *ptree, void *pc);
+
 /* The trampoline. It is aligned to PAGE_SIZE and fits inside a page, to make
    it easily mappable in virtual address spaces: it should be mapped to the
    same address in both kernel and user virtual address spaces, so that the
