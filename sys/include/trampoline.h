@@ -27,4 +27,7 @@ void *trampolinebase(void);
    marking the return to the user code. */
 void trampolineret(void);
 
+/* Returns the virtual address of trampolineret in a virtual address space. */
+void *trampolineretbase(void);
+
 #endif

@@ -3,6 +3,7 @@
 .global trampoline
 .global trampolinebase
 .global trampolineret
+.global trampolineretbase
 
 # Each user trap frame has this structure:
 #   [0,      22 * 8 + 7] = Registers.
@@ -151,5 +152,17 @@ trampolineret:
 
 trampolinebase:
 	la a0, trampoline
+
+	ret
+
+trampolineretbase:
+	la t0, trampoline
+	la t1, trampolineret
+
+	# Add the offset of trampolineret from trampoline using the trampoline
+	# virtual address as base.
+	sub a0, t1, t0
+	li  t0, 0x1000
+	add a0, a0, t0
 
 	ret
