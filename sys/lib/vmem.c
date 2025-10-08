@@ -156,6 +156,21 @@ vmap(pageentry *ptree, uptr vaddr, void *paddr, struct pageoptions opts)
 		goto panic;
 	}
 
+	if (!opts.r && !opts.w && !opts.x) {
+		setpanicmsg("No permissions.");
+		goto panic;
+	}
+
+	if (opts.w && !opts.r) {
+		setpanicmsg("Write permission without read permission.");
+		goto panic;
+	}
+
+	if (opts.x && !opts.r) {
+		setpanicmsg("Execute permission without read permission.");
+		goto panic;
+	}
+
 	/* Get last-level page table pointing to e starting from ptree. */
 	lastpt = ptree;
 	for (l = 0; l < PAGE_TABLE_LEVELS - 1; l++) {
