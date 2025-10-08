@@ -7,7 +7,6 @@
 #include <math.h>
 #include <panic.h>
 #include <pmem.h>
-#include <user.h>
 #include <vmem.h>
 
 /* Allocates process and sets pointer p to it after initializing it using text
