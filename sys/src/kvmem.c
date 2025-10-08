@@ -2,6 +2,7 @@
 
 #include <arch/page.h>
 #include <arch/types.h>
+#include <interrupt.h>
 #include <machine/mem.h>
 #include <memswitch.h>
 #include <panic.h>
@@ -68,7 +69,9 @@ kvmem(void)
 	if (vmap(ptree, UART0, (void *)UART0, opts))
 		goto panic;
 
+	disableinterrupts();
 	memswitch(ptree);
+	enableinterrupts();
 
 	return 0;
 
