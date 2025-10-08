@@ -32,7 +32,7 @@ allocvas(pageentry *ptree, void *tframe, u8 user)
 	popts.u = 0;
 	popts.r = 1;
 	popts.w = 0;
-	popts.x = 0;
+	popts.x = 1;
 	if (vmap(ptree, VADDR_TRAMPOLINE, trampolinebase(), popts))
 		goto panic;
 
