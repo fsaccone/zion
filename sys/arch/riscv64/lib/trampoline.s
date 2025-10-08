@@ -24,7 +24,7 @@ setuptrampolineret:
 	srli a0, a0, 12
 	li   t1, 10 << 60
 	or   a0, a0, t1
-	sd   t1, 0(t0)
+	sd   a0, 0(t0)
 
 	# Save interrupt handler address.
 	la t1, interrupt
