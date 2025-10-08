@@ -67,9 +67,14 @@ trampoline:
 	# Set t6, the last register to be loaded, to the trap frame address.
 	li t6, 0x1000
 
-	# Load the old satp and switch to it.
-	ld   t0,   0(t6)
-	csrw satp, t0
+	# Load the old satp and switch to it, saving the kernel satp to t1.
+	ld    t0,   0(t6)
+	csrrw t1, satp, t0
+
+	# Save the user trap frame from the current context.
+	sd t1, (23 * 8)(t6)
+	sd sp, (24 * 8)(t6)
+	sd tp, (25 * 8)(t6)
 
 	# Load the saved registers from the now available user trap frame.
 	ld t1,  (0  * 8)(t6)
