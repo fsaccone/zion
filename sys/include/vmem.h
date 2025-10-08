@@ -10,7 +10,7 @@
 #define VADDR_TRAMPOLINE      (0 * PAGE_SIZE)
 #define VADDR_TRAP_FRAME      (1 * PAGE_SIZE)
 #define VADDR_FIRST_FREE_PAGE (2 * PAGE_SIZE)
-#define VADDR_STACK_END       ((uptr)(~0))
+#define VADDR_STACK_END       PAGE_VADDR_MAX
 #define VADDR_STACK_START     (VADDR_STACK_END - STACK_SIZE + 1)
 
 struct pageoptions {
