@@ -18,4 +18,8 @@ void trampoline(void);
 /* Returns the physical address of trampoline. */
 void *trampolinebase(void);
 
+/* Part of trampoline. Starts right after the interrupt handler returns,
+   marking the return to the user code. */
+void trampolineret(void);
+
 #endif
