@@ -53,7 +53,7 @@ kvmem(void)
 	opts.x = 0;
 	for (i = 0; i < FREE_MEMORY_REGIONS_LEN; i++) {
 		uptr start = freemem[i][0],
-		     end   = freemem[i][0];
+		     end   = freemem[i][1];
 
 		for (a = start; a < end; a += PAGE_SIZE) {
 			if (vmap(ptree, a, (void *)a, opts))
