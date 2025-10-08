@@ -146,6 +146,16 @@ vmap(pageentry *ptree, uptr vaddr, void *paddr, struct pageoptions opts)
 	uptr l, lvlidxs[PAGE_TABLE_LEVELS] = PAGE_LVLIDXS_FROM_VADDR(vaddr);
 	pageentry *lastpt, *e;
 
+	if (vaddr % PAGE_SIZE) {
+		setpanicmsg("Unaligned virtual address.");
+		goto panic;
+	}
+
+	if ((uptr)paddr % PAGE_SIZE) {
+		setpanicmsg("Unaligned physical address.");
+		goto panic;
+	}
+
 	/* Get last-level page table pointing to e starting from ptree. */
 	lastpt = ptree;
 	for (l = 0; l < PAGE_TABLE_LEVELS - 1; l++) {
@@ -204,6 +214,11 @@ vunmap(pageentry *ptree, uptr vaddr)
 {
 	uptr l, i, lvlidxs[PAGE_TABLE_LEVELS] = PAGE_LVLIDXS_FROM_VADDR(vaddr);
 	pageentry *lastpt, *e;
+
+	if (vaddr % PAGE_SIZE) {
+		setpanicmsg("Unaligned virtual address.");
+		goto panic;
+	}
 
 	/* Get last-level page table pointing to e starting from ptree. */
 	lastpt = ptree;
