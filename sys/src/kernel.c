@@ -79,5 +79,5 @@ kernel(void)
 
 panic:
 	tracepanicmsg("kernel");
-	return;
+	panic();
 }
