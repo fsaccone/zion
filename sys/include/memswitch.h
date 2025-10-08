@@ -4,9 +4,8 @@
 #include <arch/page.h>
 
 /* Switches to virtual memory using page tree ptree. The page tree needs to be
-   initialized to:
-     - Map this function at the same address as its physical one.
-     - Map a stack at the maximum address. */
+   initialized in a way this function is mapped at the same address as its
+   physical one. */
 void memswitch(pageentry *ptree);
 
 #endif
