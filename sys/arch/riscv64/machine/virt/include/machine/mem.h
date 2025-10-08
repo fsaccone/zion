@@ -4,19 +4,23 @@
 #include <arch/types.h>
 #include <config.h>
 
+#define PHY_MEM_START (uptr)0x80000000
 /* (4G = 4 * 1024 * 1024 * 1024 = 4294967296) */
-#define RAM_SIZE (uptr)4294967296
+#define PHY_MEM_SIZE  (uptr)4294967296
+#define PHY_MEM_END   (PHY_MEM_START + PHY_MEM_SIZE)
 
-#define KERNEL_START (uptr)0x80000000
+#define KERNEL_START PHY_MEM_START
 #define KERNEL_SIZE  (uptr)BINARY_SIZE
+#define KERNEL_END   (KERNEL_START + KERNEL_SIZE)
 
 #define RAMINIT_START (KERNEL_START + KERNEL_SIZE)
 #define RAMINIT_SIZE  (uptr)RAMINIT_BINARY_SIZE
+#define RAMINIT_END   (RAMINIT_START + RAMINIT_SIZE)
 
 #define FREE_MEMORY_REGIONS_LEN 1
 #define FREE_MEMORY_REGIONS { \
-	/* start                                      end     */ \
-	{  KERNEL_START + KERNEL_SIZE + RAMINIT_SIZE, RAM_SIZE }, \
+	/* start        end        */ \
+	{  RAMINIT_END, PHY_MEM_END }, \
 }
 
 #define PLIC (uptr)0xc000000
