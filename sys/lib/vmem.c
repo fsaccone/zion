@@ -44,8 +44,10 @@ allocvas(pageentry *ptree, void *tframe, u8 user)
 	if (vmap(ptree, VADDR_TRAP_FRAME, tframe, popts))
 		goto panic;
 
-	/* Stack. */
-	popts.u = user;
+	/* Stack (user-only). */
+	if (!user)
+		return 0;
+	popts.u = 1;
 	popts.r = 1;
 	popts.w = 1;
 	popts.x = 0;

@@ -37,9 +37,9 @@ pageentry *allocpagetable(void);
 /* Initializes the default virtual address space for page tree ptree:
      1. Map VADDR_TRAMPOLINE to trampoline.
      2. Map VADDR_TRAP_FRAME to trap frame tframe.
-     3. Allocate stack of size STACK_SIZE through separate frames.
-     4. Map addresses VADDR_STACK_START to VADDR_STACK_END to their respective
-        frames.
+     3. (user-only) Allocate stack of size STACK_SIZE through separate frames.
+     4. (user-only) Map addresses VADDR_STACK_START to VADDR_STACK_END to their
+                    respective frames.
    Trampoline and trap frame pages are set for kernel mode, while the stack
    pages are set to kernel mode only if user is 0. Returns -1 in case of error
    or 0 otherwise. */
