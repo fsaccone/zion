@@ -34,13 +34,13 @@ kvmem(void)
 	opts.w = 0;
 	opts.x = 1;
 	for (a = KERNEL_START;
-	     a < KERNEL_START + KERNEL_SIZE;
+	     a < KERNEL_END;
 	     a += PAGE_SIZE) {
 		if (vmap(ptree, a, (void *)a, opts))
 			goto panic;
 	}
 	for (a = RAMINIT_START;
-	     a < RAMINIT_START + RAMINIT_SIZE;
+	     a < RAMINIT_END;
 	     a += PAGE_SIZE) {
 		if (vmap(ptree, a, (void *)a, opts))
 			goto panic;
