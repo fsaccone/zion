@@ -22,10 +22,6 @@ mapio(pageentry *ptree)
 		.x = 0,
 	};
 
-	/* Map PLIC. */
-	if (vmap(ptree, PLIC, (void *)PLIC, opts))
-		goto panic;
-
 	/* Map UART. */
 	if (vmap(ptree, UART0, (void *)UART0, opts))
 		goto panic;
