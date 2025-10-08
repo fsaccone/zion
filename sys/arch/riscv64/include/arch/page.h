@@ -53,6 +53,8 @@
                                         | ((lvlidxs)[3] << 21) \
                                         | ((lvlidxs)[4] << 12))
 
+#define PAGE_VADDR_MAX ((1L << 57) - 1)
+
 typedef uptr pageentry;
 
 #endif
