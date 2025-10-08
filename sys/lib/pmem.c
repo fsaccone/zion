@@ -4,6 +4,7 @@
 #include <arch/types.h>
 #include <math.h>
 #include <panic.h>
+#include <spinlock.h>
 
 struct freeframe {
 	struct freeframe *n;
@@ -16,6 +17,7 @@ static void allocframe(struct freeframe *f);
 static struct freeframe *freeframe(void *f);
 
 static struct freeframe *freeframes = NULL;
+static struct lock l;
 
 void
 allocframe(struct freeframe *f)
@@ -72,6 +74,8 @@ palloc(uptr s, uptr align)
 		goto panic;
 	}
 
+	lock(&l);
+
 	first = freeframes;
 nextfirst:
 	if (!first) {
@@ -103,6 +107,8 @@ nextfirst:
 		pmemset(frames[i], 0, PAGE_SIZE);
 	}
 
+	unlock(&l);
+
 	return first;
 
 panic:
@@ -126,6 +132,8 @@ pfree(void *f, uptr s)
 		goto panic;
 	}
 
+	lock(&l);
+
 	for (i = 0; i < CEIL(s, PAGE_SIZE) / PAGE_SIZE; i++) {
 		struct freeframe *q = (struct freeframe *)
 		                      ((uptr)f + i * PAGE_SIZE);
@@ -133,6 +141,8 @@ pfree(void *f, uptr s)
 		q->n = freeframes;
 		freeframes = q;
 	}
+
+	unlock(&l);
 
 	return 0;
 
