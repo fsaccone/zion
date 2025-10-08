@@ -7,6 +7,7 @@
 #include <machine/cpu.h>
 #include <process.h>
 #include <spinlock.h>
+#include <trampoline.h>
 
 struct process *coreprocesses[NCPU] = { 0 };
 
@@ -48,7 +49,9 @@ schedule(void)
 
 				coreprocesses[c] = p;
 
-				/* TODO. */
+				setuptrampolineret(p->pagetree,
+				                   getctxpc(p->uctx));
+				setctxpc(p->uctx, trampolineretbase());
 				switchctx(p->kctx, p->uctx);
 
 				found = 1;
