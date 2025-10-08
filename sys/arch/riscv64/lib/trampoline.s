@@ -1,4 +1,5 @@
 .section .text
+.global setuptrampolineret
 .global trampoline
 .global trampolinebase
 .global trampolineret
@@ -13,6 +14,41 @@
 # The kernel trap frame has this structure:
 #   [0, 7]     = Caller satp.
 #   [8, 8 + 7] = Interrupt handler address.
+
+setuptrampolineret:
+	# Set t0 to the kernel trap frame address.
+	li t0, 0x1000
+
+	# Save satp.
+	srli a0, a0, 12
+	li   t1, 10 << 60
+	or   a0, a0, t1
+	sd   t1, 0(t0)
+
+	# Save interrupt handler address.
+	la t1, interrupt
+	sd t1, 8(t0)
+
+	# Set sepc to given pc.
+	csrw sepc, a1
+
+	# Set sstatus.SPIE to 1 to enable interrupts in user mode.
+	csrr t0, sstatus
+	li   t1, 1 << 5
+	or   t0, t0, t1
+	csrw sstatus, t0
+
+	# Set sstatus.SPP to 0 to make sret switch to user mode.
+	csrr t0, sstatus
+	li   t1, 1 << 8
+	not  t1, t1
+	and  t0, t0, t1
+	csrw sstatus, t0
+
+	# Set stvec to trampoline.
+	csrwi stvec, 0x0
+
+	ret
 
 .align 12
 trampoline:
