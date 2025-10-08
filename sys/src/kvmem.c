@@ -8,31 +8,6 @@
 #include <pmem.h>
 #include <vmem.h>
 
-/* Map memory regions of memory-mapped IO in page tree ptree to their
-   respective addresses. Returns -1 in case of error or 0 otherwise. */
-static s8 mapio(pageentry *ptree);
-
-s8
-mapio(pageentry *ptree)
-{
-	struct pageoptions opts = {
-		.u = 0,
-		.r = 1,
-		.w = 1,
-		.x = 0,
-	};
-
-	/* Map UART. */
-	if (vmap(ptree, UART0, (void *)UART0, opts))
-		goto panic;
-
-	return 0;
-
-panic:
-	tracepanicmsg("mapio");
-	return -1;
-}
-
 s8
 kvmem(void)
 {
@@ -85,7 +60,12 @@ kvmem(void)
 		}
 	}
 
-	if (mapio(ptree))
+	/* Map UART. */
+	opts.u = 0;
+	opts.r = 1;
+	opts.w = 1;
+	opts.x = 0;
+	if (vmap(ptree, UART0, (void *)UART0, opts))
 		goto panic;
 
 	memswitch(ptree);
