@@ -1,6 +1,7 @@
 .section .text
 .global trampoline
 .global trampolinebase
+.global trampolineret
 
 # Each user trap frame has this structure:
 #   [0,      22 * 8 + 7] = Registers.
@@ -65,6 +66,8 @@ trampoline:
 	# Call interrupt handler.
 	jalr ra, t2
 
+	# Continues here.
+trampolineret:
 	# Set t6, the last register to be loaded, to the trap frame address.
 	li t6, 0x1000
 
