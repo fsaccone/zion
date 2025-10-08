@@ -10,7 +10,8 @@
 #   [26 * 8, 26 * 8 + 7] = Interrupt handler address.
 #
 # The kernel trap frame has this structure:
-#   [0, 7] = Caller satp.
+#   [0, 7]     = Caller satp.
+#   [8, 8 + 7] = Interrupt handler address.
 
 .align 12
 trampoline:
@@ -67,6 +68,9 @@ trampoline:
 	# Set t6, the last register to be loaded, to the trap frame address.
 	li t6, 0x1000
 
+	# Load the interrupt handler address from the kernel trap frame to t2.
+	ld t2, 8(t6)
+
 	# Load the old satp and switch to it, saving the kernel satp to t1.
 	ld    t0,   0(t6)
 	csrrw t1, satp, t0
@@ -75,6 +79,7 @@ trampoline:
 	sd t1, (23 * 8)(t6)
 	sd sp, (24 * 8)(t6)
 	sd tp, (25 * 8)(t6)
+	sd t2, (26 * 8)(t6)
 
 	# Load the saved registers from the now available user trap frame.
 	ld t1,  (0  * 8)(t6)
