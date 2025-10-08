@@ -46,16 +46,10 @@ trampoline:
 	sd t5,  (21 * 8)(t0)
 	sd t6,  (22 * 8)(t0)
 
-	# Load address of kernel page tree to t1.
+	# Load user trap frame.
 	ld t1, (23 * 8)(t0)
-
-	# Load kernel stack pointer.
 	ld sp, (24 * 8)(t0)
-
-	# Load kernel thread pointer.
 	ld tp, (25 * 8)(t0)
-
-	# Load address of interrupt handler to t2.
 	ld t2, (26 * 8)(t0)
 
 	# Setup satp and switch to it, saving the old satp to t1.
