@@ -28,10 +28,10 @@ kvmem(void)
 	if (allocvas(ptree, tframe, 1))
 		goto panic;
 
-	/* Map kernel and raminit texts. */
+	/* Map kernel and raminit. */
 	opts.u = 0;
 	opts.r = 1;
-	opts.w = 0;
+	opts.w = 1;
 	opts.x = 1;
 	for (a = KERNEL_START;
 	     a < KERNEL_END;
