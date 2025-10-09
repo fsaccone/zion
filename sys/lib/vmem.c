@@ -25,7 +25,7 @@ panic:
 s8
 allocvas(pageentry *ptree, void *tframe, u8 user)
 {
-	struct pageoptions popts;
+	struct pageoptions popts = { 0 };
 	uptr a;
 
 	/* Trampoline. */
