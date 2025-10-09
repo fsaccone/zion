@@ -15,7 +15,7 @@ kvmem(void)
 	pageentry *ptree;
 	void *tframe;
 	uptr a;
-	struct pageoptions opts;
+	struct pageoptions opts = { 0 };
 	uptr i, freemem[FREE_MEMORY_REGIONS_LEN][2] = FREE_MEMORY_REGIONS;
 
 	if (!(ptree = allocpagetable()))
