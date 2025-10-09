@@ -3,6 +3,7 @@
 .global enableinterrupts
 .global interrupt
 .global interruptargs
+.global interruptbase
 .global interruptisuser
 .global interruptsenabled
 .global interrupttype
@@ -145,6 +146,11 @@ interruptargs:
 	sd t1, (5 * 8)(t0)
 
 	mv a0, t0
+
+	ret
+
+interruptbase:
+	la a0, interrupt
 
 	ret
 

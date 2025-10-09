@@ -27,6 +27,9 @@ void interrupt(void);
    because having code before it may alter the values of the registers. */
 ureg *interruptargs(void);
 
+/* Returns the physical address of interrupt. */
+void *interruptbase(void);
+
 /* Returns 1 if the interrupt comes from user mode or 0 if it comes from kernel
    mode. */
 u8 interruptisuser(void);
