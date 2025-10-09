@@ -7,7 +7,7 @@
 
 # Each user trap frame has this structure:
 #   [0,      22 * 8 + 7] = Registers.
-#   [23 * 8, 23 * 8 + 7] = Kernel page tree address.
+#   [23 * 8, 23 * 8 + 7] = Kernel satp.
 #   [24 * 8, 24 * 8 + 7] = Kernel stack pointer.
 #   [25 * 8, 25 * 8 + 7] = Kernel thread pointer.
 #   [26 * 8, 26 * 8 + 7] = Interrupt handler address.
@@ -90,10 +90,7 @@ trampoline:
 	ld tp, (25 * 8)(t0)
 	ld t2, (26 * 8)(t0)
 
-	# Setup satp and switch to it, saving the old satp to t1.
-	srli  t1, t1, 12
-	li    t3, 10 << 60
-	or    t1, t1, t3
+	# Switch to kernel satp and save the old satp to t1.
 	csrrw t1, satp, t1
 
 	# Save the old satp to the now available kernel trap frame.
