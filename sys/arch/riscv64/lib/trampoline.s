@@ -27,11 +27,10 @@ setuptrampolineret:
 	sd   a0, 0(t0)
 
 	# Save interrupt handler address.
-	la t1, interrupt
-	sd t1, 8(t0)
+	sd a1, 8(t0)
 
 	# Set sepc to given pc.
-	csrw sepc, a1
+	csrw sepc, a2
 
 	# Set sstatus.SPIE to 1 to enable interrupts in user mode.
 	csrr t0, sstatus
