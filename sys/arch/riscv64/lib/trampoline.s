@@ -45,9 +45,6 @@ setuptrampolineret:
 	and  t0, t0, t1
 	csrw sstatus, t0
 
-	# Set stvec to trampoline.
-	csrwi stvec, 0x0
-
 	ret
 
 .align 12
@@ -93,6 +90,9 @@ trampoline:
 	# Switch to kernel satp and save the old satp to t1.
 	csrrw t1, satp, t1
 
+	# Set stvec to interrupt handler.
+	csrw stvec, t2
+
 	# Save the old satp to the now available kernel trap frame.
 	sd t1, 0(t0)
 
@@ -110,6 +110,9 @@ trampolineret:
 	# Load the old satp and switch to it, saving the kernel satp to t1.
 	ld    t0,   0(t6)
 	csrrw t1, satp, t0
+
+	# Set stvec to trampoline.
+	csrwi stvec, 0x0
 
 	# Save the user trap frame from the current context.
 	sd t1, (23 * 8)(t6)
