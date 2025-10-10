@@ -97,7 +97,7 @@ trampoline:
 	sd t1, 0(t0)
 
 	# Call interrupt handler.
-	jalr ra, t2
+	jalr t2
 
 	# Continues here.
 trampolineret:
