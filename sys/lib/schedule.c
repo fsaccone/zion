@@ -1,5 +1,6 @@
 #include <schedule.h>
 
+#include <arch/page.h>
 #include <console.h>
 #include <core.h>
 #include <ctx.h>
@@ -10,6 +11,17 @@
 #include <trampoline.h>
 
 struct process *coreprocesses[NCPU] = { 0 };
+
+pageentry *
+coreprocessptree(void)
+{
+	u16 c = core();
+
+	if (!coreprocesses[c])
+		return NULL;
+
+	return coreprocesses[c]->pagetree;
+}
 
 void
 nextschedule(void)
