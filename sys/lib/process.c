@@ -52,10 +52,10 @@ allocprocess(struct process **p, struct framenode *text)
 	if (allocvas((*p)->pagetree, (*p)->trapframe, 1))
 		goto panic;
 
-	/* Map text. */
+	/* Map program. */
 	popts.u = 1;
 	popts.r = 1;
-	popts.w = 0;
+	popts.w = 1;
 	popts.x = 1;
 	a = 0;
 	for (textfn = text; textfn; textfn = textfn->n) {
@@ -65,6 +65,13 @@ allocprocess(struct process **p, struct framenode *text)
 
 		a += PAGE_SIZE;
 	}
+
+	popts.u = 1;
+	popts.r = 1;
+	popts.w = 1;
+	popts.x = 0;
+	if (vmap((*p)->pagetree, 0x10000000, (void *)0x10000000, popts))
+		goto panic;
 
 	/* Set program counter and stack pointer. */
 	setctxpc((*p)->uctx, (void *)VADDR_FIRST_FREE_PAGE);
