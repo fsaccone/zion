@@ -10,22 +10,21 @@
 #include <vmem.h>
 
 s8
-kvmem(void)
+kvmem(pageentry **ptree)
 {
-	pageentry *ptree;
 	void *tframe;
 	uptr a;
 	struct pageoptions opts = { 0 };
 	uptr i, freemem[FREE_MEMORY_REGIONS_LEN][2] = FREE_MEMORY_REGIONS;
 
-	if (!(ptree = allocpagetable()))
+	if (!(*ptree = allocpagetable()))
 		goto panic;
 
 	if (!(tframe = palloc(PAGE_SIZE, 0)))
 		goto panic;
 
 	/* Do default initialization. */
-	if (allocvas(ptree, tframe, 1))
+	if (allocvas(*ptree, tframe, 1))
 		goto panic;
 
 	/* Map kernel and raminit. */
@@ -36,13 +35,13 @@ kvmem(void)
 	for (a = KERNEL_START;
 	     a < KERNEL_END;
 	     a += PAGE_SIZE) {
-		if (vmap(ptree, a, (void *)a, opts))
+		if (vmap(*ptree, a, (void *)a, opts))
 			goto panic;
 	}
 	for (a = RAMINIT_START;
 	     a < RAMINIT_END;
 	     a += PAGE_SIZE) {
-		if (vmap(ptree, a, (void *)a, opts))
+		if (vmap(*ptree, a, (void *)a, opts))
 			goto panic;
 	}
 
@@ -56,7 +55,7 @@ kvmem(void)
 		     end   = freemem[i][1];
 
 		for (a = start; a < end; a += PAGE_SIZE) {
-			if (vmap(ptree, a, (void *)a, opts))
+			if (vmap(*ptree, a, (void *)a, opts))
 				goto panic;
 		}
 	}
@@ -66,12 +65,8 @@ kvmem(void)
 	opts.r = 1;
 	opts.w = 1;
 	opts.x = 0;
-	if (vmap(ptree, UART0, (void *)UART0, opts))
+	if (vmap(*ptree, UART0, (void *)UART0, opts))
 		goto panic;
-
-	disableinterrupts();
-	memswitch(ptree);
-	enableinterrupts();
 
 	return 0;
 
