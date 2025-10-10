@@ -52,10 +52,10 @@ allocprocess(struct process **p, struct framenode *text)
 	if (allocvas((*p)->pagetree, (*p)->trapframe, 1))
 		goto panic;
 
-	/* Map text. */
+	/* Map program. */
 	popts.u = 1;
 	popts.r = 1;
-	popts.w = 0;
+	popts.w = 1;
 	popts.x = 1;
 	a = 0;
 	for (textfn = text; textfn; textfn = textfn->n) {
