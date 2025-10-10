@@ -1,4 +1,4 @@
-#include <handleinterrupt.h>
+#include <interrupt.h>
 
 #include <arch/types.h>
 #include <console.h>

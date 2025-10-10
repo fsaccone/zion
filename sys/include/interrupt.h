@@ -17,6 +17,10 @@ void disableinterrupts(void);
 /* Enables interrupts. */
 void enableinterrupts(void);
 
+/* The interrupt handler which is called by the interrupt function, which is
+   the actual entry point of an interrupt. */
+void handleinterrupt(void);
+
 /* The entry point of the interrupt handler. It does architecture-specific
    actions and eventually calls handleinterrupt. */
 void interrupt(void);
