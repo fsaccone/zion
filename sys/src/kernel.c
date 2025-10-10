@@ -4,6 +4,7 @@
 #include <console.h>
 #include <core.h>
 #include <interrupt.h>
+#include <memswitch.h>
 #include <panic.h>
 #include <process.h>
 #include <schedule.h>
@@ -21,6 +22,8 @@ static s8 core0(void);
 /* Temporarily one, gets set as the return value of the call to core0. Needed
    to sync cores. */
 static s8 core0ret = 1;
+
+static pageentry *ptree = NULL;
 
 s8
 core0(void)
@@ -50,6 +53,9 @@ core0(void)
 	if (createprocess(riframes, NULL))
 		goto panic;
 
+	if (kvmem(&ptree))
+		goto panic;
+
 	return 0;
 
 panic:
@@ -69,10 +75,10 @@ kernel(void)
 
 	while (core0ret);
 
-	if (kvmem())
-		goto panic;
-
+	disableinterrupts();
+	memswitch(ptree);
 	enableinterrupts();
+
 	setupnexttimer();
 
 	schedule();
