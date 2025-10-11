@@ -8,9 +8,10 @@
 # Each trap frame has this structure:
 #   [0,      22 * 8 + 7] = Registers.
 #   [23 * 8, 23 * 8 + 7] = Kernel satp.
-#   [24 * 8, 24 * 8 + 7] = Interrupt handler address.
-#   [25 * 8, 25 * 8 + 7] = Kernel stack pointer.
-#   [26 * 8, 26 * 8 + 7] = Kernel thread pointer.
+#   [24 * 8, 24 * 8 + 7] = Kernel interrupt entry point.
+#   [25 * 8, 25 * 8 + 7] = User interrupt entry point.
+#   [26 * 8, 26 * 8 + 7] = Kernel stack pointer.
+#   [27 * 8, 27 * 8 + 7] = Kernel thread pointer.
 
 inittrapframe:
 	# Save kernel satp.
@@ -22,11 +23,14 @@ inittrapframe:
 	# Set sscratch to given satp.
 	csrw sscratch, a1
 
-	# Save interrupt handler address.
+	# Save kernel interrupt entry point.
 	sd a2, (24 * 8)(a0)
 
+	# Save user interrupt entry point.
+	sd a3, (25 * 8)(a0)
+
 	# Set sepc to given pc.
-	csrw sepc, a3
+	csrw sepc, a4
 
 	# Set kernel stack pointer.
 	sd sp, (25 * 8)(a0)
@@ -86,20 +90,21 @@ trampoline:
 	# Load rest of user trap frame.
 	ld t1, (23 * 8)(t0)
 	ld t2, (24 * 8)(t0)
-	ld sp, (25 * 8)(t0)
-	ld tp, (26 * 8)(t0)
+	ld t3, (25 * 8)(t0)
+	ld sp, (26 * 8)(t0)
+	ld tp, (27 * 8)(t0)
 
 	# Switch to kernel satp and save the old satp to t1.
 	csrrw t1, satp, t1
 
-	# Set stvec to interrupt handler.
+	# Set stvec to kernel interrupt entry point.
 	csrw stvec, t2
 
 	# Save the old satp to sscratch.
 	csrw sscratch, t1
 
-	# Call interrupt handler.
-	jalr t2
+	# Call user interrupt entry point.
+	jalr t3
 
 	# Set s0 to 1 to mark the coming from trampoline, and not
 	# trampolineret.
@@ -135,8 +140,8 @@ trampolineret:
 	# trampolineret presumably happened through a switchctx call, making
 	# the values of sp and tp wrong.
 	beqz s0, 1f
-	sd   sp, (25 * 8)(t6)
-	sd   tp, (26 * 8)(t6)
+	sd   sp, (26 * 8)(t6)
+	sd   tp, (27 * 8)(t6)
 
 1:
 	# Load the saved registers from the now available user trap frame.
