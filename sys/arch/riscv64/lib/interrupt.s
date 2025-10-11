@@ -5,6 +5,7 @@
 .global interruptsenabled
 .global interrupttype
 .global kernelinterrupt
+.global userinterrupt
 .global waitforinterrupt
 
 # Checks the value of scause to call the correct handler.
@@ -329,6 +330,11 @@ kernelinterrupt:
 	ld   ra,  (26 * 8)(sp)
 	ld   gp,  (27 * 8)(sp)
 	addi sp,  sp, ((7 + 12 + 7 + 1 + 1) * 8)
+
+	sret
+
+userinterrupt:
+	call routeinterrupt
 
 	sret
 
