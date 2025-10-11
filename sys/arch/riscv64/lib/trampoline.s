@@ -26,13 +26,15 @@ inittrapframe:
 	csrw sscratch, a1
 
 	# Save kernel interrupt entry point.
-	sd a2, (30 * 8)(a0)
+	la t0, kernelinterrupt
+	sd t0, (30 * 8)(a0)
 
 	# Save user interrupt entry point.
-	sd a3, (31 * 8)(a0)
+	la t0, userinterrupt
+	sd t0, (31 * 8)(a0)
 
 	# Set sepc to given pc.
-	csrw sepc, a4
+	csrw sepc, a2
 
 	# Set kernel stack pointer.
 	sd sp, (32 * 8)(a0)
