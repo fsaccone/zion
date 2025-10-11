@@ -210,7 +210,7 @@ kernelinterrupt:
 	li   t1, 9
 	beq  t0, t1, 1f
 	li   t1, 11
-	beq  t0, t1, 1f
+	beq  t0, t1, 2f
 
 	# Exception (all cases where I bit is 0 and it is not an ecall).
 	li   t1, 1 << 63
