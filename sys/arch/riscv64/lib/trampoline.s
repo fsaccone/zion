@@ -130,14 +130,12 @@ trampoline:
 	jalr t3
 
 trampolineret:
-
 	# Set s0 to 1 to mark the coming from trampoline, and not usermode.
 	li s0, 1
 
 	# Skip usermode specific code.
 	j 1f
 
-	# Continues here.
 usermode:
 	# Set s0 to 0 to mark the coming from usermode, and not trampoline.
 	li s0, 0
