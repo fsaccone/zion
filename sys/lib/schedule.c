@@ -13,17 +13,6 @@
 
 struct process *coreprocesses[NCPU] = { 0 };
 
-pageentry *
-coreprocessptree(void)
-{
-	u16 c = core();
-
-	if (!coreprocesses[c])
-		return NULL;
-
-	return coreprocesses[c]->pagetree;
-}
-
 void
 nextschedule(void)
 {
