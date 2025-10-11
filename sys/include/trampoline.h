@@ -2,6 +2,7 @@
 #define _TRAMPOLINE_H
 
 #include <arch/page.h>
+#include <arch/types.h>
 
 /* Initializes trap frame tframe with page tree ptree, interrupt handler
    interrupt and program counter pc: these will be used in trampolineret to
@@ -10,6 +11,9 @@
    before doing it. */
 void inittrapframe(void *tframe, pageentry *ptree, void *kernelinterrupt,
                    void *userinterrupt, void *pc);
+
+/* Sets the return value of trap frame tframe to r. */
+void setreturn(void *tframe, ureg r);
 
 /* The trampoline. It is aligned to PAGE_SIZE and fits inside a page, to make
    it easily mappable in virtual address spaces: it should be mapped to the
