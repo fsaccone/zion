@@ -62,7 +62,7 @@ schedule(void)
 				coreprocesses[c] = p;
 
 				inittrapframe(p->trapframe, p->pagetree,
-				              interruptbase(),
+				              handleinterruptbase(),
 				              getctxpc(p->uctx));
 				setctxpc(p->uctx, trampolineretbase());
 				switchctx(p->kctx, p->uctx);
