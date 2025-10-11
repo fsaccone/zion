@@ -44,12 +44,8 @@ allocprocess(struct process **p, struct framenode *text)
 	if (!((*p)->pagetree = allocpagetable()))
 		goto panic;
 
-	/* Allocate trap frame. */
-	if (!((*p)->trapframe = palloc(PAGE_SIZE, 0)))
-		goto panic;
-
 	/* Initialize virtual address space. */
-	if (allocvas((*p)->pagetree, (*p)->trapframe, 1))
+	if (allocvas((*p)->pagetree, 1))
 		goto panic;
 
 	/* Map program. */

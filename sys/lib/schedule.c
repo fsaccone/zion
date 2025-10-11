@@ -9,6 +9,7 @@
 #include <process.h>
 #include <spinlock.h>
 #include <trampoline.h>
+#include <vmem.h>
 
 struct process *coreprocesses[NCPU] = { 0 };
 
@@ -61,7 +62,9 @@ schedule(void)
 
 				coreprocesses[c] = p;
 
-				inittrapframe(p->trapframe, p->pagetree,
+				inittrapframe(paddr(p->pagetree,
+				                    VADDR_TRAP_FRAME),
+				              p->pagetree,
 				              handleinterruptbase(),
 				              getctxpc(p->uctx));
 				setctxpc(p->uctx, trampolineretbase());

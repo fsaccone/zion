@@ -12,7 +12,6 @@
 s8
 kvmem(pageentry **ptree)
 {
-	void *tframe;
 	uptr a;
 	struct pageoptions opts = { 0 };
 	uptr i, freemem[FREE_MEMORY_REGIONS_LEN][2] = FREE_MEMORY_REGIONS;
@@ -20,11 +19,8 @@ kvmem(pageentry **ptree)
 	if (!(*ptree = allocpagetable()))
 		goto panic;
 
-	if (!(tframe = palloc(PAGE_SIZE, 0)))
-		goto panic;
-
 	/* Do default initialization. */
-	if (allocvas(*ptree, tframe, 1))
+	if (allocvas(*ptree, 1))
 		goto panic;
 
 	/* Map kernel and raminit. */

@@ -23,9 +23,10 @@ panic:
 }
 
 s8
-allocvas(pageentry *ptree, void *tframe, u8 user)
+allocvas(pageentry *ptree, u8 user)
 {
 	struct pageoptions popts = { 0 };
+	void *tframe;
 	uptr a;
 
 	/* Trampoline. */
@@ -36,17 +37,21 @@ allocvas(pageentry *ptree, void *tframe, u8 user)
 	if (vmap(ptree, VADDR_TRAMPOLINE, trampolinebase(), popts))
 		goto panic;
 
-	/* Trap frame. */
+	/* Only user-only pages are mapped after this. */
+	if (!user)
+		return 0;
+
+	/* Trap frame (user-only). */
 	popts.u = 0;
 	popts.r = 1;
 	popts.w = 1;
 	popts.x = 0;
+	if (!(tframe = palloc(PAGE_SIZE, 0)))
+		goto panic;
 	if (vmap(ptree, VADDR_TRAP_FRAME, tframe, popts))
 		goto panic;
 
 	/* Stack (user-only). */
-	if (!user)
-		return 0;
 	popts.u = 1;
 	popts.r = 1;
 	popts.w = 1;
