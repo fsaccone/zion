@@ -1,5 +1,6 @@
 .section .text
 .global inittrapframe
+.global setreturn
 .global trampoline
 .global trampolinebase
 .global trampolineret
@@ -51,6 +52,11 @@ inittrapframe:
 	not  t1, t1
 	and  t0, t0, t1
 	csrw sstatus, t0
+
+	ret
+
+setreturn:
+	sd a1, (34 * 8)(a0)
 
 	ret
 
