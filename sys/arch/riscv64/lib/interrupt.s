@@ -337,7 +337,9 @@ kernelinterrupt:
 userinterrupt:
 	call routeinterrupt
 
-	sret
+	# Do not do sret, since this function is only called as part of
+	# trampoline.
+	ret
 
 userinterruptbase:
 	la a0, userinterrupt
