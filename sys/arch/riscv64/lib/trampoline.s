@@ -7,18 +7,20 @@
 .global usermode
 .global usermodebase
 
-# Each trap frame has this structure:
-#   [0,      28 * 8 + 7] = Registers.
-#   [29 * 8, 29 * 8 + 7] = (Fixed) Kernel satp.
-#   [30 * 8, 30 * 8 + 7] = (Fixed) Kernel interrupt entry point.
-#   [31 * 8, 31 * 8 + 7] = (Fixed) User interrupt entry point.
-#   [32 * 8, 32 * 8 + 7] = (Fixed) User interrupt return address.
-#   [33 * 8, 33 * 8 + 7] = User sepc.
-#   [34 * 8, 34 * 8 + 7] = Kernel stack pointer.
-#   [35 * 8, 35 * 8 + 7] = Kernel thread pointer.
-#   [36 * 8, 36 * 8 + 7] = Return value.
-# Fixed elements are only set by inittrapframe, and are not altered by
-# trampoline.
+# The following are the indexes of a trap frame as an array of u64:
+#   0-28 = (T)   Registers.
+#   29   = (T)   Kernel satp.
+#   30   = (I)   Kernel interrupt entry point.
+#   31   = (I)   User interrupt entry point.
+#   32   = (I)   User interrupt return address.
+#   33   = (I,T) User sepc.
+#   34   = (P)   Kernel stack pointer.
+#   35   = (P)   Kernel thread pointer.
+#   36   = (T)*  Return value.
+# The flags represent where each element is modified:
+#   - I: Modified in inittrapframe.
+#   - P: Modified in preparetrapframe.
+#   - T: Modified in trampoline (* Return value may always be modified).
 
 inittrapframe:
 	# Save kernel interrupt entry point.
