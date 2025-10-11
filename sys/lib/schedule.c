@@ -62,6 +62,12 @@ schedule(void)
 
 				coreprocesses[c] = p;
 
+				/* Since inittrapframe changes the context to
+				   make the jump to trampolineret possible, it
+				   is needed to disable interrupts to avoid
+				   messing up. */
+				disableinterrupts();
+
 				inittrapframe(paddr(p->pagetree,
 				                    VADDR_TRAP_FRAME),
 				              p->pagetree,
