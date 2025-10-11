@@ -239,7 +239,6 @@ kernelinterrupt:
 2:
 	call interrupt
 
-3:
 	# See top of function.
 	ld   t0,  (0 * 8 )(sp)
 	ld   t1,  (1 * 8 )(sp)
