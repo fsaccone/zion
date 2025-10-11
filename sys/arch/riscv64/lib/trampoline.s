@@ -8,23 +8,22 @@
 # Each trap frame has this structure:
 #   [0,      22 * 8 + 7] = Registers.
 #   [23 * 8, 23 * 8 + 7] = Kernel satp.
-#   [24 * 8, 24 * 8 + 7] = Kernel stack pointer.
-#   [25 * 8, 25 * 8 + 7] = Kernel thread pointer.
-#   [26 * 8, 26 * 8 + 7] = Interrupt handler address.
-#
-# The kernel trap frame has this structure:
-#   [0, 7]     = Caller satp.
-#   [8, 8 + 7] = Interrupt handler address.
+#   [24 * 8, 24 * 8 + 7] = Interrupt handler address.
+#   [25 * 8, 25 * 8 + 7] = Kernel stack pointer.
+#   [26 * 8, 26 * 8 + 7] = Kernel thread pointer.
 
 inittrapframe:
-	# Save satp.
+	# Save kernel satp.
 	srli a1, a1, 12
 	li   t0, 10 << 60
 	or   a1, a1, t0
-	sd   a1, 0(a0)
+	sd   a1, (23 * 8)(a0)
+
+	# Set sscratch to given satp.
+	csrw sscratch, a1
 
 	# Save interrupt handler address.
-	sd a2, 8(a0)
+	sd a2, (24 * 8)(a0)
 
 	# Set sepc to given pc.
 	csrw sepc, a3
@@ -78,11 +77,11 @@ trampoline:
 	sd t5,  (21 * 8)(t0)
 	sd t6,  (22 * 8)(t0)
 
-	# Load user trap frame.
+	# Load rest of user trap frame.
 	ld t1, (23 * 8)(t0)
-	ld sp, (24 * 8)(t0)
-	ld tp, (25 * 8)(t0)
-	ld t2, (26 * 8)(t0)
+	ld t2, (24 * 8)(t0)
+	ld sp, (25 * 8)(t0)
+	ld tp, (26 * 8)(t0)
 
 	# Switch to kernel satp and save the old satp to t1.
 	csrrw t1, satp, t1
@@ -90,8 +89,8 @@ trampoline:
 	# Set stvec to interrupt handler.
 	csrw stvec, t2
 
-	# Save the old satp to the now available kernel trap frame.
-	sd t1, 0(t0)
+	# Save the old satp to sscratch.
+	csrw sscratch, t1
 
 	# Call interrupt handler.
 	jalr t2
@@ -101,11 +100,8 @@ trampolineret:
 	# Set t6, the last register to be loaded, to the trap frame address.
 	li t6, 0x1000
 
-	# Load the interrupt handler address from the kernel trap frame to t2.
-	ld t2, 8(t6)
-
 	# Load the old satp and switch to it, saving the kernel satp to t1.
-	ld    t0,   0(t6)
+	csrr  t0, sscratch
 	csrrw t1, satp, t0
 
 	# Set stvec to trampoline.
@@ -113,9 +109,8 @@ trampolineret:
 
 	# Save the user trap frame from the current context.
 	sd t1, (23 * 8)(t6)
-	sd sp, (24 * 8)(t6)
-	sd tp, (25 * 8)(t6)
-	sd t2, (26 * 8)(t6)
+	sd sp, (25 * 8)(t6)
+	sd tp, (26 * 8)(t6)
 
 	# Load the saved registers from the now available user trap frame.
 	ld t1,  (0  * 8)(t6)
