@@ -13,6 +13,12 @@
 
 struct process *coreprocesses[NCPU] = { 0 };
 
+struct process *
+coreprocess(void)
+{
+	return coreprocesses[core()];
+}
+
 void
 nextschedule(void)
 {
