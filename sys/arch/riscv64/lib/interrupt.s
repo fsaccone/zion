@@ -212,6 +212,11 @@ kernelinterrupt:
 	li   t1, 11
 	beq  t0, t1, 1f
 
+	# Exception (all cases where I bit is 0 and it is not an ecall).
+	li   t1, 1 << 63
+	and  t1, t0, t1
+	beqz t1, 3f
+
 	# Default.
 	j    2f
 
@@ -238,6 +243,13 @@ kernelinterrupt:
 	j 1f
 
 3:
+	# If cause is exception.
+
+	call exception
+
+	j 1f
+
+4:
 	call interrupt
 
 1:

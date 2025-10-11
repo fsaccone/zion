@@ -10,18 +10,9 @@
 void
 interrupt(void)
 {
-	u8 isuser = interruptisuser(),
-	   type   = interrupttype();
+	u8 type = interrupttype();
 
 	switch (type) {
-	case INTERRUPT_TYPE_EXCEPTION:
-		if (isuser)
-			break;
-
-		setpanicmsg("Exception.");
-		goto panic;
-
-		break;
 	case INTERRUPT_TYPE_HARDWARE:
 		(void)consolewrite("Hardware interrupt.\n");
 
