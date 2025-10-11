@@ -4,12 +4,13 @@
 #include <arch/page.h>
 #include <arch/types.h>
 
-/* Initializes trap frame tframe with page tree ptree using the current core
-   context. Use virtual address pc as the one usermode will jump in the kernel
-   virtual address space: if it is NULL, it won't change the one already saved
-   in the trap frame. It is important to call this right before jumping to
-   usermode. */
-void inittrapframe(void *tframe, pageentry *ptree, void *pc);
+/* Initializes trap frame tframe. */
+void inittrapframe(void *tframe);
+
+/* Prepares trap frame tframe and the current context for a jump to usermode,
+   using user page tree ptree. It is important to run this right before the
+   jump to usermode. */
+void preparetrapframe(void *tframe, pageentry *ptree);
 
 /* Sets the return value of trap frame tframe to r. */
 void setreturn(void *tframe, ureg r);
