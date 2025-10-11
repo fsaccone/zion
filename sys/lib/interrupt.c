@@ -13,10 +13,6 @@ interrupt(void)
 	u8 type = interrupttype();
 
 	switch (type) {
-	case INTERRUPT_TYPE_HARDWARE:
-		(void)consolewrite("Hardware interrupt.\n");
-
-		break;
 	case INTERRUPT_TYPE_TIMER:
 		setupnexttimer();
 		nextschedule();
