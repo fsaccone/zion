@@ -11,7 +11,7 @@
 #include <trampoline.h>
 #include <vmem.h>
 
-struct process *coreprocesses[NCPU] = { 0 };
+static struct process *coreprocesses[NCPU] = { 0 };
 
 struct process *
 coreprocess(void)
