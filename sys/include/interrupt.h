@@ -22,6 +22,9 @@ u8 interrupttype(void);
 /* The entry point of the kernel interrupt handler. */
 void kernelinterrupt(void);
 
+/* It returns the physical address of the kernelinterrupt function. */
+void *kernelinterruptbase(void);
+
 /* The entry point of the user interrupt handler. */
 void userinterrupt(void);
 

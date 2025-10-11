@@ -5,6 +5,7 @@
 .global interruptsenabled
 .global interrupttype
 .global kernelinterrupt
+.global kernelinterruptbase
 .global userinterrupt
 .global userinterruptbase
 .global waitforinterrupt
@@ -333,6 +334,11 @@ kernelinterrupt:
 	addi sp,  sp, ((7 + 12 + 7 + 1 + 1) * 8)
 
 	sret
+
+kernelinterruptbase:
+	la a0, kernelinterrupt
+
+	ret
 
 userinterrupt:
 	call routeinterrupt
