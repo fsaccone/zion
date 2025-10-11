@@ -33,10 +33,10 @@ inittrapframe:
 	csrw sepc, a4
 
 	# Set kernel stack pointer.
-	sd sp, (25 * 8)(a0)
+	sd sp, (26 * 8)(a0)
 
 	# Set kernel thread pointer.
-	sd tp, (26 * 8)(a0)
+	sd tp, (27 * 8)(a0)
 
 	# Set sstatus.SPIE to 1 to enable interrupts in user mode.
 	csrr t0, sstatus
