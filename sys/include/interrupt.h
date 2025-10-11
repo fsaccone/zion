@@ -19,9 +19,11 @@ u8 interruptsenabled(void);
 /* Returns the interrupt type code. */
 u8 interrupttype(void);
 
-/* The entry point of the kernel interrupt handler. It does
-   architecture-specific actions and eventually calls interrupt. */
+/* The entry point of the kernel interrupt handler. */
 void kernelinterrupt(void);
+
+/* The entry point of the user interrupt handler. */
+void userinterrupt(void);
 
 /* Does not return. Makes the running core in a state where it just waits for
    an interrupt to reactivate it. */
