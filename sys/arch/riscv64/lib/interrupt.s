@@ -234,8 +234,5 @@ waitforinterrupt:
 
 .section .data
 
-# ((5 interrupt arguments + 1 NULL) * 8 bytes)
-args: .space ((5 + 1) * 8)
-
 # ((1 type argument + 4 arguments + 1 NULL) * 8 bytes)
 syscallargs: .space ((1 + 4 + 1) * 8)
