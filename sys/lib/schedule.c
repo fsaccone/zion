@@ -61,9 +61,9 @@ schedule(void)
 
 				coreprocesses[c] = p;
 
-				setuptrampolineret(p->pagetree,
-				                   interruptbase(),
-				                   getctxpc(p->uctx));
+				inittrapframe(p->trapframe, p->pagetree,
+				              interruptbase(),
+				              getctxpc(p->uctx));
 				setctxpc(p->uctx, trampolineretbase());
 				switchctx(p->kctx, p->uctx);
 
