@@ -15,47 +15,48 @@ routeinterrupt:
 	# Save a0 to s0.
 	mv s0, a0
 
-	csrr t0, scause
+	# Save scause to s1.
+	csrr s1, scause
 
 	# System call.
-	li   t1, 8
-	beq  t0, t1, 2f
-	li   t1, 9
-	beq  t0, t1, 2f
-	li   t1, 11
-	beq  t0, t1, 2f
+	li   t0, 8
+	beq  s1, t0, 2f
+	li   t0, 9
+	beq  s1, t0, 2f
+	li   t0, 11
+	beq  s1, t0, 2f
 
 	# Page fault.
-	li   t1, 12
-	beq  t0, t1, 3f
-	li   t1, 13
-	beq  t0, t1, 3f
-	li   t1, 15
-	beq  t0, t1, 3f
+	li   t0, 12
+	beq  s1, t0, 3f
+	li   t0, 13
+	beq  s1, t0, 3f
+	li   t0, 15
+	beq  s1, t0, 3f
 
 	# Exception (all cases where I bit is 0 and it is not an ecall or page
 	# fault).
-	li   t1, 1 << 63
-	and  t1, t0, t1
-	beqz t1, 4f
+	li   t0, 1 << 63
+	and  t0, s1, t0
+	beqz t0, 4f
 
 	# Hardware.
-	li  t1, 1 << 63
-	li  t2, 9
-	or  t2, t1, t2
-	beq t0, t2, 5f
-	li  t2, 11
-	or  t2, t1, t2
-	beq t0, t2, 5f
+	li  t0, 1 << 63
+	li  t1, 9
+	or  t1, t0, t1
+	beq s1, t1, 5f
+	li  t1, 11
+	or  t1, t0, t1
+	beq s1, t1, 5f
 
 	# Timer.
-	li  t1, 1 << 63
-	li  t2, 5
-	or  t2, t1, t2
-	beq t0, t2, 6f
-	li  t2, 7
-	or  t2, t1, t2
-	beq t0, t2, 6f
+	li  t0, 1 << 63
+	li  t1, 5
+	or  t1, t0, t1
+	beq s1, t1, 6f
+	li  t1, 7
+	or  t1, t0, t1
+	beq s1, t1, 6f
 
 	# If the code was not recognized, just return.
 	j 1f
