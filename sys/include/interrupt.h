@@ -3,8 +3,6 @@
 
 #include <arch/types.h>
 
-#define INTERRUPT_ARGS 5
-
 #define INTERRUPT_TYPE_EXCEPTION  0x00
 #define INTERRUPT_TYPE_HARDWARE   0x02
 #define INTERRUPT_TYPE_TIMER      0x03
@@ -18,12 +16,6 @@ void enableinterrupts(void);
 
 /* The interrupt handler. */
 void interrupt(void);
-
-/* Returns an array of size INTERRUPT_ARGS containing the values of the first
-   INTERRUPT_ARGS architecture-specific argument registers of the caller
-   context. This function has to be called first inside the interrupt handler,
-   because having code before it may alter the values of the registers. */
-ureg *interruptargs(void);
 
 /* Returns the physical address of interrupt. */
 void *interruptbase(void);
