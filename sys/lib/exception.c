@@ -1,11 +1,16 @@
 #include <exception.h>
 
+#include <arch/types.h>
 #include <panic.h>
 
 void
-exception(void)
+exception(u8 u)
 {
-	setpanicmsg("Exception.");
+	if (u)
+		setpanicmsg("User exception.");
+	else
+		setpanicmsg("Kernel exception.");
+
 	tracepanicmsg("exception");
 	panic();
 }
