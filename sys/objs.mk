@@ -30,6 +30,7 @@ OBJS_LIB = arch/$(ARCH)/lib/atomic.o \
            lib/syscall.o \
            lib/syscall/reboot.o \
            lib/syscall/shutdown.o \
+           lib/timer.o \
            lib/uart.o \
            lib/vmem.o \
 
