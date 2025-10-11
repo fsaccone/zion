@@ -11,9 +11,10 @@
 #   [29 * 8, 29 * 8 + 7] = Kernel satp.
 #   [30 * 8, 30 * 8 + 7] = Kernel interrupt entry point.
 #   [31 * 8, 31 * 8 + 7] = User interrupt entry point.
-#   [32 * 8, 32 * 8 + 7] = Kernel stack pointer.
-#   [33 * 8, 33 * 8 + 7] = Kernel thread pointer.
-#   [34 * 8, 34 * 8 + 7] = Return value.
+#   [32 * 8, 32 * 8 + 7] = User interrupt return address.
+#   [33 * 8, 33 * 8 + 7] = Kernel stack pointer.
+#   [34 * 8, 34 * 8 + 7] = Kernel thread pointer.
+#   [35 * 8, 35 * 8 + 7] = Return value.
 
 inittrapframe:
 	# Save kernel satp.
@@ -33,14 +34,22 @@ inittrapframe:
 	la t0, userinterrupt
 	sd t0, (31 * 8)(a0)
 
+	# Save user interrupt return address as the difference between the
+	# physical addresses of trampolineret and trampoline plus the virtual
+	# address of trampoline, which is 0x0.
+	la  t0, trampoline
+	la  t1, trampolineret
+	sub t0, t1, t0
+	sd  t0, (32 * 8)(a0)
+
 	# Set sepc to given pc.
 	csrw sepc, a2
 
 	# Set kernel stack pointer.
-	sd sp, (32 * 8)(a0)
+	sd sp, (33 * 8)(a0)
 
 	# Set kernel thread pointer.
-	sd tp, (33 * 8)(a0)
+	sd tp, (34 * 8)(a0)
 
 	# Set sstatus.SPIE to 1 to enable interrupts in user mode.
 	csrr t0, sstatus
@@ -58,7 +67,7 @@ inittrapframe:
 	ret
 
 setreturn:
-	sd a1, (34 * 8)(a0)
+	sd a1, (35 * 8)(a0)
 
 	ret
 
@@ -106,12 +115,13 @@ trampoline:
 	ld t1, (29 * 8)(t0)
 	ld t2, (30 * 8)(t0)
 	ld t3, (31 * 8)(t0)
-	ld sp, (32 * 8)(t0)
-	ld tp, (33 * 8)(t0)
+	ld ra, (32 * 8)(t0)
+	ld sp, (33 * 8)(t0)
+	ld tp, (34 * 8)(t0)
 
 	# Set return value to current a0, so that it does not change if not
 	# done explicitly.
-	sd a0, (34 * 8)(t0)
+	sd a0, (35 * 8)(t0)
 
 	# Switch to kernel satp and save the old satp to t1.
 	csrrw t1, satp, t1
@@ -122,8 +132,10 @@ trampoline:
 	# Save the old satp to sscratch.
 	csrw sscratch, t1
 
-	# Call user interrupt entry point.
+	# Call user interrupt entry point: ra is already set to trampolineret.
 	jalr t3
+
+trampolineret:
 
 	# Set s0 to 1 to mark the coming from trampoline, and not usermode.
 	li s0, 1
@@ -156,12 +168,12 @@ usermode:
 	# to inittrapframe, also the jump to usermode presumably happened
 	# through a switchctx call, making the values of sp and tp wrong.
 	beqz s0, 1f
-	sd   sp, (32 * 8)(t6)
-	sd   tp, (33 * 8)(t6)
+	sd   sp, (33 * 8)(t6)
+	sd   tp, (34 * 8)(t6)
 
 1:
 	# Load return value from stack frame to a0.
-	ld a0, (34 * 8)(t6)
+	ld a0, (35 * 8)(t6)
 
 	# Load the saved registers from the now available user trap frame.
 	ld t1,  (0  * 8)(t6)
