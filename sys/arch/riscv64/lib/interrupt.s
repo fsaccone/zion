@@ -3,9 +3,7 @@
 .global enableinterrupts
 .global interruptsenabled
 .global kernelinterrupt
-.global kernelinterruptbase
 .global userinterrupt
-.global userinterruptbase
 .global waitforinterrupt
 
 # Checks the value of scause to call the correct handler.
@@ -227,11 +225,6 @@ kernelinterrupt:
 
 	sret
 
-kernelinterruptbase:
-	la a0, kernelinterrupt
-
-	ret
-
 userinterrupt:
 	addi sp, sp, -8
 	sd   ra, 0(sp)
@@ -242,11 +235,6 @@ userinterrupt:
 	# trampoline.
 	addi sp, sp, 8
 	ld   ra, 0(sp)
-	ret
-
-userinterruptbase:
-	la a0, userinterrupt
-
 	ret
 
 waitforinterrupt:
