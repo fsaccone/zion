@@ -102,10 +102,6 @@ trampoline:
 	sd t5,  (27 * 8)(t0)
 	sd t6,  (28 * 8)(t0)
 
-	# Save sepc.
-	csrr t1, sepc
-	sd   t1, (33 * 8)(t0)
-
 	# Load rest of user trap frame.
 	ld t1, (29 * 8)(t0)
 	ld t2, (30 * 8)(t0)
@@ -154,6 +150,10 @@ usermode:
 	and  t0, t0, t1
 	csrw sstatus, t0
 
+	# Load sepc.
+	ld   t0,   (33 * 8)(a0)
+	csrw sepc, t0
+
 1:
 	# Set t6, the last register to be loaded, to the trap frame address.
 	li t6, 0x1000
@@ -161,10 +161,6 @@ usermode:
 	# Load the old satp and switch to it, saving the kernel satp to t1.
 	csrr  t0, sscratch
 	csrrw t1, satp, t0
-
-	# Load sepc.
-	ld   t0,   (33 * 8)(a0)
-	csrw sepc, t0
 
 	# Set stvec to trampoline.
 	csrwi stvec, 0x0
