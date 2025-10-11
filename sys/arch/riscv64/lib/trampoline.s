@@ -1,5 +1,6 @@
 .section .text
 .global inittrapframe
+.global preparetrapframe
 .global setreturn
 .global trampoline
 .global trampolinebase
@@ -20,14 +21,6 @@
 # trampoline.
 
 inittrapframe:
-	# Save kernel satp.
-	srli a1, a1, 12
-	li   t0, 10 << 60
-	or   a1, a1, t0
-	sd   a1, (29 * 8)(a0)
-
-	# Set sscratch to given satp.
-	csrw sscratch, a1
 
 	# Save kernel interrupt entry point.
 	la t0, kernelinterrupt
@@ -45,16 +38,21 @@ inittrapframe:
 	sub t0, t1, t0
 	sd  t0, (32 * 8)(a0)
 
-	# Save user sepc.
-	beqz a2, 1f
-	sd   a2, (33 * 8)(a0)
+	# Set user sepc to first user virtual address.
+	li t0, 0x2000
+	sd t0, (33 * 8)(a0)
 
-1:
+	ret
+
+preparetrapframe:
 	# Set kernel stack pointer.
 	sd sp, (34 * 8)(a0)
 
 	# Set kernel thread pointer.
 	sd tp, (35 * 8)(a0)
+
+	# Set sscratch to given satp.
+	csrw sscratch, a1
 
 	ret
 
