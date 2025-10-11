@@ -23,15 +23,7 @@
 	{  RAMINIT_END, PHY_MEM_END }, \
 }
 
-#define PLIC (uptr)0xc000000
-
 /* Device base addresses. */
 #define UART0 (uptr)0x10000000
-
-/* Device IRQs. */
-#define UART0_IRQ 10
-
-/* Device priorities. */
-#define UART0_PRIORITY 1
 
 #endif
