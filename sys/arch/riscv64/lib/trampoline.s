@@ -12,6 +12,7 @@
 #   [25 * 8, 25 * 8 + 7] = User interrupt entry point.
 #   [26 * 8, 26 * 8 + 7] = Kernel stack pointer.
 #   [27 * 8, 27 * 8 + 7] = Kernel thread pointer.
+#   [28 * 8, 28 * 8 + 7] = Return value.
 
 inittrapframe:
 	# Save kernel satp.
@@ -94,6 +95,10 @@ trampoline:
 	ld sp, (26 * 8)(t0)
 	ld tp, (27 * 8)(t0)
 
+	# Set return value to current a0, so that it does not change if not
+	# done explicitly.
+	sd a0, (28 * 8)(t0)
+
 	# Switch to kernel satp and save the old satp to t1.
 	csrrw t1, satp, t1
 
@@ -144,6 +149,9 @@ trampolineret:
 	sd   tp, (27 * 8)(t6)
 
 1:
+	# Load return value from stack frame to a0.
+	ld a0, (28 * 8)(t6)
+
 	# Load the saved registers from the now available user trap frame.
 	ld t1,  (0  * 8)(t6)
 	ld t0,  (1  * 8)(t6)
