@@ -2,6 +2,11 @@
 #define _SCHEDULE_H
 
 #include <arch/page.h>
+#include <process.h>
+
+/* Returns the process owned by the current core or NULL if the current core
+   owns no process. */
+struct process *coreprocess(void);
 
 /* The process scheduler. It never returns, it loops through every process
    instead, acting as needed based on each process state. */
