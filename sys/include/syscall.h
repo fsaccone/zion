@@ -2,10 +2,10 @@
 #define _SYSCALL_H
 
 #include <arch/types.h>
-#include <interrupt.h>
 
-/* The first interrupt argument is used to identify the system call type. */
-#define SYSCALL_ARGS (INTERRUPT_ARGS - 1)
+/* The first argument register is used to identify the system call type and is
+   not included here. */
+#define SYSCALL_ARGS 4
 
 /* System call codes. */
 #define SYSCALL_SHUTDOWN 0
