@@ -7,6 +7,108 @@
 .global kernelinterrupt
 .global waitforinterrupt
 
+# Checks the value of scause to call the correct handler.
+routeinterrupt:
+	# Cases of cause codes.
+	csrr t0, scause
+
+	# System call.
+	li   t1, 8
+	beq  t0, t1, 2f
+	li   t1, 9
+	beq  t0, t1, 2f
+	li   t1, 11
+	beq  t0, t1, 2f
+
+	# Page fault.
+	li   t1, 12
+	beq  t0, t1, 3f
+	li   t1, 13
+	beq  t0, t1, 3f
+	li   t1, 15
+	beq  t0, t1, 3f
+
+	# Exception (all cases where I bit is 0 and it is not an ecall or page
+	# fault).
+	li   t1, 1 << 63
+	and  t1, t0, t1
+	beqz t1, 4f
+
+	# Hardware.
+	li  t1, 1 << 63
+	li  t2, 9
+	or  t2, t1, t2
+	beq t0, t2, 5f
+	li  t2, 11
+	or  t2, t1, t2
+	beq t0, t2, 5f
+
+	# Timer.
+	li  t1, 1 << 63
+	li  t2, 5
+	or  t2, t1, t2
+	beq t0, t2, 6f
+	li  t2, 7
+	or  t2, t1, t2
+	beq t0, t2, 6f
+
+	# If the code was not recognized, just return.
+	j 1f
+
+2:
+	# If cause is ecall.
+
+	# Set sepc to the instruction after ecall.
+	csrr t0,   sepc
+	addi t0,   t0, 4
+	csrw sepc, t0
+
+	# The a0 register already contains the system call code.
+	# Setup args array and set a1 to its address.
+	la t0, syscallargs
+	sd a1, 0(t0)
+	sd a2, 8(t0)
+	sd a3, 16(t0)
+	sd a4, 24(t0)
+	mv a1, t0
+
+	# Call system call handler.
+	call syscall
+
+	j 1f
+
+3:
+	# If cause is page fault.
+
+	call pagefault
+
+	j 1f
+
+
+4:
+	# If cause is exception.
+
+	call exception
+
+	j 1f
+
+5:
+	# If cause is hardware.
+
+	call exception
+
+	j 1f
+
+6:
+	# If cause is timer.
+
+	call timer
+
+	j 1f
+
+1:
+	ret
+
 disableinterrupts:
 	csrr t0,      sstatus
 	li   t1,      1 << 1
@@ -195,104 +297,8 @@ kernelinterrupt:
 	sd   ra,  (26 * 8)(sp)
 	sd   gp,  (27 * 8)(sp)
 
-	# Cases of cause codes.
-	csrr t0, scause
+	call routeinterrupt
 
-	# System call.
-	li   t1, 8
-	beq  t0, t1, 2f
-	li   t1, 9
-	beq  t0, t1, 2f
-	li   t1, 11
-	beq  t0, t1, 2f
-
-	# Page fault.
-	li   t1, 12
-	beq  t0, t1, 3f
-	li   t1, 13
-	beq  t0, t1, 3f
-	li   t1, 15
-	beq  t0, t1, 3f
-
-	# Exception (all cases where I bit is 0 and it is not an ecall or page
-	# fault).
-	li   t1, 1 << 63
-	and  t1, t0, t1
-	beqz t1, 4f
-
-	# Hardware.
-	li  t1, 1 << 63
-	li  t2, 9
-	or  t2, t1, t2
-	beq t0, t2, 5f
-	li  t2, 11
-	or  t2, t1, t2
-	beq t0, t2, 5f
-
-	# Timer.
-	li  t1, 1 << 63
-	li  t2, 5
-	or  t2, t1, t2
-	beq t0, t2, 6f
-	li  t2, 7
-	or  t2, t1, t2
-	beq t0, t2, 6f
-
-	# If the code was not recognized, just return from the interrupt.
-	j 1f
-
-2:
-	# If cause is ecall.
-
-	# Set sepc to the instruction after ecall.
-	csrr t0,   sepc
-	addi t0,   t0, 4
-	csrw sepc, t0
-
-	# The a0 register already contains the system call code.
-	# Setup args array and set a1 to its address.
-	la t0, syscallargs
-	sd a1, 0(t0)
-	sd a2, 8(t0)
-	sd a3, 16(t0)
-	sd a4, 24(t0)
-	mv a1, t0
-
-	# Call system call handler.
-	call syscall
-
-	j 1f
-
-3:
-	# If cause is page fault.
-
-	call pagefault
-
-	j 1f
-
-
-4:
-	# If cause is exception.
-
-	call exception
-
-	j 1f
-
-5:
-	# If cause is hardware.
-
-	call exception
-
-	j 1f
-
-6:
-	# If cause is timer.
-
-	call timer
-
-	j 1f
-
-1:
 	# See top of function.
 	ld   t0,  (0 * 8 )(sp)
 	ld   t1,  (1 * 8 )(sp)
