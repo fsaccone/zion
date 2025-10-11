@@ -8,13 +8,16 @@
 
 # Each trap frame has this structure:
 #   [0,      28 * 8 + 7] = Registers.
-#   [29 * 8, 29 * 8 + 7] = Kernel satp.
-#   [30 * 8, 30 * 8 + 7] = Kernel interrupt entry point.
-#   [31 * 8, 31 * 8 + 7] = User interrupt entry point.
-#   [32 * 8, 32 * 8 + 7] = User interrupt return address.
-#   [33 * 8, 33 * 8 + 7] = Kernel stack pointer.
-#   [34 * 8, 34 * 8 + 7] = Kernel thread pointer.
-#   [35 * 8, 35 * 8 + 7] = Return value.
+#   [29 * 8, 29 * 8 + 7] = (Fixed) Kernel satp.
+#   [30 * 8, 30 * 8 + 7] = (Fixed) Kernel interrupt entry point.
+#   [31 * 8, 31 * 8 + 7] = (Fixed) User interrupt entry point.
+#   [32 * 8, 32 * 8 + 7] = (Fixed) User interrupt return address.
+#   [33 * 8, 33 * 8 + 7] = User sepc.
+#   [34 * 8, 34 * 8 + 7] = Kernel stack pointer.
+#   [35 * 8, 35 * 8 + 7] = Kernel thread pointer.
+#   [36 * 8, 36 * 8 + 7] = Return value.
+# Fixed elements are only set by inittrapframe, and are not altered by
+# trampoline.
 
 inittrapframe:
 	# Save kernel satp.
@@ -42,19 +45,21 @@ inittrapframe:
 	sub t0, t1, t0
 	sd  t0, (32 * 8)(a0)
 
-	# Set sepc to given pc.
-	csrw sepc, a2
+	# Save user sepc.
+	beqz a2, 1f
+	sd   a2, (33 * 8)(a0)
 
+1:
 	# Set kernel stack pointer.
-	sd sp, (33 * 8)(a0)
+	sd sp, (34 * 8)(a0)
 
 	# Set kernel thread pointer.
-	sd tp, (34 * 8)(a0)
+	sd tp, (35 * 8)(a0)
 
 	ret
 
 setreturn:
-	sd a1, (35 * 8)(a0)
+	sd a1, (36 * 8)(a0)
 
 	ret
 
@@ -98,17 +103,21 @@ trampoline:
 	sd t5,  (27 * 8)(t0)
 	sd t6,  (28 * 8)(t0)
 
+	# Save sepc.
+	csrr t1, sepc
+	sd   t1, (33 * 8)(t0)
+
 	# Load rest of user trap frame.
 	ld t1, (29 * 8)(t0)
 	ld t2, (30 * 8)(t0)
 	ld t3, (31 * 8)(t0)
 	ld ra, (32 * 8)(t0)
-	ld sp, (33 * 8)(t0)
-	ld tp, (34 * 8)(t0)
+	ld sp, (34 * 8)(t0)
+	ld tp, (35 * 8)(t0)
 
 	# Set return value to current a0, so that it does not change if not
 	# done explicitly.
-	sd a0, (35 * 8)(t0)
+	sd a0, (36 * 8)(t0)
 
 	# Switch to kernel satp and save the old satp to t1.
 	csrrw t1, satp, t1
@@ -156,6 +165,10 @@ usermode:
 	csrr  t0, sscratch
 	csrrw t1, satp, t0
 
+	# Load sepc.
+	ld   t0,   (33 * 8)(a0)
+	csrw sepc, t0
+
 	# Set stvec to trampoline.
 	csrwi stvec, 0x0
 
@@ -168,12 +181,12 @@ usermode:
 	# to inittrapframe, also the jump to usermode presumably happened
 	# through a switchctx call, making the values of sp and tp wrong.
 	beqz s0, 1f
-	sd   sp, (33 * 8)(t6)
-	sd   tp, (34 * 8)(t6)
+	sd   sp, (34 * 8)(t6)
+	sd   tp, (35 * 8)(t6)
 
 1:
 	# Load return value from stack frame to a0.
-	ld a0, (35 * 8)(t6)
+	ld a0, (36 * 8)(t6)
 
 	# Load the saved registers from the now available user trap frame.
 	ld t1,  (0  * 8)(t6)
