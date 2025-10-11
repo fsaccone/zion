@@ -96,7 +96,7 @@ routeinterrupt:
 5:
 	# If cause is hardware.
 
-	call exception
+	call hardware
 
 	j 1f
 
