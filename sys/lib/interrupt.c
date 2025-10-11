@@ -33,7 +33,7 @@ syscall(u16 type, ureg args[SYSCALL_ARGS])
 }
 
 void
-handleinterrupt(void)
+interrupt(void)
 {
 	ureg *args = interruptargs();
 	u8 isuser = interruptisuser(),
