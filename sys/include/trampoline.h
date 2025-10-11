@@ -4,11 +4,11 @@
 #include <arch/page.h>
 #include <arch/types.h>
 
-/* Initializes trap frame tframe with page tree ptree, interrupt handler
-   interrupt and program counter pc: these will be used in usermode to jump to
-   user mode code. It also initializes the current core context to make it
-   ready for the usermode jump, so it is important to call this right before
-   doing it. */
+/* Initializes trap frame tframe with page tree ptree using the current core
+   context. Use virtual address pc as the one usermode will jump in the kernel
+   virtual address space: if it is NULL, it won't change the one already saved
+   in the trap frame. It is important to call this right before jumping to
+   usermode. */
 void inittrapframe(void *tframe, pageentry *ptree, void *pc);
 
 /* Sets the return value of trap frame tframe to r. */
