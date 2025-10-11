@@ -206,9 +206,9 @@ kernelinterrupt:
 
 	# System call.
 	li   t1, 8
-	beq  t0, t1, 1f
+	beq  t0, t1, 2f
 	li   t1, 9
-	beq  t0, t1, 1f
+	beq  t0, t1, 2f
 	li   t1, 11
 	beq  t0, t1, 2f
 
