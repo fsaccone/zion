@@ -21,7 +21,6 @@
 # trampoline.
 
 inittrapframe:
-
 	# Save kernel interrupt entry point.
 	la t0, kernelinterrupt
 	sd t0, (30 * 8)(a0)
