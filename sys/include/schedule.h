@@ -3,10 +3,6 @@
 
 #include <arch/page.h>
 
-/* Returns the address of the page tree of the process owned by the current
-   core or NULL if the current core owns no process. */
-pageentry *coreprocessptree(void);
-
 /* The process scheduler. It never returns, it loops through every process
    instead, acting as needed based on each process state. */
 void schedule(void);
