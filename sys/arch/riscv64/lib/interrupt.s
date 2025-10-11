@@ -8,8 +8,13 @@
 .global userinterruptbase
 .global waitforinterrupt
 
-# Checks the value of scause to call the correct handler.
+# Checks the value of scause to call the correct handler. The a0 register must
+# be set to 1 if the interrupt comes from user mode or 0 if it comes from
+# kernel mode.
 routeinterrupt:
+	# Save a0 to s0.
+	mv s0, a0
+
 	# Cases of cause codes.
 	csrr t0, scause
 
@@ -81,6 +86,7 @@ routeinterrupt:
 3:
 	# If cause is page fault.
 
+	mv   a0, s0
 	call pagefault
 
 	j 1f
@@ -89,6 +95,7 @@ routeinterrupt:
 4:
 	# If cause is exception.
 
+	mv   a0, s0
 	call exception
 
 	j 1f
@@ -177,6 +184,7 @@ kernelinterrupt:
 	sd   ra,  (26 * 8)(sp)
 	sd   gp,  (27 * 8)(sp)
 
+	li   a0, 0
 	call routeinterrupt
 
 	# See top of function.
@@ -218,6 +226,7 @@ kernelinterruptbase:
 	ret
 
 userinterrupt:
+	li   a0, 1
 	call routeinterrupt
 
 	# Do not do sret, since this function is only called as part of
