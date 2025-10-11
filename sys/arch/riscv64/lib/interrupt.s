@@ -212,31 +212,40 @@ kernelinterrupt:
 	li   t1, 11
 	beq  t0, t1, 2f
 
-	# Exception (all cases where I bit is 0 and it is not an ecall).
+	# Page fault.
+	li   t1, 12
+	beq  t0, t1, 3f
+	li   t1, 13
+	beq  t0, t1, 3f
+	li   t1, 15
+	beq  t0, t1, 3f
+
+	# Exception (all cases where I bit is 0 and it is not an ecall or page
+	# fault).
 	li   t1, 1 << 63
 	and  t1, t0, t1
-	beqz t1, 3f
+	beqz t1, 4f
 
 	# Hardware.
 	li  t1, 1 << 63
 	li  t2, 9
 	or  t2, t1, t2
-	beq t0, t2, 4f
+	beq t0, t2, 5f
 	li  t2, 11
 	or  t2, t1, t2
-	beq t0, t2, 4f
+	beq t0, t2, 5f
 
 	# Timer.
 	li  t1, 1 << 63
 	li  t2, 5
 	or  t2, t1, t2
-	beq t0, t2, 5f
+	beq t0, t2, 6f
 	li  t2, 7
 	or  t2, t1, t2
-	beq t0, t2, 5f
+	beq t0, t2, 6f
 
 	# Default.
-	j 6f
+	j 7f
 
 2:
 	# If cause is ecall.
@@ -261,27 +270,35 @@ kernelinterrupt:
 	j 1f
 
 3:
+	# If cause is page fault.
+
+	call pagefault
+
+	j 1f
+
+
+4:
 	# If cause is exception.
 
 	call exception
 
 	j 1f
 
-4:
+5:
 	# If cause is hardware.
 
 	call exception
 
 	j 1f
 
-5:
+6:
 	# If cause is timer.
 
 	call timer
 
 	j 1f
 
-6:
+7:
 	call interrupt
 
 1:
