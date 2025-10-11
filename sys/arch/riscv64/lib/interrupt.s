@@ -15,7 +15,6 @@ routeinterrupt:
 	# Save a0 to s0.
 	mv s0, a0
 
-	# Cases of cause codes.
 	csrr t0, scause
 
 	# System call.
