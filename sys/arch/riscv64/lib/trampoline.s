@@ -6,38 +6,38 @@
 .global trampolineretbase
 
 # Each trap frame has this structure:
-#   [0,      22 * 8 + 7] = Registers.
-#   [23 * 8, 23 * 8 + 7] = Kernel satp.
-#   [24 * 8, 24 * 8 + 7] = Kernel interrupt entry point.
-#   [25 * 8, 25 * 8 + 7] = User interrupt entry point.
-#   [26 * 8, 26 * 8 + 7] = Kernel stack pointer.
-#   [27 * 8, 27 * 8 + 7] = Kernel thread pointer.
-#   [28 * 8, 28 * 8 + 7] = Return value.
+#   [0,      28 * 8 + 7] = Registers.
+#   [29 * 8, 29 * 8 + 7] = Kernel satp.
+#   [30 * 8, 30 * 8 + 7] = Kernel interrupt entry point.
+#   [31 * 8, 31 * 8 + 7] = User interrupt entry point.
+#   [32 * 8, 32 * 8 + 7] = Kernel stack pointer.
+#   [33 * 8, 33 * 8 + 7] = Kernel thread pointer.
+#   [34 * 8, 34 * 8 + 7] = Return value.
 
 inittrapframe:
 	# Save kernel satp.
 	srli a1, a1, 12
 	li   t0, 10 << 60
 	or   a1, a1, t0
-	sd   a1, (23 * 8)(a0)
+	sd   a1, (29 * 8)(a0)
 
 	# Set sscratch to given satp.
 	csrw sscratch, a1
 
 	# Save kernel interrupt entry point.
-	sd a2, (24 * 8)(a0)
+	sd a2, (30 * 8)(a0)
 
 	# Save user interrupt entry point.
-	sd a3, (25 * 8)(a0)
+	sd a3, (31 * 8)(a0)
 
 	# Set sepc to given pc.
 	csrw sepc, a4
 
 	# Set kernel stack pointer.
-	sd sp, (26 * 8)(a0)
+	sd sp, (32 * 8)(a0)
 
 	# Set kernel thread pointer.
-	sd tp, (27 * 8)(a0)
+	sd tp, (33 * 8)(a0)
 
 	# Set sstatus.SPIE to 1 to enable interrupts in user mode.
 	csrr t0, sstatus
@@ -82,22 +82,28 @@ trampoline:
 	sd s9,  (15 * 8)(t0)
 	sd s10, (16 * 8)(t0)
 	sd s11, (17 * 8)(t0)
-	sd t2,  (18 * 8)(t0)
-	sd t3,  (19 * 8)(t0)
-	sd t4,  (20 * 8)(t0)
-	sd t5,  (21 * 8)(t0)
-	sd t6,  (22 * 8)(t0)
+	sd a1,  (18 * 8)(t0)
+	sd a2,  (19 * 8)(t0)
+	sd a3,  (20 * 8)(t0)
+	sd a4,  (21 * 8)(t0)
+	sd a5,  (22 * 8)(t0)
+	sd a6,  (23 * 8)(t0)
+	sd t2,  (24 * 8)(t0)
+	sd t3,  (25 * 8)(t0)
+	sd t4,  (26 * 8)(t0)
+	sd t5,  (27 * 8)(t0)
+	sd t6,  (28 * 8)(t0)
 
 	# Load rest of user trap frame.
-	ld t1, (23 * 8)(t0)
-	ld t2, (24 * 8)(t0)
-	ld t3, (25 * 8)(t0)
-	ld sp, (26 * 8)(t0)
-	ld tp, (27 * 8)(t0)
+	ld t1, (29 * 8)(t0)
+	ld t2, (30 * 8)(t0)
+	ld t3, (31 * 8)(t0)
+	ld sp, (32 * 8)(t0)
+	ld tp, (33 * 8)(t0)
 
 	# Set return value to current a0, so that it does not change if not
 	# done explicitly.
-	sd a0, (28 * 8)(t0)
+	sd a0, (34 * 8)(t0)
 
 	# Switch to kernel satp and save the old satp to t1.
 	csrrw t1, satp, t1
@@ -136,7 +142,7 @@ trampolineret:
 	csrwi stvec, 0x0
 
 	# Save the kernel satp to the trap frame.
-	sd t1, (23 * 8)(t6)
+	sd t1, (29 * 8)(t6)
 
 	# Only save stack pointer and thread pointer to trap frame if we come
 	# from trampoline, not trampolineret. If we did come from
@@ -145,12 +151,12 @@ trampolineret:
 	# trampolineret presumably happened through a switchctx call, making
 	# the values of sp and tp wrong.
 	beqz s0, 1f
-	sd   sp, (26 * 8)(t6)
-	sd   tp, (27 * 8)(t6)
+	sd   sp, (32 * 8)(t6)
+	sd   tp, (33 * 8)(t6)
 
 1:
 	# Load return value from stack frame to a0.
-	ld a0, (28 * 8)(t6)
+	ld a0, (34 * 8)(t6)
 
 	# Load the saved registers from the now available user trap frame.
 	ld t1,  (0  * 8)(t6)
@@ -171,11 +177,17 @@ trampolineret:
 	ld s9,  (15 * 8)(t6)
 	ld s10, (16 * 8)(t6)
 	ld s11, (17 * 8)(t6)
-	ld t2,  (18 * 8)(t6)
-	ld t3,  (19 * 8)(t6)
-	ld t4,  (20 * 8)(t6)
-	ld t5,  (21 * 8)(t6)
-	ld t6,  (22 * 8)(t6)
+	ld a1,  (18 * 8)(t6)
+	ld a2,  (19 * 8)(t6)
+	ld a3,  (20 * 8)(t6)
+	ld a4,  (21 * 8)(t6)
+	ld a5,  (22 * 8)(t6)
+	ld a6,  (23 * 8)(t6)
+	ld t2,  (24 * 8)(t6)
+	ld t3,  (25 * 8)(t6)
+	ld t4,  (26 * 8)(t6)
+	ld t5,  (27 * 8)(t6)
+	ld t6,  (28 * 8)(t6)
 
 	# Return
 	sret
