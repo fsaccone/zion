@@ -217,28 +217,46 @@ kernelinterrupt:
 	sd   ra,  (26 * 8)(sp)
 	sd   gp,  (27 * 8)(sp)
 
-	# If type is 8, 9 or 11 then the trap is an ecall exception: sepc needs
-	# to increment by 4, the size of the ecall instruction, before
-	# returning to avoid looping back to the same ecall instruction
-	# address.
+	# Cases of cause codes.
 	csrr t0, scause
+
+	# System call.
 	li   t1, 8
 	beq  t0, t1, 1f
 	li   t1, 9
 	beq  t0, t1, 1f
 	li   t1, 11
 	beq  t0, t1, 1f
+
+	# Default.
 	j    2f
 
-1:
-	# Only reached if cause is ecall.
+2:
+	# If cause is ecall.
+
+	# Set sepc to the instruction after ecall.
 	csrr t0,   sepc
 	addi t0,   t0, 4
 	csrw sepc, t0
 
-2:
+	# The a0 register already contains the system call code.
+	# Setup args array and set a1 to its address.
+	la t0, syscallargs
+	sd a1, 0(t0)
+	sd a2, 8(t0)
+	sd a3, 16(t0)
+	sd a4, 24(t0)
+	mv a1, t0
+
+	# Call system call handler.
+	call syscall
+
+	j 1f
+
+3:
 	call interrupt
 
+1:
 	# See top of function.
 	ld   t0,  (0 * 8 )(sp)
 	ld   t1,  (1 * 8 )(sp)
@@ -279,3 +297,6 @@ waitforinterrupt:
 
 # ((5 interrupt arguments + 1 NULL) * 8 bytes)
 args: .space ((5 + 1) * 8)
+
+# ((1 type argument + 4 arguments + 1 NULL) * 8 bytes)
+syscallargs: .space ((1 + 4 + 1) * 8)
