@@ -53,6 +53,9 @@ preparetrapframe:
 	sd tp, (35 * 8)(a0)
 
 	# Set sscratch to given satp.
+	srli a1, a1, 12
+	li   t0, 10 << 60
+	or   a1, a1, t0
 	csrw sscratch, a1
 
 	ret
