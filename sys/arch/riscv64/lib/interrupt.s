@@ -233,8 +233,8 @@ userinterrupt:
 
 	# Do not do sret, since this function is only called as part of
 	# trampoline.
-	addi sp, sp, 8
 	ld   ra, 0(sp)
+	addi sp, sp, 8
 	ret
 
 waitforinterrupt:
