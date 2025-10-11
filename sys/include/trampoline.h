@@ -5,10 +5,10 @@
 #include <arch/types.h>
 
 /* Initializes trap frame tframe with page tree ptree, interrupt handler
-   interrupt and program counter pc: these will be used in trampolineret to
-   jump to user mode code. It also initializes the current core context to make
-   it ready for the trampolineret jump, so it is important to call this right
-   before doing it. */
+   interrupt and program counter pc: these will be used in usermode to jump to
+   user mode code. It also initializes the current core context to make it
+   ready for the usermode jump, so it is important to call this right before
+   doing it. */
 void inittrapframe(void *tframe, pageentry *ptree, void *kernelinterrupt,
                    void *userinterrupt, void *pc);
 
@@ -34,9 +34,9 @@ void *trampolinebase(void);
 
 /* Part of trampoline. Starts right after the interrupt handler returns,
    marking the return to the user code. */
-void trampolineret(void);
+void usermode(void);
 
-/* Returns the virtual address of trampolineret in a virtual address space. */
-void *trampolineretbase(void);
+/* Returns the virtual address of usermode in a virtual address space. */
+void *usermodebase(void);
 
 #endif

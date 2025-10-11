@@ -58,8 +58,8 @@ schedule(void)
 				coreprocesses[c] = p;
 
 				/* Since inittrapframe changes the context to
-				   make the jump to trampolineret possible, it
-				   is needed to disable interrupts to avoid
+				   make the jump to usermode possible, it is
+				   needed to disable interrupts to avoid
 				   messing up. */
 				disableinterrupts();
 
@@ -69,7 +69,7 @@ schedule(void)
 				              kernelinterruptbase(),
 				              userinterruptbase(),
 				              getctxpc(p->uctx));
-				setctxpc(p->uctx, trampolineretbase());
+				setctxpc(p->uctx, usermodebase());
 				switchctx(p->kctx, p->uctx);
 
 				found = 1;

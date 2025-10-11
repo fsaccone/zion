@@ -3,8 +3,8 @@
 .global setreturn
 .global trampoline
 .global trampolinebase
-.global trampolineret
-.global trampolineretbase
+.global usermode
+.global usermodebase
 
 # Each trap frame has this structure:
 #   [0,      28 * 8 + 7] = Registers.
@@ -123,17 +123,15 @@ trampoline:
 	# Call user interrupt entry point.
 	jalr t3
 
-	# Set s0 to 1 to mark the coming from trampoline, and not
-	# trampolineret.
+	# Set s0 to 1 to mark the coming from trampoline, and not usermode.
 	li s0, 1
 
-	# Skip trampolineret specific code.
+	# Skip usermode specific code.
 	j 1f
 
 	# Continues here.
-trampolineret:
-	# Set s0 to 0 to mark the coming from trampolineret, and not
-	# trampoline.
+usermode:
+	# Set s0 to 0 to mark the coming from usermode, and not trampoline.
 	li s0, 0
 
 1:
@@ -151,11 +149,10 @@ trampolineret:
 	sd t1, (29 * 8)(t6)
 
 	# Only save stack pointer and thread pointer to trap frame if we come
-	# from trampoline, not trampolineret. If we did come from
-	# trampolineret, these components of the trap frames were presumably
-	# already set by a call to inittrapframe, also the jump to
-	# trampolineret presumably happened through a switchctx call, making
-	# the values of sp and tp wrong.
+	# from trampoline, not usermode. If we did come from usermode, these
+	# components of the trap frames were presumably already set by a call
+	# to inittrapframe, also the jump to usermode presumably happened
+	# through a switchctx call, making the values of sp and tp wrong.
 	beqz s0, 1f
 	sd   sp, (32 * 8)(t6)
 	sd   tp, (33 * 8)(t6)
@@ -204,13 +201,13 @@ trampolinebase:
 
 	ret
 
-trampolineretbase:
+usermodebase:
 	la t0, trampoline
-	la t1, trampolineret
+	la t1, usermode
 
 	# Since the trampoline it at address 0x0, just get the difference
-	# between the phyisical addresses of trampoline and trampolineret to
-	# get the virtual address of trampolineret.
+	# between the phyisical addresses of trampoline and usermode to get the
+	# virtual address of usermode.
 	sub a0, t1, t0
 
 	ret
