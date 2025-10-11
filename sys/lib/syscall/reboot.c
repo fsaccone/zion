@@ -1,6 +1,7 @@
 #include "calls.h"
 
 #include <machine/sys.h>
+#include <memswitch.h>
 #include <pmem.h>
 #include <spinlock.h>
 
@@ -13,5 +14,6 @@ reboot(void)
 	lock(&l);
 
 	pcleanup();
+	pmemswitch();
 	DO_SYS_REBOOT;
 }
