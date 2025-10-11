@@ -3,12 +3,10 @@
 
 #include <arch/page.h>
 
-/* Prepares the kernel trap frame and context to jump to trampolineret, to make
-   it do:
-     - Use page tree ptree.
-     - Use interrupt handler interrupt.
-     - Jump to program counter pc. */
-void setuptrampolineret(pageentry *ptree, void *interrupt, void *pc);
+/* Initializes trap frame tframe with page tree ptree, interrupt handler
+   interrupt and program counter pc: these will be used in trampolineret to
+   jump to user mode code. */
+void inittrapframe(void *tframe, pageentry *ptree, void *interrupt, void *pc);
 
 /* The trampoline. It is aligned to PAGE_SIZE and fits inside a page, to make
    it easily mappable in virtual address spaces: it should be mapped to the
