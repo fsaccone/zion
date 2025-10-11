@@ -8,4 +8,9 @@
    physical one. */
 void memswitch(pageentry *ptree);
 
+/* Switches to physical memory. The page tree which is used when this function
+   is called needs to map this function to the same address as its physical
+   one. */
+void pmemswitch(void);
+
 #endif
