@@ -25,6 +25,9 @@ void kernelinterrupt(void);
 /* The entry point of the user interrupt handler. */
 void userinterrupt(void);
 
+/* It returns the physical address of the userinterrupt function. */
+void *userinterruptbase(void);
+
 /* Does not return. Makes the running core in a state where it just waits for
    an interrupt to reactivate it. */
 void waitforinterrupt(void);
