@@ -5,7 +5,9 @@
 
 /* Initializes trap frame tframe with page tree ptree, interrupt handler
    interrupt and program counter pc: these will be used in trampolineret to
-   jump to user mode code. */
+   jump to user mode code. It also initializes the current core context to make
+   it ready for the trampolineret jump, so it is important to call this right
+   before doing it. */
 void inittrapframe(void *tframe, pageentry *ptree, void *interrupt, void *pc);
 
 /* The trampoline. It is aligned to PAGE_SIZE and fits inside a page, to make
