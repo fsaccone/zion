@@ -8,55 +8,50 @@
 .global userinterruptbase
 .global waitforinterrupt
 
-# Checks the value of scause to call the correct handler. The a0 register must
-# be set to 1 if the interrupt comes from user mode or 0 if it comes from
-# kernel mode.
+# Checks the value of scause to call the correct handler.
 routeinterrupt:
-	# Save a0 to s0.
-	mv s0, a0
-
-	# Save scause to s1.
-	csrr s1, scause
+	# Save scause to s0.
+	csrr s0, scause
 
 	# System call.
 	li   t0, 8
-	beq  s1, t0, 2f
+	beq  s0, t0, 2f
 	li   t0, 9
-	beq  s1, t0, 2f
+	beq  s0, t0, 2f
 	li   t0, 11
-	beq  s1, t0, 2f
+	beq  s0, t0, 2f
 
 	# Page fault.
 	li   t0, 12
-	beq  s1, t0, 3f
+	beq  s0, t0, 3f
 	li   t0, 13
-	beq  s1, t0, 3f
+	beq  s0, t0, 3f
 	li   t0, 15
-	beq  s1, t0, 3f
+	beq  s0, t0, 3f
 
 	# Exception (all cases where I bit is 0 and it is not an ecall or page
 	# fault).
 	li   t0, 1 << 63
-	and  t0, s1, t0
+	and  t0, s0, t0
 	beqz t0, 4f
 
 	# Hardware.
 	li  t0, 1 << 63
 	li  t1, 9
 	or  t1, t0, t1
-	beq s1, t1, 5f
+	beq s0, t1, 5f
 	li  t1, 11
 	or  t1, t0, t1
-	beq s1, t1, 5f
+	beq s0, t1, 5f
 
 	# Timer.
 	li  t0, 1 << 63
 	li  t1, 5
 	or  t1, t0, t1
-	beq s1, t1, 6f
+	beq s0, t1, 6f
 	li  t1, 7
 	or  t1, t0, t1
-	beq s1, t1, 6f
+	beq s0, t1, 6f
 
 	# If the code was not recognized, just return.
 	j 1f
@@ -86,7 +81,11 @@ routeinterrupt:
 3:
 	# If cause is page fault.
 
-	mv   a0, s0
+	csrr a0, sstatus
+	srli a0, a0, 8
+	andi a0, a0, 1
+	xori a0, a0, 1
+
 	call pagefault
 
 	j 1f
@@ -95,7 +94,11 @@ routeinterrupt:
 4:
 	# If cause is exception.
 
-	mv   a0, s0
+	csrr a0, sstatus
+	srli a0, a0, 8
+	andi a0, a0, 1
+	xori a0, a0, 1
+
 	call exception
 
 	j 1f
@@ -184,7 +187,6 @@ kernelinterrupt:
 	sd   ra,  (26 * 8)(sp)
 	sd   gp,  (27 * 8)(sp)
 
-	li   a0, 0
 	call routeinterrupt
 
 	# See top of function.
@@ -226,7 +228,6 @@ kernelinterruptbase:
 	ret
 
 userinterrupt:
-	li   a0, 1
 	call routeinterrupt
 
 	# Do not do sret, since this function is only called as part of
