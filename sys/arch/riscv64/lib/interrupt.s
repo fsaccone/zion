@@ -1,9 +1,7 @@
 .section .text
 .global disableinterrupts
 .global enableinterrupts
-.global interruptisuser
 .global interruptsenabled
-.global interrupttype
 .global kernelinterrupt
 .global kernelinterruptbase
 .global userinterrupt
@@ -139,133 +137,12 @@ enableinterrupts:
 
 	ret
 
-interruptisuser:
-	# (t0 = sstatus.SPP)
-	csrr t0, sstatus
-	srli t0, t0, 8
-	li   t1, 1
-	and  t0, t0, t1
-
-	# If t0 is 0, then interrupt was caused by user mode; otherwise, it was
-	# caused by supervisor mode.
-	beqz t0, 1f
-
-	# Kernel mode.
-	li a0, 0
-	ret
-
-1:
-	# User mode.
-	li a0, 1
-	ret
-
 interruptsenabled:
 	csrr a0, sstatus
 	li   t0, 1 << 1
 	and  a0, a0, t0
 	srli a0, a0, 1
 
-	ret
-
-interrupttype:
-	# 0x00 - Exception.
-	# 0x01 - Syscall.
-	# 0x02 - Hardware.
-	# 0x03 - Timer.
-	# 0x04 - Page fault.
-
-	csrr t0, scause
-
-	# Interrupt bit (I).
-	li t1, 1 << 63
-
-	# If I != 0, handle cases with interrupt bit set to 1.
-	and  t2, t0, t1
-	bnez t2, 1f
-
-	# 8 | 9 -> Syscall.
-	# 12 | 13 | 15 -> Page fault.
-	# *     -> Exception.
-
-	# If 8 jump to 2f.
-	li  t2, 8
-	beq t0, t2, 2f
-
-	# If 9 jump to 2f.
-	li  t2, 9
-	beq t0, t2, 2f
-
-	# If 12 jump to 3f.
-	li  t2, 12
-	beq t0, t2, 3f
-
-	# If 13 jump to 3f.
-	li  t2, 13
-	beq t0, t2, 3f
-
-	# If 15 jump to 3f.
-	li  t2, 15
-	beq t0, t2, 3f
-
-	# Exception (not 8 or 9).
-	li a0, 0x00
-	ret
-
-2:
-	# Syscall (8 or 9).
-	li a0, 0x01
-	ret
-
-3:
-	# Page fault (12, 13 or 15).
-	li a0, 0x04
-	ret
-
-1:
-	# Set I to 0.
-	not t2, t1
-	and t0, t0, t2
-
-	# 1 || 3  -> Syscall.
-	# 5 || 7  -> Timer.
-	# 9 || 11 -> Hardware.
-
-	# If 1 jump to 2b.
-	li  t2, 1
-	beq t0, t2, 2b
-
-	# If 3 jump to 2b.
-	li  t2, 3
-	beq t0, t2, 2b
-
-	# If 5 jump to 2f.
-	li  t2, 5
-	beq t0, t2, 2f
-
-	# If 7 jump to 2f.
-	li  t2, 7
-	beq t0, t2, 2f
-
-	# If 9 jump to 3f.
-	li  t2, 9
-	beq t0, t2, 3f
-
-	# If 11 jump to 3f.
-	li  t2, 11
-	beq t0, t2, 3f
-
-	# Default (0x00 - Exception).
-	li a0, 0x00
-	ret
-
-2:
-	# Timer.
-	li a0, 0x03
-	ret
-
-3:
-	# Hardware.
-	li a0, 0x02
 	ret
 
 kernelinterrupt:
