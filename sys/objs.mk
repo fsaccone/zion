@@ -20,7 +20,6 @@ OBJS_LIB = arch/$(ARCH)/lib/atomic.o \
            lib/console.o \
            lib/exception.o \
            lib/hardware.o \
-           lib/interrupt.o \
            lib/pagefault.o \
            lib/panic.o \
            lib/pmem.o \

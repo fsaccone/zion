@@ -57,12 +57,16 @@ schedule(void)
 				   messing up. */
 				disableinterrupts();
 
+				/* TODO: When the interrupt function was
+				   removed, this remained. The solution will be
+				   to pass a userinterrupt function address
+				   which will route to the correct handler.
 				inittrapframe(paddr(p->pagetree,
 				                    VADDR_TRAP_FRAME),
 				              p->pagetree, interruptbase(),
 				              getctxpc(p->uctx));
 				setctxpc(p->uctx, trampolineretbase());
-				switchctx(p->kctx, p->uctx);
+				switchctx(p->kctx, p->uctx); */
 
 				found = 1;
 

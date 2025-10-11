@@ -1,7 +1,6 @@
 .section .text
 .global disableinterrupts
 .global enableinterrupts
-.global interruptbase
 .global interruptisuser
 .global interruptsenabled
 .global interrupttype
@@ -32,11 +31,6 @@ enableinterrupts:
 	li   t1,  1 << 9
 	or   t0,  t0, t1
 	csrw sie, t0
-
-	ret
-
-interruptbase:
-	la a0, interrupt
 
 	ret
 
@@ -244,8 +238,8 @@ kernelinterrupt:
 	or  t2, t1, t2
 	beq t0, t2, 6f
 
-	# Default.
-	j 7f
+	# If the code was not recognized, just return from the interrupt.
+	j 1f
 
 2:
 	# If cause is ecall.
@@ -297,9 +291,6 @@ kernelinterrupt:
 	call timer
 
 	j 1f
-
-7:
-	call interrupt
 
 1:
 	# See top of function.
