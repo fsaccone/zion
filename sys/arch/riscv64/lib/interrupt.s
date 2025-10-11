@@ -10,6 +10,9 @@
 
 # Checks the value of scause to call the correct handler.
 routeinterrupt:
+	addi sp, sp, -8
+	sd   ra, 0(sp)
+
 	# Save scause to s0.
 	csrr s0, scause
 
@@ -118,6 +121,8 @@ routeinterrupt:
 	j 1f
 
 1:
+	ld   ra, 0(sp)
+	addi sp, sp, 8
 	ret
 
 disableinterrupts:
@@ -228,10 +233,15 @@ kernelinterruptbase:
 	ret
 
 userinterrupt:
+	addi sp, sp, -8
+	sd   ra, 0(sp)
+
 	call routeinterrupt
 
 	# Do not do sret, since this function is only called as part of
 	# trampoline.
+	addi sp, sp, 8
+	ld   ra, 0(sp)
 	ret
 
 userinterruptbase:
