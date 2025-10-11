@@ -137,3 +137,9 @@ processes(void)
 {
 	return processlist;
 }
+
+void *
+trapframe(struct process *p)
+{
+	return paddr(p->pagetree, VADDR_TRAP_FRAME);
+}

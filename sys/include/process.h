@@ -57,4 +57,8 @@ s8 createprocess(struct framenode *text, struct process *parent);
 /* Returns the linked list containing all the processes. */
 struct processnode *processes(void);
 
+/* Returns the physical address of the trap frame of process p or NULL if it
+   does not exist. */
+void *trapframe(struct process *p);
+
 #endif
