@@ -7,7 +7,6 @@
 .global interruptisuser
 .global interruptsenabled
 .global interrupttype
-.global setinterruptreturn
 .global waitforinterrupt
 
 disableinterrupts:
@@ -69,11 +68,6 @@ interrupt:
 	sd   ra,  (26 * 8)(sp)
 	sd   gp,  (27 * 8)(sp)
 
-	# The a0 register is held by sscratch instead of the stack so that we
-	# can choose to change its value when switching back to the caller
-	# context.
-	csrw sscratch, a0
-
 	# If type is 8, 9 or 11 then the trap is an ecall exception: sepc needs
 	# to increment by 4, the size of the ecall instruction, before
 	# returning to avoid looping back to the same ecall instruction
@@ -127,10 +121,6 @@ interrupt:
 	ld   ra,  (26 * 8)(sp)
 	ld   gp,  (27 * 8)(sp)
 	addi sp,  sp, ((7 + 12 + 7 + 1 + 1) * 8)
-
-	# The sscratch register may hold the original value of a0 or a new one.
-	# See above.
-	csrr a0, sscratch
 
 	sret
 
@@ -281,13 +271,6 @@ interrupttype:
 3:
 	# Hardware.
 	li a0, 0x02
-	ret
-
-setinterruptreturn:
-	# The sscratch is used to hold the new value of a0 and is set to the
-	# original a0 at the start of the trap vector.
-	csrw sscratch, a0
-
 	ret
 
 waitforinterrupt:

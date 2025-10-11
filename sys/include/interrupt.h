@@ -44,10 +44,6 @@ u8 interruptsenabled(void);
 /* Returns the interrupt type code. */
 u8 interrupttype(void);
 
-/* Sets the first architecture-specific argument register of the caller context
-   to r. If it is not called, the register retains its original value. */
-void setinterruptreturn(ureg r);
-
 /* Does not return. Makes the running core in a state where it just waits for
    an interrupt to reactivate it. */
 void waitforinterrupt(void);
