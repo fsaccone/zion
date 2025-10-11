@@ -13,7 +13,7 @@ astart:
 	call initsstatus
 	call initstime
 
-	la   t0,    handleinterrupt
+	la   t0,    kernelinterrupt
 	csrw stvec, t0
 
 	csrr tp, mhartid
