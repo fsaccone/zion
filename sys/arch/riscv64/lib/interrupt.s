@@ -217,8 +217,17 @@ kernelinterrupt:
 	and  t1, t0, t1
 	beqz t1, 3f
 
+	# Hardware
+	li  t1, 1 << 63
+	li  t2, 9
+	or  t2, t1, t2
+	beq t0, t2, 4f
+	li  t2, 11
+	or  t2, t1, t2
+	beq t0, t2, 4f
+
 	# Default.
-	j    2f
+	j 5f
 
 2:
 	# If cause is ecall.
@@ -250,6 +259,13 @@ kernelinterrupt:
 	j 1f
 
 4:
+	# If cause is hardware.
+
+	call exception
+
+	j 1f
+
+5:
 	call interrupt
 
 1:
