@@ -25,6 +25,7 @@ OBJS_LIB = arch/$(ARCH)/lib/atomic.o \
            lib/schedule.o \
            lib/spinlock.o \
            lib/string.o \
+           lib/syscall.o \
            lib/syscall/reboot.o \
            lib/syscall/shutdown.o \
            lib/uart.o \
