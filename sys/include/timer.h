@@ -5,4 +5,7 @@
    best to call this first in the timer interrupt handler. */
 void setupnexttimer(void);
 
+/* The timer interrupt handler. */
+void timer(void);
+
 #endif

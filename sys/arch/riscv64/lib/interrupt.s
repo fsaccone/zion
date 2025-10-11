@@ -226,8 +226,17 @@ kernelinterrupt:
 	or  t2, t1, t2
 	beq t0, t2, 4f
 
+	# Timer.
+	li  t1, 1 << 63
+	li  t2, 5
+	or  t2, t1, t2
+	beq t0, t2, 5f
+	li  t2, 7
+	or  t2, t1, t2
+	beq t0, t2, 5f
+
 	# Default.
-	j 5f
+	j 6f
 
 2:
 	# If cause is ecall.
@@ -266,6 +275,13 @@ kernelinterrupt:
 	j 1f
 
 5:
+	# If cause is timer.
+
+	call timer
+
+	j 1f
+
+6:
 	call interrupt
 
 1:
