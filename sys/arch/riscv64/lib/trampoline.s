@@ -28,6 +28,12 @@ inittrapframe:
 	# Set sepc to given pc.
 	csrw sepc, a3
 
+	# Set kernel stack pointer.
+	sd sp, (25 * 8)(a0)
+
+	# Set kernel thread pointer.
+	sd tp, (26 * 8)(a0)
+
 	# Set sstatus.SPIE to 1 to enable interrupts in user mode.
 	csrr t0, sstatus
 	li   t1, 1 << 5
@@ -95,8 +101,20 @@ trampoline:
 	# Call interrupt handler.
 	jalr t2
 
+	# Set s0 to 1 to mark the coming from trampoline, and not
+	# trampolineret.
+	li s0, 1
+
+	# Skip trampolineret specific code.
+	j 1f
+
 	# Continues here.
 trampolineret:
+	# Set s0 to 0 to mark the coming from trampolineret, and not
+	# trampoline.
+	li s0, 0
+
+1:
 	# Set t6, the last register to be loaded, to the trap frame address.
 	li t6, 0x1000
 
@@ -107,11 +125,20 @@ trampolineret:
 	# Set stvec to trampoline.
 	csrwi stvec, 0x0
 
-	# Save the user trap frame from the current context.
+	# Save the kernel satp to the trap frame.
 	sd t1, (23 * 8)(t6)
-	sd sp, (25 * 8)(t6)
-	sd tp, (26 * 8)(t6)
 
+	# Only save stack pointer and thread pointer to trap frame if we come
+	# from trampoline, not trampolineret. If we did come from
+	# trampolineret, these components of the trap frames were presumably
+	# already set by a call to inittrapframe, also the jump to
+	# trampolineret presumably happened through a switchctx call, making
+	# the values of sp and tp wrong.
+	beqz s0, 1f
+	sd   sp, (25 * 8)(t6)
+	sd   tp, (26 * 8)(t6)
+
+1:
 	# Load the saved registers from the now available user trap frame.
 	ld t1,  (0  * 8)(t6)
 	ld t0,  (1  * 8)(t6)
