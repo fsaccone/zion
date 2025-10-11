@@ -9,15 +9,8 @@ void disableinterrupts(void);
 /* Enables interrupts. */
 void enableinterrupts(void);
 
-/* Returns 1 if the interrupt comes from user mode or 0 if it comes from kernel
-   mode. */
-u8 interruptisuser(void);
-
 /* Returns 1 if interrupts are enabled and 0 otherwise. */
 u8 interruptsenabled(void);
-
-/* Returns the interrupt type code. */
-u8 interrupttype(void);
 
 /* The entry point of the kernel interrupt handler. */
 void kernelinterrupt(void);
