@@ -59,8 +59,7 @@ schedule(void)
 
 				inittrapframe(paddr(p->pagetree,
 				                    VADDR_TRAP_FRAME),
-				              p->pagetree,
-				              handleinterruptbase(),
+				              p->pagetree, interruptbase(),
 				              getctxpc(p->uctx));
 				setctxpc(p->uctx, trampolineretbase());
 				switchctx(p->kctx, p->uctx);

@@ -1,8 +1,8 @@
 .section .text
 .global disableinterrupts
 .global enableinterrupts
-.global handleinterruptbase
 .global interruptargs
+.global interruptbase
 .global interruptisuser
 .global interruptsenabled
 .global interrupttype
@@ -36,11 +36,6 @@ enableinterrupts:
 
 	ret
 
-handleinterruptbase:
-	la a0, handleinterrupt
-
-	ret
-
 interruptargs:
 	la t0, args
 	li t1, 0
@@ -53,6 +48,11 @@ interruptargs:
 	sd t1, (5 * 8)(t0)
 
 	mv a0, t0
+
+	ret
+
+interruptbase:
+	la a0, interrupt
 
 	ret
 
@@ -237,7 +237,7 @@ kernelinterrupt:
 	csrw sepc, t0
 
 2:
-	call handleinterrupt
+	call interrupt
 
 3:
 	# See top of function.

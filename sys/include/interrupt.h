@@ -18,16 +18,16 @@ void disableinterrupts(void);
 void enableinterrupts(void);
 
 /* The interrupt handler. */
-void handleinterrupt(void);
-
-/* Returns the physical address of handleinterrupt. */
-void *handleinterruptbase(void);
+void interrupt(void);
 
 /* Returns an array of size INTERRUPT_ARGS containing the values of the first
    INTERRUPT_ARGS architecture-specific argument registers of the caller
    context. This function has to be called first inside the interrupt handler,
    because having code before it may alter the values of the registers. */
 ureg *interruptargs(void);
+
+/* Returns the physical address of interrupt. */
+void *interruptbase(void);
 
 /* Returns 1 if the interrupt comes from user mode or 0 if it comes from kernel
    mode. */
@@ -40,7 +40,7 @@ u8 interruptsenabled(void);
 u8 interrupttype(void);
 
 /* The entry point of the kernel interrupt handler. It does
-   architecture-specific actions and eventually calls handleinterrupt. */
+   architecture-specific actions and eventually calls interrupt. */
 void kernelinterrupt(void);
 
 /* Does not return. Makes the running core in a state where it just waits for
