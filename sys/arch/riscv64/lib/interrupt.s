@@ -1,7 +1,6 @@
 .section .text
 .global disableinterrupts
 .global enableinterrupts
-.global interruptargs
 .global interruptbase
 .global interruptisuser
 .global interruptsenabled
@@ -33,21 +32,6 @@ enableinterrupts:
 	li   t1,  1 << 9
 	or   t0,  t0, t1
 	csrw sie, t0
-
-	ret
-
-interruptargs:
-	la t0, args
-	li t1, 0
-
-	sd a0, (0 * 8)(t0)
-	sd a1, (1 * 8)(t0)
-	sd a2, (2 * 8)(t0)
-	sd a3, (3 * 8)(t0)
-	sd a4, (4 * 8)(t0)
-	sd t1, (5 * 8)(t0)
-
-	mv a0, t0
 
 	ret
 
