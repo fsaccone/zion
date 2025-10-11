@@ -37,7 +37,7 @@ allocprocess(struct process **p, struct framenode *text)
 	}
 
 	/* Set other initial values. */
-	(*p)->state = READY;
+	(*p)->state = NEW;
 	(*p)->children = NULL;
 
 	/* Allocate page tree. */

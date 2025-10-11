@@ -11,6 +11,7 @@
 #define PID_MAX 65535
 
 enum processstate {
+	NEW,
 	READY,
 	RUNNING,
 	BLOCKED,

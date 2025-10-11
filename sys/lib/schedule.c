@@ -43,11 +43,20 @@ schedule(void)
 
 		for (pn = processes(); pn; pn = pn->n) {
 			struct process *p = pn->p;
+			void *tframepc;
 
 			lock(&p->lock);
 
 			switch (p->state) {
+			case NEW:
 			case READY:
+				/* If the process is NEW, set pc of the process
+				   trap frame to the first free user address,
+				   otherwise do not change it. */
+				tframepc = p->state == NEW
+				           ? (void *)VADDR_FIRST_FREE_PAGE
+				           : NULL;
+
 				p->state = RUNNING;
 
 				/* After setting the process state to RUNNING,
@@ -65,7 +74,7 @@ schedule(void)
 
 				inittrapframe(paddr(p->pagetree,
 				                    VADDR_TRAP_FRAME),
-				              p->pagetree, getctxpc(p->uctx));
+				              p->pagetree, tframepc);
 				setctxpc(p->uctx, usermodebase());
 				switchctx(p->kctx, p->uctx);
 
