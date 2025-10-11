@@ -9,8 +9,7 @@
    user mode code. It also initializes the current core context to make it
    ready for the usermode jump, so it is important to call this right before
    doing it. */
-void inittrapframe(void *tframe, pageentry *ptree, void *kernelinterrupt,
-                   void *userinterrupt, void *pc);
+void inittrapframe(void *tframe, pageentry *ptree, void *pc);
 
 /* Sets the return value of trap frame tframe to r. */
 void setreturn(void *tframe, ureg r);
