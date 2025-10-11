@@ -217,7 +217,7 @@ kernelinterrupt:
 	and  t1, t0, t1
 	beqz t1, 3f
 
-	# Hardware
+	# Hardware.
 	li  t1, 1 << 63
 	li  t2, 9
 	or  t2, t1, t2
