@@ -8,7 +8,8 @@
    jump to user mode code. It also initializes the current core context to make
    it ready for the trampolineret jump, so it is important to call this right
    before doing it. */
-void inittrapframe(void *tframe, pageentry *ptree, void *interrupt, void *pc);
+void inittrapframe(void *tframe, pageentry *ptree, void *kernelinterrupt,
+                   void *userinterrupt, void *pc);
 
 /* The trampoline. It is aligned to PAGE_SIZE and fits inside a page, to make
    it easily mappable in virtual address spaces: it should be mapped to the
