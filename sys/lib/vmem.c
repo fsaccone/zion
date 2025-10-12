@@ -46,29 +46,19 @@ paddr(pageentry *ptree, uptr vaddr)
 	for (l = 0; l < PAGE_TABLE_LEVELS - 1; l++) {
 		pageentry *lastpte = &lastpt[lvlidxs[l]];
 
-		if (!PAGE_ENTRY_GET_VALID(*lastpte)) {
-			setpanicmsg("Invalid page.");
-			goto panic;
-		} else if (!PAGE_ENTRY_GET_WALKABLE(*lastpte)) {
-			setpanicmsg("Non-walkable page table.");
-			goto panic;
-		}
+		if (!PAGE_ENTRY_GET_VALID(*lastpte)
+		 || !PAGE_ENTRY_GET_WALKABLE(*lastpte))
+			return NULL;
 
 		lastpt = (pageentry *)PAGE_ENTRY_GET_PADDR(*lastpte);
 	}
 
 	e = &lastpt[lvlidxs[PAGE_TABLE_LEVELS - 1]];
 
-	if (!PAGE_ENTRY_GET_VALID(*e)) {
-		setpanicmsg("Invalid page.");
-		goto panic;
-	}
+	if (!PAGE_ENTRY_GET_VALID(*e))
+		return NULL;
 
 	return (void *)(PAGE_ENTRY_GET_PADDR(*e) + (vaddr % PAGE_SIZE));
-
-panic:
-	tracepanicmsg("paddr");
-	return NULL;
 }
 
 s8
@@ -174,13 +164,13 @@ vmemcpy(uptr d, pageentry *dptree, uptr s, pageentry *sptree, uptr n,
 	for (p = 0; p < n * PAGE_SIZE; p += PAGE_SIZE) {
 		void *sf, *df;
 
-		if (!(sf = paddr(sptree, s + p)))
-			goto panic;
-
 		if (!(df = palloc(PAGE_SIZE, 0)))
 			goto panic;
 
-		pmemcpy(df, sf, PAGE_SIZE);
+		if (!(sf = paddr(sptree, s + p)))
+			pmemset(df, 0, PAGE_SIZE);
+		else
+			pmemcpy(df, sf, PAGE_SIZE);
 
 		if (vmap(dptree, d + p, df, opts))
 			goto panic;
