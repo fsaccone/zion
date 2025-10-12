@@ -66,6 +66,8 @@ allocprocess(struct process **p, struct process *parent)
 
 	/* Append to processlist. */
 	(*p)->n = processlist;
+	if (processlist)
+		processlist->p = *p;
 	processlist = *p;
 
 	return 0;

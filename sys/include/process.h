@@ -60,8 +60,9 @@ struct process {
 	/* The context of the process in user mode. */
 	u8 uctx[CTX_SIZE];
 
-	/* The pointer to the next process. This is needed to create linked
-	   list of processes. */
+	/* The pointers to the previous and next processes. This is needed to
+	   create linked lists of processes. */
+	struct process *p;
 	struct process *n;
 };
 
