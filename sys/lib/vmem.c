@@ -156,6 +156,44 @@ panic:
 }
 
 s8
+vmemcpy(uptr d, pageentry *dptree, uptr s, pageentry *sptree, uptr n,
+        struct pageoptions opts)
+{
+	uptr p;
+
+	if (d % PAGE_SIZE) {
+		setpanicmsg("Unaligned destination virtual address.");
+		goto panic;
+	}
+
+	if (s % PAGE_SIZE) {
+		setpanicmsg("Unaligned source virtual address.");
+		goto panic;
+	}
+
+	for (p = 0; p < n * PAGE_SIZE; p += PAGE_SIZE) {
+		void *sf, *df;
+
+		if (!(sf = paddr(sptree, s + p)))
+			goto panic;
+
+		if (!(df = palloc(PAGE_SIZE, 0)))
+			goto panic;
+
+		pmemcpy(df, sf, PAGE_SIZE);
+
+		if (vmap(dptree, d + p, df, opts))
+			goto panic;
+	}
+
+	return 0;
+
+panic:
+	tracepanicmsg("vmemcpy");
+	return -1;
+}
+
+s8
 vunmap(pageentry *ptree, uptr vaddr)
 {
 	uptr l, i, lvlidxs[PAGE_TABLE_LEVELS] = PAGE_LVLIDXS_FROM_VADDR(vaddr);
