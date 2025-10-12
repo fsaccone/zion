@@ -29,6 +29,8 @@
 #define PROC_VAS_TRAP_FRAME      (1 * PAGE_SIZE)
 #define PROC_VAS_FIRST_FREE_PAGE (2 * PAGE_SIZE)
 
+#define PID_MAX (u16)(~0)
+
 enum processstate {
 	READY,
 	RUNNING,
