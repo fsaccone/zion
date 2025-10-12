@@ -5,11 +5,11 @@
 #include "syscall/calls.h"
 
 void
-syscall(u16 type, ureg *args)
+syscall(u16 code, ureg *args)
 {
 	(void)args;
 
-	switch (type) {
+	switch (code) {
 	case SYSCALL_SHUTDOWN:
 		shutdown();
 		break;
