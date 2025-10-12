@@ -255,16 +255,15 @@ trampolinebase:
 	ret
 
 usermodebase:
-	# Save a0 to s0.
-	mv s0, a0
-
 	la t0, trampoline
 	la t1, usermode
 
 	# Add the virtual address of trampoline to the difference between the
 	# physical addresses of usermode and trampoline to get the virtual
 	# address of usermode.
-	sub a0, t1, t0
-	add a0, a0, s0
+	mv  t2, t1
+	sub t2, t2, t0
+	add t2, t2, a0
+	mv  a0, t2
 
 	ret
