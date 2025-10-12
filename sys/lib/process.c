@@ -72,7 +72,6 @@ allocprocess(struct process **p)
 
 	/* Set other initial values. */
 	(*p)->state = READY;
-	(*p)->children = NULL;
 
 	/* Allocate page tree. */
 	if (!((*p)->pagetree = allocpagetable()))
@@ -112,17 +111,7 @@ createprocess(struct process **p, struct process *parent)
 	if (allocprocess(p))
 		goto panic;
 
-	if (parent) {
-		struct processnode *newchild;
-
-		if (!(newchild = palloc(sizeof(struct processnode), 0)))
-			goto panic;
-
-		newchild->p = *p;
-
-		newchild->n = parent->children;
-		parent->children = newchild;
-	}
+	(*p)->parent = parent;
 
 	if (!(pn = palloc(sizeof(struct processnode), 0)))
 		goto panic;

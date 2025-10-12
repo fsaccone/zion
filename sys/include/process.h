@@ -64,6 +64,9 @@ struct process {
 	/* The process state. */
 	enum processstate state;
 
+	/* The parent process.. */
+	struct process *parent;
+
 	/* The pointer to the root table of the virtual page tree. */
 	pageentry *pagetree;
 
@@ -76,9 +79,6 @@ struct process {
 
 	/* The context of the process in user mode. */
 	u8 uctx[CTX_SIZE];
-
-	/* A linked list containing the children processes of the process. */
-	struct processnode *children;
 };
 
 /* Allocates a child process of process parent, or a standalone process with no
