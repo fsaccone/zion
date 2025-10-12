@@ -77,6 +77,33 @@ panic:
 	return -1;
 }
 
+s8
+freeprocess(struct process *p)
+{
+	/* TODO: Unmap all pages in virtual address space, which also frees all
+	         page tables. Frames pointed by pages also need to be freed. */
+
+	/* Now that the page tree contains no allocated page tables, it is
+	   possible to free it. */
+	if (freepagetable(p->pagetree))
+		goto panic;
+
+	/* Make the previous process in the list point to the one after
+	   this. */
+	if (p->p)
+		p->p->n = p->n;
+
+	/* Finally free the process. */
+	if (pfree(p, sizeof(struct process)))
+		goto panic;
+
+	return 0;
+
+panic:
+	tracepanicmsg("freeprocess");
+	return -1;
+}
+
 struct process *
 processes(void)
 {

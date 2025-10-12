@@ -71,6 +71,10 @@ struct process {
    error or 0 otherwise. */
 s8 allocprocess(struct process **p, struct process *parent);
 
+/* Frees process p and all its allocated memory. Returns -1 in case of error or
+   0 otherwise. */
+s8 freeprocess(struct process *p);
+
 /* Returns the linked list containing all the processes. */
 struct process *processes(void);
 
