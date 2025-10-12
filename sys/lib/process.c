@@ -7,6 +7,7 @@
 #include <math.h>
 #include <panic.h>
 #include <pmem.h>
+#include <trampoline.h>
 #include <vmem.h>
 
 /* Allocates process and sets pointer p to it after initializing it using text
@@ -27,6 +28,7 @@ allocprocess(struct process **p, struct framenode *text)
 	struct pageoptions popts = { 0 };
 	uptr a;
 	struct framenode *textfn;
+	void *tframe;
 
 	if (!(*p = palloc(sizeof(struct process), 0)))
 		goto panic;
@@ -44,9 +46,39 @@ allocprocess(struct process **p, struct framenode *text)
 	if (!((*p)->pagetree = allocpagetable()))
 		goto panic;
 
-	/* Initialize virtual address space. */
-	if (allocvas((*p)->pagetree, 1))
+	/* Map trampoline. */
+	popts.u = 0;
+	popts.r = 1;
+	popts.w = 0;
+	popts.x = 1;
+	if (vmap((*p)->pagetree, VADDR_TRAMPOLINE, trampolinebase(), popts))
 		goto panic;
+
+	/* Allocate, initialize and map trap frame. */
+	popts.u = 0;
+	popts.r = 1;
+	popts.w = 1;
+	popts.x = 0;
+	if (!(tframe = palloc(PAGE_SIZE, 0)))
+		goto panic;
+	inittrapframe(tframe, VADDR_FIRST_FREE_PAGE, VADDR_STACK_END);
+	if (vmap((*p)->pagetree, VADDR_TRAP_FRAME, tframe, popts))
+		goto panic;
+
+	/* Allocate and map stack frames. */
+	popts.u = 1;
+	popts.r = 1;
+	popts.w = 1;
+	popts.x = 0;
+	for (a = 0; a < STACK_SIZE; a += PAGE_SIZE) {
+		void *sf;
+
+		if (!(sf = palloc(PAGE_SIZE, 0)))
+			goto panic;
+
+		if (vmap((*p)->pagetree, VADDR_STACK_START + a, sf, popts))
+			goto panic;
+	}
 
 	/* Map program. */
 	popts.u = 1;

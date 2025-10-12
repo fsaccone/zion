@@ -23,58 +23,6 @@ panic:
 }
 
 s8
-allocvas(pageentry *ptree, u8 user)
-{
-	struct pageoptions popts = { 0 };
-	void *tframe;
-	uptr a;
-
-	/* Trampoline. */
-	popts.u = 0;
-	popts.r = 1;
-	popts.w = 0;
-	popts.x = 1;
-	if (vmap(ptree, VADDR_TRAMPOLINE, trampolinebase(), popts))
-		goto panic;
-
-	/* Only user-only pages are mapped after this. */
-	if (!user)
-		return 0;
-
-	/* Trap frame (user-only). */
-	popts.u = 0;
-	popts.r = 1;
-	popts.w = 1;
-	popts.x = 0;
-	if (!(tframe = palloc(PAGE_SIZE, 0)))
-		goto panic;
-	inittrapframe(tframe, VADDR_FIRST_FREE_PAGE, VADDR_STACK_END);
-	if (vmap(ptree, VADDR_TRAP_FRAME, tframe, popts))
-		goto panic;
-
-	/* Stack (user-only). */
-	popts.u = 1;
-	popts.r = 1;
-	popts.w = 1;
-	popts.x = 0;
-	for (a = 0; a < STACK_SIZE; a += PAGE_SIZE) {
-		void *f;
-
-		if (!(f = palloc(PAGE_SIZE, 0)))
-			goto panic;
-
-		if (vmap(ptree, VADDR_STACK_START + a, f, popts))
-			goto panic;
-	}
-
-	return 0;
-
-panic:
-	tracepanicmsg("allocvas");
-	return -1;
-}
-
-s8
 freepagetable(pageentry *ptable)
 {
 	if (pfree(ptable, PAGE_TABLE_ENTRIES * sizeof(pageentry)))
@@ -84,31 +32,6 @@ freepagetable(pageentry *ptable)
 
 panic:
 	tracepanicmsg("freepagetable");
-	return -1;
-}
-
-s8
-freevasstack(pageentry *ptree)
-{
-	uptr a;
-
-	for (a = 0; a < STACK_SIZE; a += PAGE_SIZE) {
-		void *f;
-
-		if (!(f = paddr(ptree, VADDR_STACK_START + a)))
-			goto panic;
-
-		if (pfree(f, PAGE_SIZE))
-			goto panic;
-
-		if (vunmap(ptree, VADDR_STACK_START + a))
-			goto panic;
-	}
-
-	return 0;
-
-panic:
-	tracepanicmsg("freevasstack");
 	return -1;
 }
 
