@@ -50,7 +50,7 @@ core0(void)
 	if (kvmem(&ptree))
 		goto panic;
 
-	if (createprocess(&rip, NULL))
+	if (allocprocess(&rip, NULL))
 		goto panic;
 
 	(void)consolewrite(RAMINIT_LOG_PRE);

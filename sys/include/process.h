@@ -68,7 +68,7 @@ struct process {
 /* Allocates a child process of process parent, or a standalone process with no
    parent if it is NULL, of state READY and sets p to it. Returns -1 in case of
    error or 0 otherwise. */
-s8 createprocess(struct process **p, struct process *parent);
+s8 allocprocess(struct process **p, struct process *parent);
 
 /* Returns the linked list containing all the processes. */
 struct process *processes(void);

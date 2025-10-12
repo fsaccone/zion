@@ -14,7 +14,7 @@ static struct process *processlist = NULL;
 static u8 pidbitmap[CEIL(PID_MAX, 8) / 8] = { 0 };
 
 s8
-createprocess(struct process **p, struct process *parent)
+allocprocess(struct process **p, struct process *parent)
 {
 	struct pageoptions opts = { 0 };
 	void *tframe;
@@ -71,7 +71,7 @@ createprocess(struct process **p, struct process *parent)
 	return 0;
 
 panic:
-	tracepanicmsg("createprocess");
+	tracepanicmsg("allocprocess");
 	return -1;
 }
 
