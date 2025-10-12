@@ -10,6 +10,14 @@
 /* Maximum 16 bits unsigned integer. */
 #define PID_MAX 65535
 
+/* Process virtual address space. */
+#define PROC_VAS_TRAMPOLINE      (0 * PAGE_SIZE)
+#define PROC_VAS_TRAP_FRAME      (1 * PAGE_SIZE)
+#define PROC_VAS_FIRST_FREE_PAGE (2 * PAGE_SIZE)
+#define PROC_VAS_STACK_SIZE      CEIL(8192, PAGE_SIZE)
+#define PROC_VAS_STACK_END       PAGE_VADDR_MAX
+#define PROC_VAS_STACK_START     (PROC_VAS_STACK_END - PROC_VAS_STACK_SIZE + 1)
+
 enum processstate {
 	READY,
 	RUNNING,

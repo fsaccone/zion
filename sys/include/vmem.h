@@ -5,14 +5,6 @@
 #include <arch/types.h>
 #include <math.h>
 
-#define STACK_SIZE CEIL(8192, PAGE_SIZE)
-
-#define VADDR_TRAMPOLINE      (0 * PAGE_SIZE)
-#define VADDR_TRAP_FRAME      (1 * PAGE_SIZE)
-#define VADDR_FIRST_FREE_PAGE (2 * PAGE_SIZE)
-#define VADDR_STACK_END       PAGE_VADDR_MAX
-#define VADDR_STACK_START     (VADDR_STACK_END - STACK_SIZE + 1)
-
 struct pageoptions {
 	/* If 1, the page is for user-mode; otherwise, it is for
 	   kernel-mode. */
