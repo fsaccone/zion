@@ -38,11 +38,6 @@ enum processstate {
 	TERMINATED,
 };
 
-struct processnode {
-	struct process *p;
-	struct processnode *n;
-};
-
 struct process {
 	/* The process ID. */
 	u16 pid;
@@ -64,6 +59,10 @@ struct process {
 
 	/* The context of the process in user mode. */
 	u8 uctx[CTX_SIZE];
+
+	/* The pointer to the next process. This is needed to create linked
+	   list of processes. */
+	struct process *n;
 };
 
 /* Allocates a child process of process parent, or a standalone process with no
@@ -72,7 +71,7 @@ struct process {
 s8 createprocess(struct process **p, struct process *parent);
 
 /* Returns the linked list containing all the processes. */
-struct processnode *processes(void);
+struct process *processes(void);
 
 /* Returns the physical address of the trap frame of process p or NULL if it
    does not exist. */

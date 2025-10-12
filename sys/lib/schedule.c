@@ -34,12 +34,10 @@ void
 schedule(void)
 {
 	u16 c = core();
-	struct processnode *pn;
 
 	for(;;) {
-		for (pn = processes(); pn; pn = pn->n) {
-			struct process *p = pn->p;
-
+		struct process *p;
+		for (p = processes(); p; p = p->n) {
 			lock(&p->lock);
 
 			switch (p->state) {
