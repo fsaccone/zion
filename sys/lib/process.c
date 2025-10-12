@@ -52,8 +52,6 @@ s8
 allocprocess(struct process **p)
 {
 	struct pageoptions popts = { 0 };
-	uptr a;
-	struct framenode *pfn;
 	void *tframe;
 
 	if (!(*p = palloc(sizeof(struct process), 0)))
