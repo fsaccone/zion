@@ -17,10 +17,6 @@ routeinterrupt:
 	# System call.
 	li   t0, 8
 	beq  s0, t0, 2f
-	li   t0, 9
-	beq  s0, t0, 2f
-	li   t0, 11
-	beq  s0, t0, 2f
 
 	# Page fault.
 	li   t0, 12
@@ -30,8 +26,8 @@ routeinterrupt:
 	li   t0, 15
 	beq  s0, t0, 3f
 
-	# Exception (all cases where I bit is 0 and it is not an ecall or page
-	# fault).
+	# Exception (all cases where I bit is 0 and it is not an user ecall or
+	# page fault).
 	li   t0, 1 << 63
 	and  t0, s0, t0
 	beqz t0, 4f
