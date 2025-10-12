@@ -63,9 +63,7 @@ schedule(void)
 				   messing up. */
 				disableinterrupts();
 
-				preparetrapframe(paddr(p->pagetree,
-				                       PROC_VAS_TRAP_FRAME),
-				                 p->pagetree);
+				preparetrapframe(trapframe(p), p->pagetree);
 				setctxpc(p->uctx, usermodebase());
 				switchctx(p->kctx, p->uctx);
 
