@@ -167,9 +167,7 @@ vmemcpy(uptr d, pageentry *dptree, uptr s, pageentry *sptree, uptr n,
 		if (!(df = palloc(PAGE_SIZE, 0)))
 			goto panic;
 
-		if (!(sf = paddr(sptree, s + p)))
-			pmemset(df, 0, PAGE_SIZE);
-		else
+		if ((sf = paddr(sptree, s + p)))
 			pmemcpy(df, sf, PAGE_SIZE);
 
 		if (vmap(dptree, d + p, df, opts))
