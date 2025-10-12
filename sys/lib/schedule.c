@@ -71,9 +71,8 @@ schedule(void)
 
 				break;
 			default:
+				unlock(&p->lock);
 			}
-
-			unlock(&p->lock);
 		}
 	}
 }
