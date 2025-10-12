@@ -15,10 +15,6 @@
    case of error or 0 otherwise. */
 static s8 allocprocpage(void **f, uptr v, struct process *p);
 
-/* Allocates process and sets pointer p to it after initializing it. Returns -1
-   in case of error or 0 otherwise */
-static s8 allocprocess(struct process **p);
-
 static struct processnode *processlist            = NULL;
 static u8                  pidbitmap[CEIL(PID_MAX, 8) / 8] = { 0 };
 
@@ -47,13 +43,16 @@ panic:
 }
 
 s8
-allocprocess(struct process **p)
+createprocess(struct process **p, struct process *parent)
 {
-	struct pageoptions popts = { 0 };
+	struct pageoptions opts = { 0 };
 	void *tframe;
+	struct processnode *pn;
 
 	if (!(*p = palloc(sizeof(struct process), 0)))
 		goto panic;
+
+	(*p)->state = READY;
 
 	/* Allocate smallest free PID. */
 	for ((*p)->pid = 0; (*p)->pid < PID_MAX; (*p)->pid++) {
@@ -70,45 +69,27 @@ allocprocess(struct process **p)
 		goto panic;
 	}
 
-	/* Set other initial values. */
-	(*p)->state = READY;
-
 	/* Allocate page tree. */
 	if (!((*p)->pagetree = allocpagetable()))
 		goto panic;
 
 	/* Map trampoline. */
-	popts.u = 0;
-	popts.r = 1;
-	popts.w = 0;
-	popts.x = 1;
-	if (vmap((*p)->pagetree, PROC_VAS_TRAMPOLINE, trampolinebase(), popts))
+	opts.u = 0;
+	opts.r = 1;
+	opts.w = 0;
+	opts.x = 1;
+	if (vmap((*p)->pagetree, PROC_VAS_TRAMPOLINE, trampolinebase(), opts))
 		goto panic;
 
 	/* Allocate, initialize and map trap frame. */
-	popts.u = 0;
-	popts.r = 1;
-	popts.w = 1;
-	popts.x = 0;
+	opts.u = 0;
+	opts.r = 1;
+	opts.w = 1;
+	opts.x = 0;
 	if (allocprocpage(&tframe, PROC_VAS_FIRST_FREE_PAGE, *p))
 		goto panic;
 	inittrapframe(tframe, PROC_VAS_FIRST_FREE_PAGE, PROC_VAS_TRAMPOLINE);
-	if (vmap((*p)->pagetree, PROC_VAS_TRAP_FRAME, tframe, popts))
-		goto panic;
-
-	return 0;
-
-panic:
-	tracepanicmsg("allocprocess");
-	return -1;
-}
-
-s8
-createprocess(struct process **p, struct process *parent)
-{
-	struct processnode *pn;
-
-	if (allocprocess(p))
+	if (vmap((*p)->pagetree, PROC_VAS_TRAP_FRAME, tframe, opts))
 		goto panic;
 
 	(*p)->parent = parent;
