@@ -51,7 +51,7 @@ allocprocess(struct process **p, struct framenode *text)
 	popts.r = 1;
 	popts.w = 0;
 	popts.x = 1;
-	if (vmap((*p)->pagetree, VADDR_TRAMPOLINE, trampolinebase(), popts))
+	if (vmap((*p)->pagetree, PROC_VAS_TRAMPOLINE, trampolinebase(), popts))
 		goto panic;
 
 	/* Allocate, initialize and map trap frame. */
@@ -61,8 +61,8 @@ allocprocess(struct process **p, struct framenode *text)
 	popts.x = 0;
 	if (!(tframe = palloc(PAGE_SIZE, 0)))
 		goto panic;
-	inittrapframe(tframe, VADDR_FIRST_FREE_PAGE, VADDR_STACK_END);
-	if (vmap((*p)->pagetree, VADDR_TRAP_FRAME, tframe, popts))
+	inittrapframe(tframe, PROC_VAS_FIRST_FREE_PAGE, PROC_VAS_STACK_END);
+	if (vmap((*p)->pagetree, PROC_VAS_TRAP_FRAME, tframe, popts))
 		goto panic;
 
 	/* Allocate and map stack frames. */
@@ -70,13 +70,13 @@ allocprocess(struct process **p, struct framenode *text)
 	popts.r = 1;
 	popts.w = 1;
 	popts.x = 0;
-	for (a = 0; a < STACK_SIZE; a += PAGE_SIZE) {
+	for (a = 0; a < PROC_VAS_STACK_SIZE; a += PAGE_SIZE) {
 		void *sf;
 
 		if (!(sf = palloc(PAGE_SIZE, 0)))
 			goto panic;
 
-		if (vmap((*p)->pagetree, VADDR_STACK_START + a, sf, popts))
+		if (vmap((*p)->pagetree, PROC_VAS_STACK_START + a, sf, popts))
 			goto panic;
 	}
 
@@ -87,8 +87,8 @@ allocprocess(struct process **p, struct framenode *text)
 	popts.x = 1;
 	a = 0;
 	for (textfn = text; textfn; textfn = textfn->n) {
-		if (vmap((*p)->pagetree, VADDR_FIRST_FREE_PAGE + a, textfn->f,
-		         popts))
+		if (vmap((*p)->pagetree, PROC_VAS_FIRST_FREE_PAGE + a,
+		         textfn->f, popts))
 			goto panic;
 
 		a += PAGE_SIZE;
@@ -162,5 +162,5 @@ processes(void)
 void *
 trapframe(struct process *p)
 {
-	return paddr(p->pagetree, VADDR_TRAP_FRAME);
+	return paddr(p->pagetree, PROC_VAS_TRAP_FRAME);
 }

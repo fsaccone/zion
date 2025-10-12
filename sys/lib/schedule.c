@@ -64,7 +64,7 @@ schedule(void)
 				disableinterrupts();
 
 				preparetrapframe(paddr(p->pagetree,
-				                       VADDR_TRAP_FRAME),
+				                       PROC_VAS_TRAP_FRAME),
 				                 p->pagetree);
 				setctxpc(p->uctx, usermodebase());
 				switchctx(p->kctx, p->uctx);

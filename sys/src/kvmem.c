@@ -7,6 +7,7 @@
 #include <memswitch.h>
 #include <panic.h>
 #include <pmem.h>
+#include <process.h>
 #include <trampoline.h>
 #include <vmem.h>
 
@@ -25,7 +26,7 @@ kvmem(pageentry **ptree)
 	opts.r = 1;
 	opts.w = 0;
 	opts.x = 1;
-	if (vmap(*ptree, VADDR_TRAMPOLINE, trampolinebase(), opts))
+	if (vmap(*ptree, PROC_VAS_TRAMPOLINE, trampolinebase(), opts))
 		goto panic;
 
 	/* Map kernel and raminit. */
