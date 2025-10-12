@@ -31,7 +31,7 @@ pageentry *allocpagetable(void);
 s8 freepagetable(pageentry *ptable);
 
 /* Returns the physical address pointed by virtual address vaddr in page tree
-   ptree, or NULL in case of error. */
+   ptree, or NULL if it is not mapped. */
 void *paddr(pageentry *ptree, uptr vaddr);
 
 /* Validates page pointed by virtual address vaddr of page tree ptree using
