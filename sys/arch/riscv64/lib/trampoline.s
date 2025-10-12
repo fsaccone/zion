@@ -107,13 +107,13 @@ trampoline:
 	sd t5,  (27 * 8)(t0)
 	sd t6,  (28 * 8)(t0)
 
-	# Load rest of user trap frame.
-	ld t1, (29 * 8)(t0)
-	ld t2, (30 * 8)(t0)
-	ld t3, (31 * 8)(t0)
-	ld ra, (32 * 8)(t0)
-	ld sp, (34 * 8)(t0)
-	ld tp, (35 * 8)(t0)
+	# Load kernel context from trap frame.
+	ld t1, (29 * 8)(t0) # Kernel satp.
+	ld t2, (30 * 8)(t0) # Kernel interrupt entry point.
+	ld t3, (31 * 8)(t0) # User interrupt entry point.
+	ld ra, (32 * 8)(t0) # User interrupt return address.
+	ld sp, (34 * 8)(t0) # Kernel stack pointer.
+	ld tp, (35 * 8)(t0) # Kernel thread pointer.
 
 	# Set return value to current a0, so that it does not change if not
 	# done explicitly.
