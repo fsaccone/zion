@@ -8,28 +8,29 @@
 .global usermodebase
 
 # The following are the indexes of a trap frame as an array of u64:
-#   0-28 = (T)   Registers.
-#   29   = (T)   Kernel satp.
-#   30   = (I)   Kernel interrupt entry point.
-#   31   = (I)   User interrupt entry point.
-#   32   = (I)   User interrupt return address.
-#   33   = (I,T) User sepc.
-#   34   = (P)   Kernel stack pointer.
-#   35   = (P)   Kernel thread pointer.
-#   36   = (T)*  Return value.
-# The flags represent where each element is modified:
-#   - I: Modified in inittrapframe.
-#   - P: Modified in preparetrapframe.
-#   - T: Modified in trampoline (* Return value may always be modified).
+#   - Data saved by inittrapframe:
+#     0 = Kernel interrupt entry point.
+#     1 = User interrupt entry point.
+#     2 = User interrupt return address.
+#
+#   - Data saved by preparetrapframe and modified by trampolineret:
+#     10 = Kernel stack pointer.
+#     11 = Kernel thread pointer.
+#
+#   - Data saved by trampoline:
+#     20    = User sepc.
+#     21    = Kernel satp.
+#     22    = Return value.
+#     23-51 = Registers.
 
 inittrapframe:
 	# Save kernel interrupt entry point.
 	la t0, kernelinterrupt
-	sd t0, (30 * 8)(a0)
+	sd t0, (0 * 8)(a0)
 
 	# Save user interrupt entry point.
 	la t0, userinterrupt
-	sd t0, (31 * 8)(a0)
+	sd t0, (1 * 8)(a0)
 
 	# Save user interrupt return address as the difference between the
 	# physical addresses of trampolineret and trampoline plus the virtual
@@ -37,19 +38,19 @@ inittrapframe:
 	la  t0, trampoline
 	la  t1, trampolineret
 	sub t0, t1, t0
-	sd  t0, (32 * 8)(a0)
+	sd  t0, (2 * 8)(a0)
 
 	# Set user sepc to initial pc.
-	sd a1, (33 * 8)(a0)
+	sd a1, (20 * 8)(a0)
 
 	ret
 
 preparetrapframe:
 	# Set kernel stack pointer.
-	sd sp, (34 * 8)(a0)
+	sd sp, (10 * 8)(a0)
 
 	# Set kernel thread pointer.
-	sd tp, (35 * 8)(a0)
+	sd tp, (11 * 8)(a0)
 
 	# Set sscratch to given satp.
 	srli a1, a1, 12
@@ -60,7 +61,7 @@ preparetrapframe:
 	ret
 
 setreturn:
-	sd a1, (36 * 8)(a0)
+	sd a1, (22 * 8)(a0)
 
 	ret
 
@@ -69,40 +70,40 @@ trampoline:
 	# Swap t0 and sscratch, set t0 to the trap frame address and save t1.
 	csrrw t0, sscratch, t0
 	li    t0, 0x1000
-	sd    t1, (0 * 8)(t0)
+	sd    t1, (23 * 8)(t0)
 
 	# Save the original t0.
 	csrr t1, sscratch
-	sd   t1, (1 * 8)(t0)
+	sd   t1, (24 * 8)(t0)
 
 	# Save all the other registers.
-	sd ra,  (2  * 8)(t0)
-	sd sp,  (3  * 8)(t0)
-	sd gp,  (4  * 8)(t0)
-	sd tp,  (5  * 8)(t0)
-	sd s0,  (6  * 8)(t0)
-	sd s1,  (7  * 8)(t0)
-	sd s2,  (8  * 8)(t0)
-	sd s3,  (9  * 8)(t0)
-	sd s4,  (10 * 8)(t0)
-	sd s5,  (11 * 8)(t0)
-	sd s6,  (12 * 8)(t0)
-	sd s7,  (13 * 8)(t0)
-	sd s8,  (14 * 8)(t0)
-	sd s9,  (15 * 8)(t0)
-	sd s10, (16 * 8)(t0)
-	sd s11, (17 * 8)(t0)
-	sd a1,  (18 * 8)(t0)
-	sd a2,  (19 * 8)(t0)
-	sd a3,  (20 * 8)(t0)
-	sd a4,  (21 * 8)(t0)
-	sd a5,  (22 * 8)(t0)
-	sd a6,  (23 * 8)(t0)
-	sd t2,  (24 * 8)(t0)
-	sd t3,  (25 * 8)(t0)
-	sd t4,  (26 * 8)(t0)
-	sd t5,  (27 * 8)(t0)
-	sd t6,  (28 * 8)(t0)
+	sd ra,  (25 * 8)(t0)
+	sd sp,  (26 * 8)(t0)
+	sd gp,  (27 * 8)(t0)
+	sd tp,  (28 * 8)(t0)
+	sd s0,  (29 * 8)(t0)
+	sd s1,  (30 * 8)(t0)
+	sd s2,  (31 * 8)(t0)
+	sd s3,  (32 * 8)(t0)
+	sd s4,  (33 * 8)(t0)
+	sd s5,  (34 * 8)(t0)
+	sd s6,  (35 * 8)(t0)
+	sd s7,  (36 * 8)(t0)
+	sd s8,  (37 * 8)(t0)
+	sd s9,  (38 * 8)(t0)
+	sd s10, (39 * 8)(t0)
+	sd s11, (40 * 8)(t0)
+	sd a1,  (41 * 8)(t0)
+	sd a2,  (42 * 8)(t0)
+	sd a3,  (43 * 8)(t0)
+	sd a4,  (44 * 8)(t0)
+	sd a5,  (45 * 8)(t0)
+	sd a6,  (46 * 8)(t0)
+	sd t2,  (47 * 8)(t0)
+	sd t3,  (48 * 8)(t0)
+	sd t4,  (49 * 8)(t0)
+	sd t5,  (50 * 8)(t0)
+	sd t6,  (51 * 8)(t0)
 
 	# If the cause of the interrupt was an ecall exception, set sepc to the
 	# instruction right after ecall.
@@ -118,33 +119,36 @@ trampoline:
 
 	# Save sepc.
 	csrr t1, sepc
-	sd   t1, (33 * 8)(t0)
+	sd   t1, (20 * 8)(t0)
 
-	# Load kernel context from trap frame.
-	ld t1, (29 * 8)(t0) # Kernel satp.
-	ld t2, (30 * 8)(t0) # Kernel interrupt entry point.
-	ld t3, (31 * 8)(t0) # User interrupt entry point.
-	ld ra, (32 * 8)(t0) # User interrupt return address.
-	ld sp, (34 * 8)(t0) # Kernel stack pointer.
-	ld tp, (35 * 8)(t0) # Kernel thread pointer.
+	# Load fixed kernel context from trap frame.
+	ld t1, (0 * 8)(t0) # Kernel interrupt entry point.
+	ld t2, (1 * 8)(t0) # User interrupt entry point.
+	ld ra, (2 * 8)(t0) # User interrupt return address.
+
+	# Load kernel context saved from last trampolineret or
+	# preparetrapframe.
+	ld sp, (10 * 8)(t0) # Kernel stack pointer.
+	ld tp, (11 * 8)(t0) # Kernel thread pointer.
+	ld t3, (21 * 8)(t0) # Kernel satp.
 
 	# Set return value to current a0, so that it does not change if not
 	# done explicitly.
-	sd a0, (36 * 8)(t0)
+	sd a0, (22 * 8)(t0)
 
-	# Switch to kernel satp and save the old satp to t1.
+	# Switch to kernel satp and save the old satp to t3.
 	sfence.vma zero, zero
-	csrrw      t1,   satp, t1
+	csrrw      t3,   satp, t3
 	sfence.vma zero, zero
 
 	# Set stvec to kernel interrupt entry point.
-	csrw stvec, t2
+	csrw stvec, t1
 
 	# Save the old satp to sscratch.
-	csrw sscratch, t1
+	csrw sscratch, t3
 
 	# Call user interrupt entry point: ra is already set to trampolineret.
-	jalr t3
+	jalr t2
 
 trampolineret:
 	# Set s0 to 1 to mark the coming from trampoline, and not usermode.
@@ -181,14 +185,14 @@ usermode:
 	sfence.vma zero, zero
 
 	# Load sepc.
-	ld   t0,   (33 * 8)(t6)
+	ld   t0,   (20 * 8)(t6)
 	csrw sepc, t0
 
 	# Set stvec to trampoline.
 	csrwi stvec, 0x0
 
 	# Save the kernel satp to the trap frame.
-	sd t1, (29 * 8)(t6)
+	sd t1, (21 * 8)(t6)
 
 	# Only save stack pointer and thread pointer to trap frame if we come
 	# from trampoline, not usermode. If we did come from usermode, these
@@ -196,43 +200,43 @@ usermode:
 	# to inittrapframe, also the jump to usermode presumably happened
 	# through a switchctx call, making the values of sp and tp wrong.
 	beqz s0, 1f
-	sd   sp, (34 * 8)(t6)
-	sd   tp, (35 * 8)(t6)
+	sd   sp, (10 * 8)(t6)
+	sd   tp, (11 * 8)(t6)
 
 1:
 	# Load return value from trap frame to a0.
-	ld a0, (36 * 8)(t6)
+	ld a0, (22 * 8)(t6)
 
 	# Load the saved registers from the now available user trap frame.
-	ld t1,  (0  * 8)(t6)
-	ld t0,  (1  * 8)(t6)
-	ld ra,  (2  * 8)(t6)
-	ld sp,  (3  * 8)(t6)
-	ld gp,  (4  * 8)(t6)
-	ld tp,  (5  * 8)(t6)
-	ld s0,  (6  * 8)(t6)
-	ld s1,  (7  * 8)(t6)
-	ld s2,  (8  * 8)(t6)
-	ld s3,  (9  * 8)(t6)
-	ld s4,  (10 * 8)(t6)
-	ld s5,  (11 * 8)(t6)
-	ld s6,  (12 * 8)(t6)
-	ld s7,  (13 * 8)(t6)
-	ld s8,  (14 * 8)(t6)
-	ld s9,  (15 * 8)(t6)
-	ld s10, (16 * 8)(t6)
-	ld s11, (17 * 8)(t6)
-	ld a1,  (18 * 8)(t6)
-	ld a2,  (19 * 8)(t6)
-	ld a3,  (20 * 8)(t6)
-	ld a4,  (21 * 8)(t6)
-	ld a5,  (22 * 8)(t6)
-	ld a6,  (23 * 8)(t6)
-	ld t2,  (24 * 8)(t6)
-	ld t3,  (25 * 8)(t6)
-	ld t4,  (26 * 8)(t6)
-	ld t5,  (27 * 8)(t6)
-	ld t6,  (28 * 8)(t6)
+	ld t1,  (23 * 8)(t6)
+	ld t0,  (24 * 8)(t6)
+	ld ra,  (25 * 8)(t6)
+	ld sp,  (26 * 8)(t6)
+	ld gp,  (27 * 8)(t6)
+	ld tp,  (28 * 8)(t6)
+	ld s0,  (29 * 8)(t6)
+	ld s1,  (30 * 8)(t6)
+	ld s2,  (31 * 8)(t6)
+	ld s3,  (32 * 8)(t6)
+	ld s4,  (33 * 8)(t6)
+	ld s5,  (34 * 8)(t6)
+	ld s6,  (35 * 8)(t6)
+	ld s7,  (36 * 8)(t6)
+	ld s8,  (37 * 8)(t6)
+	ld s9,  (38 * 8)(t6)
+	ld s10, (39 * 8)(t6)
+	ld s11, (40 * 8)(t6)
+	ld a1,  (41 * 8)(t6)
+	ld a2,  (42 * 8)(t6)
+	ld a3,  (43 * 8)(t6)
+	ld a4,  (44 * 8)(t6)
+	ld a5,  (45 * 8)(t6)
+	ld a6,  (46 * 8)(t6)
+	ld t2,  (47 * 8)(t6)
+	ld t3,  (48 * 8)(t6)
+	ld t4,  (49 * 8)(t6)
+	ld t5,  (50 * 8)(t6)
+	ld t6,  (51 * 8)(t6)
 
 	# Return
 	sret
