@@ -21,17 +21,17 @@
                                   & ~PAGE_ENTRY_GET_W(e) \
                                   & ~PAGE_ENTRY_GET_X(e))
 
-#define PAGE_ENTRY_ADD_VALID(e)    ((e) | 1)
-#define PAGE_ENTRY_ADD_R(e)        ((e) | (1 << 1))
-#define PAGE_ENTRY_ADD_W(e)        ((e) | (1 << 2))
-#define PAGE_ENTRY_ADD_X(e)        ((e) | (1 << 3))
-#define PAGE_ENTRY_ADD_USER(e)     ((e) | (1 << 4))
+#define PAGE_ENTRY_ADD_VALID(e) ((e) | 1)
+#define PAGE_ENTRY_ADD_U(e)     ((e) | (1 << 4))
+#define PAGE_ENTRY_ADD_R(e)     ((e) | (1 << 1))
+#define PAGE_ENTRY_ADD_W(e)     ((e) | (1 << 2))
+#define PAGE_ENTRY_ADD_X(e)     ((e) | (1 << 3))
 
-#define PAGE_ENTRY_REM_VALID(e)    ((e) & ~1)
-#define PAGE_ENTRY_REM_R(e)        ((e) & ~(1 << 1))
-#define PAGE_ENTRY_REM_W(e)        ((e) & ~(1 << 2))
-#define PAGE_ENTRY_REM_X(e)        ((e) & ~(1 << 3))
-#define PAGE_ENTRY_REM_USER(e)     ((e) & ~(1 << 4))
+#define PAGE_ENTRY_REM_VALID(e) ((e) & ~1)
+#define PAGE_ENTRY_REM_U(e)     ((e) & ~(1 << 4))
+#define PAGE_ENTRY_REM_R(e)     ((e) & ~(1 << 1))
+#define PAGE_ENTRY_REM_W(e)     ((e) & ~(1 << 2))
+#define PAGE_ENTRY_REM_X(e)     ((e) & ~(1 << 3))
 
 #define PAGE_ENTRY_SET_PADDR(e, paddr) ((e) | (((paddr) >> 12) << 10))
 #define PAGE_ENTRY_SET_WALKABLE(e)     (PAGE_ENTRY_ADD_VALID(e) \
