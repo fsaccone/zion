@@ -10,15 +10,14 @@
 #include <trampoline.h>
 #include <vmem.h>
 
-static struct processnode *processlist            = NULL;
-static u8                  pidbitmap[CEIL(PID_MAX, 8) / 8] = { 0 };
+static struct process *processlist = NULL;
+static u8 pidbitmap[CEIL(PID_MAX, 8) / 8] = { 0 };
 
 s8
 createprocess(struct process **p, struct process *parent)
 {
 	struct pageoptions opts = { 0 };
 	void *tframe;
-	struct processnode *pn;
 
 	if (!(*p = palloc(sizeof(struct process), 0)))
 		goto panic;
@@ -65,13 +64,9 @@ createprocess(struct process **p, struct process *parent)
 
 	(*p)->parent = parent;
 
-	if (!(pn = palloc(sizeof(struct processnode), 0)))
-		goto panic;
-
-	pn->p = *p;
-
-	pn->n = processlist;
-	processlist = pn;
+	/* Append to processlist. */
+	(*p)->n = processlist;
+	processlist = *p;
 
 	return 0;
 
@@ -80,7 +75,7 @@ panic:
 	return -1;
 }
 
-struct processnode *
+struct process *
 processes(void)
 {
 	return processlist;
