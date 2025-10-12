@@ -20,7 +20,7 @@ static s8 allocprocpage(void **f, uptr v, struct process *p);
 static s8 allocprocess(struct process **p);
 
 static struct processnode *processlist            = NULL;
-static u8                  pidbitmap[CEIL((u16)(~0), 8) / 8] = { 0 };
+static u8                  pidbitmap[CEIL(PID_MAX, 8) / 8] = { 0 };
 
 s8
 allocprocpage(void **f, uptr v, struct process *p)
@@ -56,7 +56,7 @@ allocprocess(struct process **p)
 		goto panic;
 
 	/* Allocate smallest free PID. */
-	for ((*p)->pid = 0; (*p)->pid < (u16)(~0); (*p)->pid++) {
+	for ((*p)->pid = 0; (*p)->pid < PID_MAX; (*p)->pid++) {
 		if (BITMAPGET(pidbitmap, (*p)->pid))
 			continue;
 
@@ -65,7 +65,7 @@ allocprocess(struct process **p)
 		break;
 	}
 
-	if ((*p)->pid == (u16)(~0)) {
+	if ((*p)->pid == PID_MAX) {
 		setpanicmsg("Maximum number of processes reached.");
 		goto panic;
 	}
