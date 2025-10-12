@@ -27,7 +27,6 @@ nextschedule(void)
 	if (!coreprocesses[c] || coreprocesses[c]->state != RUNNING)
 		return;
 
-
 	switchctx(coreprocesses[c]->uctx, coreprocesses[c]->kctx);
 }
 
