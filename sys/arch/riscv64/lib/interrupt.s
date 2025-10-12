@@ -60,11 +60,6 @@ routeinterrupt:
 2:
 	# If cause is ecall.
 
-	# Set sepc to the instruction after ecall.
-	csrr t0,   sepc
-	addi t0,   t0, 4
-	csrw sepc, t0
-
 	# The a0 register already contains the system call code.
 	# Setup args array and set a1 to its address.
 	la t0, syscallargs

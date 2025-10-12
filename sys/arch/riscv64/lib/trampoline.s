@@ -107,6 +107,18 @@ trampoline:
 	sd t5,  (27 * 8)(t0)
 	sd t6,  (28 * 8)(t0)
 
+	# If the cause of the interrupt was an ecall exception, set sepc to the
+	# instruction right after ecall.
+	csrr t1, scause
+	li   t2, 8
+	beq  t1, t2, 1f
+	j 2f
+1:
+	csrr t1,   sepc
+	addi t1,   t1, 4
+	csrw sepc, t1
+2:
+
 	# Save sepc.
 	csrr t1, sepc
 	sd   t1, (33 * 8)(t0)
