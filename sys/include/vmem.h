@@ -17,7 +17,7 @@ struct pageoptions {
 	u8 w : 1;
 
 	/* If 1, the page is executable. */
-	u8 x: 1;
+	u8 x : 1;
 
 	u8 reserved : 4;
 };
