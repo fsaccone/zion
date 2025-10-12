@@ -10,9 +10,10 @@
 #include <trampoline.h>
 #include <vmem.h>
 
-/* Allocates a frame, sets f to its address and appends it to the allocated
-   linked list of process p. Returns -1 in case of error or 0 otherwise. */
-static s8 allocprocpage(void **f, struct process *p);
+/* Allocates a frame, sets f to its address and appends it to the vas linked
+   list of process p using v as the virtual address mapped to f. Returns -1 in
+   case of error or 0 otherwise. */
+static s8 allocprocpage(void **f, uptr v, struct process *p);
 
 /* Allocates process and sets pointer p to it after initializing it. Returns -1
    in case of error or 0 otherwise */
@@ -22,20 +23,21 @@ static struct processnode *processlist            = NULL;
 static u8                  pidbitmap[CEIL((u16)(~0), 8) / 8] = { 0 };
 
 s8
-allocprocpage(void **f, struct process *p)
+allocprocpage(void **f, uptr v, struct process *p)
 {
-	struct framenode *fn;
+	struct pagenode *pn;
 
 	if (!(*f = palloc(PAGE_SIZE, 0)))
 		goto panic;
 
-	if (!(fn = palloc(sizeof(struct framenode), 0)))
+	if (!(pn = palloc(sizeof(struct pagenode), 0)))
 		goto panic;
 
-	fn->f = *f;
+	pn->f = *f;
+	pn->p = v;
 
-	fn->n = p->allocated;
-	p->allocated = fn;
+	pn->n = p->vas;
+	p->vas = pn;
 
 	return 0;
 
@@ -89,7 +91,7 @@ allocprocess(struct process **p)
 	popts.r = 1;
 	popts.w = 1;
 	popts.x = 0;
-	if (allocprocpage(&tframe, *p))
+	if (allocprocpage(&tframe, PROC_VAS_FIRST_FREE_PAGE, *p))
 		goto panic;
 	inittrapframe(tframe, PROC_VAS_FIRST_FREE_PAGE, PROC_VAS_TRAMPOLINE);
 	if (vmap((*p)->pagetree, PROC_VAS_TRAP_FRAME, tframe, popts))
