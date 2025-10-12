@@ -12,6 +12,7 @@
 #     0 = Kernel interrupt entry point.
 #     1 = User interrupt entry point.
 #     2 = User interrupt return address.
+#     3 = Trampoline virtual address.
 #
 #   - Data saved by preparetrapframe and modified by trampolineret:
 #     10 = Kernel stack pointer.
@@ -32,16 +33,21 @@ inittrapframe:
 	la t0, userinterrupt
 	sd t0, (1 * 8)(a0)
 
-	# Save user interrupt return address as the difference between the
-	# physical addresses of trampolineret and trampoline plus the virtual
-	# address of trampoline, which is 0x0.
+	# Save user interrupt return address as the virtual address of
+	# trampolineret: that is the difference between the physical addresses
+	# of trampolineret and trampoline plus the virtual address of
+	# trampoline.
 	la  t0, trampoline
 	la  t1, trampolineret
 	sub t0, t1, t0
+	add t0, t0, a2
 	sd  t0, (2 * 8)(a0)
 
 	# Set user sepc to initial pc.
 	sd a1, (20 * 8)(a0)
+
+	# Save trampoline virtual address.
+	sd a2, (3 * 8)(a0)
 
 	ret
 
@@ -188,8 +194,9 @@ usermode:
 	ld   t0,   (20 * 8)(t6)
 	csrw sepc, t0
 
-	# Set stvec to trampoline.
-	csrwi stvec, 0x0
+	# Set stvec to trampoline virtual address.
+	ld   t0,    (3 * 8)(t6)
+	csrw stvec, t0
 
 	# Save the kernel satp to the trap frame.
 	sd t1, (21 * 8)(t6)
@@ -248,12 +255,16 @@ trampolinebase:
 	ret
 
 usermodebase:
+	# Save a0 to s0.
+	mv s0, a0
+
 	la t0, trampoline
 	la t1, usermode
 
-	# Since the trampoline it at address 0x0, just get the difference
-	# between the phyisical addresses of trampoline and usermode to get the
-	# virtual address of usermode.
+	# Add the virtual address of trampoline to the difference between the
+	# physical addresses of usermode and trampoline to get the virtual
+	# address of usermode.
 	sub a0, t1, t0
+	add a0, a0, s0
 
 	ret
