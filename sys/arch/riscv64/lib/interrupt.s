@@ -4,7 +4,6 @@
 .global interruptsenabled
 .global kernelinterrupt
 .global userinterrupt
-.global waitforinterrupt
 
 # Checks the value of scause to call the correct handler.
 routeinterrupt:
@@ -227,9 +226,6 @@ userinterrupt:
 	ld   ra, 0(sp)
 	addi sp, sp, 8
 	ret
-
-waitforinterrupt:
-	wfi
 
 .section .data
 

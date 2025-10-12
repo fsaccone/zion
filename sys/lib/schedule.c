@@ -39,8 +39,6 @@ schedule(void)
 	struct processnode *pn;
 
 	for(;;) {
-		u8 found = 0;
-
 		for (pn = processes(); pn; pn = pn->n) {
 			struct process *p = pn->p;
 
@@ -68,17 +66,11 @@ schedule(void)
 				         usermodebase(PROC_VAS_TRAMPOLINE));
 				switchctx(p->kctx, p->uctx);
 
-				found = 1;
-
 				break;
 			default:
 			}
 
 			unlock(&p->lock);
 		}
-
-		/* No process, out of all, was found for running core. */
-		if (!found)
-			waitforinterrupt();
 	}
 }
