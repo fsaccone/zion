@@ -62,10 +62,6 @@ allocprocess(struct process **p, struct framenode *text)
 		a += PAGE_SIZE;
 	}
 
-	/* Set program counter and stack pointer. */
-	setctxpc((*p)->uctx, (void *)VADDR_FIRST_FREE_PAGE);
-	setctxsp((*p)->uctx, (void *)VADDR_STACK_END);
-
 	return 0;
 
 panic:

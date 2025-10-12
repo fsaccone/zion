@@ -48,7 +48,7 @@ allocvas(pageentry *ptree, u8 user)
 	popts.x = 0;
 	if (!(tframe = palloc(PAGE_SIZE, 0)))
 		goto panic;
-	inittrapframe(tframe);
+	inittrapframe(tframe, VADDR_FIRST_FREE_PAGE, VADDR_STACK_END);
 	if (vmap(ptree, VADDR_TRAP_FRAME, tframe, popts))
 		goto panic;
 
