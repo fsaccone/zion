@@ -23,7 +23,7 @@ static s8 allocprocess(struct process **p);
 static u8 unusedpid(u16 *o);
 
 static struct processnode *processlist            = NULL;
-static u8                  pidbitmap[PID_MAX / 8] = { 0 };
+static u8                  pidbitmap[CEIL(PID_MAX, 8) / 8] = { 0 };
 
 s8
 allocprocpage(void **f, struct process *p)
