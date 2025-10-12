@@ -102,8 +102,8 @@ unusedpid(u16 *o)
 	u16 i;
 
 	for (i = 0; i < PID_MAX; i++) {
-		if (!(pidbitmap[i / 8] & (1 << (i % 8)))) {
-			pidbitmap[i / 8] |= (1 << (i % 8));
+		if (!BITMAPGET(pidbitmap, i)) {
+			BITMAPADD(pidbitmap, i);
 			*o = i;
 			return 0;
 		}
