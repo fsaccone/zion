@@ -7,6 +7,7 @@
 #include <memswitch.h>
 #include <panic.h>
 #include <pmem.h>
+#include <trampoline.h>
 #include <vmem.h>
 
 s8
@@ -19,8 +20,12 @@ kvmem(pageentry **ptree)
 	if (!(*ptree = allocpagetable()))
 		goto panic;
 
-	/* Do default initialization. */
-	if (allocvas(*ptree, 1))
+	/* Map trampoline. */
+	opts.u = 0;
+	opts.r = 1;
+	opts.w = 0;
+	opts.x = 1;
+	if (vmap(*ptree, VADDR_TRAMPOLINE, trampolinebase(), opts))
 		goto panic;
 
 	/* Map kernel and raminit. */
