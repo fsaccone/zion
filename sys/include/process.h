@@ -4,7 +4,6 @@
 #include <arch/ctx.h>
 #include <arch/page.h>
 #include <arch/types.h>
-#include <pmem.h>
 #include <spinlock.h>
 
 /* Process virtual address space:
@@ -37,6 +36,19 @@ enum processstate {
 	TERMINATED,
 };
 
+/* Node of a linked list of pages. */
+struct pagenode {
+	/* The virtual address of the page. */
+	uptr p;
+
+	/* The physical address of the allocated frame pointed by the p virtual
+	   address, or NULL if the frame pointed by v is not allocated. */
+	void *f;
+
+	/* The next node. */
+	struct pagenode *n;
+};
+
 struct processnode {
 	struct process *p;
 	struct processnode *n;
@@ -49,15 +61,15 @@ struct process {
 	/* The spinlock of the process, used by the scheduler. */
 	struct lock lock;
 
-	/* A linked list containing the frames which were allocated for the
-	   process. */
-	struct framenode *allocated;
-
 	/* The process state. */
 	enum processstate state;
 
 	/* The pointer to the root table of the virtual page tree. */
 	pageentry *pagetree;
+
+	/* The linked list containing the mapped virtual address space
+	   pages. */
+	struct pagenode *vas;
 
 	/* The context of the core before switching to the process. */
 	u8 kctx[CTX_SIZE];
