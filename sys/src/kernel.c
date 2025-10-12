@@ -10,6 +10,7 @@
 #include <schedule.h>
 #include <string.h>
 #include <timer.h>
+#include <vmem.h>
 
 #include "mem.h"
 #include "kvmem.h"
@@ -28,7 +29,13 @@ static pageentry *ptree = NULL;
 s8
 core0(void)
 {
-	struct framenode *riframes;
+	struct process *rip;
+	struct pageoptions riopts = {
+		.u = 1,
+		.r = 1,
+		.w = 0,
+		.x = 1,
+	};
 
 	initconsole();
 
@@ -39,9 +46,18 @@ core0(void)
 	if (freeallmem())
 		goto panic;
 
+	if (kvmem(&ptree))
+		goto panic;
+
+	if (createprocess(&rip, NULL))
+		goto panic;
+
 	(void)consolewrite(RAMINIT_LOG_PRE);
 
-	if (raminitframes(&riframes))
+	if (vmemcpy(PROC_VAS_FIRST_FREE_PAGE, rip->pagetree,
+	            RAMINIT_BASE, ptree,
+	            CEIL(RAMINIT_BINARY_SIZE, PAGE_SIZE) / PAGE_SIZE,
+	            riopts))
 		goto panic;
 
 	(void)consolewrite("[");
@@ -49,12 +65,6 @@ core0(void)
 	(void)consolewrite(" - ");
 	(void)consolewriteb16(RAMINIT_BASE + RAMINIT_BINARY_SIZE);
 	(void)consolewrite("]\n");
-
-	if (createprocess(NULL))
-		goto panic;
-
-	if (kvmem(&ptree))
-		goto panic;
 
 	return 0;
 
