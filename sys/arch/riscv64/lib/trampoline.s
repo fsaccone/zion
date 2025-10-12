@@ -8,7 +8,7 @@
 .global usermodebase
 
 # The following are the indexes of a trap frame as an array of u64:
-#   0-28 = (I,T) Registers.
+#   0-28 = (T)   Registers.
 #   29   = (T)   Kernel satp.
 #   30   = (I)   Kernel interrupt entry point.
 #   31   = (I)   User interrupt entry point.
@@ -41,9 +41,6 @@ inittrapframe:
 
 	# Set user sepc to initial pc.
 	sd a1, (33 * 8)(a0)
-
-	# Set stack pointer of user context to initial sp.
-	sd a2, (3 * 8)(a0)
 
 	ret
 
