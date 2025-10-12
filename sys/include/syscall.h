@@ -12,6 +12,6 @@
 #define SYSCALL_REBOOT   1
 
 /* The system call handler. System calls only come from user mode. */
-void syscall(u16 type, ureg *args);
+void syscall(u16 code, ureg *args);
 
 #endif
