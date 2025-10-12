@@ -88,7 +88,7 @@ allocprocess(struct process **p, struct framenode *text)
 	popts.x = 0;
 	if (allocprocpage(&tframe, *p))
 		goto panic;
-	inittrapframe(tframe, PROC_VAS_FIRST_FREE_PAGE);
+	inittrapframe(tframe, PROC_VAS_FIRST_FREE_PAGE, PROC_VAS_TRAMPOLINE);
 	if (vmap((*p)->pagetree, PROC_VAS_TRAP_FRAME, tframe, popts))
 		goto panic;
 

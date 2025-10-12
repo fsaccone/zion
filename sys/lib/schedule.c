@@ -64,7 +64,8 @@ schedule(void)
 				disableinterrupts();
 
 				preparetrapframe(trapframe(p), p->pagetree);
-				setctxpc(p->uctx, usermodebase());
+				setctxpc(p->uctx,
+				         usermodebase(PROC_VAS_TRAMPOLINE));
 				switchctx(p->kctx, p->uctx);
 
 				found = 1;

@@ -5,8 +5,9 @@
 #include <arch/types.h>
 
 /* Initializes trap frame tframe using startpc as the virtual address of the
-   initial program counter. */
-void inittrapframe(void *tframe, uptr startpc);
+   initial program counter and trampoline as the virtual address of the
+   trampoline page. */
+void inittrapframe(void *tframe, uptr startpc, uptr trampoline);
 
 /* Prepares trap frame tframe and the current context for a jump to usermode,
    using user page tree ptree. It is important to run this right before the
@@ -37,7 +38,8 @@ void *trampolinebase(void);
    marking the return to the user code. */
 void usermode(void);
 
-/* Returns the virtual address of usermode in a virtual address space. */
-void *usermodebase(void);
+/* Returns the virtual address of usermode given that the virtual address of
+   the trampoline page is trampoline. */
+void *usermodebase(uptr trampoline);
 
 #endif
