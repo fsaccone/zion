@@ -50,7 +50,7 @@ core0(void)
 	(void)consolewriteb16(RAMINIT_BASE + RAMINIT_BINARY_SIZE);
 	(void)consolewrite("]\n");
 
-	if (createprocess(riframes, NULL))
+	if (createprocess(NULL))
 		goto panic;
 
 	if (kvmem(&ptree))
