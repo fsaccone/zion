@@ -38,7 +38,6 @@ OBJS_LIB = arch/$(ARCH)/lib/atomic.o \
 OBJS_SRC = src/kernel.o \
            src/kvmem.o \
            src/mem.o \
-           src/raminit.o \
 
 # All object files.
 OBJS = $(OBJS_START) $(OBJS_ASTART) $(OBJS_LIB) $(OBJS_SRC)
