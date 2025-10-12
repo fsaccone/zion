@@ -8,7 +8,7 @@
 .global usermodebase
 
 # The following are the indexes of a trap frame as an array of u64:
-#   0-28 = (T)   Registers.
+#   0-28 = (I,T) Registers.
 #   29   = (T)   Kernel satp.
 #   30   = (I)   Kernel interrupt entry point.
 #   31   = (I)   User interrupt entry point.
