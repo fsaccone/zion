@@ -124,7 +124,9 @@ trampoline:
 	sd a0, (36 * 8)(t0)
 
 	# Switch to kernel satp and save the old satp to t1.
-	csrrw t1, satp, t1
+	sfence.vma zero, zero
+	csrrw      t1,   satp, t1
+	sfence.vma zero, zero
 
 	# Set stvec to kernel interrupt entry point.
 	csrw stvec, t2
@@ -164,8 +166,10 @@ usermode:
 	li t6, 0x1000
 
 	# Load the old satp and switch to it, saving the kernel satp to t1.
-	csrr  t0, sscratch
-	csrrw t1, satp, t0
+	csrr       t0,   sscratch
+	sfence.vma zero, zero
+	csrrw      t1,   satp, t0
+	sfence.vma zero, zero
 
 	# Load sepc.
 	ld   t0,   (33 * 8)(t6)
