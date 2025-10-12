@@ -9,12 +9,6 @@
 
 #define NULL ((void *)0)
 
-/* Node of linked list of pointers. */
-struct framenode {
-	void *f;
-	struct framenode *n;
-};
-
 /* Allocate as much adjacent frames as needed to fit size s, fill with zeros
    and return the pointer to the first one, which will be aligned to align or
    to PAGE_SIZE if align is 0. Returns NULL in case of error. */
