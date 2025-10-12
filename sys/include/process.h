@@ -7,9 +7,6 @@
 #include <pmem.h>
 #include <spinlock.h>
 
-/* Maximum 16 bits unsigned integer. */
-#define PID_MAX 65535
-
 /* Process virtual address space:
      + 0x0
      |
