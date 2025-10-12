@@ -187,7 +187,7 @@ usermode:
 	sd   tp, (35 * 8)(t6)
 
 1:
-	# Load return value from stack frame to a0.
+	# Load return value from trap frame to a0.
 	ld a0, (36 * 8)(t6)
 
 	# Load the saved registers from the now available user trap frame.
