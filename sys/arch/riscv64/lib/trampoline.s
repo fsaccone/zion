@@ -107,6 +107,10 @@ trampoline:
 	sd t5,  (27 * 8)(t0)
 	sd t6,  (28 * 8)(t0)
 
+	# Save sepc.
+	csrr t1, sepc
+	sd   t1, (33 * 8)(t0)
+
 	# Load kernel context from trap frame.
 	ld t1, (29 * 8)(t0) # Kernel satp.
 	ld t2, (30 * 8)(t0) # Kernel interrupt entry point.
