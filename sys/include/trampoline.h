@@ -4,8 +4,9 @@
 #include <arch/page.h>
 #include <arch/types.h>
 
-/* Initializes trap frame tframe. */
-void inittrapframe(void *tframe);
+/* Initializes trap frame tframe using startpc as the virtual address of the
+   initial program counter and sp as the initial stack pointer. */
+void inittrapframe(void *tframe, uptr startpc, uptr sp);
 
 /* Prepares trap frame tframe and the current context for a jump to usermode,
    using user page tree ptree. It is important to run this right before the

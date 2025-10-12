@@ -39,9 +39,11 @@ inittrapframe:
 	sub t0, t1, t0
 	sd  t0, (32 * 8)(a0)
 
-	# Set user sepc to first user virtual address.
-	li t0, 0x2000
-	sd t0, (33 * 8)(a0)
+	# Set user sepc to initial pc.
+	sd a1, (33 * 8)(a0)
+
+	# Set stack pointer of user context to initial sp.
+	sd a2, (3 * 8)(a0)
 
 	ret
 
