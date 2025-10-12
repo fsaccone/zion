@@ -73,9 +73,9 @@ struct process {
 };
 
 /* Allocates a child process of process parent, or a standalone process with no
-   parent if it is NULL, of state READY with program contained in the program
-   linked list of frames. Returns -1 in case of error or 0 otherwise. */
-s8 createprocess(struct framenode *program, struct process *parent);
+   parent if it is NULL, of state READY. Returns -1 in case of error or 0
+   otherwise. */
+s8 createprocess(struct process *parent);
 
 /* Returns the linked list containing all the processes. */
 struct processnode *processes(void);
