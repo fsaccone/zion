@@ -27,7 +27,6 @@ nextschedule(void)
 	if (!coreprocesses[c] || coreprocesses[c]->state != RUNNING)
 		return;
 
-	coreprocesses[c]->state = READY;
 
 	switchctx(coreprocesses[c]->uctx, coreprocesses[c]->kctx);
 }
@@ -65,6 +64,11 @@ schedule(void)
 				setctxpc(p->uctx,
 				         usermodebase(PROC_VAS_TRAMPOLINE));
 				switchctx(p->kctx, p->uctx);
+
+				/* Got back here through a nextschedule call
+				   from the core which was owning the
+				   process. */
+				coreprocesses[c]->state = READY;
 
 				break;
 			default:
