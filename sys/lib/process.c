@@ -18,10 +18,6 @@ static s8 allocprocpage(void **f, struct process *p);
    in case of error or 0 otherwise */
 static s8 allocprocess(struct process **p);
 
-/* Finds the first unused PID from pidbitmap, sets it to used and sets o to it.
-   Returns 1 if the bit map is full or 0 otherwise. */
-static u8 unusedpid(u16 *o);
-
 static struct processnode *processlist            = NULL;
 static u8                  pidbitmap[CEIL(PID_MAX, 8) / 8] = { 0 };
 
@@ -57,7 +53,17 @@ allocprocess(struct process **p)
 	if (!(*p = palloc(sizeof(struct process), 0)))
 		goto panic;
 
-	if (unusedpid(&(*p)->pid)) {
+	/* Allocate smallest free PID. */
+	for ((*p)->pid = 0; (*p)->pid < PID_MAX; (*p)->pid++) {
+		if (BITMAPGET(pidbitmap, (*p)->pid))
+			continue;
+
+		BITMAPADD(pidbitmap, (*p)->pid);
+
+		break;
+	}
+
+	if ((*p)->pid == PID_MAX) {
 		setpanicmsg("PID_MAX exceeded.");
 		goto panic;
 	}
@@ -94,22 +100,6 @@ allocprocess(struct process **p)
 panic:
 	tracepanicmsg("allocprocess");
 	return -1;
-}
-
-u8
-unusedpid(u16 *o)
-{
-	u16 i;
-
-	for (i = 0; i < PID_MAX; i++) {
-		if (!BITMAPGET(pidbitmap, i)) {
-			BITMAPADD(pidbitmap, i);
-			*o = i;
-			return 0;
-		}
-	}
-
-	return 1;
 }
 
 s8
