@@ -13,6 +13,7 @@
 
 #define PAGE_ENTRY_GET_VALID(e)    ((e) & 1)
 #define PAGE_ENTRY_GET_PADDR(e)    ((((e) >> 10) << 12))
+#define PAGE_ENTRY_GET_U(e)        (((e) >> 4) & 1)
 #define PAGE_ENTRY_GET_R(e)        (((e) >> 1) & 1)
 #define PAGE_ENTRY_GET_W(e)        (((e) >> 2) & 1)
 #define PAGE_ENTRY_GET_X(e)        (((e) >> 3) & 1)
