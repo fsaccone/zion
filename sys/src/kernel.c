@@ -4,8 +4,10 @@
 #include <console.h>
 #include <core.h>
 #include <interrupt.h>
+#include <machine/mem.h>
 #include <memswitch.h>
 #include <panic.h>
+#include <pmem.h>
 #include <process.h>
 #include <schedule.h>
 #include <string.h>
@@ -15,7 +17,6 @@
 #include "mem.h"
 #include "kvmem.h"
 #include "logs.h"
-#include "raminit.h"
 
 /* The main function of core 0. Returns -1 in case of error or 0 otherwise. */
 static s8 core0(void);
@@ -55,15 +56,15 @@ core0(void)
 	(void)consolewrite(RAMINIT_LOG_PRE);
 
 	if (vmemcpy(PROC_VAS_FIRST_FREE_PAGE, rip->pagetree,
-	            RAMINIT_BASE, ptree,
-	            CEIL(RAMINIT_BINARY_SIZE, PAGE_SIZE) / PAGE_SIZE,
+	            RAMINIT_START, ptree,
+	            CEIL(RAMINIT_SIZE, PAGE_SIZE) / PAGE_SIZE,
 	            riopts))
 		goto panic;
 
 	(void)consolewrite("[");
-	(void)consolewriteb16(RAMINIT_BASE);
+	(void)consolewriteb16(RAMINIT_START);
 	(void)consolewrite(" - ");
-	(void)consolewriteb16(RAMINIT_BASE + RAMINIT_BINARY_SIZE);
+	(void)consolewriteb16(RAMINIT_END);
 	(void)consolewrite("]\n");
 
 	return 0;
