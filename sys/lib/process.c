@@ -10,6 +10,10 @@
 #include <trampoline.h>
 #include <vmem.h>
 
+/* Allocates a frame, sets f to its address and appends it to the allocated
+   linked list of process p. Returns -1 in case of error or 0 otherwise. */
+static s8 allocprocpage(void **f, struct process *p);
+
 /* Allocates process and sets pointer p to it after initializing it using text
    as the frames containing the text of the program. Returns -1 in case of
    error or 0 otherwise */
@@ -21,6 +25,29 @@ static u8 unusedpid(u16 *o);
 
 static struct processnode *processlist            = NULL;
 static u8                  pidbitmap[PID_MAX / 8] = { 0 };
+
+s8
+allocprocpage(void **f, struct process *p)
+{
+	struct framenode *fn;
+
+	if (!(*f = palloc(PAGE_SIZE, 0)))
+		goto panic;
+
+	if (!(fn = palloc(sizeof(struct framenode), 0)))
+		goto panic;
+
+	fn->f = *f;
+
+	fn->n = p->allocated;
+	p->allocated = fn;
+
+	return 0;
+
+panic:
+	tracepanicmsg("allocprocpage");
+	return -1;
+}
 
 s8
 allocprocess(struct process **p, struct framenode *text)
