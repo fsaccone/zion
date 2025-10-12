@@ -14,10 +14,10 @@
    linked list of process p. Returns -1 in case of error or 0 otherwise. */
 static s8 allocprocpage(void **f, struct process *p);
 
-/* Allocates process and sets pointer p to it after initializing it using text
-   as the frames containing the text of the program. Returns -1 in case of
-   error or 0 otherwise */
-static s8 allocprocess(struct process **p, struct framenode *text);
+/* Allocates process and sets pointer p to it after initializing it using
+   program as the frames containing the program. Returns -1 in case of error or
+   0 otherwise */
+static s8 allocprocess(struct process **p, struct framenode *program);
 
 /* Finds the first unused PID from pidbitmap, sets it to used and sets o to it.
    Returns 1 if the bit map is full or 0 otherwise. */
@@ -50,11 +50,11 @@ panic:
 }
 
 s8
-allocprocess(struct process **p, struct framenode *text)
+allocprocess(struct process **p, struct framenode *program)
 {
 	struct pageoptions popts = { 0 };
 	uptr a;
-	struct framenode *textfn;
+	struct framenode *pfn;
 	void *tframe;
 
 	if (!(*p = palloc(sizeof(struct process), 0)))
@@ -98,9 +98,9 @@ allocprocess(struct process **p, struct framenode *text)
 	popts.w = 1;
 	popts.x = 1;
 	a = 0;
-	for (textfn = text; textfn; textfn = textfn->n) {
-		if (vmap((*p)->pagetree, PROC_VAS_FIRST_FREE_PAGE + a,
-		         textfn->f, popts))
+	for (pfn = program; pfn; pfn = pfn->n) {
+		if (vmap((*p)->pagetree, PROC_VAS_FIRST_FREE_PAGE + a, pfn->f,
+		         popts))
 			goto panic;
 
 		a += PAGE_SIZE;
@@ -130,12 +130,12 @@ unusedpid(u16 *o)
 }
 
 s8
-createprocess(struct framenode *text, struct process *parent)
+createprocess(struct framenode *program, struct process *parent)
 {
 	struct process *p;
 	struct processnode *pn;
 
-	if (allocprocess(&p, text))
+	if (allocprocess(&p, program))
 		goto panic;
 
 	if (parent) {
