@@ -10,37 +10,8 @@
 #include <trampoline.h>
 #include <vmem.h>
 
-/* Allocates a frame, sets f to its address and appends it to the vas linked
-   list of process p using v as the virtual address mapped to f. Returns -1 in
-   case of error or 0 otherwise. */
-static s8 allocprocpage(void **f, uptr v, struct process *p);
-
 static struct processnode *processlist            = NULL;
 static u8                  pidbitmap[CEIL(PID_MAX, 8) / 8] = { 0 };
-
-s8
-allocprocpage(void **f, uptr v, struct process *p)
-{
-	struct pagenode *pn;
-
-	if (!(*f = palloc(PAGE_SIZE, 0)))
-		goto panic;
-
-	if (!(pn = palloc(sizeof(struct pagenode), 0)))
-		goto panic;
-
-	pn->f = *f;
-	pn->p = v;
-
-	pn->n = p->vas;
-	p->vas = pn;
-
-	return 0;
-
-panic:
-	tracepanicmsg("allocprocpage");
-	return -1;
-}
 
 s8
 createprocess(struct process **p, struct process *parent)
@@ -86,7 +57,7 @@ createprocess(struct process **p, struct process *parent)
 	opts.r = 1;
 	opts.w = 1;
 	opts.x = 0;
-	if (allocprocpage(&tframe, PROC_VAS_FIRST_FREE_PAGE, *p))
+	if (!(tframe = palloc(PAGE_SIZE, 0)))
 		goto panic;
 	inittrapframe(tframe, PROC_VAS_FIRST_FREE_PAGE, PROC_VAS_TRAMPOLINE);
 	if (vmap((*p)->pagetree, PROC_VAS_TRAP_FRAME, tframe, opts))
