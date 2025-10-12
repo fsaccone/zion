@@ -1,37 +1,10 @@
 .section .text
-.global getctxpc
-.global getctxsp
-.global getcursp
 .global setctxpc
-.global setctxsp
 .global switchctx
-
-getctxpc:
-	# Load ra from ctx.
-	ld a0, (0 * 8)(a0)
-
-	ret
-
-getctxsp:
-	# Load sp from ctx.
-	ld a0, (1 * 8)(a0)
-
-	ret
-
-getcursp:
-	mv a0, sp
-
-	ret
 
 setctxpc:
 	# Save new pc to ra of ctx.
 	sd a1, (0 * 8)(a0)
-
-	ret
-
-setctxsp:
-	# Save new sp to sp of ctx.
-	sd a1, (1 * 8)(a0)
 
 	ret
 
