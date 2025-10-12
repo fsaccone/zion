@@ -126,6 +126,9 @@ vmap(pageentry *ptree, uptr vaddr, void *paddr, struct pageoptions opts)
 
 	*e = PAGE_ENTRY_ADD_VALID(*e);
 
+	if (opts.u)
+		*e = PAGE_ENTRY_ADD_U(*e);
+
 	if (opts.r)
 		*e = PAGE_ENTRY_ADD_R(*e);
 
@@ -134,9 +137,6 @@ vmap(pageentry *ptree, uptr vaddr, void *paddr, struct pageoptions opts)
 
 	if (opts.x)
 		*e = PAGE_ENTRY_ADD_X(*e);
-
-	if (opts.u)
-		*e = PAGE_ENTRY_ADD_USER(*e);
 
 	return 0;
 
