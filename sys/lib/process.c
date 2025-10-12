@@ -113,12 +113,11 @@ unusedpid(u16 *o)
 }
 
 s8
-createprocess(struct process *parent)
+createprocess(struct process **p, struct process *parent)
 {
-	struct process *p;
 	struct processnode *pn;
 
-	if (allocprocess(&p))
+	if (allocprocess(p))
 		goto panic;
 
 	if (parent) {
@@ -127,7 +126,7 @@ createprocess(struct process *parent)
 		if (!(newchild = palloc(sizeof(struct processnode), 0)))
 			goto panic;
 
-		newchild->p = p;
+		newchild->p = *p;
 
 		newchild->n = parent->children;
 		parent->children = newchild;
@@ -136,7 +135,7 @@ createprocess(struct process *parent)
 	if (!(pn = palloc(sizeof(struct processnode), 0)))
 		goto panic;
 
-	pn->p = p;
+	pn->p = *p;
 
 	pn->n = processlist;
 	processlist = pn;
