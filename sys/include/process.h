@@ -10,7 +10,25 @@
 /* Maximum 16 bits unsigned integer. */
 #define PID_MAX 65535
 
-/* Process virtual address space. */
+/* Process virtual address space:
+     + 0x0
+     |
+     | (kr-x) Trampoline.
+     |
+     + PAGE_SIZE
+     |
+     | (krw-) Trap frame.
+     |
+     + 2 * PAGE_SIZE
+     |
+     | (urwx) Program.
+     |
+     + 2 * PAGE_SIZE + [Program size]
+     |
+     | (urw-) Free memory.
+     |
+     + PAGE_VADDR_MAX
+*/
 #define PROC_VAS_TRAMPOLINE      (0 * PAGE_SIZE)
 #define PROC_VAS_TRAP_FRAME      (1 * PAGE_SIZE)
 #define PROC_VAS_FIRST_FREE_PAGE (2 * PAGE_SIZE)
