@@ -145,7 +145,7 @@ setreturn:
 trampoline:
 	# Swap t0 and sscratch, set t0 to the trap frame address and save t1.
 	csrrw t0, sscratch, t0
-	li    t0, 0x1000
+	li    t0, 0x0
 	sd    t1, (23 * 8)(t0)
 
 	# Save the original t0.
@@ -252,7 +252,7 @@ usermode:
 
 1:
 	# Set t6, the last register to be loaded, to the trap frame address.
-	li t6, 0x1000
+	li t6, 0x0
 
 	# Load the old satp and switch to it, saving the kernel satp to t1.
 	csrr       t0,   sscratch

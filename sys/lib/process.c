@@ -57,15 +57,6 @@ allocprocess(struct process *parent)
 	if (!(p->pagetree = allocpagetable()))
 		goto panic;
 
-	/* Map trampoline. */
-	opts.u = 0;
-	opts.r = 1;
-	opts.w = 0;
-	opts.x = 1;
-	opts.a = 0;
-	if (vmap(p->pagetree, PROC_VAS_TRAMPOLINE, trampolinebase(), opts))
-		goto panic;
-
 	/* Allocate, initialize and map trap frame. */
 	opts.u = 0;
 	opts.r = 1;
@@ -76,6 +67,15 @@ allocprocess(struct process *parent)
 		goto panic;
 	inittrapframe(tframe, PROC_VAS_FIRST_FREE_PAGE, PROC_VAS_TRAMPOLINE);
 	if (vmap(p->pagetree, PROC_VAS_TRAP_FRAME, tframe, opts))
+		goto panic;
+
+	/* Map trampoline. */
+	opts.u = 0;
+	opts.r = 1;
+	opts.w = 0;
+	opts.x = 1;
+	opts.a = 0;
+	if (vmap(p->pagetree, PROC_VAS_TRAMPOLINE, trampolinebase(), opts))
 		goto panic;
 
 	/* Set ceil to the first free page. */
