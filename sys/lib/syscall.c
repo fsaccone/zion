@@ -10,6 +10,9 @@ syscall(u16 code, ureg *args)
 	struct process *p = coreprocess();
 
 	switch (code) {
+	case SYSCALL_FORK:
+		fork();
+		break;
 	case SYSCALL_GROWMEM:
 		if (!p)
 			break;
