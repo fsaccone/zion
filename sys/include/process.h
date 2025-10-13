@@ -69,7 +69,7 @@ struct process {
 	struct process *n;
 };
 
-/* Allocates and returns a child process of process parent of state READY. If
+/* Allocates and returns a child process of process parent of state BLOCKED. If
    parent is NULL, the process is referred to as the "init" process: it has no
    parents and automatically adopts all orphaned processes. The init process
    must only be allocated once. Returns NULL on failure. */

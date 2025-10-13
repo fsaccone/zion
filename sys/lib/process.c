@@ -29,12 +29,14 @@ allocprocess(struct process *parent)
 	if (!(p = palloc(sizeof(struct process), 0)))
 		goto panic;
 
+	/* Set parent or initprocess. */
 	if (parent)
 		p->parent = parent;
 	else
 		initprocess = p;
 
-	p->state = READY;
+	/* Set initial state. */
+	p->state = BLOCKED;
 
 	/* Allocate smallest free PID. */
 	for (p->pid = 1; p->pid < PID_MAX; p->pid++) {

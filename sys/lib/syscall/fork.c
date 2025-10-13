@@ -51,6 +51,8 @@ fork(void)
 	setreturn(ptframe, c->pid);
 	setreturn(ctframe, 0);
 
+	c->state = READY;
+
 	return;
 
 fail:
