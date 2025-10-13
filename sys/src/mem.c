@@ -44,7 +44,7 @@ freeallmem(void)
 		}
 
 		/* Once done, print MiB with 2 decimal places to give more
-		   preciseness and print start and end addresses. */
+		   preciseness. Also print start and end addresses. */
 		(void)consolewrite("\r");
 		(void)consolewrite(MEM_LOG_PRE);
 		(void)consolewriteb10u(done / 1024);

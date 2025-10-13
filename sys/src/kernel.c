@@ -18,11 +18,11 @@
 #include "kvmem.h"
 #include "logs.h"
 
-/* The main function of core 0. Returns -1 in case of error or 0 otherwise. */
+/* Does the initialization of core 0. On success, 0 is returned. On failure, -1
+   is returned and the panic message is set. */
 static s8 core0(void);
 
-/* Temporarily one, gets set as the return value of the call to core0. Needed
-   to sync cores. */
+/* Temporarily one. Gets set as the return value of core0 to sync cores. */
 static s8 core0ret = 1;
 
 static pageentry *ptree = NULL;

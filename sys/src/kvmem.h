@@ -4,8 +4,10 @@
 #include <arch/page.h>
 #include <arch/types.h>
 
-/* Allocates a page tree, initializes it with a kernel virtual address space
-   and sets ptree to its address. Returns -1 on error or 0 otherwise. */
+/* It allocates a page tree and initializes it with the kernel virtual address
+   space. On success, 0 is returned and ptree is set to the address of the
+   allocated page tree. On failure, -1 is returned and the panic message is
+   set. */
 s8 kvmem(pageentry **ptree);
 
 #endif
