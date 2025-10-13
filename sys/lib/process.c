@@ -182,6 +182,13 @@ processes(void)
 	return processlist;
 }
 
+void
+removeprocess(struct process *p)
+{
+	if (p->n)
+		p->n->p = p->p;
+}
+
 void *
 trapframe(struct process *p)
 {

@@ -97,6 +97,9 @@ struct process *initprocess(void);
 /* It returns the head of the linked list of all the allocated processes. */
 struct process *processes(void);
 
+/* It removes the p process from the linked list of all the processes. */
+void removeprocess(struct process *p);
+
 /* It returns the physical address of the trap frame of process p, or NULL if
    it is not mapped in the process page tree. NULL is returned if p is NULL. */
 void *trapframe(struct process *p);
