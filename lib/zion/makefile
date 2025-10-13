@@ -3,8 +3,9 @@ include ../../config.mk
 OUT = libzion.a
 
 COBJS =
-SOBJS = arch/$(ARCH)/syscalls/reboot.o \
-        arch/$(ARCH)/syscalls/shutdown.o
+SOBJS = arch/$(ARCH)/syscalls/growmem.o \
+        arch/$(ARCH)/syscalls/reboot.o \
+        arch/$(ARCH)/syscalls/shutdown.o \
 
 .PHONY: all clean install uninstall
 
