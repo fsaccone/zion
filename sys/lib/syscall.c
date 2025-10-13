@@ -2,8 +2,6 @@
 
 #include <arch/types.h>
 
-#include "syscall/calls.h"
-
 void
 syscall(u16 code, ureg *args)
 {

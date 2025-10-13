@@ -1,4 +1,4 @@
-#include "calls.h"
+#include <syscall.h>
 
 #include <machine/sys.h>
 #include <memswitch.h>
