@@ -179,5 +179,8 @@ processes(void)
 void *
 trapframe(struct process *p)
 {
+	if (!p)
+		return NULL;
+
 	return paddr(NULL, p->pagetree, PROC_VAS_TRAP_FRAME);
 }
