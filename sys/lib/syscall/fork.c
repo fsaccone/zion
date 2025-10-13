@@ -36,10 +36,14 @@ fork(void)
 		if (!(sf = paddr(&opts, p->pagetree, a)))
 			goto fail;
 
-		if (!(df = palloc(PAGE_SIZE, 0)))
-			goto fail;
+		if (opts.a) {
+			if (!(df = palloc(PAGE_SIZE, 0)))
+				goto fail;
 
-		pmemcpy(df, sf, PAGE_SIZE);
+			pmemcpy(df, sf, PAGE_SIZE);
+		} else {
+			df = sf;
+		}
 
 		if (growprocess(&newa, c, df, opts))
 			goto fail;
