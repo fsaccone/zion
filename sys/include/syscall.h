@@ -7,11 +7,17 @@
    not included here. */
 #define SYSCALL_ARGS 4
 
-/* System call codes. */
-#define SYSCALL_SHUTDOWN 0
-#define SYSCALL_REBOOT   1
-
 /* The system call handler. System calls only come from user mode. */
 void syscall(u16 code, ureg *args);
+
+/* System call codes and their respective functions. */
+
+/* Shuts down the machine. Does not return. */
+#define SYSCALL_SHUTDOWN 0
+void shutdown(void);
+
+/* Reboots the machine. Does not return. */
+#define SYSCALL_REBOOT 1
+void reboot(void);
 
 #endif
