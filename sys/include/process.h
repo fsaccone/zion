@@ -5,6 +5,7 @@
 #include <arch/page.h>
 #include <arch/types.h>
 #include <spinlock.h>
+#include <vmem.h>
 
 /* Process virtual address space:
      + 0x0
@@ -76,6 +77,12 @@ s8 allocprocess(struct process **p, struct process *parent);
 /* Frees process p and all its allocated memory. Returns -1 in case of error or
    0 otherwise. */
 s8 freeprocess(struct process *p);
+
+/* Increases ceil of process p by a page, mapping it to the paddr physical
+   address and setting its options to opts. It returns -1 in case of error or,
+   if o is not NULL, sets it to the virtual address of the newly mapped page
+   and returns 0 otherwise. */
+s8 growprocess(uptr *o, struct process *p, void *f, struct pageoptions opts);
 
 /* Returns the linked list containing all the processes. */
 struct process *processes(void);

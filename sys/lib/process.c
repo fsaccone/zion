@@ -106,6 +106,31 @@ panic:
 	return -1;
 }
 
+s8
+growprocess(uptr *o, struct process *p, void *f, struct pageoptions opts)
+{
+	/* Map page. */
+	if (vmap(p->pagetree, p->ceil, f, opts))
+		goto panic;
+
+	/* Set o. */
+	if (o)
+		*o = p->ceil;
+
+	/* Increase ceil. */
+	if (PAGE_VADDR_MAX - p->ceil < PAGE_SIZE) {
+		setpanicmsg("Max virtual address reached by process ceil.");
+		goto panic;
+	}
+	p->ceil += PAGE_SIZE;
+
+	return 0;
+
+panic:
+	tracepanicmsg("growprocess");
+	return -1;
+}
+
 struct process *
 processes(void)
 {
