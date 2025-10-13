@@ -39,14 +39,6 @@ void *paddr(pageentry *ptree, uptr vaddr);
    intermediate page tables. Returns -1 in case of error and 0 otherwise. */
 s8 vmap(pageentry *ptree, uptr vaddr, void *paddr, struct pageoptions opts);
 
-/* Copies n pages from virtual address s of page tree sptree to virtual address
-   d of page tree dptree, using opts as the options of the destination
-   pages. Physical memory is also copied so that the frame of each page is
-   duplicated. The s and d addresses must be aligned to PAGE_SIZE. Returns -1
-   on error or 0 otherwise. */
-s8 vmemcpy(uptr d, pageentry *dptree, uptr s, pageentry *sptree, uptr n,
-           struct pageoptions opts);
-
 /* Invalidates allocated page pointed by virtual address vaddr of page tree
    ptree, freeing the page tables which were emptied after the operation.
    Returns -1 in case of error and 0 otherwise. */
