@@ -7,6 +7,7 @@
 #include <ctx.h>
 #include <interrupt.h>
 #include <machine/cpu.h>
+#include <panic.h>
 #include <process.h>
 #include <spinlock.h>
 #include <trampoline.h>
@@ -28,6 +29,12 @@ nextschedule(void)
 
 	if (!coreprocesses[c])
 		return;
+
+	if (!holding(&coreprocesses[c]->lock)) {
+		setpanicmsg("Process lock not acquired.");
+		tracepanicmsg("nextschedule");
+		panic();
+	}
 
 	switchctx(coreprocesses[c]->ctx, corectxs[c]);
 }
