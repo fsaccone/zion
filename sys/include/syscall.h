@@ -20,7 +20,7 @@ void syscall(u16 code, ureg *args);
 void fork(void);
 
 /* Grows process memory by how many pages are needed to fit size s, allocating
-   frames in physical memory. It uses urw- as the permission of the new pages.
+   frames in physical memory. It uses urw-a as the permission of the new pages.
    It returns the address of the first allocated page or NULL in case of
    error. */
 #define SYSCALL_GROWMEM 1

@@ -15,6 +15,7 @@ growmem(uptr s)
 		.r = 1,
 		.w = 1,
 		.x = 0,
+		.a = 1,
 	};
 	uptr npages = CEIL(s, PAGE_SIZE) / PAGE_SIZE;
 	void *first = NULL;
