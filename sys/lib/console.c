@@ -4,9 +4,9 @@
 #include <spinlock.h>
 #include <uart.h>
 
-/* Writes a NULL-terminated string to str which contains the number n written
-   in base base. If sign is not 0, it treats n as signed and prefixes str with
-   the - character if n is negative. */
+/* It writes the number n written in base base as a NULL-terminated string to
+   the str pointer. If sign is not 0, it treats n as signed and prefixes the
+   string with the - character when n is negative. */
 static void inttostr(char *str, u64 n, u8 base, u8 sign);
 
 static struct lock l = { 0 };

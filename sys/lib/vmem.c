@@ -41,7 +41,7 @@ paddr(struct pageoptions *opts, pageentry *ptree, uptr vaddr)
 	uptr l, lvlidxs[PAGE_TABLE_LEVELS] = PAGE_LVLIDXS_FROM_VADDR(vaddr);
 	pageentry *lastpt, *e;
 
-	/* Get last-level page table pointing to e starting from ptree. */
+	/* Get the last-level page table mapped to e, walking from ptree. */
 	lastpt = ptree;
 	for (l = 0; l < PAGE_TABLE_LEVELS - 1; l++) {
 		pageentry *lastpte = &lastpt[lvlidxs[l]];
@@ -100,12 +100,12 @@ vmap(pageentry *ptree, uptr vaddr, void *paddr, struct pageoptions opts)
 		goto panic;
 	}
 
-	/* Get last-level page table pointing to e starting from ptree. */
+	/* Get the last-level page table mapped to e, walking from ptree. */
 	lastpt = ptree;
 	for (l = 0; l < PAGE_TABLE_LEVELS - 1; l++) {
 		pageentry *lastpte = &lastpt[lvlidxs[l]];
 
-		/* Allocate invalid intermediate page tables. */
+		/* Allocate and map non-existent intermediate page tables. */
 		if (!PAGE_ENTRY_GET_VALID(*lastpte)) {
 			pageentry *newpt;
 
@@ -167,7 +167,7 @@ vunmap(pageentry *ptree, uptr vaddr)
 		goto panic;
 	}
 
-	/* Get last-level page table pointing to e starting from ptree. */
+	/* Get the last-level page table mapped to e, walking from ptree. */
 	lastpt = ptree;
 	for (l = 0; l < PAGE_TABLE_LEVELS - 1; l++) {
 		pageentry *lastpte = &lastpt[lvlidxs[l]];
@@ -199,12 +199,10 @@ vunmap(pageentry *ptree, uptr vaddr)
 		uptr j, ei;
 		u8 isempty;
 
-		/* Find current page table pt and the entry pointing to it,
-		   etopt, which is needed when pt has to be freed. */
+		/* Find the current page table, pt, and the entry mapped to it,
+		   etopt. */
 		pt = ptree;
 		for (j = 0; j < PAGE_TABLE_LEVELS - i - 1; j++) {
-			/* Set etopt on the previous pt, which is the parent of
-			   the pt which is going to be set next. */
 			etopt = &pt[lvlidxs[j]];
 
 			pt = (pageentry *)PAGE_ENTRY_GET_PADDR(pt[lvlidxs[j]]);
@@ -217,6 +215,7 @@ vunmap(pageentry *ptree, uptr vaddr)
 				isempty = 0;
 		}
 
+		/* If the page table is empty, free it. */
 		if (isempty) {
 			if (freepagetable(pt))
 				goto panic;
