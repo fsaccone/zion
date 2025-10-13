@@ -54,11 +54,9 @@ struct process {
 	/* The pointer to the root table of the virtual page tree. */
 	pageentry *pagetree;
 
-	/* The context of the core before switching to the process. */
-	u8 kctx[CTX_SIZE];
-
-	/* The context of the process in user mode. */
-	u8 uctx[CTX_SIZE];
+	/* The context which is saved when switching back to the scheduler
+	   after a user interrupt, and loaded the other way around. */
+	u8 ctx[CTX_SIZE];
 
 	/* The pointers to the previous and next processes. This is needed to
 	   create linked lists of processes. */

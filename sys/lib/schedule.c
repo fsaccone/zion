@@ -1,5 +1,6 @@
 #include <schedule.h>
 
+#include <arch/ctx.h>
 #include <arch/page.h>
 #include <console.h>
 #include <core.h>
@@ -11,6 +12,7 @@
 #include <trampoline.h>
 #include <vmem.h>
 
+static u8 corectxs[NCPU][CTX_SIZE] = { 0 };
 static struct process *coreprocesses[NCPU] = { 0 };
 
 struct process *
@@ -27,7 +29,7 @@ nextschedule(void)
 	if (!coreprocesses[c] || coreprocesses[c]->state != RUNNING)
 		return;
 
-	switchctx(coreprocesses[c]->uctx, coreprocesses[c]->kctx);
+	switchctx(coreprocesses[c]->ctx, corectxs[c]);
 }
 
 void
@@ -58,9 +60,9 @@ schedule(void)
 				disableinterrupts();
 
 				preparetrapframe(trapframe(p), p->pagetree);
-				setctxpc(p->uctx,
+				setctxpc(p->ctx,
 				         usermodebase(PROC_VAS_TRAMPOLINE));
-				switchctx(p->kctx, p->uctx);
+				switchctx(corectxs[c], p->ctx);
 
 				/* Got back here through a nextschedule call
 				   from the core which was owning the
