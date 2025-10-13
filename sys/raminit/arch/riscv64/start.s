@@ -7,6 +7,10 @@ start:
 
 	call raminit
 
+	# Do shutdown().
+	li a0, 2
+	ecall
+
 1:
 	j 1b
 
