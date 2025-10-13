@@ -81,17 +81,22 @@ allocprocess(struct process *parent)
 	/* Set ceil to the first free page. */
 	p->ceil = PROC_VAS_FIRST_FREE_PAGE;
 
-	/* Append to processlist. */
-	p->n = processlist;
-	if (processlist)
-		processlist->p = p;
-	processlist = p;
-
 	return p;
 
 panic:
 	tracepanicmsg("allocprocess");
 	return NULL;
+}
+
+void
+appendprocess(struct process *p)
+{
+	p->n = processlist;
+
+	if (processlist)
+		processlist->p = p;
+
+	processlist = p;
 }
 
 s8

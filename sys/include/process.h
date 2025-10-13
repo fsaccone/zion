@@ -77,6 +77,9 @@ struct process {
    is returned. On failure, NULL is returned and the panic message is set. */
 struct process *allocprocess(struct process *parent);
 
+/* It appends the p process to the linked list of all the processes. */
+void appendprocess(struct process *p);
+
 /* It frees process p and all its allocated memory. On success, 0 is returned.
    On failure, -1 is returned and the panic message is set. */
 s8 freeprocess(struct process *p);
