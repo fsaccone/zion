@@ -2,7 +2,7 @@
 .global fork
 
 fork:
-	li a0, 0
+	li a0, 1
 	ecall
 
 	ret

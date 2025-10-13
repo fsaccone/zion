@@ -3,7 +3,8 @@ include ../../config.mk
 OUT = libzion.a
 
 COBJS =
-SOBJS = arch/$(ARCH)/syscalls/fork.o \
+SOBJS = arch/$(ARCH)/syscalls/exit.o \
+        arch/$(ARCH)/syscalls/fork.o \
         arch/$(ARCH)/syscalls/growmem.o \
         arch/$(ARCH)/syscalls/reboot.o \
         arch/$(ARCH)/syscalls/shutdown.o \
