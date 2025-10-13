@@ -12,7 +12,8 @@ start:
 
 # Allocates stack and returns its end address.
 allocstack:
-	li a0, 0
+	# Do growmem(8192).
+	li a0, 1
 	li a1, 8192
 	ecall
 
