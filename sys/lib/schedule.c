@@ -66,7 +66,11 @@ schedule(void)
 
 				/* A core may come back here by calling
 				   nextschedule. */
-				coreprocesses[c]->state = READY;
+
+				/* Only change the state back to READY if it
+				   was not already modified. */
+				if (p->state == RUNNING)
+					p->state = READY;
 
 				break;
 			case TERMINATED:
