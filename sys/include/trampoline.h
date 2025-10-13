@@ -4,6 +4,10 @@
 #include <arch/page.h>
 #include <arch/types.h>
 
+/* Copies the registers and program counter saved in trap frame s to trap frame
+   d. */
+void copytrapframe(void *d, void *s);
+
 /* Initializes trap frame tframe using startpc as the virtual address of the
    initial program counter and trampoline as the virtual address of the
    trampoline page. */
