@@ -5,7 +5,7 @@
 .global kernelinterrupt
 .global userinterrupt
 
-# Checks the value of scause to call the correct handler.
+# It checks the value of scause and calls the correct handler.
 routeinterrupt:
 	addi sp, sp, -8
 	sd   ra, 0(sp)
