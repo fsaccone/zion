@@ -95,8 +95,31 @@ panic:
 s8
 freeprocess(struct process *p)
 {
-	/* TODO: Unmap all pages in virtual address space, which also frees all
-	         page tables. Frames pointed by pages also need to be freed. */
+	void *tframe;
+	uptr a;
+
+	/* Free and unmap trap frame. */
+	if ((tframe = trapframe(p))) {
+		if (pfree(tframe, PAGE_SIZE))
+			goto panic;
+
+		if (vunmap(p->pagetree, PROC_VAS_TRAP_FRAME))
+			goto panic;
+	}
+
+	/* Free and unmap all user pages. */
+	for (a = PROC_VAS_FIRST_FREE_PAGE; a < p->ceil; a += PAGE_SIZE) {
+		void *f;
+
+		if (!(f = paddr(NULL, p->pagetree, a)))
+			continue;
+
+		if (pfree(f, PAGE_SIZE))
+			goto panic;
+
+		if (vunmap(p->pagetree, a))
+			goto panic;
+	}
 
 	/* Now that the page tree contains no allocated page tables, it is
 	   possible to free it. */
