@@ -17,11 +17,11 @@
      |
      + 2 * PAGE_SIZE
      |
-     | (urwx) Program.
+     | (u???) Mapped memory.
      |
-     + 2 * PAGE_SIZE + [Program size]
+     + ceil
      |
-     | (urw-) Free memory.
+     | (////) Unmapped memory.
      |
      + PAGE_VADDR_MAX
 */
@@ -53,6 +53,10 @@ struct process {
 
 	/* The pointer to the root table of the virtual page tree. */
 	pageentry *pagetree;
+
+	/* The virtual address of the first unmapped page of the virtual
+	   address space. */
+	uptr ceil;
 
 	/* The context which is saved when switching back to the scheduler
 	   after a user interrupt, and loaded the other way around. */
