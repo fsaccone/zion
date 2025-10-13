@@ -19,7 +19,10 @@ struct pageoptions {
 	/* If 1, the page is executable. */
 	u8 x : 1;
 
-	u8 reserved : 4;
+	/* If 1, the page points to a physically allocated frame. */
+	u8 a : 1;
+
+	u8 reserved : 3;
 };
 
 /* Allocates a page table full of invalid entries and returns its address.

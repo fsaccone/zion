@@ -62,6 +62,7 @@ allocprocess(struct process *parent)
 	opts.r = 1;
 	opts.w = 0;
 	opts.x = 1;
+	opts.a = 0;
 	if (vmap(p->pagetree, PROC_VAS_TRAMPOLINE, trampolinebase(), opts))
 		goto panic;
 
@@ -70,6 +71,7 @@ allocprocess(struct process *parent)
 	opts.r = 1;
 	opts.w = 1;
 	opts.x = 0;
+	opts.a = 1;
 	if (!(tframe = palloc(PAGE_SIZE, 0)))
 		goto panic;
 	inittrapframe(tframe, PROC_VAS_FIRST_FREE_PAGE, PROC_VAS_TRAMPOLINE);

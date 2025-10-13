@@ -10,19 +10,19 @@
 /* Process virtual address space:
      + 0x0
      |
-     | (kr-x) Trampoline.
+     | (kr-x-) Trampoline.
      |
      + PAGE_SIZE
      |
-     | (krw-) Trap frame.
+     | (krw-a) Trap frame.
      |
      + 2 * PAGE_SIZE
      |
-     | (????) Mapped memory.
+     | (?????) Mapped memory.
      |
      + ceil
      |
-     | (////) Unmapped memory.
+     | (/////) Unmapped memory.
      |
      + PAGE_VADDR_MAX
 */
