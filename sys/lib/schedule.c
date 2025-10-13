@@ -84,16 +84,8 @@ schedule(void)
 
 				break;
 			case TERMINATED:
-				/* Make the previous process in the linked list
-				   point to the one after this.
-				   Since a process is set to TERMINATED only
-				   when it calls the exit system call, and
-				   since it cannot be called by the init
-				   process, if we assume that the init process
-				   has been the first to be allocated, we can
-				   assure that there exists a previous
-				   process. */
-				p->p->n = p->n;
+				/* Remove the process from the linked list. */
+				removeprocess(p);
 
 				/* Set state to BLOCKED and unlock the process
 				   so that other cores may skip it. */
