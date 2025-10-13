@@ -11,7 +11,7 @@
 #include <vmem.h>
 
 static struct process *processlist = NULL;
-static struct process *initprocess = NULL;
+static struct process *init = NULL;
 static u8 pidbitmap[CEIL(PID_MAX, 8) / 8] = { 0 };
 
 struct process *
@@ -21,7 +21,7 @@ allocprocess(struct process *parent)
 	struct pageoptions opts = { 0 };
 	void *tframe;
 
-	if (!parent && initprocess) {
+	if (!parent && init) {
 		setpanicmsg("Tried allocating init process twice.");
 		goto panic;
 	}
@@ -29,11 +29,11 @@ allocprocess(struct process *parent)
 	if (!(p = palloc(sizeof(struct process), 0)))
 		goto panic;
 
-	/* Set parent or initprocess. */
+	/* Set parent or init. */
 	if (parent)
 		p->parent = parent;
 	else
-		initprocess = p;
+		init = p;
 
 	/* Set initial state. */
 	p->state = BLOCKED;
@@ -168,6 +168,12 @@ growprocess(uptr *o, struct process *p, void *f, struct pageoptions opts)
 panic:
 	tracepanicmsg("growprocess");
 	return -1;
+}
+
+struct process *
+initprocess(void)
+{
+	return init;
 }
 
 struct process *

@@ -87,6 +87,10 @@ s8 freeprocess(struct process *p);
    failure, -1 is returned and the panic message is set. */
 s8 growprocess(uptr *o, struct process *p, void *f, struct pageoptions opts);
 
+/* It returns the init process. If the init process has not been allocated yet,
+   NULL is returned. */
+struct process *initprocess(void);
+
 /* It returns the head of the linked list of all the allocated processes. */
 struct process *processes(void);
 
