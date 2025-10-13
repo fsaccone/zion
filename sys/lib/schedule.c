@@ -65,7 +65,10 @@ schedule(void)
 				switchctx(corectxs[c], p->ctx);
 
 				/* A core may come back here by calling
-				   nextschedule. */
+				   nextschedule. Since the lock of the process
+				   must be acquired to call nextschedule, we
+				   need to release it. */
+				unlock(&p->lock);
 
 				/* Only change the state back to READY if it
 				   was not already modified. */

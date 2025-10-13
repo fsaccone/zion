@@ -4,8 +4,9 @@
 #include <arch/page.h>
 #include <process.h>
 
-/* If the calling core owns a process, a pointer to the process is returned. If
-   the calling core does not own a process, NULL is returned. */
+/* If the calling core owns a process, a pointer to the process is returned.
+   The lock of the process must be acquired by the calling core. If the calling
+   core does not own a process, NULL is returned. */
 struct process *coreprocess(void);
 
 /* It loops infinitely through every allocated process, making the calling core
