@@ -175,8 +175,8 @@ pmemcpy(void *d, void *s, uptr n)
 }
 
 void
-pmemset(void *s, u8 c, uptr n)
+pmemset(void *d, u8 c, uptr n)
 {
 	while (n--)
-		*(u8 *)s++ = c;
+		*(u8 *)d++ = c;
 }
