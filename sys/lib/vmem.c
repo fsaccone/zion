@@ -63,6 +63,7 @@ paddr(struct pageoptions *opts, pageentry *ptree, uptr vaddr)
 		opts->r = PAGE_ENTRY_GET_R(*e);
 		opts->w = PAGE_ENTRY_GET_W(*e);
 		opts->x = PAGE_ENTRY_GET_X(*e);
+		opts->a = PAGE_ENTRY_GET_A(*e);
 	}
 
 	return (void *)(PAGE_ENTRY_GET_PADDR(*e) + (vaddr % PAGE_SIZE));
@@ -144,6 +145,9 @@ vmap(pageentry *ptree, uptr vaddr, void *paddr, struct pageoptions opts)
 
 	if (opts.x)
 		*e = PAGE_ENTRY_ADD_X(*e);
+
+	if (opts.a)
+		*e = PAGE_ENTRY_ADD_A(*e);
 
 	return 0;
 

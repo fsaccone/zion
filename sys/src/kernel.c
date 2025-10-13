@@ -37,6 +37,7 @@ core0(void)
 		.r = 1,
 		.w = 0,
 		.x = 1,
+		.a = 0,
 	};
 
 	initconsole();

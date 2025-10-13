@@ -26,6 +26,7 @@ kvmem(pageentry **ptree)
 	opts.r = 1;
 	opts.w = 0;
 	opts.x = 1;
+	opts.a = 0;
 	if (vmap(*ptree, PROC_VAS_TRAMPOLINE, trampolinebase(), opts))
 		goto panic;
 
@@ -34,6 +35,7 @@ kvmem(pageentry **ptree)
 	opts.r = 1;
 	opts.w = 1;
 	opts.x = 1;
+	opts.a = 0;
 	for (a = KERNEL_START;
 	     a < KERNEL_END;
 	     a += PAGE_SIZE) {
@@ -52,6 +54,7 @@ kvmem(pageentry **ptree)
 	opts.r = 1;
 	opts.w = 1;
 	opts.x = 0;
+	opts.a = 0;
 	for (i = 0; i < FREE_MEMORY_REGIONS_LEN; i++) {
 		uptr start = freemem[i][0],
 		     end   = freemem[i][1];
@@ -67,6 +70,7 @@ kvmem(pageentry **ptree)
 	opts.r = 1;
 	opts.w = 1;
 	opts.x = 0;
+	opts.a = 0;
 	if (vmap(*ptree, UART0, (void *)UART0, opts))
 		goto panic;
 
