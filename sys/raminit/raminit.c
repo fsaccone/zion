@@ -1,5 +1,4 @@
 void
 raminit(void)
 {
-	for(;;);
 }
