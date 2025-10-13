@@ -135,8 +135,10 @@ preparetrapframe:
 	ret
 
 setreturn:
-	sd a1, (22 * 8)(a0)
+	beqz a0, 1f
+	sd   a1, (22 * 8)(a0)
 
+1:
 	ret
 
 .align 12
