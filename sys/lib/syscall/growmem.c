@@ -20,20 +20,20 @@ growmem(uptr s)
 	void *first = NULL;
 
 	if (!s)
-		goto error;
+		goto fail;
 
 	if (!(p = coreprocess()))
-		goto error;
+		goto fail;
 
 	while (npages--) {
 		void *f;
 		uptr a;
 
 		if (!(f = palloc(PAGE_SIZE, 0)))
-			goto error;
+			goto fail;
 
 		if (growprocess(&a, p, f, opts))
-			goto error;
+			goto fail;
 
 		if (!first)
 			first = (void *)a;
@@ -41,6 +41,6 @@ growmem(uptr s)
 
 	return first;
 
-error:
+fail:
 	return NULL;
 }
