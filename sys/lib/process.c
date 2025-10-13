@@ -22,6 +22,7 @@ allocprocess(struct process **p, struct process *parent)
 	if (!(*p = palloc(sizeof(struct process), 0)))
 		goto panic;
 
+	(*p)->parent = parent;
 	(*p)->state = READY;
 
 	/* Allocate smallest free PID. */
@@ -61,8 +62,6 @@ allocprocess(struct process **p, struct process *parent)
 	inittrapframe(tframe, PROC_VAS_FIRST_FREE_PAGE, PROC_VAS_TRAMPOLINE);
 	if (vmap((*p)->pagetree, PROC_VAS_TRAP_FRAME, tframe, opts))
 		goto panic;
-
-	(*p)->parent = parent;
 
 	/* Append to processlist. */
 	(*p)->n = processlist;
