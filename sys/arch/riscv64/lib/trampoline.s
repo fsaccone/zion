@@ -1,4 +1,5 @@
 .section .text
+.global copytrapframe
 .global inittrapframe
 .global preparetrapframe
 .global setreturn
@@ -23,6 +24,73 @@
 #     21    = Kernel satp.
 #     22    = Return value.
 #     23-51 = Registers.
+
+copytrapframe:
+	# Copy user sepc.
+	ld t0, (20 * 8)(a1)
+	sd t0, (20 * 8)(a0)
+
+	# Copy registers.
+	ld t0, (23 * 8)(a1)
+	sd t0, (23 * 8)(a0)
+	ld t0, (24 * 8)(a1)
+	sd t0, (24 * 8)(a0)
+	ld t0, (25 * 8)(a1)
+	sd t0, (25 * 8)(a0)
+	ld t0, (26 * 8)(a1)
+	sd t0, (26 * 8)(a0)
+	ld t0, (27 * 8)(a1)
+	sd t0, (27 * 8)(a0)
+	ld t0, (28 * 8)(a1)
+	sd t0, (28 * 8)(a0)
+	ld t0, (29 * 8)(a1)
+	sd t0, (29 * 8)(a0)
+	ld t0, (30 * 8)(a1)
+	sd t0, (30 * 8)(a0)
+	ld t0, (31 * 8)(a1)
+	sd t0, (31 * 8)(a0)
+	ld t0, (32 * 8)(a1)
+	sd t0, (32 * 8)(a0)
+	ld t0, (33 * 8)(a1)
+	sd t0, (33 * 8)(a0)
+	ld t0, (34 * 8)(a1)
+	sd t0, (34 * 8)(a0)
+	ld t0, (35 * 8)(a1)
+	sd t0, (35 * 8)(a0)
+	ld t0, (36 * 8)(a1)
+	sd t0, (36 * 8)(a0)
+	ld t0, (37 * 8)(a1)
+	sd t0, (37 * 8)(a0)
+	ld t0, (38 * 8)(a1)
+	sd t0, (38 * 8)(a0)
+	ld t0, (39 * 8)(a1)
+	sd t0, (39 * 8)(a0)
+	ld t0, (40 * 8)(a1)
+	sd t0, (40 * 8)(a0)
+	ld t0, (41 * 8)(a1)
+	sd t0, (41 * 8)(a0)
+	ld t0, (42 * 8)(a1)
+	sd t0, (42 * 8)(a0)
+	ld t0, (43 * 8)(a1)
+	sd t0, (43 * 8)(a0)
+	ld t0, (44 * 8)(a1)
+	sd t0, (44 * 8)(a0)
+	ld t0, (45 * 8)(a1)
+	sd t0, (45 * 8)(a0)
+	ld t0, (46 * 8)(a1)
+	sd t0, (46 * 8)(a0)
+	ld t0, (47 * 8)(a1)
+	sd t0, (47 * 8)(a0)
+	ld t0, (48 * 8)(a1)
+	sd t0, (48 * 8)(a0)
+	ld t0, (49 * 8)(a1)
+	sd t0, (49 * 8)(a0)
+	ld t0, (50 * 8)(a1)
+	sd t0, (50 * 8)(a0)
+	ld t0, (51 * 8)(a1)
+	sd t0, (51 * 8)(a0)
+
+	ret
 
 inittrapframe:
 	# Save kernel interrupt entry point.
