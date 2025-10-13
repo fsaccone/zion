@@ -1,9 +1,9 @@
 include ../../config.mk
 
+CRT0 = crt0.o
 LIBS = libzion.a
 
-COBJS = raminit.o
-SOBJS = arch/$(ARCH)/start.o
+OBJS = main.o
 
 INCLUDEFLAGS = -I ../../lib/zion/include
 
@@ -14,17 +14,18 @@ OUT = raminit.bin
 all: $(OUT)
 
 clean:
-	rm -rf $(OUT) $(COBJS) $(SOBJS) $(LIBS)
+	rm -rf $(OUT) $(CRT0) $(OBJS) $(LIBS)
 
-$(OUT): $(SOBJS) $(COBJS) $(LIBS)
-	$(LD) $(LDFLAGS) -e start -o $@ $^
+$(OUT): $(CRT0) $(OBJS) $(LIBS)
+	$(LD) $(LDFLAGS) -o $@ $^
 	$(OBJCOPY) -O binary $@
 
-$(COBJS):
+$(OBJS):
 	$(CC) $(CFLAGS) $(INCLUDEFLAGS) -c -o $@ $(@:.o=.c)
 
-$(SOBJS):
-	$(AS) $(ASFLAGS) -o $@ $(@:.o=.s)
+$(CRT0):
+	(cd ../../lib/libc && $(MAKE) $@ > /dev/null 2>&1)
+	cp ../../lib/libc/$@ $@
 
 libzion.a:
 	(cd ../../lib/zion && $(MAKE) $@ > /dev/null 2>&1)

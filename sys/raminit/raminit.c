@@ -1,4 +1,0 @@
-void
-raminit(void)
-{
-}
