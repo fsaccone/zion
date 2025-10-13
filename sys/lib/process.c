@@ -63,8 +63,8 @@ allocprocess(struct process **p, struct process *parent)
 	if (vmap((*p)->pagetree, PROC_VAS_TRAP_FRAME, tframe, opts))
 		goto panic;
 
-	/* Set ceil to the page which comes after the highest mapped page. */
-	(*p)->ceil = MAX(PROC_VAS_TRAMPOLINE, PROC_VAS_TRAP_FRAME) + PAGE_SIZE;
+	/* Set ceil to the first free page. */
+	(*p)->ceil = PROC_VAS_FIRST_FREE_PAGE;
 
 	/* Append to processlist. */
 	(*p)->n = processlist;
