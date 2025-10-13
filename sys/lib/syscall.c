@@ -6,6 +6,9 @@ void
 syscall(u16 code, ureg *args)
 {
 	switch (code) {
+	case SYSCALL_EXIT:
+		exit();
+		break;
 	case SYSCALL_FORK:
 		fork();
 		break;
