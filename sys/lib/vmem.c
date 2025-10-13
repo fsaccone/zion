@@ -36,7 +36,7 @@ panic:
 }
 
 void *
-paddr(pageentry *ptree, uptr vaddr)
+paddr(struct pageoptions *opts, pageentry *ptree, uptr vaddr)
 {
 	uptr l, lvlidxs[PAGE_TABLE_LEVELS] = PAGE_LVLIDXS_FROM_VADDR(vaddr);
 	pageentry *lastpt, *e;
@@ -57,6 +57,13 @@ paddr(pageentry *ptree, uptr vaddr)
 
 	if (!PAGE_ENTRY_GET_VALID(*e))
 		return NULL;
+
+	if (opts) {
+		opts->u = PAGE_ENTRY_GET_U(*e);
+		opts->r = PAGE_ENTRY_GET_R(*e);
+		opts->w = PAGE_ENTRY_GET_W(*e);
+		opts->x = PAGE_ENTRY_GET_X(*e);
+	}
 
 	return (void *)(PAGE_ENTRY_GET_PADDR(*e) + (vaddr % PAGE_SIZE));
 }
