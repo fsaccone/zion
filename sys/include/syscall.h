@@ -20,9 +20,9 @@ void fork(void);
 /* It grows process memory by how many pages are needed to fit size s. Each new
    page is mapped to a newly allocated frame. It uses urw-a as the options of
    the new pages. On success, the address of the first allocated page is
-   returned. On failure, NULL is returned. */
+   returned in the process. On failure, NULL is returned in the process. */
 #define SYSCALL_GROWMEM 1
-void *growmem(uptr s);
+void growmem(uptr s);
 
 /* It shuts down the machine. */
 #define SYSCALL_SHUTDOWN 2
