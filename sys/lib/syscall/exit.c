@@ -10,10 +10,10 @@ exit(void)
 	struct process *p, *init, *c;
 
 	if (!(p = coreprocess()))
-		return;
+		goto fail;
 
 	if (!(init = initprocess()))
-		return;
+		goto fail;
 
 	if (p == init) {
 		setpanicmsg("Init process attempted to exit.");
@@ -29,6 +29,7 @@ exit(void)
 
 	p->state = TERMINATED;
 
+fail:
 	/* Jump to scheduler. */
 	nextschedule();
 }
