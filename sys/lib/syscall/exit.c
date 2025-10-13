@@ -3,6 +3,7 @@
 #include <panic.h>
 #include <process.h>
 #include <schedule.h>
+#include <spinlock.h>
 
 void
 exit(void)
@@ -27,9 +28,10 @@ exit(void)
 			c->parent = init;
 	}
 
-	p->state = TERMINATED;
-
 fail:
-	/* Jump to scheduler. */
+	if (p) {
+		lock(&p->lock);
+		p->state = TERMINATED;
+	}
 	nextschedule();
 }
