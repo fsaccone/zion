@@ -91,7 +91,7 @@ s8 growprocess(uptr *o, struct process *p, void *f, struct pageoptions opts);
 struct process *processes(void);
 
 /* It returns the physical address of the trap frame of process p, or NULL if
-   it is not mapped in the process page tree. */
+   it is not mapped in the process page tree. NULL is returned if p is NULL. */
 void *trapframe(struct process *p);
 
 #endif
