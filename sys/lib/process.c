@@ -129,11 +129,6 @@ freeprocess(struct process *p)
 	if (freepagetable(p->pagetree))
 		goto panic;
 
-	/* Make the previous process in the list point to the one after
-	   this. */
-	if (p->p)
-		p->p->n = p->n;
-
 	/* Finally free the process. */
 	if (pfree(p, sizeof(struct process)))
 		goto panic;
