@@ -8,7 +8,7 @@ start:
 	call raminit
 
 	# Do shutdown().
-	li a0, 2
+	li a0, 3
 	ecall
 
 1:
@@ -17,7 +17,7 @@ start:
 # Allocates stack and returns its end address.
 allocstack:
 	# Do growmem(8192).
-	li a0, 1
+	li a0, 2
 	li a1, 8192
 	ecall
 
