@@ -272,7 +272,7 @@ usermode:
 	# Only save stack pointer and thread pointer to trap frame if we come
 	# from trampoline, not usermode. If we did come from usermode, these
 	# components of the trap frames were presumably already set by a call
-	# to inittrapframe, also the jump to usermode presumably happened
+	# to inittrapframe. Also, the jump to usermode presumably happened
 	# through a switchctx call, making the values of sp and tp wrong.
 	beqz s0, 1f
 	sd   sp, (10 * 8)(t6)
