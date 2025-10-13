@@ -10,11 +10,16 @@
 /* It handles system call code of arguments args. */
 void syscall(u16 code, ureg *args);
 
+/* It terminates the calling process. All orphaned processes are reparented to
+   the init process. It does not return: it jumps back to the scheduler. */
+#define SYSCALL_EXIT 0
+void exit(void);
+
 /* It creates a new process by duplicating the calling process. On failure, -1
    is returned in the parent and and no child process is created. On success,
    the PID of the child process is returned in the parent, and 0 is returned in
    the child. */
-#define SYSCALL_FORK 0
+#define SYSCALL_FORK 1
 void fork(void);
 
 /* It grows the calling process memory by how many pages are needed to fit size
@@ -22,15 +27,15 @@ void fork(void);
    options of the new pages. On success, the address of the first allocated
    page is returned in the process. On failure, NULL is returned in the
    process. */
-#define SYSCALL_GROWMEM 1
+#define SYSCALL_GROWMEM 2
 void growmem(uptr s);
 
 /* It shuts down the machine. */
-#define SYSCALL_SHUTDOWN 2
+#define SYSCALL_SHUTDOWN 3
 void shutdown(void);
 
 /* It reboots the machine. */
-#define SYSCALL_REBOOT 3
+#define SYSCALL_REBOOT 4
 void reboot(void);
 
 #endif
