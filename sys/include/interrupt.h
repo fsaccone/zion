@@ -3,19 +3,20 @@
 
 #include <arch/types.h>
 
-/* Disables interrupts. */
+/* It disables interrupts for the calling core. */
 void disableinterrupts(void);
 
-/* Enables interrupts. */
+/* It enables interrupts for the calling core. */
 void enableinterrupts(void);
 
-/* Returns 1 if interrupts are enabled and 0 otherwise. */
+/* It returns 1 if interrupts are enabled for the calling core or 0
+   otherwise. */
 u8 interruptsenabled(void);
 
-/* The entry point of the kernel interrupt handler. */
+/* The entry point to kernel interrupts. */
 void kernelinterrupt(void);
 
-/* The entry point of the user interrupt handler. */
+/* The entry point to user interrupts, called from trampoline. */
 void userinterrupt(void);
 
 #endif

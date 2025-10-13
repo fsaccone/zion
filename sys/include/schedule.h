@@ -4,17 +4,17 @@
 #include <arch/page.h>
 #include <process.h>
 
-/* Returns the process owned by the current core or NULL if the current core
-   owns no process. */
+/* If the calling core owns a process, a pointer to the process is returned. If
+   the calling core does not own a process, NULL is returned. */
 struct process *coreprocess(void);
 
-/* The process scheduler. It never returns, it loops through every process
-   instead, acting as needed based on each process state. */
+/* It loops infinitely through every allocated process, making the calling core
+   switch to the first READY process it finds. The core may eventually switch
+   back here by calling nextschedule. */
 void schedule(void);
 
-/* Switches to the context of the running core that was saved when it switched
-   to the process, effectively continuing the execution of the scheduler. Does
-   noting if the running core did not switch context before. */
+/* It makes the calling core switch back to the scheduler. If the calling core
+   did not switch to a process before, it does nothing. */
 void nextschedule(void);
 
 #endif

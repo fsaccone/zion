@@ -4,26 +4,25 @@
 #include <arch/types.h>
 #include <machine/cpu.h>
 
+/* The spinlock. */
 struct lock {
-	/* If 0, lock is not acquired; otherwise, it is. This needs to be the
-	   size of a register because the atomic swap generally works with
-	   values of this size. */
+	/* The state of the lock. It is 0 when the lock is not acquired. The
+	   size of this is the size of a register to make the atomic swap
+	   possible. */
 	ureg locked;
 
-	/* The difference of lock and unlock calls on this lock for each
-	   core. */
+	/* The amount of times the lock was acquired for each core. */
 	u8 depth[NCPU];
 
-	/* The state of interrupts at the first lock call on this lock for each
-	   core. If 0, interrupts were disabled; otherwise, they were
-	   enabled. */
+	/* The state of interrupts during the first acquiring of this lock for
+	   each core: 0 if disabled, 1 otherwise. */
 	u8 interruptsenabled[NCPU];
 };
 
-/* Acquires lock l after waiting for it to be released. */
+/* It acquires lock l after waiting for it to be released. */
 void lock(struct lock *l);
 
-/* Releases acquired lock l. */
+/* It releases acquired lock l. */
 void unlock(struct lock *l);
 
 #endif

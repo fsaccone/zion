@@ -1,14 +1,14 @@
 #ifndef _PANIC_H
 #define _PANIC_H
 
-/* Prints the panic message along with its call trace path. */
+/* It prints the panic message and its call trace path, disable interrupts
+   and loops infinitely. */
 void panic(void);
 
-/* Sets the message of the next panic call to m. */
+/* It sets the panic message to m and resets the call trace path. */
 void setpanicmsg(char *m);
 
-/* Appends t to the message of the next panic call formatted as a path of the
-   call trace leading to the function that set the initial message. */
+/* It appends t to the panic message call trace path. */
 void tracepanicmsg(char *t);
 
 #endif

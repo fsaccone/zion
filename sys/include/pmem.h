@@ -9,29 +9,31 @@
 
 #define NULL ((void *)0)
 
-/* Allocate as much adjacent frames as needed to fit size s, fill with zeros
-   and return the pointer to the first one, which will be aligned to align or
-   to PAGE_SIZE if align is 0. Returns NULL in case of error. */
+/* It allocates as much adjacent frames as needed to fit size s starting with
+   a frame aligned to align or to PAGE_SIZE if align is 0. Allocated frames are
+   filled with zeros. On success, a pointer to the first frame is returned. On
+   failure, NULL is returned and the panic message is set. */
 void *palloc(uptr s, uptr align);
 
-/* Allocates all free memory pages, thus filling all used memory with zeros. */
+/* It allocates all free memory pages, thus filling all used memory with
+   zeros. */
 void pcleanup(void);
 
-/* Free enough frames from p to fit size s. Returns -1 in case of error and 0
-   otherwise. */
+/* It frees enough frames starting with f to fit size s. On success, 0 is
+   returned. On failure, -1 is returned and the panic message is set. */
 s8 pfree(void *f, uptr s);
 
-/* Returns 0 if the memory block pointed to by a is equal to the memory block 
-   pointed to by b, a negative number if the memory block pointer by a is less
-   than the memory block pointer by b, or a positive number if the memory block
-   pointed by a is greater than the memory block pointed by b. Each memory
-   block is made of n bytes. */
+/* If the memory block at a is equal to the memory block at b, 0 is returned.
+   If the memory block at a is less than the memory block at b, a negative
+   number is returned. If the memory block at a is greater than the memory
+   block at b, a positive number is returned. Memory blocks are made of n
+   bytes. */
 s8 pmemcmp(void *a, void *b, uptr n);
 
-/* Copy n bytes from s to d. */
+/* It copies n bytes from s to d. */
 void pmemcpy(void *d, void *s, uptr n);
 
-/* Sets all n bytes starting from s to c. */
+/* It sets the first n bytes of s to c. */
 void pmemset(void *s, u8 c, uptr n);
 
 #endif

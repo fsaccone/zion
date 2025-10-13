@@ -3,14 +3,12 @@
 
 #include <arch/page.h>
 
-/* Switches to virtual memory using page tree ptree. The page tree needs to be
-   initialized in a way this function is mapped at the same address as its
-   physical one. */
+/* It switches to virtual memory using page tree ptree. The ptree page tree
+   needs to map this function to the same address as the calling one. */
 void memswitch(pageentry *ptree);
 
-/* Switches to physical memory. The page tree which is used when this function
-   is called needs to map this function to the same address as its physical
-   one. */
+/* It switches to physical memory. The active page tree needs to map this
+   function to the same address as its physical one. */
 void pmemswitch(void);
 
 #endif

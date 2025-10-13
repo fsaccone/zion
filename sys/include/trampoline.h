@@ -4,28 +4,26 @@
 #include <arch/page.h>
 #include <arch/types.h>
 
-/* Copies the registers and program counter saved in trap frame s to trap frame
-   d. */
+/* It copies the context saved in trap frame s to trap frame d. */
 void copytrapframe(void *d, void *s);
 
-/* Initializes trap frame tframe using startpc as the virtual address of the
-   initial program counter and trampoline as the virtual address of the
-   trampoline page. */
+/* It initializes trap frame tframe using startpc as the initial program
+   counter and trampoline as trampoline page address. */
 void inittrapframe(void *tframe, uptr startpc, uptr trampoline);
 
-/* Prepares trap frame tframe and the current context for a jump to usermode,
-   using user page tree ptree. It is important to run this right before the
-   jump to usermode. */
+/* It prepares trap frame tframe, mapped in the ptree page tree at address
+   PROC_VAS_TRAP_FRAME, to jump to usermode. It also configures the context of
+   the calling core. It is important to run this right before the jump to
+   usermode. */
 void preparetrapframe(void *tframe, pageentry *ptree);
 
-/* Sets the return value of trap frame tframe to r. */
+/* It sets the return value of trap frame tframe to r. */
 void setreturn(void *tframe, ureg r);
 
-/* The trampoline. It is aligned to PAGE_SIZE and fits inside a page, to make
-   it easily mappable in virtual address spaces: it should be mapped to the
-   same address in both kernel and user virtual address spaces, so that the
-   page tree switch may not break interrupts. It makes use of the trap frame at
-   address VADDR_TRAP_FRAME, doing:
+/* It is aligned to PAGE_SIZE and fits inside a frame: it should be mapped to
+   the same address in both kernel and user virtual address spaces, so that the
+   page tree switch in it is possible. It makes use of the trap frame at
+   address PROC_VAS_TRAP_FRAME, defined in process.h, doing:
      1. Save the context.
      2. Load the kernel essential data, such as the stack pointer and page
         tree.
@@ -35,15 +33,16 @@ void setreturn(void *tframe, ureg r);
      5. Load the initial context and return to user mode. */
 void trampoline(void);
 
-/* Returns the physical address of trampoline. */
+/* It returns the physical address of trampoline. */
 void *trampolinebase(void);
 
-/* Part of trampoline. Starts right after the interrupt handler returns,
-   marking the return to the user code. */
+/* It is part of trampoline: it approximately resides at step 4. Before
+   switching here, it is important to call preparetrapframe passing the page
+   tree to switch to. */
 void usermode(void);
 
-/* Returns the virtual address of usermode given that the virtual address of
-   the trampoline page is trampoline. */
+/* It returns the virtual address of usermode provided that the virtual address
+   of the trampoline page in the same virtual address space is trampoline. */
 void *usermodebase(uptr trampoline);
 
 #endif
