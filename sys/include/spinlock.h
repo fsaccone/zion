@@ -19,6 +19,10 @@ struct lock {
 	u8 interruptsenabled[NCPU];
 };
 
+/* If the l lock is acquired by the calling core, 1 is returned. Otherwise, 0
+   is returned. */
+u8 holding(struct lock *l);
+
 /* It acquires lock l after waiting for it to be released. */
 void lock(struct lock *l);
 
