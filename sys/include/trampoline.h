@@ -17,7 +17,8 @@ void inittrapframe(void *tframe, uptr startpc, uptr trampoline);
    usermode. */
 void preparetrapframe(void *tframe, pageentry *ptree);
 
-/* It sets the return value of trap frame tframe to r. */
+/* It sets the return value of trap frame tframe to r. It does nothing if
+   tframe is NULL. */
 void setreturn(void *tframe, ureg r);
 
 /* It is aligned to PAGE_SIZE and fits inside a frame: it should be mapped to
