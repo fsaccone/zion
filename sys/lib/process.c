@@ -26,11 +26,11 @@ allocprocess(struct process **p, struct process *parent)
 	(*p)->state = READY;
 
 	/* Allocate smallest free PID. */
-	for ((*p)->pid = 0; (*p)->pid < PID_MAX; (*p)->pid++) {
-		if (BITMAPGET(pidbitmap, (*p)->pid))
+	for ((*p)->pid = 1; (*p)->pid < PID_MAX; (*p)->pid++) {
+		if (BITMAPGET(pidbitmap, (*p)->pid - 1))
 			continue;
 
-		BITMAPADD(pidbitmap, (*p)->pid);
+		BITMAPADD(pidbitmap, (*p)->pid - 1);
 
 		break;
 	}
