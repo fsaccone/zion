@@ -11,6 +11,7 @@
 #include <vmem.h>
 
 static struct process *processlist = NULL;
+static struct process *initprocess = NULL;
 static u8 pidbitmap[CEIL(PID_MAX, 8) / 8] = { 0 };
 
 s8
@@ -19,10 +20,19 @@ allocprocess(struct process **p, struct process *parent)
 	struct pageoptions opts = { 0 };
 	void *tframe;
 
+	if (!parent && initprocess) {
+		setpanicmsg("Tried allocating init process twice.");
+		goto panic;
+	}
+
 	if (!(*p = palloc(sizeof(struct process), 0)))
 		goto panic;
 
-	(*p)->parent = parent;
+	if (parent)
+		(*p)->parent = parent;
+	else
+		initprocess = *p;
+
 	(*p)->state = READY;
 
 	/* Allocate smallest free PID. */
