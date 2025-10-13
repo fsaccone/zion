@@ -67,6 +67,8 @@ core0(void)
 	(void)consolewriteb16(RAMINIT_END);
 	(void)consolewrite("]\n");
 
+	rip->state = READY;
+
 	return 0;
 
 panic:
