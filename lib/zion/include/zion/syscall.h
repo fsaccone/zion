@@ -1,5 +1,5 @@
-#ifndef _ZION_SYSCALLS_H
-#define _ZION_SYSCALLS_H
+#ifndef _ZION_SYSCALL_H
+#define _ZION_SYSCALL_H
 
 void exit(void);
 int fork(void);
