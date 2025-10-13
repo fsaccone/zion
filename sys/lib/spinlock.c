@@ -5,6 +5,12 @@
 #include <core.h>
 #include <interrupt.h>
 
+u8
+holding(struct lock *l)
+{
+	return l->locked;
+}
+
 void
 lock(struct lock *l)
 {
