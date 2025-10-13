@@ -10,11 +10,11 @@
 /* This is a representation of the process virtual address space:
      + 0x0
      |
-     | (kr-x-) Trampoline.
+     | (krw-a) Trap frame.
      |
      + PAGE_SIZE
      |
-     | (krw-a) Trap frame.
+     | (kr-x-) Trampoline.
      |
      + 2 * PAGE_SIZE
      |
@@ -26,8 +26,8 @@
      |
      + PAGE_VADDR_MAX
 */
-#define PROC_VAS_TRAMPOLINE      (0 * PAGE_SIZE)
-#define PROC_VAS_TRAP_FRAME      (1 * PAGE_SIZE)
+#define PROC_VAS_TRAP_FRAME      (0 * PAGE_SIZE)
+#define PROC_VAS_TRAMPOLINE      (1 * PAGE_SIZE)
 #define PROC_VAS_FIRST_FREE_PAGE (2 * PAGE_SIZE)
 
 #define PID_MAX (u16)(~0)
