@@ -31,8 +31,9 @@ pageentry *allocpagetable(void);
 s8 freepagetable(pageentry *ptable);
 
 /* Returns the physical address pointed by virtual address vaddr in page tree
-   ptree, or NULL if it is not mapped. */
-void *paddr(pageentry *ptree, uptr vaddr);
+   ptree, or NULL if it is not mapped. If opts is not NULL, it saves the page
+   options to it. */
+void *paddr(struct pageoptions *opts, pageentry *ptree, uptr vaddr);
 
 /* Validates page pointed by virtual address vaddr of page tree ptree using
    options opts, mapping it to the paddr physical address. Allocates missing
