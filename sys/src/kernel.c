@@ -49,7 +49,7 @@ core0(void)
 	if (freeallmem())
 		goto panic;
 
-	if (kvmem(&ptree))
+	if (!(ptree = kvmem()))
 		goto panic;
 
 	if (!(rip = allocprocess(NULL)))
