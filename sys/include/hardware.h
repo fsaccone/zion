@@ -1,7 +1,7 @@
 #ifndef _HARDWARE_H
 #define _HARDWARE_H
 
-/* The hardware interrupt handler. */
+/* It handles a hardware interrupt. */
 void hardware(void);
 
 #endif

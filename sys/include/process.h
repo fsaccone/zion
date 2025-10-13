@@ -7,7 +7,7 @@
 #include <spinlock.h>
 #include <vmem.h>
 
-/* Process virtual address space:
+/* This is a representation of the process virtual address space:
      + 0x0
      |
      | (kr-x-) Trampoline.
@@ -20,7 +20,7 @@
      |
      | (?????) Mapped memory.
      |
-     + ceil
+     + [Process ceil]
      |
      | (/////) Unmapped memory.
      |
@@ -39,57 +39,59 @@ enum processstate {
 	TERMINATED,
 };
 
+/* The process. */
 struct process {
 	/* The process ID. */
 	u16 pid;
 
-	/* The spinlock of the process, used by the scheduler. */
+	/* The spinlock of the process. */
 	struct lock lock;
 
 	/* The process state. */
 	enum processstate state;
 
-	/* The parent process.. */
+	/* The parent process. If NULL, the process is referred to as the
+	   "init" process. */
 	struct process *parent;
 
-	/* The pointer to the root table of the virtual page tree. */
+	/* The pointer to the process page tree. */
 	pageentry *pagetree;
 
-	/* The virtual address of the first unmapped page of the virtual
+	/* The address of the first unmapped page in the process virtual
 	   address space. */
 	uptr ceil;
 
-	/* The context which is saved when switching back to the scheduler
-	   after a user interrupt, and loaded the other way around. */
+	/* The context of the process in the trampoline. */
 	u8 ctx[CTX_SIZE];
 
-	/* The pointers to the previous and next processes. This is needed to
+	/* The pointers to the previous and next processes. These are needed to
 	   create linked lists of processes. */
 	struct process *p;
 	struct process *n;
 };
 
-/* Allocates and returns a child process of process parent of state BLOCKED. If
-   parent is NULL, the process is referred to as the "init" process: it has no
-   parents and automatically adopts all orphaned processes. The init process
-   must only be allocated once. Returns NULL on failure. */
+/* It allocates process of state BLOCKED. If parent is not NULL, the allocated
+   process is referred to as the "child" process. If parent is NULL, the
+   allocated process is referred to as the "init" process. The init process
+   may only be allocated once. On success, a pointer to the allocated process
+   is returned. On failure, NULL is returned and the panic message is set. */
 struct process *allocprocess(struct process *parent);
 
-/* Frees process p and all its allocated memory. Returns -1 in case of error or
-   0 otherwise. */
+/* It frees process p and all its allocated memory. On success, 0 is returned.
+   On failure, -1 is returned and the panic message is set. */
 s8 freeprocess(struct process *p);
 
-/* Increases ceil of process p by a page, mapping it to the paddr physical
-   address and setting its options to opts. It returns -1 in case of error or
-   0 otherwise, setting it to the virtual address of the newly mapped page if
-   it is not NULL. */
+/* It increases the ceil of process p by a page, mapping it to the f
+   physical frame and setting its options to opts. On success, 0 is returned
+   and o is set to the virtual address of the mapped page if not NULL. On
+   failure, -1 is returned and the panic message is set. */
 s8 growprocess(uptr *o, struct process *p, void *f, struct pageoptions opts);
 
-/* Returns the linked list containing all the processes. */
+/* It returns the head of the linked list of all the allocated processes. */
 struct process *processes(void);
 
-/* Returns the physical address of the trap frame of process p or NULL if it
-   does not exist. */
+/* It returns the physical address of the trap frame of process p, or NULL if
+   it is not mapped in the process page tree. */
 void *trapframe(struct process *p);
 
 #endif

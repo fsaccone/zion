@@ -3,8 +3,7 @@
 
 #include <arch/types.h>
 
-/* The exception handler. The u argument is 1 when the exception is caused by
-   code in user mode. */
+/* It handles a kernel exception if u is 0 or a user exception otherwise. */
 void exception(u8 u);
 
 #endif

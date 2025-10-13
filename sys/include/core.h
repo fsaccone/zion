@@ -3,7 +3,7 @@
 
 #include <arch/types.h>
 
-/* Returns the ID of the running core. */
+/* It returns the ID of the calling core. */
 u16 core(void);
 
 #endif

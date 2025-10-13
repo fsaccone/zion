@@ -3,10 +3,10 @@
 
 #include <arch/types.h>
 
-/* Initializes the UART device controller. */
+/* It initializes the UART device controller. */
 void inituart(void);
 
-/* Writes character c to the UART controller. */
+/* It writes the c character to the UART controller. */
 void uartwrite(u8 c);
 
 #endif

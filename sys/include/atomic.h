@@ -3,7 +3,7 @@
 
 #include <arch/types.h>
 
-/* Atomically swaps the value at d with s and returns the old value. */
+/* It atomically swaps the value at d with s, returning the old value at d. */
 ureg atomicswap(ureg *d, ureg s);
 
 #endif

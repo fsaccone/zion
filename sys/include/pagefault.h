@@ -3,8 +3,7 @@
 
 #include <arch/types.h>
 
-/* The page fault handler. The u argument is 1 when the page fault is caused by
-   code in user mode. */
+/* It handles a kernel page fault if u is 0 or a user page fault otherwise. */
 void pagefault(u8 u);
 
 #endif
