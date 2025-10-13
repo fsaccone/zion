@@ -33,7 +33,7 @@ s8 pmemcmp(void *a, void *b, uptr n);
 /* It copies n bytes from s to d. */
 void pmemcpy(void *d, void *s, uptr n);
 
-/* It sets the first n bytes of s to c. */
-void pmemset(void *s, u8 c, uptr n);
+/* It sets the first n bytes of d to c. */
+void pmemset(void *d, u8 c, uptr n);
 
 #endif
