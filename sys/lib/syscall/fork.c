@@ -60,8 +60,7 @@ fork(void)
 	return;
 
 fail:
-	if (p && (ptframe = trapframe(p)))
-		setreturn(ptframe, -1);
+	setreturn(trapframe(p), -1);
 
 	if (c)
 		(void)freeprocess(c);

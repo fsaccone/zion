@@ -46,6 +46,5 @@ growmem(uptr s)
 	return;
 
 fail:
-	if (p)
-		setreturn(trapframe(p), (ureg)NULL);
+	setreturn(trapframe(p), (ureg)NULL);
 }
