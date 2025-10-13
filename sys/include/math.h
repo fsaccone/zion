@@ -12,6 +12,8 @@
 #define FLOOR(x, n) (((x) / (n)) * (n))
 #define CEIL(x, n)  ((((x) + (n) - 1) / (n)) * (n))
 
+/* Returns the maximum/minimum between a and b. */
+#define MAX(a, b) (((a) > (b)) ? (a) : (b))
 #define MIN(a, b) (((a) < (b)) ? (a) : (b))
 
 #endif
