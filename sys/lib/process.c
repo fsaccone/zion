@@ -111,12 +111,13 @@ freeprocess(struct process *p)
 
 	/* Free and unmap all user pages. */
 	for (a = PROC_VAS_FIRST_FREE_PAGE; a < p->ceil; a += PAGE_SIZE) {
+		struct pageoptions opts;
 		void *f;
 
-		if (!(f = paddr(NULL, p->pagetree, a)))
+		if (!(f = paddr(&opts, p->pagetree, a)))
 			continue;
 
-		if (pfree(f, PAGE_SIZE))
+		if (opts.a && pfree(f, PAGE_SIZE))
 			goto panic;
 
 		if (vunmap(p->pagetree, a))
