@@ -31,6 +31,7 @@ s8
 core0(void)
 {
 	struct process *rip;
+	uptr ria;
 	struct pageoptions riopts = {
 		.u = 1,
 		.r = 1,
@@ -55,11 +56,10 @@ core0(void)
 
 	(void)consolewrite(RAMINIT_LOG_PRE);
 
-	if (vmemcpy(PROC_VAS_FIRST_FREE_PAGE, rip->pagetree,
-	            RAMINIT_START, ptree,
-	            CEIL(RAMINIT_SIZE, PAGE_SIZE) / PAGE_SIZE,
-	            riopts))
-		goto panic;
+	for (ria = RAMINIT_START; ria < RAMINIT_END; ria += PAGE_SIZE) {
+		if (growprocess(NULL, rip, (void *)ria, riopts))
+			goto panic;
+	}
 
 	(void)consolewrite("[");
 	(void)consolewriteb16(RAMINIT_START);
