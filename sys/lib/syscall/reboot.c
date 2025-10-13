@@ -10,7 +10,7 @@ static struct lock l = { 0 };
 void
 reboot(void)
 {
-	/* This lock will never be released. */
+	/* This lock is never released. */
 	lock(&l);
 
 	pcleanup();

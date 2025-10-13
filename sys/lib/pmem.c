@@ -10,13 +10,18 @@ struct freeframe {
 	struct freeframe *n;
 };
 
-/* Removes f from freeframes. */
+/* It removes the f frame from the freeframes linked list. */
 static void allocframe(struct freeframe *f);
 
-/* Finds f in freeframes and returns it as a struct freeframe *. */
+/* It searches for the f frame in the freeframes linked list. If the frame is
+   found, it is returned as a struct freeframe *. If the frame is not found,
+   NULL is returned. */
 static struct freeframe *freeframe(void *f);
 
+/* The linked list of free frames. Each node of the linked list is the frame
+   itself. */
 static struct freeframe *freeframes = NULL;
+
 static struct lock l;
 
 void
@@ -32,7 +37,7 @@ allocframe(struct freeframe *f)
 		return;
 	}
 
-	/* Find prev freeframes element which points to f. */
+	/* Find the node of freeframe which points to f and save it to prev. */
 	for (prev = freeframes; prev->n != f; prev = prev->n) {
 		if (!prev)
 			return;
@@ -99,7 +104,7 @@ nextfirst:
 	}
 
 	/* Since the search happens from the highest to the lowest address,
-	   first is needed to be set to the last element of frames. */
+	   it is needed to set first to the last element of frames. */
 	first = frames[nframes - 1];
 
 	for (i = 0; i < nframes; i++) {

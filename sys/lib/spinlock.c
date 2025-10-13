@@ -13,13 +13,13 @@ lock(struct lock *l)
 
 	disableinterrupts();
 
-	/* If first call, set interruptsenabled. */
+	/* If this is the first call, set interruptsenabled. */
 	if (!l->depth[c])
 		l->interruptsenabled[c] = ie;
 
 	l->depth[c]++;
 
-	/* Wait for lock to be unlocked. */
+	/* Wait for the lock to be unlocked. */
 	while (atomicswap(&l->locked, 1));
 }
 

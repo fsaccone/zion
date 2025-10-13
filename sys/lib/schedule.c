@@ -53,8 +53,8 @@ schedule(void)
 
 				coreprocesses[c] = p;
 
-				/* Since inittrapframe changes the context to
-				   make the jump to usermode possible, it is
+				/* Since preparetrapframe changes the context
+				   to make the jump to usermode possible, it is
 				   needed to disable interrupts to avoid
 				   messing up. */
 				disableinterrupts();
@@ -64,9 +64,8 @@ schedule(void)
 				         usermodebase(PROC_VAS_TRAMPOLINE));
 				switchctx(corectxs[c], p->ctx);
 
-				/* Got back here through a nextschedule call
-				   from the core which was owning the
-				   process. */
+				/* A core may come back here by calling
+				   nextschedule. */
 				coreprocesses[c]->state = READY;
 
 				break;
