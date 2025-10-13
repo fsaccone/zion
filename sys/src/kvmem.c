@@ -11,14 +11,15 @@
 #include <trampoline.h>
 #include <vmem.h>
 
-s8
-kvmem(pageentry **ptree)
+pageentry *
+kvmem(void)
 {
+	pageentry *ptree;
 	uptr a;
 	struct pageoptions opts = { 0 };
 	uptr i, freemem[FREE_MEMORY_REGIONS_LEN][2] = FREE_MEMORY_REGIONS;
 
-	if (!(*ptree = allocpagetable()))
+	if (!(ptree = allocpagetable()))
 		goto panic;
 
 	/* Map trampoline. */
@@ -27,7 +28,7 @@ kvmem(pageentry **ptree)
 	opts.w = 0;
 	opts.x = 1;
 	opts.a = 0;
-	if (vmap(*ptree, PROC_VAS_TRAMPOLINE, trampolinebase(), opts))
+	if (vmap(ptree, PROC_VAS_TRAMPOLINE, trampolinebase(), opts))
 		goto panic;
 
 	/* Map kernel and raminit. */
@@ -39,13 +40,13 @@ kvmem(pageentry **ptree)
 	for (a = KERNEL_START;
 	     a < KERNEL_END;
 	     a += PAGE_SIZE) {
-		if (vmap(*ptree, a, (void *)a, opts))
+		if (vmap(ptree, a, (void *)a, opts))
 			goto panic;
 	}
 	for (a = RAMINIT_START;
 	     a < RAMINIT_END;
 	     a += PAGE_SIZE) {
-		if (vmap(*ptree, a, (void *)a, opts))
+		if (vmap(ptree, a, (void *)a, opts))
 			goto panic;
 	}
 
@@ -60,7 +61,7 @@ kvmem(pageentry **ptree)
 		     end   = freemem[i][1];
 
 		for (a = start; a < end; a += PAGE_SIZE) {
-			if (vmap(*ptree, a, (void *)a, opts))
+			if (vmap(ptree, a, (void *)a, opts))
 				goto panic;
 		}
 	}
@@ -71,12 +72,12 @@ kvmem(pageentry **ptree)
 	opts.w = 1;
 	opts.x = 0;
 	opts.a = 0;
-	if (vmap(*ptree, UART0, (void *)UART0, opts))
+	if (vmap(ptree, UART0, (void *)UART0, opts))
 		goto panic;
 
-	return 0;
+	return ptree;
 
 panic:
 	tracepanicmsg("kvmem");
-	return -1;
+	return NULL;
 }
