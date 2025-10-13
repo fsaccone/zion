@@ -5,8 +5,9 @@
 #include <pmem.h>
 #include <process.h>
 #include <schedule.h>
+#include <trampoline.h>
 
-void *
+void
 growmem(uptr s)
 {
 	struct process *p;
@@ -40,8 +41,11 @@ growmem(uptr s)
 			first = (void *)a;
 	}
 
-	return first;
+	setreturn(trapframe(p), (ureg)first);
+
+	return;
 
 fail:
-	return NULL;
+	if (p)
+		setreturn(trapframe(p), (ureg)NULL);
 }
