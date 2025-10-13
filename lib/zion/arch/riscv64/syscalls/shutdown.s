@@ -2,7 +2,7 @@
 .global shutdown
 
 shutdown:
-	li a0, 2
+	li a0, 3
 	ecall
 
 	ret

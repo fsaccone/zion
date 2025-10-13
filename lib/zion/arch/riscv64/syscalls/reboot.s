@@ -2,7 +2,7 @@
 .global reboot
 
 reboot:
-	li a0, 3
+	li a0, 4
 	ecall
 
 	ret

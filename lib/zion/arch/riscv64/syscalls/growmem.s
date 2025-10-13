@@ -3,7 +3,7 @@
 
 growmem:
 	mv a1, a0
-	li a0, 1
+	li a0, 2
 	ecall
 
 	ret
