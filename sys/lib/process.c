@@ -14,9 +14,10 @@ static struct process *processlist = NULL;
 static struct process *initprocess = NULL;
 static u8 pidbitmap[CEIL(PID_MAX, 8) / 8] = { 0 };
 
-s8
-allocprocess(struct process **p, struct process *parent)
+struct process *
+allocprocess(struct process *parent)
 {
+	struct process *p;
 	struct pageoptions opts = { 0 };
 	void *tframe;
 
@@ -25,33 +26,33 @@ allocprocess(struct process **p, struct process *parent)
 		goto panic;
 	}
 
-	if (!(*p = palloc(sizeof(struct process), 0)))
+	if (!(p = palloc(sizeof(struct process), 0)))
 		goto panic;
 
 	if (parent)
-		(*p)->parent = parent;
+		p->parent = parent;
 	else
-		initprocess = *p;
+		initprocess = p;
 
-	(*p)->state = READY;
+	p->state = READY;
 
 	/* Allocate smallest free PID. */
-	for ((*p)->pid = 1; (*p)->pid < PID_MAX; (*p)->pid++) {
-		if (BITMAPGET(pidbitmap, (*p)->pid - 1))
+	for (p->pid = 1; p->pid < PID_MAX; p->pid++) {
+		if (BITMAPGET(pidbitmap, p->pid - 1))
 			continue;
 
-		BITMAPADD(pidbitmap, (*p)->pid - 1);
+		BITMAPADD(pidbitmap, p->pid - 1);
 
 		break;
 	}
 
-	if ((*p)->pid == PID_MAX) {
+	if (p->pid == PID_MAX) {
 		setpanicmsg("Maximum number of processes reached.");
 		goto panic;
 	}
 
 	/* Allocate page tree. */
-	if (!((*p)->pagetree = allocpagetable()))
+	if (!(p->pagetree = allocpagetable()))
 		goto panic;
 
 	/* Map trampoline. */
@@ -59,7 +60,7 @@ allocprocess(struct process **p, struct process *parent)
 	opts.r = 1;
 	opts.w = 0;
 	opts.x = 1;
-	if (vmap((*p)->pagetree, PROC_VAS_TRAMPOLINE, trampolinebase(), opts))
+	if (vmap(p->pagetree, PROC_VAS_TRAMPOLINE, trampolinebase(), opts))
 		goto panic;
 
 	/* Allocate, initialize and map trap frame. */
@@ -70,23 +71,23 @@ allocprocess(struct process **p, struct process *parent)
 	if (!(tframe = palloc(PAGE_SIZE, 0)))
 		goto panic;
 	inittrapframe(tframe, PROC_VAS_FIRST_FREE_PAGE, PROC_VAS_TRAMPOLINE);
-	if (vmap((*p)->pagetree, PROC_VAS_TRAP_FRAME, tframe, opts))
+	if (vmap(p->pagetree, PROC_VAS_TRAP_FRAME, tframe, opts))
 		goto panic;
 
 	/* Set ceil to the first free page. */
-	(*p)->ceil = PROC_VAS_FIRST_FREE_PAGE;
+	p->ceil = PROC_VAS_FIRST_FREE_PAGE;
 
 	/* Append to processlist. */
-	(*p)->n = processlist;
+	p->n = processlist;
 	if (processlist)
-		processlist->p = *p;
-	processlist = *p;
+		processlist->p = p;
+	processlist = p;
 
-	return 0;
+	return p;
 
 panic:
 	tracepanicmsg("allocprocess");
-	return -1;
+	return NULL;
 }
 
 s8

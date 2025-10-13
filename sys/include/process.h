@@ -69,11 +69,11 @@ struct process {
 	struct process *n;
 };
 
-/* Allocates a child process of process parent of state READY and sets p to it.
-   If parent is null, the process is referred to as the "init" process: it has
-   no parents and automatically adopts all orphaned processes. The init process
-   must only be allocated once. Returns -1 in case of error or 0 otherwise. */
-s8 allocprocess(struct process **p, struct process *parent);
+/* Allocates and returns a child process of process parent of state READY. If
+   parent is NULL, the process is referred to as the "init" process: it has no
+   parents and automatically adopts all orphaned processes. The init process
+   must only be allocated once. Returns NULL on failure. */
+struct process *allocprocess(struct process *parent);
 
 /* Frees process p and all its allocated memory. Returns -1 in case of error or
    0 otherwise. */
