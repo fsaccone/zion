@@ -69,6 +69,42 @@ schedule(void)
 				coreprocesses[c]->state = READY;
 
 				break;
+			case TERMINATED:
+				/* Make the previous process in the linked list
+				   point to the one after this.
+				   Since a process is set to TERMINATED only
+				   when it calls the exit system call, and
+				   since it cannot be called by the init
+				   process, if we assume that the init process
+				   has been the first to be allocated, we can
+				   assure that there exists a previous
+				   process. */
+				p->p->n = p->n;
+
+				/* Set state to BLOCKED and unlock the process
+				   so that other cores may skip it. */
+				p->state = BLOCKED;
+				unlock(&p->lock);
+
+				/* We are now sure that all the cores which
+				   checked for this process have acquired the
+				   lock, and that no other core has come into
+				   contact with this process since it was
+				   removed from the linked list.
+				   Lock the process again to wait for the other
+				   cores to skip the process. */
+				lock(&p->lock);
+
+				/* Unlock the process again. This is pretty
+				   much not needed but it is more clear like
+				   this. */
+				unlock(&p->lock);
+
+				/* Free the process. If the freeing fails, we
+				   do not take any action. */
+				(void)freeprocess(p);
+
+				break;
 			default:
 				unlock(&p->lock);
 			}
