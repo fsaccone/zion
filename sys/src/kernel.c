@@ -70,6 +70,8 @@ core0(void)
 
 	rip->state = READY;
 
+	appendprocess(rip);
+
 	return 0;
 
 panic:

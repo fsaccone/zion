@@ -57,6 +57,8 @@ fork(void)
 
 	c->state = READY;
 
+	appendprocess(c);
+
 	return;
 
 fail:
