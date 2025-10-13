@@ -18,7 +18,7 @@
      |
      + 2 * PAGE_SIZE
      |
-     | (u???) Mapped memory.
+     | (????) Mapped memory.
      |
      + ceil
      |
