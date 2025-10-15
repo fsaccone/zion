@@ -18,6 +18,7 @@
 #define LSR          (u8 *)(UART0 + 0x05)
 #define LSR_RX_READY (0b1 << 0)
 #define LSR_TX_IDLE  (0b1 << 5)
+#define LSR_TX_EMPTY (0b1 << 6)
 
 /* FIFO control register. */
 #define FCR        (u8 *)(UART0 + 2)
@@ -55,5 +56,9 @@ inituart(void)
 void
 uartwrite(u8 c)
 {
+	/* Wait for the transmitter to be empty. */
+	while (!(*(u8 *)LSR & LSR_TX_EMPTY));
+
+	/* Write the character to the transmitter holding register. */
 	*THR = c;
 }
