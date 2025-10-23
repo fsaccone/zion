@@ -6,7 +6,7 @@ MACHINE = virt
 CROSS_COMPILE = $(ARCH)-linux-musl-
 AR            = $(CROSS_COMPILE)ar
 AS            = $(CROSS_COMPILE)as
-CC            = $(CROSS_COMPILE)cc
+CC            = $(CROSS_COMPILE)gcc
 LD            = $(CROSS_COMPILE)ld
 OBJCOPY       = $(CROSS_COMPILE)objcopy
 
