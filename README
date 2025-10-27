@@ -1,10 +1,8 @@
-Zion
-====
+# Zion
 
 Operating system.
 
-Structure
----------
+## Structure
 
 * /sbin/ - System binaries.
 * /sys/  - Kernel.
