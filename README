@@ -6,3 +6,4 @@ Operating system.
 
 * /sbin/ - System binaries.
 * /sys/  - Kernel.
+* /tmp/  - Build-time files, not part of the source code.
